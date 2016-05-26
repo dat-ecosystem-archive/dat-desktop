@@ -10,8 +10,10 @@ const drop = require('drag-and-drop-files');
 const fileReader = require('filereader-stream');
 const fs = require('fs');
 const {basename} = require('path');
+const raf = require('random-access-file');
 
 const appPath = `${app.getPath('appData')}/${app.getName()}`;
+try { fs.mkdirSync(`${appPath}/files`) } catch (_) {}
 
 const db = level(`${appPath}/db`);
 const drive = hyperdrive(db);
@@ -20,7 +22,10 @@ let key;
 const keyPath = `${appPath}/key.txt`;
 try { key = fs.readFileSync(keyPath); } catch (_) {}
 
-const archive = drive.createArchive(key, { live: true });
+const archive = drive.createArchive(key, {
+  live: true,
+  file: name => raf(`${appPath}/files/${name}`)
+});
 fs.writeFileSync(keyPath, archive.key);
 
 const swarmKey = `dat-desktop-${archive.key.toString('hex')}`;
