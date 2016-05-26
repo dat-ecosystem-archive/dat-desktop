@@ -16,6 +16,10 @@
     "webrtc-swarm": "^2.4.0"
   },
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "semistandard"
+  },
+  "devDependencies": {
+    "semistandard": "^8.0.0"
   }
 }

@@ -16,7 +16,7 @@ const drive = hyperdrive(db);
 
 let key;
 const keyPath = `${appPath}/key.txt`;
-try { key = fs.readFileSync(keyPath) } catch (_) {}
+try { key = fs.readFileSync(keyPath); } catch (_) {}
 
 const archive = drive.createArchive(key, { live: true });
 fs.writeFileSync(keyPath, archive.key);
@@ -31,7 +31,7 @@ ws.on('peer', peer => {
 const ds = discoverySwarm(swarmDefaults({
   stream: () => drive.createPeerStream()
 }));
-ds.once('listening', () => ds.join(swarmKey))
+ds.once('listening', () => ds.join(swarmKey));
 ds.listen(3282);
 
 archive.list({ live: true }).on('data', entry => {
@@ -42,10 +42,10 @@ drop(document.body, files => {
   let i = 0;
 
   (function loop () {
-    if (i == files.length) return;
+    if (i === files.length) return;
 
     const file = files[i++];
     const stream = fileReader(file);
     stream.pipe(archive.createFileWriteStream(file.name)).on('finish', loop);
-  })(); 
+  })();
 });

@@ -3,6 +3,8 @@
 
 This is a work in progress. Nothing to see here yet!
 
+[![js-semistandard-style](https://cdn.rawgit.com/flet/semistandard/master/badge.svg)](https://github.com/Flet/semistandard)
+
 ## Running
 
 ```bash
