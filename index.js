@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 
 let win;
 
@@ -15,4 +15,10 @@ app.on('window-all-closed', () => {
 });
 app.on('activate', () => {
   if (!win) createWindow();
+});
+app.on('will-finish-launching', () => {
+  app.on('open-file', (ev, path) => {
+    ev.preventDefault();
+    win.webContents.send('file', path);
+  });
 });

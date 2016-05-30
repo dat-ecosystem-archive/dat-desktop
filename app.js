@@ -5,9 +5,11 @@ const discoverySwarm = require('discovery-swarm');
 const swarmDefaults = require('datland-swarm-defaults');
 const signalhub = require('signalhub');
 const app = require('electron').remote.app;
+const {ipcRenderer: ipc} = require('electron');
 const drop = require('drag-and-drop-files');
 const fileReader = require('filereader-stream');
 const fs = require('fs');
+const {basename} = require('path');
 
 const appPath = `${app.getPath('appData')}/${app.getName()}`;
 
@@ -48,4 +50,8 @@ drop(document.body, files => {
     const stream = fileReader(file);
     stream.pipe(archive.createFileWriteStream(file.name)).on('finish', loop);
   })();
+});
+
+ipc.on('file', (ev, path) => {
+  fs.createReadStream(path).pipe(archive.createFileWriteStream(basename(path)));
 });
