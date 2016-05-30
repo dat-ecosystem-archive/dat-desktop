@@ -1,6 +1,6 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 
-let win, file;
+let win, file, link;
 
 ipcMain.on('ready', () => {
   if (file) {
@@ -8,7 +8,12 @@ ipcMain.on('ready', () => {
     file = null;
     win.webContents.send('file', path);
   }
-})
+  if (link) {
+    let url = link;
+    link = null;
+    win.webContents.send('link', url);
+  }
+});
 
 function createWindow () {
   win = new BrowserWindow();
@@ -29,5 +34,10 @@ app.on('will-finish-launching', () => {
     ev.preventDefault();
     if (win) win.webContents.send('file', path);
     else file = path;
+  });
+  app.on('open-url', (ev, url) => {
+    ev.preventDefault();
+    if (win) win.webContents.send('link', url);
+    else link = url;
   });
 });

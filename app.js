@@ -56,4 +56,8 @@ ipc.on('file', (ev, path) => {
   fs.createReadStream(path).pipe(archive.createFileWriteStream(basename(path)));
 });
 
+ipc.on('link', (ev, url) => {
+  console.log(`Requested to open ${url} (not yet implemented)`);
+});
+
 ipc.send('ready');

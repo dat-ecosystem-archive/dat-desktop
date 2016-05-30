@@ -19,7 +19,7 @@
   "scripts": {
     "start": "electron .",
     "test": "semistandard",
-    "package": "electron-packager . --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist"
+    "package": "electron-packager . --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist --app-bundle-id=com.dat.desktop"
   },
   "devDependencies": {
     "electron-packager": "^7.0.2",
