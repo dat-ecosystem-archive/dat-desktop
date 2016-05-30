@@ -1,5 +1,6 @@
 {
   "name": "dat-desktop",
+  "productName": "Dat Desktop",
   "version": "0.0.1",
   "license": "MIT",
   "repository": "juliangruber/dat-desktop",
@@ -17,9 +18,11 @@
   },
   "scripts": {
     "start": "electron .",
-    "test": "semistandard"
+    "test": "semistandard",
+    "package": "electron-packager . --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist"
   },
   "devDependencies": {
+    "electron-packager": "^7.0.2",
     "semistandard": "^8.0.0"
   }
 }
