@@ -55,3 +55,5 @@ drop(document.body, files => {
 ipc.on('file', (ev, path) => {
   fs.createReadStream(path).pipe(archive.createFileWriteStream(basename(path)));
 });
+
+ipc.send('ready');
