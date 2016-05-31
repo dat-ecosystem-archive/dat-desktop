@@ -11,10 +11,9 @@ const fileReader = require('filereader-stream');
 const fs = require('fs');
 const {basename} = require('path');
 const raf = require('random-access-file');
-const downloadsFolder = require('downloads-folder')();
 
 const appPath = `${app.getPath('appData')}/${app.getName()}`;
-const filesPath = `${downloadsFolder}/dat`;
+const filesPath = `${app.getPath('downloads')}/dat`;
 try { fs.mkdirSync(filesPath) } catch (_) {}
 const keyPath = `${appPath}/key.txt`;
 
