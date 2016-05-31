@@ -31,7 +31,7 @@ ws.on('peer', peer => {
 });
 
 const ds = discoverySwarm(swarmDefaults({
-  stream: () => drive.createPeerStream()
+  stream: () => archive.replicate()
 }));
 ds.once('listening', () => ds.join(swarmKey));
 ds.listen(3282);
