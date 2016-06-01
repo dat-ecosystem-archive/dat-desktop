@@ -7,16 +7,17 @@ const fileReader = require('filereader-stream');
 const fs = require('fs');
 const {basename} = require('path');
 const raf = require('random-access-file');
-const replicate = require('./lib/replicate');
 const yo = require('yo-yo');
 const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
+const createArchive = require('./lib/create-archive');
 
 const appPath = `${app.getPath('appData')}/${app.getName()}`;
-const filesPath = `${app.getPath('downloads')}/dat`;
 try { fs.mkdirSync(filesPath) } catch (_) {}
 
-const db = level(`${appPath}/db`, { keyEncoding: bytewise });
+const db = window.db = level(`${appPath}/db`, {
+  keyEncoding: bytewise
+});
 const drive = hyperdrive(db);
 
 
@@ -25,17 +26,11 @@ let localKey;
 const localKeyPath = `${appPath}/key.txt`;
 try { localKey = fs.readFileSync(localKeyPath); } catch (_) {}
 
-const local = drive.createArchive(localKey, {
-  live: true,
-  file: name => raf(`${filesPath}/${name}`)
-});
+const local = createArchive(drive, localKey);
 fs.writeFileSync(localKeyPath, local.key);
 
-replicate(local);
 
-
-
-const archives = new Set;
+const archives = new Map;
 let el;
 
 const addArchive = ev => {
@@ -49,8 +44,8 @@ const render = (archives, add) => yo`
     <h2>Archives</h2>
     <ul>
       <li>Your dat (${local.key.toString('hex')})</li>
-      ${Array.from(archives).map(key => yo`
-        <li>${key.toString('hex')}</li>
+      ${Array.from(archives.keys()).map(key => yo`
+        <li>${key}</li>
       `)}
     </ul>
     <form onsubmit=${add}>
@@ -68,9 +63,12 @@ liveStream(db, {
   gt: ['archive', null],
   lt: ['archive', undefined]
 }).on('data', data => {
-  console.log('data', data);
-  if (data.type == 'del') archives.delete(data.value);
-  else archives.add(data.value);
+  if (data.type == 'del') {
+    archives.delete(data.value);
+  } else {
+    const archive = createArchive(drive, data.value);
+    archives.set(archive.key.toString('hex'), archive);
+  }
   refresh();
 });
 
