@@ -1,6 +1,6 @@
 const level = require('level');
 const hyperdrive = require('hyperdrive');
-const {app, dialog} = require('electron').remote;
+const {app, dialog, process: remoteProcess} = require('electron').remote;
 const {ipcRenderer: ipc} = require('electron');
 const drop = require('drag-and-drop-files');
 const fileReader = require('filereader-stream');
@@ -11,24 +11,24 @@ const yo = require('yo-yo');
 const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
+const replicate = require('./lib/replicate');
+const minimist = require('minimist');
 
-const appPath = `${app.getPath('appData')}/${app.getName()}`;
+const argv = minimist(remoteProcess.argv.slice(2));
+
+const filesPath = argv.data || `${app.getPath('downloads')}/dat`;
 try { fs.mkdirSync(filesPath) } catch (_) {}
 
-const db = window.db = level(`${appPath}/db`, {
+const db = window.db = level(`${filesPath}/.db`, {
   keyEncoding: bytewise
 });
 const drive = hyperdrive(db);
 
-
-
 let localKey;
-const localKeyPath = `${appPath}/key.txt`;
-try { localKey = fs.readFileSync(localKeyPath); } catch (_) {}
+try { localKey = fs.readFileSync(`${filesPath}/.key.txt`); } catch (_) {}
 
 const local = createArchive(drive, localKey);
-fs.writeFileSync(localKeyPath, local.key);
-
+fs.writeFileSync(`${filesPath}/.key.txt`, local.key);
 
 const archives = new Map;
 let el;
