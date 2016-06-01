@@ -6,13 +6,13 @@ const drop = require('drag-and-drop-files');
 const fileReader = require('filereader-stream');
 const fs = require('fs');
 const {basename} = require('path');
-const raf = require('random-access-file');
 const yo = require('yo-yo');
 const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
 const replicate = require('./lib/replicate');
 const minimist = require('minimist');
+const defaults = require('levelup-defaults');
 
 const argv = minimist(remoteProcess.argv.slice(2));
 
@@ -22,7 +22,9 @@ try { fs.mkdirSync(root) } catch (_) {}
 const db = window.db = level(`${root}/.db`, {
   keyEncoding: bytewise
 });
-const drive = hyperdrive(db);
+// temporary fix for
+// https://github.com/mafintosh/hypercore/pull/22
+const drive = hyperdrive(defaults(db, { keyEncoding: 'utf8' }));
 
 let localKey;
 try { localKey = fs.readFileSync(`${root}/.key.txt`); } catch (_) {}
@@ -31,6 +33,10 @@ const local = createArchive(drive, localKey);
 fs.writeFileSync(`${root}/.key.txt`, local.key);
 
 const archives = new Map;
+archives.set(local.key.toString('hex'), local);
+let selected;
+let listStream;
+let files = [];
 let el;
 
 const addArchive = ev => {
@@ -39,24 +45,54 @@ const addArchive = ev => {
   db.put(['archive', link], link);
 };
 
-const render = (archives, add) => yo`
+const selectArchive = key => ev => {
+  if (ev) ev.preventDefault();
+  if (typeof key != 'string') key = key.toString('hex');
+  if (selected && selected.key.toString('hex') === key) return;
+
+  selected = archives.get(key);
+  files = [];
+  if (listStream) listStream.destroy();
+  listStream = selected.list({ live: true })
+  .on('data', file => {
+    files.push(file);
+    refresh();
+  });
+  refresh();
+};
+
+const render = (archives, selected, files, add, select) => yo`
   <div>
     <h2>Archives</h2>
     <ul>
-      <li>Your dat (${local.key.toString('hex')})</li>
       ${Array.from(archives.keys()).map(key => yo`
-        <li>${key}</li>
+        <li>
+          <a onclick=${select(key)} href=#>
+            ${key}
+          </a>
+          ${key === local.key.toString('hex')
+            ? '(your dat)'
+            : ''}
+        </li>
       `)}
     </ul>
     <form onsubmit=${add}>
       <input type="text" placeholder="Link">
       <input type="submit" value="Add archive">
     </form>
+    <h1>${selected.key.toString('hex')}</h1>
+    <ul>
+      ${files.map(file => yo`
+        <li>${file.name}</li>
+      `)}
+    </ul>
   </div>
 `;
 
 const refresh = () => {
-  el = yo.update(el, render(archives, addArchive));
+  const fresh = render(archives, selected, files, addArchive, selectArchive);
+  if (el) el = yo.update(el, fresh);
+  else el = fresh;
 };
 
 liveStream(db, {
@@ -72,20 +108,9 @@ liveStream(db, {
   refresh();
 });
 
-el = render(archives, addArchive);
+selectArchive(local.key)();
 document.body.appendChild(el);
 
-
-
-
-
-/*
-archive.list({ live: true }).on('data', entry => {
-  document.body.innerHTML += entry.name + '<br>';
-});
-*/
-
-/*
 drop(document.body, files => {
   let i = 0;
 
@@ -94,12 +119,12 @@ drop(document.body, files => {
 
     const file = files[i++];
     const stream = fileReader(file);
-    stream.pipe(archive.createFileWriteStream(file.name)).on('finish', loop);
+    stream.pipe(local.createFileWriteStream(file.name)).on('finish', loop);
   })();
 });
 
 ipc.on('file', (ev, path) => {
-  fs.createReadStream(path).pipe(archive.createFileWriteStream(basename(path)));
+  fs.createReadStream(path).pipe(local.createFileWriteStream(basename(path)));
 });
 
 ipc.on('link', (ev, url) => {
@@ -107,4 +132,4 @@ ipc.on('link', (ev, url) => {
 });
 
 ipc.send('ready');
-*/
+
