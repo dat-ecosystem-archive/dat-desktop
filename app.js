@@ -1,6 +1,6 @@
 const level = require('level');
 const hyperdrive = require('hyperdrive');
-const {app, dialog, process: remoteProcess} = require('electron').remote;
+const {app, process: remoteProcess} = require('electron').remote;
 const {ipcRenderer: ipc} = require('electron');
 const drop = require('drag-and-drop-files');
 const fileReader = require('filereader-stream');
