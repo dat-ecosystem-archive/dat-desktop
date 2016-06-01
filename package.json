@@ -13,6 +13,7 @@
     "filereader-stream": "^1.0.0",
     "hyperdrive": "^5.1.5",
     "level": "^1.4.0",
+    "minimist": "^1.2.0",
     "random-access-file": "^1.2.0",
     "signalhub": "^4.3.2",
     "webrtc-swarm": "^2.4.0"

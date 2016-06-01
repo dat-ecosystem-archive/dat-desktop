@@ -14,6 +14,10 @@ $ npm start
 
 Then drop files onto the app window and watch the console.
 
+## CLI
+
+-- `--data=DIR` overwrite the data path
+
 ## License
 
   MIT
