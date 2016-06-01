@@ -21,18 +21,30 @@ const drive = hyperdrive(db);
 
 
 
+let localKey;
+const localKeyPath = `${appPath}/key.txt`;
+try { localKey = fs.readFileSync(localKeyPath); } catch (_) {}
+
+const local = drive.createArchive(localKey, {
+  live: true,
+  file: name => raf(`${filesPath}/${name}`)
+});
+fs.writeFileSync(localKeyPath, local.key);
+
+replicate(local);
+
 
 
 const archives = new Set;
-archives.add('w00t');
 let el;
 
 const render = archives => yo`
   <div>
     <h2>Archives</h2>
     <ul>
+      <li>Your dat (${local.key.toString('hex')})</li>
       ${Array.from(archives).map(key => yo`
-        <li>${key}</li>
+        <li>${key.toString('hex')}</li>
       `)}
     </ul>
   </div>
@@ -58,19 +70,8 @@ document.body.appendChild(el);
 
 
 
+
 /*
-let key;
-const keyPath = `${appPath}/key.txt`;
-try { key = fs.readFileSync(keyPath); } catch (_) {}
-
-const archive = drive.createArchive(key, {
-  live: true,
-  file: name => raf(`${filesPath}/${name}`)
-});
-fs.writeFileSync(keyPath, archive.key);
-
-replicate(archive);
-
 archive.list({ live: true }).on('data', entry => {
   document.body.innerHTML += entry.name + '<br>';
 });
