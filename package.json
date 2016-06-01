@@ -9,7 +9,6 @@
     "bytewise": "^1.1.0",
     "datland-swarm-defaults": "^1.0.0",
     "discovery-swarm": "^3.1.2",
-    "drag-and-drop-files": "0.0.1",
     "drag-drop": "^2.11.0",
     "electron-prebuilt": "1.1.3",
     "filereader-stream": "^1.0.0",
