@@ -128,7 +128,8 @@ ipc.on('file', (ev, path) => {
 });
 
 ipc.on('link', (ev, url) => {
-  console.log(`Requested to open ${url} (not yet implemented)`);
+  const link = url.slice(6);
+  db.put(['archive', link], link);
 });
 
 ipc.send('ready');
