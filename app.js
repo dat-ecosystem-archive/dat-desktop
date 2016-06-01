@@ -2,7 +2,7 @@ const level = require('level');
 const hyperdrive = require('hyperdrive');
 const {app, process: remoteProcess} = require('electron').remote;
 const {ipcRenderer: ipc} = require('electron');
-const drop = require('drag-and-drop-files');
+const drop = require('drag-drop');
 const fileReader = require('filereader-stream');
 const fs = require('fs');
 const {basename} = require('path');
@@ -119,7 +119,7 @@ drop(document.body, files => {
 
     const file = files[i++];
     const stream = fileReader(file);
-    stream.pipe(local.createFileWriteStream(file.name)).on('finish', loop);
+    stream.pipe(local.createFileWriteStream(file.fullPath)).on('finish', loop);
   })();
 });
 
