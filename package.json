@@ -6,6 +6,7 @@
   "repository": "juliangruber/dat-desktop",
   "description": "Dat Desktop App",
   "dependencies": {
+    "bytewise": "^1.1.0",
     "datland-swarm-defaults": "^1.0.0",
     "discovery-swarm": "^3.1.2",
     "drag-and-drop-files": "0.0.1",
@@ -13,9 +14,11 @@
     "filereader-stream": "^1.0.0",
     "hyperdrive": "^5.1.5",
     "level": "^1.4.0",
+    "level-live-stream": "^1.4.11",
     "random-access-file": "^1.2.0",
     "signalhub": "^4.3.2",
-    "webrtc-swarm": "^2.4.0"
+    "webrtc-swarm": "^2.4.0",
+    "yo-yo": "^1.2.1"
   },
   "scripts": {
     "start": "electron .",

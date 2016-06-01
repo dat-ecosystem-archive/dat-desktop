@@ -8,16 +8,59 @@ const fs = require('fs');
 const {basename} = require('path');
 const raf = require('random-access-file');
 const replicate = require('./lib/replicate');
+const yo = require('yo-yo');
+const bytewise = require('bytewise');
+const liveStream = require('level-live-stream');
 
 const appPath = `${app.getPath('appData')}/${app.getName()}`;
 const filesPath = `${app.getPath('downloads')}/dat`;
 try { fs.mkdirSync(filesPath) } catch (_) {}
-const keyPath = `${appPath}/key.txt`;
 
-const db = level(`${appPath}/db`);
+const db = level(`${appPath}/db`, { keyEncoding: bytewise });
 const drive = hyperdrive(db);
 
+
+
+
+
+const archives = new Set;
+archives.add('w00t');
+let el;
+
+const render = archives => yo`
+  <div>
+    <h2>Archives</h2>
+    <ul>
+      ${Array.from(archives).map(key => yo`
+        <li>${key}</li>
+      `)}
+    </ul>
+  </div>
+`;
+
+const refresh = () => {
+  el = yo.update(el, render(archives));
+};
+
+liveStream(db, {
+  gt: ['archive', null],
+  lt: ['archive', undefined]
+}).on('data', data => {
+  console.log('data', data);
+  if (data.type == 'del') archives.delete(data.value);
+  else archives.add(data.value);
+  refresh();
+});
+
+el = render(archives);
+document.body.appendChild(el);
+
+
+
+
+/*
 let key;
+const keyPath = `${appPath}/key.txt`;
 try { key = fs.readFileSync(keyPath); } catch (_) {}
 
 const archive = drive.createArchive(key, {
@@ -31,7 +74,9 @@ replicate(archive);
 archive.list({ live: true }).on('data', entry => {
   document.body.innerHTML += entry.name + '<br>';
 });
+*/
 
+/*
 drop(document.body, files => {
   let i = 0;
 
@@ -53,3 +98,4 @@ ipc.on('link', (ev, url) => {
 });
 
 ipc.send('ready');
+*/
