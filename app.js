@@ -12,6 +12,7 @@ const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
 const replicate = require('./lib/replicate');
 const minimist = require('minimist');
+const hyperdriveUI = require('hyperdrive-ui')
 const defaults = require('levelup-defaults');
 
 const argv = minimist(remoteProcess.argv.slice(2));
@@ -61,7 +62,13 @@ const selectArchive = key => ev => {
   refresh();
 };
 
-const render = (archives, selected, files, add, select) => yo`
+const render = (archives, selected, files, add, select) => {
+  var selectedUI = hyperdriveUI(selected, onFileClick);
+  function onFileClick (entry) {
+    console.log('selected');
+  }
+
+  return yo`
   <div>
     <h2>Archives</h2>
     <ul>
@@ -81,13 +88,9 @@ const render = (archives, selected, files, add, select) => yo`
       <input type="submit" value="Add archive">
     </form>
     <h1>${selected.key.toString('hex')}</h1>
-    <ul>
-      ${files.map(file => yo`
-        <li>${file.name}</li>
-      `)}
-    </ul>
-  </div>
-`;
+      ${selectedUI}
+  </div>`;
+};
 
 const refresh = () => {
   const fresh = render(archives, selected, files, addArchive, selectArchive);
@@ -133,4 +136,3 @@ ipc.on('link', (ev, url) => {
 });
 
 ipc.send('ready');
-
