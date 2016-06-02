@@ -10,7 +10,6 @@ const yo = require('yo-yo');
 const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
-const replicate = require('./lib/replicate');
 const minimist = require('minimist');
 const hyperdriveUI = require('hyperdrive-ui')
 const defaults = require('levelup-defaults');
