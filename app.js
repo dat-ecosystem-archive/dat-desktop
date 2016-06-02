@@ -63,11 +63,6 @@ const selectArchive = key => ev => {
 };
 
 const render = (archives, selected, files, add, select) => {
-  var selectedUI = hyperdriveUI(selected, onFileClick);
-  function onFileClick (entry) {
-    console.log('selected');
-  }
-
   return yo`
   <div>
     <h2>Archives</h2>
@@ -88,7 +83,6 @@ const render = (archives, selected, files, add, select) => {
       <input type="submit" value="Add archive">
     </form>
     <h1>${selected.key.toString('hex')}</h1>
-      ${selectedUI}
   </div>`;
 };
 
@@ -96,6 +90,11 @@ const refresh = () => {
   const fresh = render(archives, selected, files, addArchive, selectArchive);
   if (el) el = yo.update(el, fresh);
   else el = fresh;
+  el.appendChild(hyperdriveUI(selected, onFileClick));
+
+  function onFileClick (entry) {
+    console.log('selected');
+  }
 };
 
 liveStream(db, {
