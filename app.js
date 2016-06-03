@@ -12,7 +12,6 @@ const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
 const minimist = require('minimist');
 const hyperdriveUI = require('hyperdrive-ui')
-const defaults = require('levelup-defaults');
 const debounce = require('debounce');
 
 const argv = minimist(remoteProcess.argv.slice(2));
@@ -23,9 +22,7 @@ try { fs.mkdirSync(root) } catch (_) {}
 const db = window.db = level(`${root}/.db`, {
   keyEncoding: bytewise
 });
-// temporary fix for
-// https://github.com/mafintosh/hypercore/pull/22
-const drive = hyperdrive(defaults(db, { keyEncoding: 'utf8' }));
+const drive = hyperdrive(db);
 
 let localKey;
 try { localKey = fs.readFileSync(`${root}/.key.txt`); } catch (_) {}
