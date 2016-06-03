@@ -13,6 +13,7 @@ const createArchive = require('./lib/create-archive');
 const minimist = require('minimist');
 const hyperdriveUI = require('hyperdrive-ui')
 const defaults = require('levelup-defaults');
+const debounce = require('debounce');
 
 const argv = minimist(remoteProcess.argv.slice(2));
 
@@ -85,7 +86,7 @@ const render = (archives, selected, files, add, select) => {
   </div>`;
 };
 
-const refresh = () => {
+const refresh = debounce(() => {
   const fresh = render(archives, selected, files, addArchive, selectArchive);
   if (el) el = yo.update(el, fresh);
   else el = fresh;
@@ -94,7 +95,7 @@ const refresh = () => {
   function onFileClick (entry) {
     console.log('selected');
   }
-};
+}, 16, true);
 
 liveStream(db, {
   gt: ['archive', null],
