@@ -1,3 +1,5 @@
+'use strict';
+
 const level = require('level');
 const hyperdrive = require('hyperdrive');
 const {app, process: remoteProcess} = require('electron').remote;
@@ -11,13 +13,13 @@ const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
 const minimist = require('minimist');
-const hyperdriveUI = require('hyperdrive-ui')
+const hyperdriveUI = require('hyperdrive-ui');
 const debounce = require('debounce');
 
 const argv = minimist(remoteProcess.argv.slice(2));
 
 const root = argv.data || `${app.getPath('downloads')}/dat`;
-try { fs.mkdirSync(root) } catch (_) {}
+try { fs.mkdirSync(root); } catch (_) {}
 
 const db = window.db = level(`${root}/.db`, {
   keyEncoding: bytewise
@@ -30,7 +32,7 @@ try { localKey = fs.readFileSync(`${root}/.key.txt`); } catch (_) {}
 const local = createArchive(drive, localKey);
 fs.writeFileSync(`${root}/.key.txt`, local.key);
 
-const archives = new Map;
+const archives = new Map();
 archives.set(local.key.toString('hex'), local);
 let selected;
 let listStream;
@@ -47,7 +49,7 @@ const addArchive = ev => {
 
 const selectArchive = key => ev => {
   if (ev) ev.preventDefault();
-  if (typeof key != 'string') key = key.toString('hex');
+  if (typeof key !== 'string') key = key.toString('hex');
   if (selected && selected.key.toString('hex') === key) return;
 
   selected = archives.get(key);
@@ -97,7 +99,7 @@ liveStream(db, {
   gt: ['archive', null],
   lt: ['archive', undefined]
 }).on('data', data => {
-  if (data.type == 'del') {
+  if (data.type === 'del') {
     archives.delete(data.value);
   } else {
     const archive = createArchive(drive, data.value);
