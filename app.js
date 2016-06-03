@@ -39,7 +39,9 @@ let el;
 
 const addArchive = ev => {
   ev.preventDefault();
-  const link = ev.target.querySelector('input').value;
+  const input = ev.target.querySelector('input');
+  const link = input.value;
+  input.value = '';
   db.put(['archive', link], link);
 };
 
