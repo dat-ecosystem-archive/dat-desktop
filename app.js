@@ -17,18 +17,14 @@ const hyperdriveUI = require('hyperdrive-ui');
 const debounce = require('debounce');
 
 const argv = minimist(remoteProcess.argv.slice(2));
-
 const root = argv.data || `${app.getPath('downloads')}/dat`;
 try { fs.mkdirSync(root); } catch (_) {}
 
-const db = window.db = level(`${root}/.db`, {
-  keyEncoding: bytewise
-});
+const db = level(`${root}/.db`, { keyEncoding: bytewise });
 const drive = hyperdrive(db);
 
 let localKey;
 try { localKey = fs.readFileSync(`${root}/.key.txt`); } catch (_) {}
-
 const local = createArchive(drive, localKey);
 fs.writeFileSync(`${root}/.key.txt`, local.key);
 
