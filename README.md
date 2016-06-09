@@ -11,6 +11,7 @@ This is a work in progress. Nothing to see here yet!
 
 ```bash
 $ npm install
+$ npm run rebuild
 $ npm start
 ```
 
