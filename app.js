@@ -81,7 +81,7 @@ const render = (archives, selected, files, add, select) => {
     </form>
     <h1>${selected.key.toString('hex')}</h1>
   </div>`;
-  el.appendChild(hyperdriveUI(selected, () => {}));
+  el.appendChild(hyperdriveUI(selected));
   return el;
 };
 

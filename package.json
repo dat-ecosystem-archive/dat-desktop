@@ -13,7 +13,7 @@
     "filereader-stream": "^1.0.0",
     "hyperdrive": "^6.0.0",
     "hyperdrive-archive-swarm": "^1.0.1",
-    "hyperdrive-ui": "^1.1.0",
+    "hyperdrive-ui": "^1.2.3",
     "level": "^1.4.0",
     "level-live-stream": "^1.4.11",
     "minimist": "^1.2.0",
