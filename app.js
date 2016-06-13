@@ -31,8 +31,6 @@ fs.writeFileSync(`${root}/.key.txt`, local.key);
 const archives = new Map();
 archives.set(local.key.toString('hex'), local);
 let selected;
-let listStream;
-let files = [];
 let el;
 
 const addArchive = ev => {
@@ -49,21 +47,14 @@ const selectArchive = key => ev => {
   if (selected && selected.key.toString('hex') === key) return;
 
   selected = archives.get(key);
-  files = [];
-  if (listStream) listStream.destroy();
-  listStream = selected.list({ live: true })
-  .on('data', file => {
-    files.push(file);
-    refresh();
-  });
   refresh();
 };
 
-const refresh = debounce(() => {
-  const fresh = render(archives, selected, local, files, addArchive, selectArchive);
+const refresh = () => {
+  const fresh = render(archives, selected, local, addArchive, selectArchive);
   if (el) el = yo.update(el, fresh);
   else el = fresh;
-}, 16, true);
+};
 
 liveStream(db, {
   gt: ['archive', null],
