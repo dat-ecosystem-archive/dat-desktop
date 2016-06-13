@@ -12,8 +12,8 @@ const yo = require('yo-yo');
 const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
+const render = require('./lib/render');
 const minimist = require('minimist');
-const hyperdriveUI = require('hyperdrive-ui');
 const debounce = require('debounce');
 
 const argv = minimist(remoteProcess.argv.slice(2));
@@ -59,34 +59,8 @@ const selectArchive = key => ev => {
   refresh();
 };
 
-const render = (archives, selected, files, add, select) => {
-  const el = yo`
-  <div>
-    <h2>Archives</h2>
-    <ul>
-      ${Array.from(archives.keys()).map(key => yo`
-        <li>
-          <a onclick=${select(key)} href=#>
-            ${key}
-          </a>
-          ${key === local.key.toString('hex')
-            ? '(your dat)'
-            : ''}
-        </li>
-      `)}
-    </ul>
-    <form onsubmit=${add}>
-      <input type="text" placeholder="Link">
-      <input type="submit" value="Add archive">
-    </form>
-    <h1>${selected.key.toString('hex')}</h1>
-  </div>`;
-  el.appendChild(hyperdriveUI(selected));
-  return el;
-};
-
 const refresh = debounce(() => {
-  const fresh = render(archives, selected, files, addArchive, selectArchive);
+  const fresh = render(archives, selected, local, files, addArchive, selectArchive);
   if (el) el = yo.update(el, fresh);
   else el = fresh;
 }, 16, true);
