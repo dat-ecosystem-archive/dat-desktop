@@ -14,7 +14,6 @@ const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
 const render = require('./lib/render');
 const minimist = require('minimist');
-const debounce = require('debounce');
 
 const argv = minimist(remoteProcess.argv.slice(2));
 const root = argv.data || `${app.getPath('downloads')}/dat`;
