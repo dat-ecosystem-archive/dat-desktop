@@ -14,6 +14,7 @@ const liveStream = require('level-live-stream');
 const createArchive = require('./lib/create-archive');
 const render = require('./lib/render');
 const minimist = require('minimist');
+const {decode} = require('dat-encoding');
 
 const argv = minimist(remoteProcess.argv.slice(2));
 const root = argv.data || `${app.getPath('downloads')}/dat`;
@@ -97,7 +98,7 @@ ipc.on('file', (ev, path) => {
 });
 
 ipc.on('link', (ev, url) => {
-  const link = url.slice(6);
+  const link = decode(url);
   db.put(['archive', link], link);
 });
 
