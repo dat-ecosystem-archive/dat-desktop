@@ -2,19 +2,21 @@
 
 const level = require('level');
 const hyperdrive = require('hyperdrive');
-const {app, process: remoteProcess} = require('electron').remote;
+const {app, process: remoteProcess, dialog} = require('electron').remote;
 const {ipcRenderer: ipc} = require('electron');
-const drop = require('drag-drop');
-const fileReader = require('filereader-stream');
 const fs = require('fs');
-const {basename} = require('path');
 const yo = require('yo-yo');
 const bytewise = require('bytewise');
 const liveStream = require('level-live-stream');
-const createArchive = require('./lib/create-archive');
 const render = require('./lib/render');
 const minimist = require('minimist');
-const {decode} = require('dat-encoding');
+const exec = require('child_process').exec;
+const raf = require('random-access-file');
+const swarm = require('hyperdrive-archive-swarm');
+const encoding = require('dat-encoding');
+const hyperImport = require('hyperdrive-import-files');
+const rmrf = require('rimraf');
+const assert = require('assert');
 
 const argv = minimist(remoteProcess.argv.slice(2));
 const root = argv.data || `${app.getPath('downloads')}/dat`;
@@ -23,44 +25,51 @@ try { fs.mkdirSync(root); } catch (_) {}
 const db = level(`${root}/.db`, { keyEncoding: bytewise });
 const drive = hyperdrive(db);
 
-let localKey;
-try { localKey = fs.readFileSync(`${root}/.key.txt`); } catch (_) {}
-const local = createArchive(drive, localKey);
-fs.writeFileSync(`${root}/.key.txt`, local.key);
-
 const archives = new Map();
-archives.set(local.key.toString('hex'), local);
-let selected;
-let listStream;
-let entries = [];
 let el;
 
-const addArchive = ev => {
-  ev.preventDefault();
-  const input = ev.target.querySelector('input');
-  const link = input.value;
-  input.value = '';
-  db.put(['archive', link], link);
-};
+const createArchive = (key) => {
+  const archive = drive.createArchive(key, {
+    live: true,
+    file: name => raf(`${archive.path}/${name}`)
+  })
+  archive.path = `${root}/${encoding.encode(archive.key)}`
+  return archive
+}
 
-const selectArchive = key => ev => {
-  if (ev) ev.preventDefault();
-  if (typeof key !== 'string') key = key.toString('hex');
-  if (selected && selected.key.toString('hex') === key) return;
+function refresh (err) {
+  if (err) throw err;
+  const fresh = render({
+    dats: archives,
+    open: dat => {
+      // TODO cross platform
+      exec(`open ${root}/${encoding.encode(dat.key)}`, err => {
+        if (err) throw err
+      })
+    },
+    share: () => console.error('TODO'),
+    delete: dat => {
+      db.del(['archive', encoding.encode(dat.key)], err => {
+        if (err) throw err;
+      });
+    },
+    create: () => {
+      const files = dialog.showOpenDialog({
+        properties: ['openFile', 'openDirectory', 'multiSelections']
+      });
+      if (!files.length) return;
+      const archive = createArchive();
+      hyperImport(archive, files, err => {
+        if (err) throw err;
+        archive.finalize(err => {
+          if (err) throw err;
 
-  selected = archives.get(key);
-  if (listStream) listStream.destroy();
-  entries = [];
-  listStream = selected.list({ live: true });
-  listStream.on('data', entry => {
-    entries.push(entry);
-    refresh();
+          const link = encoding.encode(archive.key);
+          db.put(['archive', link], link);
+        });
+      });
+    }
   });
-  refresh();
-};
-
-const refresh = () => {
-  const fresh = render(archives, selected, entries, local, addArchive, selectArchive);
   if (el) el = yo.update(el, fresh);
   else el = fresh;
 };
@@ -70,35 +79,35 @@ liveStream(db, {
   lt: ['archive', undefined]
 }).on('data', data => {
   if (data.type === 'del') {
-    archives.delete(data.value);
+    // TODO delete archive from hyperdrive
+    const key = data.key[1];
+    const dat = archives.get(key);
+    archives.delete(key);
+    refresh();
+    assert(dat.path.indexOf(root) > -1);
+    rmrf(dat.path, err => {
+      if (err) throw err;
+    });
   } else {
-    const archive = createArchive(drive, data.value);
-    archives.set(archive.key.toString('hex'), archive);
+    const key = encoding.decode(data.value);
+    const archive = createArchive(key)
+    archive.open(refresh);
+    archive.swarm = swarm(archive);
+    archive.swarm.on('connection', peer => {
+      refresh();
+      peer.on('close', () => refresh());
+    });
+
+    archives.set(encoding.encode(archive.key), archive);
   }
   refresh();
 });
 
-selectArchive(local.key)();
+refresh();
 document.body.appendChild(el);
 
-drop(document.body, files => {
-  let i = 0;
-
-  (function loop () {
-    if (i === files.length) return;
-
-    const file = files[i++];
-    const stream = fileReader(file);
-    stream.pipe(local.createFileWriteStream(file.fullPath)).on('finish', loop);
-  })();
-});
-
-ipc.on('file', (ev, path) => {
-  fs.createReadStream(path).pipe(local.createFileWriteStream(basename(path)));
-});
-
 ipc.on('link', (ev, url) => {
-  const link = decode(url);
+  const link = encoding.decode(url);
   db.put(['archive', link], link);
 });
 
