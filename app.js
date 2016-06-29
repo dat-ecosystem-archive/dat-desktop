@@ -32,10 +32,10 @@ const createArchive = (key) => {
   const archive = drive.createArchive(key, {
     live: true,
     file: name => raf(`${archive.path}/${name}`)
-  })
-  archive.path = `${root}/${encoding.encode(archive.key)}`
-  return archive
-}
+  });
+  archive.path = `${root}/${encoding.encode(archive.key)}`;
+  return archive;
+};
 
 function refresh (err) {
   if (err) throw err;
@@ -44,8 +44,8 @@ function refresh (err) {
     open: dat => {
       // TODO cross platform
       exec(`open ${root}/${encoding.encode(dat.key)}`, err => {
-        if (err) throw err
-      })
+        if (err) throw err;
+      });
     },
     share: () => console.error('TODO'),
     delete: dat => {
@@ -72,7 +72,7 @@ function refresh (err) {
   });
   if (el) el = yo.update(el, fresh);
   else el = fresh;
-};
+}
 
 liveStream(db, {
   gt: ['archive', null],
@@ -90,7 +90,7 @@ liveStream(db, {
     });
   } else {
     const key = encoding.decode(data.value);
-    const archive = createArchive(key)
+    const archive = createArchive(key);
     archive.open(refresh);
     archive.swarm = swarm(archive);
     archive.swarm.on('connection', peer => {
