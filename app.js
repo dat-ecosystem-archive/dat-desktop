@@ -47,7 +47,7 @@ function refresh (err) {
         if (err) throw err;
       });
     },
-    share: () => console.error('TODO'),
+    share: dat => console.log(`dat://${encoding.encode(dat.key)}`),
     delete: dat => {
       db.del(['archive', encoding.encode(dat.key)], err => {
         if (err) throw err;
