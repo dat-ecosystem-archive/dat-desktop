@@ -1,7 +1,9 @@
 
 # dat-desktop
 
-This is a work in progress. Nothing to see here yet!
+WIP desktop app for [dat](https://github.com/maxogden/dat).
+
+![](screenshot.png)
 
 [![Build Status](https://travis-ci.org/juliangruber/dat-desktop.svg?branch=master)](https://travis-ci.org/juliangruber/dat-desktop)
 
