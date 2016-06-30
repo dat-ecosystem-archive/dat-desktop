@@ -100,6 +100,7 @@ liveStream(db, {
       refresh();
       peer.on('close', () => refresh());
     });
+    archive.on('downloaded', () => refresh());
 
     archives.set(encoding.encode(archive.key), archive);
   }
