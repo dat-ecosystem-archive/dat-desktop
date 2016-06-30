@@ -83,6 +83,7 @@ liveStream(db, {
 }).on('data', data => {
   if (data.type === 'del') {
     // TODO delete archive from hyperdrive
+    // TODO close swarm
     const key = data.key[1];
     const dat = archives.get(key);
     archives.delete(key);
