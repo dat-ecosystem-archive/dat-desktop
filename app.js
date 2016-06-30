@@ -68,6 +68,9 @@ function refresh (err) {
           db.put(['archive', link], link);
         });
       });
+    },
+    download: link => {
+      db.put(['archive', link], link);
     }
   });
   if (el) el = yo.update(el, fresh);
