@@ -439,6 +439,21 @@ body {
   text-transform: uppercase;
   letter-spacing: .025em; }
 
+.lead {
+  font-size: 1.5rem;
+  line-height: 1.333;
+  margin-bottom: 1.5rem; }
+
+.blockquote {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 4px solid #D3D7DB; }
+  .blockquote blockquote {
+    margin: 0; }
+  .blockquote figcaption {
+    font-size: .875rem;
+    color: #7C8792; }
+
 a {
   color: #35B44F; }
 
@@ -539,24 +554,58 @@ a[disabled],
   padding: .75rem 1.5rem; }
 
 .progress {
-  width: 100%;
+  overflow: hidden;
+  padding-top: .5rem;
+  padding-bottom: .5rem; }
+
+.progress__bar {
   height: 0.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  width: calc(100% - 3rem);
+  float: left;
+  overflow: hidden;
   background-color: #D3D7DB;
   border-radius: 2px; }
 
-.progress__bar {
+.progress__line {
   width: 0%;
   height: 0.5rem;
   background-color: #2980B9;
   border-radius: 2px; }
 
-.progress__bar--complete {
+.progress__line--loading {
+  overflow: hidden;
+  position: relative;
+  height: 0.5rem; }
+
+@keyframes move-bg {
+  0% {
+    background-position: 28px 0; }
+  100% {
+    background-position: 0 0; } }
+  .progress__line--loading:before {
+    content: '';
+    width: 100%;
+    height: 0.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(255, 255, 255, 0.1) 5px, rgba(255, 255, 255, 0.1) 10px);
+    background-size: 28px 0.5rem;
+    animation: move-bg .75s linear infinite; }
+
+.progress__line--complete {
   background-color: #35B44F; }
 
-.progress__bar--paused {
+.progress__line--paused {
   background-color: #7C8792; }
+
+.progress__counter {
+  float: right;
+  min-width: 3rem;
+  margin-top: -.4rem;
+  text-align: right;
+  font-size: .875rem;
+  color: #7C8792; }
 
 /* Breakpoint definitions: */
 /**
@@ -565,14 +614,17 @@ a[disabled],
  *
  * Sample mixin usage in your .scss files
  * (assumes you've @import'ed this file):
+ *
  * .foo {
  *   background-color: red;
- *
- *   @include breakpoint (xs) { // up to max width 320px
- *     background-color: green;
+ *   @include breakpoint (max-md1) { // up until a width of 640px
+ *    background-color: beige;
  *   }
- *   @include breakpoint (vxs) { // up to max height 320px
- *     background-color: blue;
+ *   @include breakpoint (md2) { // starting from a width 768px
+ *    background-color: green;
+ *   }
+ *   @include breakpoint (vmd2) { // starting from a height of 768px
+ *    background-color: blue;
  *   }
  * }
  *
@@ -586,7 +638,7 @@ input,
 select,
 textarea {
   transition-property: background-color, color;
-  transition-duration: 0.015s;
+  transition-duration: 0.05s;
   transition-timing-function: ease-out; }
 
 #hyperdrive-ui {
@@ -709,12 +761,15 @@ textarea {
 
 html {
   font-size: 18px; }
-  @media (max-width: 1024px) {
+  @media (min-width: 1024px) {
     html {
       font-size: 16px; } }
-  @media (max-width: 640px) {
+  @media (min-width: 640px) {
     html {
       font-size: 14px; } }
+
+body {
+  min-width: 540px; }
 
 .dat-header {
   height: 4rem;
@@ -766,15 +821,18 @@ html {
 
 .dat-list {
   width: 100%; }
+  .dat-list th:not(:last-child), .dat-list td:not(:last-child) {
+    padding-right: 1rem; }
 
-.dat-list__header th {
-  height: 4rem;
-  text-align: left;
-  font-size: .8125rem;
-  font-weight: normal;
-  color: #919BA4; }
-  .dat-list__header th:not(:first-child) {
-    border-bottom: 1px solid #D3D7DB; }
+.dat-list__header {
+  text-align: left; }
+  .dat-list__header th {
+    height: 4rem;
+    font-size: .8125rem;
+    font-weight: normal;
+    color: #919BA4; }
+    .dat-list__header th:not(:first-child) {
+      border-bottom: 1px solid #D3D7DB; }
 
 .dat-list__item td {
   height: 4rem; }
@@ -817,3 +875,6 @@ html {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
+
+.cell-right {
+  text-align: right; }

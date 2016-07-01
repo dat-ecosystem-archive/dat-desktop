@@ -14,6 +14,9 @@ html {
   }
 }
 
+body {
+  min-width: 540px;
+}
 
 // dat-header
 
@@ -87,12 +90,17 @@ html {
 
 .dat-list {
   width: 100%;
+  th, td {
+    &:not(:last-child) {
+      padding-right: 1rem;
+    }
+  }
 }
 
 .dat-list__header {
+  text-align: left;
   th {
     height: 4rem;
-    text-align: left;
     font-size: .8125rem;
     font-weight: normal;
     color: $color-neutral--50;
@@ -160,4 +168,9 @@ html {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// use this for table columns that contain numbers or other content that should be right aligned
+.cell-right {
+  text-align: right;
 }
