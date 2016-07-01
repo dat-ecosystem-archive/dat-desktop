@@ -1,3 +1,1 @@
-body, html {
-  height: 100%;
-}
+@import './node_modules/dat-design/public/css/base.css';
