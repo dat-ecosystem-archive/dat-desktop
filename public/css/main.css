@@ -772,3 +772,27 @@ textarea {
   .dat-list__item td:first-child {
     width: 6.5rem;
     padding-left: 2.625rem; }
+
+.dat-hexagon {
+  position: relative;
+  width: 20px;
+  height: 11.55px;
+  margin: 5.77px 0;
+  text-align: center;
+  background-color: #24943A;
+  color: #FFFFFF;
+  line-height: .5; }
+  .dat-hexagon:before, .dat-hexagon:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent; }
+  .dat-hexagon:before {
+    bottom: 100%;
+    border-bottom: 5.77px solid #24943A; }
+  .dat-hexagon:after {
+    top: 100%;
+    width: 0;
+    border-top: 5.77px solid #24943A; }
