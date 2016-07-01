@@ -707,6 +707,15 @@ textarea {
     background-color: #f4f5f6;
     min-height: 1.42857143; }
 
+html {
+  font-size: 18px; }
+  @media (max-width: 1024px) {
+    html {
+      font-size: 16px; } }
+  @media (max-width: 640px) {
+    html {
+      font-size: 14px; } }
+
 .dat-header {
   height: 4rem;
   padding-right: 1.5rem;
@@ -773,6 +782,12 @@ textarea {
     width: 6.5rem;
     padding-left: 2.625rem; }
 
+.dat-list__item td:not(:nth-child(2)) {
+  font-size: .8125rem; }
+
+.dat-list__item:hover td {
+  background-color: #F6F7F8; }
+
 .dat-hexagon {
   position: relative;
   width: 20px;
@@ -781,7 +796,7 @@ textarea {
   text-align: center;
   background-color: #24943A;
   color: #FFFFFF;
-  line-height: .5; }
+  line-height: .8; }
   .dat-hexagon:before, .dat-hexagon:after {
     content: "";
     position: absolute;
@@ -796,3 +811,9 @@ textarea {
     top: 100%;
     width: 0;
     border-top: 5.77px solid #24943A; }
+
+.cell-truncate {
+  width: 25vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }

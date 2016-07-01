@@ -4,6 +4,17 @@
 // 16px = 1rem
 // 24px = 1.5rem
 
+html {
+  font-size: 18px;
+  @include breakpoint (lg) { // reverse with next version of dat-design!
+    font-size: 16px;
+  }
+  @include breakpoint (md1) { // reverse with next version of dat-design!
+    font-size: 14px;
+  }
+}
+
+
 // dat-header
 
 .dat-header {
@@ -99,6 +110,14 @@
       padding-left: 2.625rem;
     }
   }
+  td:not(:nth-child(2)) {
+    font-size: .8125rem;
+  }
+  &:hover {
+    td {
+      background-color: $color-neutral--04;
+    }
+  }
 }
 
 
@@ -112,7 +131,7 @@
   text-align: center;
   background-color: $color-green--hover;
   color: $color-white;
-  line-height: .5;
+  line-height: .8;
   &:before,
   &:after {
     content: "";
@@ -133,4 +152,12 @@
     width: 0;
     border-top: 5.77px solid $color-green--hover;
   }
+}
+
+// truncate dat link in overview
+.cell-truncate {
+  width: 25vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
