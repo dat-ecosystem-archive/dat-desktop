@@ -1,7 +1,102 @@
 @import './node_modules/dat-design/scss/base.scss';
 @import 'hyperdrive-ui.scss';
 
-body {
-  margin: 0;
-//  background-color: $color-green !important; // uncomment and reload app to visually test if sass is working
+// 16px = 1rem
+// 24px = 1.5rem
+
+// dat-header
+
+.dat-header {
+  height: 4rem;
+  padding-right: 1.5rem;
+  padding-left: 6.5rem;
+  background-color: $color-green--hover;
+  color: $color-white;
+}
+
+.dat-header__title {
+  float: left;
+  font-size: 1.25rem;
+  padding-top: 1.15rem;
+}
+
+.dat-header__actions {
+  float: right;
+}
+
+// dat-button
+.dat-button {
+  float: left;
+  padding-top: 1.15rem;
+  margin-right: 3rem;
+  button {
+    &:hover, &:focus, &:active {
+      color: $color-neutral--04;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
+
+// dat-import
+
+.dat-import {
+  float: left;
+  position: relative;
+  padding-top: .5rem;
+}
+
+// we need an extra element + wrapper div for the icon, as we can't have pseude-elements on input elements
+.dat-import--icon {
+  position: absolute;
+  top: calc(2rem - (.625rem / 2));
+  left: 1rem;
+  pointer-events: none;
+  img {
+    display: block;
+    width: 1.25rem;
+    height: .625rem;
+  }
+}
+
+.dat-import--input {
+  height: 3rem;
+  padding-right: 1rem;
+  padding-left: 3rem;
+  border-radius: 2px;
+  border: none;
+  &:hover, &:focus, &:active {
+    outline: none;
+  }
+}
+
+
+
+// dat-list
+
+.dat-list {
+  width: 100%;
+}
+
+.dat-list__header {
+  th {
+    height: 4rem;
+    text-align: left;
+    font-size: .8125rem;
+    font-weight: normal;
+    color: $color-neutral--50;
+    &:not(:first-child) {
+      border-bottom: 1px solid $color-neutral--20;
+    }
+  }
+}
+
+.dat-list__item {
+  td {
+    height: 4rem;
+    &:first-child {
+      width: 6.5rem;
+      padding-left: 2.625rem;
+    }
+  }
 }
