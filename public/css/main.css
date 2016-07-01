@@ -760,13 +760,13 @@ textarea {
     min-height: 1.42857143; }
 
 html {
-  font-size: 18px; }
-  @media (min-width: 1024px) {
-    html {
-      font-size: 16px; } }
+  font-size: 14px; }
   @media (min-width: 640px) {
     html {
-      font-size: 14px; } }
+      font-size: 16px; } }
+  @media (min-width: 1024px) {
+    html {
+      font-size: 18px; } }
 
 body {
   min-width: 540px; }

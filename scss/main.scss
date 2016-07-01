@@ -5,12 +5,12 @@
 // 24px = 1.5rem
 
 html {
-  font-size: 18px;
-  @include breakpoint (lg) { // reverse with next version of dat-design!
+  font-size: 14px;
+  @include breakpoint (md1) {
     font-size: 16px;
   }
-  @include breakpoint (md1) { // reverse with next version of dat-design!
-    font-size: 14px;
+  @include breakpoint (lg) {
+    font-size: 18px;
   }
 }
 
