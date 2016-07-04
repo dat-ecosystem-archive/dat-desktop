@@ -174,3 +174,9 @@ body {
 .cell-right {
   text-align: right;
 }
+
+
+// makin sure the progress bar is not to tiny
+.progress {
+  min-width: 10rem;
+}

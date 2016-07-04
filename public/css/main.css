@@ -878,3 +878,6 @@ body {
 
 .cell-right {
   text-align: right; }
+
+.progress {
+  min-width: 10rem; }
