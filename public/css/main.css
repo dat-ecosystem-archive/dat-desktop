@@ -1,13 +1,3 @@
-@charset "UTF-8";
-/**
- * Use awesome syntax of `node-sass-magic-importer` to import scss modules
- * "@import ~xxx" resolves to a node module named `xxx`
- * If there's no file path specified after module name, it resolves to the file
- * defined by the imported package.json's `style` property
- *
- * More magic importer features:
- * https://github.com/maoberlehner/node-sass-magic-importer
- */
 /*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Change the default font family in all browsers (opinionated).
@@ -449,6 +439,21 @@ body {
   text-transform: uppercase;
   letter-spacing: .025em; }
 
+.lead {
+  font-size: 1.5rem;
+  line-height: 1.333;
+  margin-bottom: 1.5rem; }
+
+.blockquote {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 4px solid #D3D7DB; }
+  .blockquote blockquote {
+    margin: 0; }
+  .blockquote figcaption {
+    font-size: .875rem;
+    color: #7C8792; }
+
 a {
   color: #35B44F; }
 
@@ -458,30 +463,26 @@ a:focus {
 
 .link--info {
   color: #2980B9; }
-
-.link--info:hover, .link--info:focus {
-  color: #1B679A; }
+  .link--info:hover, .link--info:focus {
+    color: #1B679A; }
 
 .link--warning {
   color: #F0C30E; }
-
-.link--warning:hover, .link--warning:focus {
-  color: #C9A001; }
+  .link--warning:hover, .link--warning:focus {
+    color: #C9A001; }
 
 .link--danger {
   color: #D8524E; }
-
-.link--danger:hover, .link--danger:focus {
-  color: #B33C38; }
+  .link--danger:hover, .link--danger:focus {
+    color: #B33C38; }
 
 a[disabled],
 .link--disabled {
   color: #A7AFB6; }
-
-a[disabled]:hover, a[disabled]:focus,
-.link--disabled:hover,
-.link--disabled:focus {
-  color: #A7AFB6; }
+  a[disabled]:hover, a[disabled]:focus,
+  .link--disabled:hover,
+  .link--disabled:focus {
+    color: #A7AFB6; }
 
 .btn {
   display: inline-block;
@@ -498,53 +499,47 @@ a[disabled]:hover, a[disabled]:focus,
   line-height: 1.5;
   vertical-align: middle;
   letter-spacing: .02em; }
-
-.btn:hover, .btn:focus {
-  background-color: #7C8792;
-  color: #FFFFFF;
-  text-decoration: none;
-  cursor: pointer; }
+  .btn:hover, .btn:focus {
+    background-color: #7C8792;
+    color: #FFFFFF;
+    text-decoration: none;
+    cursor: pointer; }
 
 .btn--green {
   background-color: #35B44F; }
-
-.btn--green:hover, .btn--green:focus {
-  color: #FFFFFF;
-  background-color: #24943A; }
+  .btn--green:hover, .btn--green:focus {
+    color: #FFFFFF;
+    background-color: #24943A; }
 
 .btn--info {
   background-color: #2980B9; }
-
-.btn--info:hover, .btn--info:focus {
-  color: #FFFFFF;
-  background-color: #1B679A; }
+  .btn--info:hover, .btn--info:focus {
+    color: #FFFFFF;
+    background-color: #1B679A; }
 
 .btn--warning {
   background-color: #F0C30E; }
-
-.btn--warning:hover, .btn--warning:focus {
-  color: #FFFFFF;
-  background-color: #C9A001; }
+  .btn--warning:hover, .btn--warning:focus {
+    color: #FFFFFF;
+    background-color: #C9A001; }
 
 .btn--danger {
   background-color: #D8524E; }
-
-.btn--danger:hover, .btn--danger:focus {
-  color: #FFFFFF;
-  background-color: #B33C38; }
+  .btn--danger:hover, .btn--danger:focus {
+    color: #FFFFFF;
+    background-color: #B33C38; }
 
 .btn[disabled],
 .btn--disabled {
   background-color: #E9EBEC;
   color: #A7AFB6;
   cursor: default; }
-
-.btn[disabled]:hover, .btn[disabled]:focus,
-.btn--disabled:hover,
-.btn--disabled:focus {
-  background-color: #E9EBEC;
-  color: #A7AFB6;
-  cursor: default; }
+  .btn[disabled]:hover, .btn[disabled]:focus,
+  .btn--disabled:hover,
+  .btn--disabled:focus {
+    background-color: #E9EBEC;
+    color: #A7AFB6;
+    cursor: default; }
 
 .btn--small {
   font-size: .75rem;
@@ -559,24 +554,58 @@ a[disabled]:hover, a[disabled]:focus,
   padding: .75rem 1.5rem; }
 
 .progress {
-  width: 100%;
+  overflow: hidden;
+  padding-top: .5rem;
+  padding-bottom: .5rem; }
+
+.progress__bar {
   height: 0.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  width: calc(100% - 3rem);
+  float: left;
+  overflow: hidden;
   background-color: #D3D7DB;
   border-radius: 2px; }
 
-.progress__bar {
+.progress__line {
   width: 0%;
   height: 0.5rem;
   background-color: #2980B9;
   border-radius: 2px; }
 
-.progress__bar--complete {
+.progress__line--loading {
+  overflow: hidden;
+  position: relative;
+  height: 0.5rem; }
+
+@keyframes move-bg {
+  0% {
+    background-position: 28px 0; }
+  100% {
+    background-position: 0 0; } }
+  .progress__line--loading:before {
+    content: '';
+    width: 100%;
+    height: 0.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(255, 255, 255, 0.1) 5px, rgba(255, 255, 255, 0.1) 10px);
+    background-size: 28px 0.5rem;
+    animation: move-bg .75s linear infinite; }
+
+.progress__line--complete {
   background-color: #35B44F; }
 
-.progress__bar--paused {
+.progress__line--paused {
   background-color: #7C8792; }
+
+.progress__counter {
+  float: right;
+  min-width: 3rem;
+  margin-top: -.4rem;
+  text-align: right;
+  font-size: .875rem;
+  color: #7C8792; }
 
 /* Breakpoint definitions: */
 /**
@@ -585,14 +614,17 @@ a[disabled]:hover, a[disabled]:focus,
  *
  * Sample mixin usage in your .scss files
  * (assumes you've @import'ed this file):
+ *
  * .foo {
  *   background-color: red;
- *
- *   @include breakpoint (xs) { // up to max width 320px
- *     background-color: green;
+ *   @include breakpoint (max-md1) { // up until a width of 640px
+ *    background-color: beige;
  *   }
- *   @include breakpoint (vxs) { // up to max height 320px
- *     background-color: blue;
+ *   @include breakpoint (md2) { // starting from a width 768px
+ *    background-color: green;
+ *   }
+ *   @include breakpoint (vmd2) { // starting from a height of 768px
+ *    background-color: blue;
  *   }
  * }
  *
@@ -606,245 +638,128 @@ input,
 select,
 textarea {
   transition-property: background-color, color;
-  transition-duration: 0.015s;
+  transition-duration: 0.05s;
   transition-timing-function: ease-out; }
 
-/* Breakpoint definitions: */
-/**
- * Responsive Mixins ----------------------------
- * https://medium.com/developing-with-sass/creating-a-dead-simple-sass-mixin-to-handle-responsive-breakpoints-889927b37740
- *
- * Sample mixin usage in your .scss files
- * (assumes you've @import'ed this file):
- * .foo {
- *   background-color: red;
- *
- *   @include breakpoint (xs) { // up to max width 320px
- *     background-color: green;
- *   }
- *   @include breakpoint (vxs) { // up to max height 320px
- *     background-color: blue;
- *   }
- * }
- *
- */
+html {
+  font-size: 14px; }
+  @media (min-width: 640px) {
+    html {
+      font-size: 16px; } }
+  @media (min-width: 1024px) {
+    html {
+      font-size: 18px; } }
+
 body {
-  min-width: 500px; }
-  @media (max-width: 320px) {
-    body {
-      background: red; } }
-  @media (max-width: 480px) {
-    body {
-      background: yellow; } }
+  min-width: 540px; }
 
-a, button, input, .link {
-  transition-property: background-color, color;
-  transition-duration: .015s;
-  transition-timing-function: ease-out;
-  cursor: pointer; }
+.dat-header {
+  height: 4rem;
+  padding-right: 1.5rem;
+  padding-left: 6.5rem;
+  background-color: #24943A;
+  color: #FFFFFF; }
 
-a,
-.link {
-  color: #35b44f; }
-
-a:hover, a:focus,
-.link:hover, .link:focus {
-  color: #A9CE7F;
-  outline: none; }
-
-.link {
-  color: #959ba4;
-  border: none;
-  background: none;
-  padding: .2rem 1rem .2rem 0; }
-
-.link:before {
-  content: '« '; }
-
-/* demo page layout */
-.site-header {
-  background-color: #fdfdfd;
-  border-bottom: 1px solid #f0f0f0;
-  height: 65px; }
-
-.site-header h1 {
-  margin: 0;
-  float: left; }
-
-.site-header #share-link {
-  display: block;
+.dat-header__title {
   float: left;
-  width: 40%;
-  margin-left: 1rem;
-  padding: 6px 14px;
-  font-size: 18px; }
+  font-size: 1.25rem;
+  padding-top: 1.15rem; }
 
-.site-header #share-link:hover {
-  background-color: #f7f7f7; }
-
-.site-header button {
+.dat-header__actions {
   float: right; }
 
-.site-main {
-  padding-top: 1.5rem; }
+.dat-button {
+  float: left;
+  padding-top: 1.15rem;
+  margin-right: 3rem; }
+  .dat-button button:hover, .dat-button button:focus, .dat-button button:active {
+    color: #F6F7F8;
+    outline: none;
+    cursor: pointer; }
 
-.container {
-  margin: 0 auto;
-  padding: .75rem 2rem;
-  max-width: 1170px; }
+.dat-import {
+  float: left;
+  position: relative;
+  padding-top: .5rem; }
 
-.upload-file {
-  width: 100%;
-  min-height: 3em;
-  margin: 1rem auto;
-  padding: 1rem;
-  border: 3px dashed #959ba4;
-  border-radius: 1em;
-  color: #959ba4;
-  text-align: center; }
+.dat-import--icon {
+  position: absolute;
+  top: calc(2rem - (.625rem / 2));
+  left: 1rem;
+  pointer-events: none; }
+  .dat-import--icon img {
+    display: block;
+    width: 1.25rem;
+    height: .625rem; }
 
-#peers {
-  line-height: 37px;
-  padding: 0;
-  margin: 0 0 0 20px;
-  display: inline-block; }
+.dat-import--input {
+  height: 3rem;
+  padding-right: 1rem;
+  padding-left: 3rem;
+  border-radius: 2px;
+  border: none; }
+  .dat-import--input:hover, .dat-import--input:focus, .dat-import--input:active {
+    outline: none; }
 
-#speed {
-  display: none;
-  float: right;
-  line-height: 37px;
-  margin: 0 10px 0 0px;
-  padding: 0;
-  width: 320px; }
+.dat-list {
+  width: 100%; }
+  .dat-list th:not(:last-child), .dat-list td:not(:last-child) {
+    padding-right: 1rem; }
 
-#speed span span {
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 37px;
-  margin-left: 10px; }
+.dat-list__header {
+  text-align: left; }
+  .dat-list__header th {
+    height: 4rem;
+    font-size: .8125rem;
+    font-weight: normal;
+    color: #919BA4; }
+    .dat-list__header th:not(:first-child) {
+      border-bottom: 1px solid #D3D7DB; }
 
-.breadcrumbs {
-  margin-bottom: 1rem;
-  min-height: 2em; }
+.dat-list__item td {
+  height: 4rem; }
+  .dat-list__item td:first-child {
+    width: 6.5rem;
+    padding-left: 2.625rem; }
 
-.button {
-  display: inline-block;
-  padding: 8px 14px;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
+.dat-list__item td:not(:nth-child(2)) {
+  font-size: .8125rem; }
+
+.dat-list__item:hover td {
+  background-color: #F6F7F8; }
+
+.dat-hexagon {
+  position: relative;
+  width: 20px;
+  height: 11.55px;
+  margin: 5.77px 0;
+  text-align: center;
+  background-color: #24943A;
   color: #FFFFFF;
-  background-color: #35b44f;
-  border-radius: 5px;
-  cursor: pointer; }
+  line-height: .8; }
+  .dat-hexagon:before, .dat-hexagon:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent; }
+  .dat-hexagon:before {
+    bottom: 100%;
+    border-bottom: 5.77px solid #24943A; }
+  .dat-hexagon:after {
+    top: 100%;
+    width: 0;
+    border-top: 5.77px solid #24943A; }
 
-#help.button {
-  background-color: #FFFFFF;
-  border: 1px solid #35b44f;
-  color: #35b44f;
-  border-radius: 10px;
-  margin-left: 10px; }
+.cell-truncate {
+  width: 25vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 
-.button:hover,
-.button:focus {
-  background-color: #A9CE7F;
-  outline: none; }
-
-.status-bar {
-  padding: .5rem;
-  padding-top: 1rem;
-  background-color: #f5fbf6;
-  text-align: center; }
-
-#display {
-  margin-bottom: 50px; }
-
-#display img,
-#display video {
-  padding: 10px;
-  max-width: 95%;
-  max-height: 95%; }
-
-#display iframe {
-  width: 100%;
-  height: 70%; }
-
-#get_link {
-  z-index: 10;
-  position: absolute; }
-
-#yo-fs {
-  color: #2A3749; }
-
-ul {
-  margin: 0;
-  padding: 0; }
-
-#yo-fs h1 a {
-  margin: 5px; }
-
-#yo-fs a {
-  color: #2A3749;
-  opacity: .7;
-  text-decoration: none; }
-
-#yo-fs a:hover {
-  opacity: 1; }
-
-#yo-fs {
-  padding: 0; }
-
-#yo-fs li {
-  list-style-type: none; }
-
-#yo-fs a {
-  display: block;
-  padding: 10px;
-  font-size: 14px;
-  border-bottom: 1px solid #f0f0f0;
-  background-size: 15px;
-  background-repeat: no-repeat;
-  background-position: 10px 11px;
-  padding-left: 35px; }
-
-#yo-fs a:hover {
-  background-color: #f5fbf6; }
-
-#yo-fs .file a {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABQZJREFUeJzt3M9rnEUcx/HPzPNskk3TTTZNVFQKIkIOEnr3pBQv2osiuKWpJ1Ei4kF7EPwnPIiIt5jmLPQkpV1wS089ay6ihJCy+dHEza/dZ/PMeEilYos2mZmdZ/f7eR1DmOfL5s3u7LOzAYiIiIhIHBVy8fqdOxeM0a9bixkoNQFlk5DXi2F9Z+uny5cufR97jtMKEsCtxt33APsVoGdDrF8kyyt/2Gpl7KN+jcBrAI1Go5ohXQDwts91i2x55XcAqm8j0L4WqtfvTXVs+jME/fEfsWq7tffd0o0bH8ae5KS8BFCv19OjtPujUnjVx3r9qT8j8BKASUe+0MBrPtbqb/0XgXMAN2/eG4cxX/oYZjD0VwTOAaiR7H1oXfExzODonwjcAzDqLR+DDJ7+iMB9D6DNBQ9zDKjiR+AcgDF4zscgg6vYETgHoLUu+RhksBU3Am83guj/FDMCBtBTxYuAAfRcsSJgAFEUJwIGEE0xImAAUcWPgAFEFzcCBlAI8SJgAIURJwIGUCi9j4ABONLK90PY2wgYgKNSmgZYtXcRMABH5aHhQCv3JgIG4Ojs6JmAq4ePgAE4OlMuY7g0FPAKYSNgAB48Wz0X+ArhImAAHoyOjGBqvBr4KmEiYACeTI1P4NzZ8cBX8R8BA/BoujqJ56emkeiQX4L2GwED8KwyOoaXX3gRz0xUMRRsc+gvghB3McTTSmOyMoHJygSO8hzZURd5bgBYn5dRsPgagNM3khlAYGmSIE2CvSSUXRfgS4BwDEA4BiBc9D1A62Av9ghRVUbHol4/egBrmxuxR4iqcj5uAHwJEI4BCMcAhGMAwkXfBM6cfyn2CKLxGUA4BiAcAxCOAQjHAIRjAMIxAOEYgHAMQLjodwJ5HoDnAWKPEBXPA1BUDEA4BiAcAxAu+iaQ5wHi4jOAcAxAOAYgHAMQjgEIxwCEYwDCMQDhGIBw0e8E8jwAzwPEHiEqngegqBiAcAxAOAYgXPRNIM8DxMVnAOEYgHAMQDgGIBwDEI4BCMcAhGMAwjEA4aLfCeR5AJ4HiD1CVDwPQFExAOEYgHAMQLjom0CeB4iLzwDCMQDhGIBwDEA4BiAcAxCOAQjHAIRjAMIxAOEYgHAMQDgGIBwDEI4BCOccgLXWxxx0Gh4ee+cAcpM7D0Gn083dH3vnANqdzHkIOp125v7YOwew1z50HoJOZ7+977yGcwCtgz0Ya5wHoZMxxqC1X4AAjDFma2fHeRA6mc3WNo5y902Aj7eB21u7f+Kg0/awFD2N/XYbD3Z3oYEHrmv5CGAZAFY3ml42JfTf2lmGtc3m8VtArX91Xc89AIvbwPFr0sr6fbQO3V+X6MlaB3tYaa4hN3/vuewt1zWdA9DK/gDAAMcRrG2sY3WzicOs47o0PdTOOljdaGJtcwPm0c0fo4BF17WV6wIA8M3i4hKUrv3750NpCaPlMobTEhKd+LmYABYWuTHIul3sdw6RdbuP/Y6xWPj0yuUPXK/l5athibWf59ZchNbT//x5dtRFtvv48OTImGZizTUfS3n5MOjjubn7Csm7BuBbgdCMOUSavDN/9eq6j+W8fRo4P1drJEa9CWNk/8uPkIxpIk0uflKr3fW1pNePg+fnag07PDRrYZfwcGNIXhhjsaCsmfX5xwc8bQKf5Nvr11/JrbqiLN4wwIzWmATPHzwVY0wO6G2t8Yu1uJ0navGzWu23ENf6C/l/AOrWkOSOAAAAAElFTkSuQmCC); }
-
-#yo-fs .directory a {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABTpJREFUeJzt2s9rHHUYx/HP88zO7OZX2cQareLBU7IVLyJ4EaJFS6ogIlKK+A948FDEi1DTFQUV1CJ49iBCFSse1DYR61EQqfbQNlFPFvzRkh9tkibZ3fk+HrRp2sb00GS+230+r1tmhvAJeXd3OhuAiIiIiIiIiIiIOp/c6IKhsYm7TO1eDeEOQLMiRt0sQQgGnUtKdubUgdGzsfe0s3UDGHrriz691P0iEPZB5P6iR22mYOFXEf2wZfkHv9WfuBh7T7u5LoChsWPPidh7Ah2MMWirGMI5GF6YrO/5PPaWdqJrv6iNjb+pIh932i8fAAQ6KKJHhg+OH4i9pZ2svgLUxiZegdgbMccUxcz2T9ZHD8Xe0Q4EAIbGjj6iwHGI3vCmsBMEhJYYHpqs7zkRe0tsAjOp1Sd+BPBA7DG0aQIszAKYNJHvYMlHk/XHf1nvQqmNHX0Mot8UPJCKZMEg8kkwfWmqvvuPtacUkKdj7aKCiAog+1TCyeH6xMjaU2qQh2PtoqLJdrH82NoIVMTujjmJiqYVsfDZ8OtHdwCAwuy22JOoaLJdmvIOAEjt4LjFnkNRBKgM642vow6lCPY8A3DMYLsYgGMCDJdij4itVOmNPWHTGQywgNBqwvLWBlfKgO8ARFCudtwHn1cJeROtSwtoXroIWH7taXX9FqDJLfEHTjdFkxRZXz+6B+9Z99XOdwBZOfaEwogoytVBZH0DVx13HUBa6Yk9oXBpTxVZb//q124D0LQMzbpiz4gi7e1H8t/P7jQAQbnP9xPwbNu/bwUuA8h6+6FZJfaMqLRURpJ1+Qsg66ki7a3GntEWkkoP3DwHEE1Q3rYdicMbv/+TZJXOD0BLGUpdfSh190HE3QvehjRJNw5A0wxJ2gUppRBVQG6NPxoWA6AJklIKaBJ7TvsSWT+ApNKDrLcKLfl5UOLV1QFIgkr1diTl7khzqGirAYgqKgM7oKXOfz5OV6zeFZX77+Qv3yEFgLS3iiT1/WDEKxVRpD18MOKVJpUe/v/YMeWTMd80SXnj55mKdvzTYNoA3/ydYwDOMQDnGIBzDMA5BuAcA3COATjHAJxjAM4xAOcYgHMMwDkG4BwDcI4BOMcAnGMAzjEA5xiAcwzAOQbgHANwjgE4xwCcYwDOMQDnGIBzDMA5BuAcA3COATjHAJxjAM4xAOcYgHMMwDkG4BwDcI4BOMcAnGMAzjEA5xiAcwzAOQbgHANwjgE4xwCcYwDOMQDnGIBzDMA5BuAcA3COATjHAJxjAM4xAOcUZrE3UCxm0JA3Y8+gSELegIbGSuwdFElorEBbKwuxd1AkzeVFaL6yhNBqxN5CBQvNFYTGEjRYaDYuTsfeQ4UyrMxPIwANBfSvvLGE5sJs7FVUkMbCLEJjGTD8qSL20+WDzcULsbfRFmsszqG5MAcAUNgJhclXqyfnp7Eydw4WQrSBtDUs5Fie+xvN+Zm1h7/UFvLDsLD6T7+1vICl87+jMT/Dm8MOEFoNNOansXT+LPLlxSvHgRlB+VMBgNrB8ZcBvL3eNxBNoKUUIglMihlNmyDkyFtNIOTrnjaz/ZP10UMlADiz88K7tVPbnoTIyHUXhhx5Y/1vQremYPbtFL5/H7j8YdDevbkAzwSEn6MuoyKcqKD8LOr1AKz5NPB0fXQmNxuB4Ui8bbS17LBYNnKy/ujc5SPrvqvvHJt4yiQ/AOiDxY2jrWLAD2JSP1Pf/fW15za8rbvvtYlaHmyXAMMABoIh2bKVtGkEaIlgFrDTQe341Kt7pmJvIiIiIqI28g8P/1ywWiSczgAAAABJRU5ErkJggg==); }
-
-#yo-fs .directory .size {
-  display: none; }
-
-#yo-fs a span {
-  display: inline-block; }
-
-#yo-fs .size, #yo-fs .modified {
-  width: 30%;
-  float: right;
+.cell-right {
   text-align: right; }
 
-#yo-fs .modified {
-  width: 40%; }
-
-#yo-fs pre {
-  padding: 10px;
-  margin: 0; }
-
-/* render data */
-table {
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 14px; }
-
-table th,
-table td {
-  text-align: left;
-  padding: 5px 10px;
-  color: #777;
-  background-color: #f4f5f6;
-  min-height: 1.42857143; }
+.progress {
+  min-width: 10rem; }

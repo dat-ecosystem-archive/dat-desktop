@@ -1,0 +1,181 @@
+@import './node_modules/dat-design/scss/base.scss';
+
+// 16px = 1rem
+// 24px = 1.5rem
+
+html {
+  font-size: 14px;
+  @include breakpoint (md1) {
+    font-size: 16px;
+  }
+  @include breakpoint (lg) {
+    font-size: 18px;
+  }
+}
+
+body {
+  min-width: 540px;
+}
+
+// dat-header
+
+.dat-header {
+  height: 4rem;
+  padding-right: 1.5rem;
+  padding-left: 6.5rem;
+  background-color: $color-green--hover;
+  color: $color-white;
+}
+
+.dat-header__title {
+  float: left;
+  font-size: 1.25rem;
+  padding-top: 1.15rem;
+}
+
+.dat-header__actions {
+  float: right;
+}
+
+// dat-button
+.dat-button {
+  float: left;
+  padding-top: 1.15rem;
+  margin-right: 3rem;
+  button {
+    &:hover, &:focus, &:active {
+      color: $color-neutral--04;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
+
+// dat-import
+
+.dat-import {
+  float: left;
+  position: relative;
+  padding-top: .5rem;
+}
+
+// we need an extra element + wrapper div for the icon, as we can't have pseude-elements on input elements
+.dat-import--icon {
+  position: absolute;
+  top: calc(2rem - (.625rem / 2));
+  left: 1rem;
+  pointer-events: none;
+  img {
+    display: block;
+    width: 1.25rem;
+    height: .625rem;
+  }
+}
+
+.dat-import--input {
+  height: 3rem;
+  padding-right: 1rem;
+  padding-left: 3rem;
+  border-radius: 2px;
+  border: none;
+  &:hover, &:focus, &:active {
+    outline: none;
+  }
+}
+
+
+
+// dat-list
+
+.dat-list {
+  width: 100%;
+  th, td {
+    &:not(:last-child) {
+      padding-right: 1rem;
+    }
+  }
+}
+
+.dat-list__header {
+  text-align: left;
+  th {
+    height: 4rem;
+    font-size: .8125rem;
+    font-weight: normal;
+    color: $color-neutral--50;
+    &:not(:first-child) {
+      border-bottom: 1px solid $color-neutral--20;
+    }
+  }
+}
+
+.dat-list__item {
+  td {
+    height: 4rem;
+    &:first-child {
+      width: 6.5rem;
+      padding-left: 2.625rem;
+    }
+  }
+  td:not(:nth-child(2)) {
+    font-size: .8125rem;
+  }
+  &:hover {
+    td {
+      background-color: $color-neutral--04;
+    }
+  }
+}
+
+
+// hexagon
+
+.dat-hexagon {
+  position: relative;
+  width: 20px;
+  height: 11.55px;
+  margin: 5.77px 0;
+  text-align: center;
+  background-color: $color-green--hover;
+  color: $color-white;
+  line-height: .8;
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+  }
+
+  &:before {
+    bottom: 100%;
+    border-bottom: 5.77px solid $color-green--hover;
+  }
+
+  &:after {
+    top: 100%;
+    width: 0;
+    border-top: 5.77px solid $color-green--hover;
+  }
+}
+
+// truncate dat link in overview
+.cell-truncate {
+  width: 25vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// use this for table columns that contain numbers or other content that should be right aligned
+.cell-right {
+  text-align: right;
+}
+
+
+// makin sure the progress bar is not to tiny
+.progress {
+  min-width: 10rem;
+}
