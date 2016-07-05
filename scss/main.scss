@@ -83,8 +83,6 @@ body {
   }
 }
 
-
-
 // dat-list
 
 .dat-list {
@@ -103,6 +101,9 @@ body {
     font-size: .8125rem;
     font-weight: normal;
     color: $color-neutral--50;
+    &:first-child {
+      width: 6.5rem;
+    }
     &:not(:first-child) {
       border-bottom: 1px solid $color-neutral--20;
     }
@@ -113,7 +114,6 @@ body {
   td {
     height: 4rem;
     &:first-child {
-      width: 6.5rem;
       padding-left: 2.625rem;
     }
   }
