@@ -26,12 +26,13 @@
   "scripts": {
     "start": "electron .",
     "test": "semistandard",
-    "package": "rm -Rf dist/*; electron-packager . --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns",
+    "package": "rm -Rf dist/*; electron-packager . --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns && appdmg dmg.json dist/Dat.dmg",
     "rebuild": "npm rebuild --runtime=electron --target=1.1.3 --disturl=https://atom.io/download/atom-shell --abi=48",
     "build-css": "node-sass --include-path scss scss/main.scss public/css/main.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""
   },
   "devDependencies": {
+    "appdmg": "^0.4.5",
     "electron-packager": "^7.0.2",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
