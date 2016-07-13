@@ -37,50 +37,10 @@ body {
   float: right;
 }
 
-// dat-button
-.dat-button {
-  float: left;
-  padding-top: 1.15rem;
-  margin-right: 3rem;
-  button {
-    &:hover, &:focus, &:active {
-      color: $color-neutral--04;
-      outline: none;
-      cursor: pointer;
-    }
-  }
-}
-
-// dat-import
-
+// dat-import customization
 .dat-import {
   float: left;
-  position: relative;
-  padding-top: .5rem;
-}
-
-// we need an extra element + wrapper div for the icon, as we can't have pseude-elements on input elements
-.dat-import--icon {
-  position: absolute;
-  top: calc(2rem - (.625rem / 2));
-  left: 1rem;
-  pointer-events: none;
-  img {
-    display: block;
-    width: 1.25rem;
-    height: .625rem;
-  }
-}
-
-.dat-import--input {
-  height: 3rem;
-  padding-right: 1rem;
-  padding-left: 3rem;
-  border-radius: 2px;
-  border: none;
-  &:hover, &:focus, &:active {
-    outline: none;
-  }
+  margin-top: .5rem;
 }
 
 // dat-list
@@ -126,7 +86,6 @@ body {
     }
   }
 }
-
 
 // hexagon
 
@@ -174,8 +133,7 @@ body {
   text-align: right;
 }
 
-
-// makin sure the progress bar is not to tiny
+// making sure the progress bar is not to tiny
 .progress {
   min-width: 10rem;
 }
