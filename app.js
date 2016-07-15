@@ -3,7 +3,7 @@
 const level = require('level');
 const hyperdrive = require('hyperdrive');
 const {app, process: remoteProcess, dialog} = require('electron').remote;
-const {ipcRenderer: ipc} = require('electron');
+const {ipcRenderer: ipc, clipboard} = require('electron');
 const fs = require('fs');
 const yo = require('yo-yo');
 const bytewise = require('bytewise');
@@ -47,7 +47,11 @@ function refresh (err) {
         if (err) throw err;
       });
     },
-    share: dat => console.log(`dat://${encoding.encode(dat.key)}`),
+    share: dat => {
+      const link = `dat://${encoding.encode(dat.key)}`
+      clipboard.writeText(link);
+      console.log(link);
+    },
     delete: dat => {
       db.del(['archive', encoding.encode(dat.key)], err => {
         if (err) throw err;
