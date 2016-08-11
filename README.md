@@ -7,8 +7,6 @@ WIP desktop app for [dat](https://github.com/maxogden/dat).
 
 [![Build Status](https://travis-ci.org/juliangruber/dat-desktop.svg?branch=master)](https://travis-ci.org/juliangruber/dat-desktop)
 
-[![js-semistandard-style](https://cdn.rawgit.com/flet/semistandard/master/badge.svg)](https://github.com/Flet/semistandard)
-
 ## Running
 
 ```bash
