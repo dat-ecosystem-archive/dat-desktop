@@ -59,11 +59,11 @@ function refresh (err) {
     },
     create: () => {
       const files = dialog.showOpenDialog({
-        properties: ['openFile', 'openDirectory', 'multiSelections']
+        properties: ['openFile', 'openDirectory']
       })
       if (!files.length) return
       const archive = createArchive()
-      hyperImport(archive, files, err => {
+      hyperImport(archive, files[0], err => {
         if (err) throw err
         archive.finalize(err => {
           if (err) throw err
