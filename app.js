@@ -22,18 +22,24 @@ const argv = minimist(remoteProcess.argv.slice(2))
 const root = argv.data || `${app.getPath('downloads')}/dat`
 try { fs.mkdirSync(root) } catch (_) {}
 
-const db = level(`${root}/.db`, { keyEncoding: bytewise })
+const db = level(`${root}/.db`, {
+  keyEncoding: bytewise,
+  valueEncoding: 'json'
+})
 const drive = hyperdrive(db)
 
 const archives = new Map()
 let el
 
-const createArchive = (key) => {
+const createArchive = ({ path, key, isFile }) => {
+  if (typeof key === 'string') key = encoding.decode(key)
   const archive = drive.createArchive(key, {
     live: true,
-    file: name => raf(`${archive.path}/${name}`)
+    file: name => raf(isFile
+      ? archive.path
+      : `${archive.path}/${name}`)
   })
-  archive.path = `${root}/${encoding.encode(archive.key)}`
+  archive.path = path
   return archive
 }
 
@@ -41,9 +47,9 @@ function refresh (err) {
   if (err) throw err
   const fresh = render({
     dats: archives,
-    open: dat => {
+    open: archive => {
       // TODO cross platform
-      exec(`open ${root}/${encoding.encode(dat.key)}`, err => {
+      exec(`open "${archive.path}"`, err => {
         if (err) throw err
       })
     },
@@ -62,19 +68,34 @@ function refresh (err) {
         properties: ['openFile', 'openDirectory']
       })
       if (!files.length) return
-      const archive = createArchive()
-      hyperImport(archive, files[0], err => {
+      const target = files[0]
+      fs.stat(target, (err, stat) => {
         if (err) throw err
-        archive.finalize(err => {
-          if (err) throw err
 
-          const link = encoding.encode(archive.key)
-          db.put(['archive', link], link)
+        const archive = createArchive({
+          isFile: stat.isFile(),
+          path: target
+        })
+        hyperImport(archive, target, err => {
+          if (err) throw err
+          archive.finalize(err => {
+            if (err) throw err
+
+            const link = encoding.encode(archive.key)
+            db.put(['archive', link], {
+              key: link,
+              path: target,
+              isFile: stat.isFile()
+            })
+          })
         })
       })
     },
     download: link => {
-      db.put(['archive', link], link)
+      db.put(['archive', link], {
+        key: link,
+        path: `${root}/${encoding.encode(archive.key)}`
+      })
     }
   })
   if (el) el = yo.update(el, fresh)
@@ -92,13 +113,13 @@ liveStream(db, {
     const dat = archives.get(key)
     archives.delete(key)
     refresh()
-    assert(dat.path.indexOf(root) > -1)
-    rmrf(dat.path, err => {
-      if (err) throw err
-    })
+    if (dat.path.indexOf(root) > -1) {
+      rmrf(dat.path, err => {
+        if (err) throw err
+      })
+    }
   } else {
-    const key = encoding.decode(data.value)
-    const archive = createArchive(key)
+    const archive = createArchive(data.value)
     archive.open(refresh)
     archive.swarm = swarm(archive)
     archive.swarm.on('connection', peer => {
@@ -116,8 +137,12 @@ refresh()
 document.body.appendChild(el)
 
 ipc.on('link', (ev, url) => {
-  const link = encoding.decode(url)
-  db.put(['archive', link], link)
+  const key = encoding.decode(url)
+  const encoded = encoding.encode(key)
+  db.put(['archive', link], {
+    key: encoding.encode(key),
+    path: `${root}/${encoding.encode(key)}`
+  })
 })
 
 ipc.send('ready')

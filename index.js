@@ -16,7 +16,7 @@ ipcMain.on('ready', () => {
 })
 
 function createWindow () {
-  win = new BrowserWindow()
+  win = new BrowserWindow({ width: 1000 })
   win.loadURL(`file://${__dirname}/index.html`)
   win.webContents.openDevTools()
   win.on('closed', () => { win = null })
