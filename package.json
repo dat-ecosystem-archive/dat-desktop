@@ -16,6 +16,7 @@
     "hyperdrive-archive-swarm": "^3.1.0",
     "hyperdrive-import-files": "^2.2.0",
     "hyperdrive-ui": "karissa/hyperdrive-ui#alternative-api",
+    "js-alert": "^1.0.4",
     "level": "^1.4.0",
     "level-live-stream": "^1.4.11",
     "minimist": "^1.2.0",

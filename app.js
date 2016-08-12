@@ -17,6 +17,7 @@ const encoding = require('dat-encoding')
 const hyperImport = require('hyperdrive-import-files')
 const rmrf = require('rimraf')
 const assert = require('assert')
+const jsAlert = require('js-alert')
 
 const argv = minimist(remoteProcess.argv.slice(2))
 const root = argv.data || `${app.getPath('downloads')}/dat`
@@ -56,7 +57,13 @@ function refresh (err) {
     share: dat => {
       const link = `dat://${encoding.encode(dat.key)}`
       clipboard.writeText(link)
-      console.log(link)
+      jsAlert.alert(yo`
+        <div>
+          <p>Your dat link:</p>
+          <p>${link}</p>
+          <p>This link has also been copied to the clipboard for your convenience.</p>
+        </div>
+      `.outerHTML)
     },
     delete: dat => {
       db.del(['archive', encoding.encode(dat.key)], err => {
