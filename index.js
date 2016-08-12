@@ -21,7 +21,9 @@ function createWindow () {
   win = new BrowserWindow({ width: 1000 })
   win.loadURL(`file://${__dirname}/index.html`)
   if (env === 'development') {
-    win.webContents.openDevTools()
+    win.webContents.openDevTools({
+      mode: 'detach'
+    })
   }
   win.on('closed', () => { win = null })
 }
