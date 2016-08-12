@@ -1,4 +1,5 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron')
+const defaultMenu = require('electron-default-menu')
 
 const env = process.env.NODE_ENV
 
@@ -26,6 +27,8 @@ function createWindow () {
     })
   }
   win.on('closed', () => { win = null })
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)))
 }
 
 app.on('ready', createWindow)
