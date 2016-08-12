@@ -28,7 +28,9 @@
   "scripts": {
     "start": "NODE_ENV=development electron .",
     "test": "standard",
-    "package": "rm -Rf dist/*; electron-packager . --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns && appdmg dmg.json dist/Dat.dmg",
+    "build-app": "rm -Rf dist/*; electron-packager . Dat --platform=darwin --arch=x64 --out=dist/ --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns",
+    "build-dmg": "appdmg dmg.json dist/Dat-$npm_package_version.dmg",
+    "package": "npm run build-app && npm run build-dmg",
     "rebuild": "npm rebuild --runtime=electron --target=1.1.3 --disturl=https://atom.io/download/atom-shell --abi=48",
     "build-css": "node-sass --include-path scss scss/main.scss public/css/main.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""
