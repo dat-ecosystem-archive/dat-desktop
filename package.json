@@ -8,6 +8,7 @@
   "dependencies": {
     "bytes": "^2.4.0",
     "bytewise": "^1.1.0",
+    "collect-stream": "^1.1.1",
     "dat-button": "^2.2.0",
     "dat-design": "^1.1.4",
     "dat-encoding": "^2.0.1",

@@ -18,6 +18,7 @@ const hyperImport = require('hyperdrive-import-files')
 const rmrf = require('rimraf')
 const assert = require('assert')
 const jsAlert = require('js-alert')
+const collect = require('collect-stream')
 
 const argv = minimist(remoteProcess.argv.slice(2))
 const root = argv.data || `${app.getPath('downloads')}/dat`
@@ -134,6 +135,12 @@ liveStream(db, {
       peer.on('close', () => refresh())
     })
     archive.on('downloaded', () => refresh())
+    collect(archive.createFileReadStream('dat.json'), (err, raw) => {
+      if (err) return
+      const json = JSON.parse(raw.toString())
+      archive.title = json.title
+      refresh()
+    })
 
     archives.set(encoding.encode(archive.key), archive)
   }
