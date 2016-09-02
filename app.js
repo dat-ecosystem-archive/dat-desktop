@@ -101,7 +101,7 @@ function refresh (err) {
     download: link => {
       db.put(['archive', link], {
         key: link,
-        path: `${root}/${encoding.encode(archive.key)}`
+        path: `${root}/${encoding.decode(link)}`
       })
     }
   })
