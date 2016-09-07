@@ -146,6 +146,7 @@ liveStream(db, {
         refresh()
       })
     })
+    archive.progress = 0.5
 
     archives.set(encoding.encode(archive.key), archive)
   }
