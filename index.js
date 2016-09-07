@@ -31,12 +31,15 @@ function createWindow () {
   Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)))
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  app.ready = true
+  createWindow()
+})
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 app.on('activate', () => {
-  if (!win) createWindow()
+  if (!win && app.ready) createWindow()
 })
 app.on('will-finish-launching', () => {
   app.on('open-file', (ev, path) => {
