@@ -121,7 +121,7 @@ liveStream(db, {
     const dat = archives.get(key)
     archives.delete(key)
     refresh()
-    archive.listStream.destroy()
+    dat.listStream.destroy()
     if (dat.path.indexOf(root) > -1) {
       rmrf(dat.path, err => {
         if (err) throw err
