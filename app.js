@@ -121,6 +121,7 @@ liveStream(db, {
     const dat = archives.get(key)
     archives.delete(key)
     refresh()
+    archive.listStream.destroy()
     if (dat.path.indexOf(root) > -1) {
       rmrf(dat.path, err => {
         if (err) throw err
@@ -135,11 +136,15 @@ liveStream(db, {
       peer.on('close', () => refresh())
     })
     archive.on('downloaded', () => refresh())
-    collect(archive.createFileReadStream('dat.json'), (err, raw) => {
-      if (err) return
-      const json = JSON.parse(raw.toString())
-      archive.title = json.title
-      refresh()
+    archive.listStream = archive.list({ live: true })
+    archive.listStream.on('data', entry => {
+      if (entry.name != 'dat.json') return
+      collect(archive.createFileReadStream('dat.json'), (err, raw) => {
+        if (err) return
+        const json = JSON.parse(raw.toString())
+        archive.title = json.title
+        refresh()
+      })
     })
 
     archives.set(encoding.encode(archive.key), archive)
