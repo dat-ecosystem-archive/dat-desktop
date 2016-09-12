@@ -12,8 +12,8 @@ const render = require('./lib/render')
 const minimist = require('minimist')
 const exec = require('child_process').exec
 const raf = require('random-access-file')
-const swarm = require('hyperdrive-archive-swarm')
 const encoding = require('dat-encoding')
+const swarm = require('hyperdrive-archive-swarm')
 const hyperImport = require('hyperdrive-import-files')
 const rmrf = require('rimraf')
 const assert = require('assert')
@@ -33,8 +33,11 @@ const drive = hyperdrive(db)
 const archives = new Map()
 let el
 
+function encode (key) {
+  return key.toString('hex')
+}
+
 const createArchive = ({ path, key, isFile }) => {
-  if (typeof key === 'string') key = encoding.decode(key)
   const archive = drive.createArchive(key, {
     live: true,
     file: name => raf(isFile
@@ -56,7 +59,7 @@ function refresh (err) {
       })
     },
     share: dat => {
-      const link = `dat://${encoding.encode(dat.key)}`
+      const link = `${encode(dat.key)}`
       clipboard.writeText(link)
       jsAlert.alert(yo`
         <div>
@@ -67,7 +70,7 @@ function refresh (err) {
       `.outerHTML)
     },
     delete: dat => {
-      db.del(['archive', encoding.encode(dat.key)], err => {
+      db.del(['archive', encode(dat.key)], err => {
         if (err) throw err
       })
     },
@@ -89,7 +92,7 @@ function refresh (err) {
           archive.finalize(err => {
             if (err) throw err
 
-            const link = encoding.encode(archive.key)
+            const link = encode(archive.key)
             db.put(['archive', link], {
               key: link,
               path: target,
@@ -102,7 +105,7 @@ function refresh (err) {
     download: link => {
       db.put(['archive', link], {
         key: link,
-        path: `${root}/${encoding.decode(link)}`
+        path: `${root}/${link}`
       })
     }
   })
@@ -149,7 +152,7 @@ liveStream(db, {
     })
     archive.progress = 0.5
 
-    archives.set(encoding.encode(archive.key), archive)
+    archives.set(encode(archive.key), archive)
   }
   refresh()
 })
@@ -159,10 +162,10 @@ document.body.appendChild(el)
 
 ipc.on('link', (ev, url) => {
   const key = encoding.decode(url)
-  const encoded = encoding.encode(key)
+  const encoded = encode(key)
   db.put(['archive', link], {
-    key: encoding.encode(key),
-    path: `${root}/${encoding.encode(key)}`
+    key: encode(key),
+    path: `${root}/${encode(key)}`
   })
 })
 
