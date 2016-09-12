@@ -135,7 +135,8 @@ liveStream(db, {
       refresh()
       peer.on('close', () => refresh())
     })
-    archive.on('downloaded', () => refresh())
+    archive.on('download', () => refresh())
+    archive.on('content', () => refresh())
     archive.listStream = archive.list({ live: true })
     archive.listStream.on('data', entry => {
       if (entry.name != 'dat.json') return
