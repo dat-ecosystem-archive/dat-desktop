@@ -80,7 +80,7 @@ function refresh (err) {
       const files = dialog.showOpenDialog({
         properties: ['openFile', 'openDirectory']
       })
-      if (!files.length) return
+      if (!files || !files.length) return
       const target = files[0]
       fs.stat(target, (err, stat) => {
         if (err) throw err
