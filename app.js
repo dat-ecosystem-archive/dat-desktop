@@ -72,7 +72,7 @@ function refresh (err) {
       `.outerHTML)
     },
     delete: dat => {
-      db.del(['archive', encoding.encode(dat.key)], err => {
+      db.del(['archive', dat.key], err => {
         if (err) throw err
       })
     },
@@ -94,9 +94,7 @@ function refresh (err) {
           archive.finalize(err => {
             if (err) throw err
 
-            const link = encoding.encode(archive.key)
-            db.put(['archive', link], {
-              key: link,
+            db.put(['archive', archive.key], {
               path: target,
               isFile: stat.isFile()
             })
@@ -105,9 +103,13 @@ function refresh (err) {
       })
     },
     download: link => {
-      db.put(['archive', link], {
-        key: link,
-        path: `${root}/${encoding.decode(link)}`
+      const key = encoding.decode(link)
+      const path = `${root}/${encoding.encode(key)}`
+      fs.mkdir(path, () => {
+        db.put(['archive', key], {
+          key: link,
+          path: path
+        })
       })
     }
   })
@@ -119,12 +121,14 @@ liveStream(db, {
   gt: ['archive', null],
   lt: ['archive', undefined]
 }).on('data', data => {
+  const key = data.key[1]
+  const link = encoding.encode(key)
+
   if (data.type === 'del') {
     // TODO delete archive from hyperdrive
     // TODO close swarm
-    const key = data.key[1]
-    const dat = archives.get(key)
-    archives.delete(key)
+    const dat = archives.get(link)
+    archives.delete(link)
     refresh()
     dat.listStream.destroy()
     if (dat.path.indexOf(root) > -1) {
@@ -133,7 +137,7 @@ liveStream(db, {
       })
     }
   } else {
-    const archive = createArchive(data.value)
+    const archive = createArchive(Object.assign({ key }, data.value))
     archive.open(refresh)
     archive.swarm = swarm(archive)
     archive.swarm.on('connection', peer => {
@@ -154,7 +158,7 @@ liveStream(db, {
     })
     archive.progress = 0.5
 
-    archives.set(encoding.encode(archive.key), archive)
+    archives.set(link, archive)
   }
   refresh()
 })
@@ -164,9 +168,8 @@ document.body.appendChild(el)
 
 ipc.on('link', (ev, url) => {
   const key = encoding.decode(url)
-  const encoded = encoding.encode(key)
-  db.put(['archive', link], {
-    key: encoding.encode(key),
+  const link = encoding.encode(key)
+  db.put(['archive', key], {
     path: `${root}/${encoding.encode(key)}`
   })
 })
