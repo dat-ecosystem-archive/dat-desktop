@@ -61,8 +61,13 @@ function refresh (err) {
       jsAlert.alert(yo`
         <div>
           <p>Your dat link:</p>
-          <p>${link}</p>
-          <p>This link has also been copied to the clipboard for your convenience.</p>
+          <p>
+            <input type="text" value=${link}/>
+          </p>
+          <p>
+            This link has also been copied to the clipboard for your
+            convenience.
+          </p>
         </div>
       `.outerHTML)
     },
