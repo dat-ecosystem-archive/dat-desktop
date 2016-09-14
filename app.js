@@ -137,28 +137,31 @@ liveStream(db, {
       })
     }
   } else {
-    const archive = createArchive(Object.assign({ key }, data.value))
-    archive.open(refresh)
-    archive.swarm = swarm(archive)
-    archive.swarm.on('connection', peer => {
-      refresh()
-      peer.on('close', () => refresh())
-    })
-    archive.on('download', () => refresh())
-    archive.on('content', () => refresh())
-    archive.listStream = archive.list({ live: true })
-    archive.listStream.on('data', entry => {
-      if (entry.name != 'dat.json') return
-      collect(archive.createFileReadStream('dat.json'), (err, raw) => {
-        if (err) return
-        const json = JSON.parse(raw.toString())
-        archive.title = json.title
+    const path = `${root}/${link}`
+    fs.mkdir(path, () => {
+      const archive = createArchive(Object.assign({ key }, data.value))
+      archive.open(refresh)
+      archive.swarm = swarm(archive)
+      archive.swarm.on('connection', peer => {
         refresh()
+        peer.on('close', () => refresh())
       })
-    })
-    archive.progress = 0.5
+      archive.on('download', () => refresh())
+      archive.on('content', () => refresh())
+      archive.listStream = archive.list({ live: true })
+      archive.listStream.on('data', entry => {
+        if (entry.name != 'dat.json') return
+        collect(archive.createFileReadStream('dat.json'), (err, raw) => {
+          if (err) return
+          const json = JSON.parse(raw.toString())
+          archive.title = json.title
+          refresh()
+        })
+      })
+      archive.progress = 0.5
 
-    archives.set(link, archive)
+      archives.set(link, archive)
+    })
   }
   refresh()
 })
