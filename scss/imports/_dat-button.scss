@@ -12,3 +12,45 @@
     }
   }
 }
+
+
+.btn__icon-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+.btn__icon-img {
+  opacity: .64;
+}
+.btn__icon-text {
+  margin-left: .5em;
+}
+&:hover, &:focus {
+  .btn__icon-img {
+    opacity: 1;
+  }
+}
+
+.dat-header-action {
+  .btn__icon-img {
+    width: 100%;
+    max-width: 1.25rem;
+    max-height: 1rem;
+  }
+}
+
+.btn__reveal-text {
+  .btn__icon-text {
+    transition-property: width, margin, opacity;
+    transition-duration: $transition-duration;
+    transition-timing-function: $transition-timing-function;
+    transition-timing-function: 1s;
+  }
+  &:not(:hover) {
+    .btn__icon-text {
+      width: 0;
+      margin-left: 0;
+      opacity: 0;
+    }
+  }
+}
