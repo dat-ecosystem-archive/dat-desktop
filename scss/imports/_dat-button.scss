@@ -1,0 +1,14 @@
+// dat-button
+
+.dat-button {
+  float: left;
+  padding-top: 1.15rem;
+  margin-right: 3rem;
+  button {
+    &:hover, &:focus, &:active {
+      color: $color-neutral--04;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}

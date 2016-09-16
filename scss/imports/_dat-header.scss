@@ -1,0 +1,19 @@
+// dat-header
+
+.dat-header {
+  height: 4rem;
+  padding-right: 1.5rem;
+  padding-left: 6.5rem;
+  background-color: $color-green--hover;
+  color: $color-white;
+}
+
+.dat-header__title {
+  float: left;
+  font-size: 1.25rem;
+  padding-top: 1.15rem;
+}
+
+.dat-header__actions {
+  float: right;
+}

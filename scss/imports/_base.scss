@@ -1,0 +1,16 @@
+// 16px = 1rem
+// 24px = 1.5rem
+
+html {
+  font-size: 14px;
+  @include breakpoint (md1) {
+    font-size: 16px;
+  }
+  @include breakpoint (lg) {
+    font-size: 18px;
+  }
+}
+
+body {
+  min-width: 540px;
+}
