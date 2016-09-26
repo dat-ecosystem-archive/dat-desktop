@@ -1631,6 +1631,9 @@ body {
 .dat-header__actions {
   float: right; }
 
+.dat-header--dark {
+  background-color: #293648; }
+
 .dat-import {
   float: left;
   position: relative;
