@@ -21,14 +21,14 @@
 }
 .btn__icon-img {
   opacity: .64;
+  &:hover, &:focus {
+    .btn__icon-img {
+      opacity: 1;
+    }
+  }
 }
 .btn__icon-text {
   margin-left: .5em;
-}
-&:hover, &:focus {
-  .btn__icon-img {
-    opacity: 1;
-  }
 }
 
 .dat-header-action {
