@@ -3,9 +3,19 @@
 .dat-header {
   height: 4rem;
   padding-right: 1.5rem;
-  padding-left: 6.5rem;
   background-color: $color-green--hover;
   color: $color-white;
+}
+
+.dat-header__menu-trigger {
+  float: left;
+  height: 4rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-left: .625rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
 }
 
 .dat-header__title {
