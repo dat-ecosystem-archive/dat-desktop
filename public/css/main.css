@@ -1630,6 +1630,8 @@ body {
   width: 2.5rem;
   display: flex;
   align-items: center; }
+  .dat-header__menu-trigger img {
+    max-width: 2rem; }
 
 .dat-header__title {
   float: left;
