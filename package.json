@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "appdmg": "^0.4.5",
+    "dat-icons": "^1.0.0",
     "electron-packager": "^7.0.2",
     "node-sass": "^3.8.0",
     "node-sass-magic-importer": "^1.0.1",
