@@ -1593,12 +1593,11 @@ body {
 
 .btn__icon-img {
   opacity: .64; }
+  .btn__icon-img:hover .btn__icon-img, .btn__icon-img:focus .btn__icon-img {
+    opacity: 1; }
 
 .btn__icon-text {
   margin-left: .5em; }
-
-:hover .btn__icon-img, :focus .btn__icon-img {
-  opacity: 1; }
 
 .dat-header-action .btn__icon-img {
   width: 100%;
@@ -1619,9 +1618,18 @@ body {
 .dat-header {
   height: 4rem;
   padding-right: 1.5rem;
-  padding-left: 6.5rem;
   background-color: #24943A;
   color: #FFFFFF; }
+
+.dat-header__menu-trigger {
+  float: left;
+  height: 4rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-left: .625rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center; }
 
 .dat-header__title {
   float: left;
