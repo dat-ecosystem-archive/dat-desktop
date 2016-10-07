@@ -1629,9 +1629,11 @@ body {
   padding-left: .625rem;
   width: 2.5rem;
   display: flex;
-  align-items: center; }
-  .dat-header__menu-trigger img {
-    max-width: 2rem; }
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; }
+  .dat-header__menu-trigger .icon-menu {
+    fill: white; }
 
 .dat-header__title {
   float: left;
