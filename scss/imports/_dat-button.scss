@@ -16,17 +16,17 @@
 
 .btn__icon-wrapper {
   display: flex;
+  flex-direction: column;
   flex-wrap: nowrap;
-  flex-direction: row;
-}
-.btn__icon-img {
-  opacity: .64;
-  &:hover, &:focus {
-    .btn__icon-img {
-      opacity: 1;
+  svg {
+    width: 1.1em;
+    fill: $color-neutral--60;
+    &:hover, &:focus {
+      fill: $color-neutral;
     }
   }
 }
+
 .btn__icon-text {
   margin-left: .5em;
 }
