@@ -178,3 +178,24 @@ ipc.on('link', (ev, url) => {
 })
 
 ipc.send('ready')
+
+const test = true
+const lock = new Auth0Lock(
+  'DWrTFyyzp3QZq8S3PZ5dfJd3T8xNf5kY',
+  'publicbits.auth0.com',
+  {
+    auth: { redirect: false }
+  }
+)
+let authed = false
+
+if (test) lock.show()
+
+lock.on('authenticated', ({idToken}) => {
+  localStorage.setItem('id_token', idToken)
+  lock.getProfile(idToken, (err, profile) => {
+    if (err) throw err
+    localStorage.setItem('profile', JSON.stringify(profile))
+    console.log(profile)
+  })
+})
