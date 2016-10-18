@@ -2,7 +2,7 @@
 
 .dat-button {
   float: left;
-  padding-top: 1.15rem;
+  margin-top: .8rem;
   margin-right: 3rem;
   button {
     &:hover, &:focus, &:active {
@@ -16,10 +16,11 @@
 
 .btn__icon-wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: nowrap;
   svg {
     width: 1.1em;
+    max-height: 1.6em;
     fill: $color-neutral--60;
     &:hover, &:focus {
       fill: $color-neutral;
@@ -32,10 +33,14 @@
 }
 
 .dat-header-action {
+  cursor: pointer;
   .btn__icon-img {
     width: 100%;
     max-width: 1.25rem;
     max-height: 1rem;
+  }
+  &:hover, &:focus {
+    outline: none;
   }
 }
 

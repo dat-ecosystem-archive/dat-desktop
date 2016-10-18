@@ -9,7 +9,7 @@
     "bytes": "^2.4.0",
     "bytewise": "^1.1.0",
     "collect-stream": "^1.1.1",
-    "dat-design": "^1.4.2",
+    "dat-design": "^2.0.0",
     "dat-encoding": "^3.0.0",
     "electron-default-menu": "^1.0.0",
     "electron-prebuilt": "1.1.3",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "appdmg": "^0.4.5",
-    "dat-icons": "^1.0.0",
+    "dat-icons": "^1.3.0",
     "electron-packager": "^7.0.2",
     "node-sass": "^3.8.0",
     "node-sass-magic-importer": "^1.0.1",

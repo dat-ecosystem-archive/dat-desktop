@@ -18,8 +18,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   .icon-menu {
-    fill: white;
+    fill: $color-neutral--20;
+  }
+  &:hover, &:focus {
+    .icon-menu {
+      fill: $color-white;
+    }
   }
 }
 
