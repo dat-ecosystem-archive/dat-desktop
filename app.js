@@ -184,7 +184,10 @@ const lock = new Auth0Lock(
   'DWrTFyyzp3QZq8S3PZ5dfJd3T8xNf5kY',
   'publicbits.auth0.com',
   {
-    auth: { redirect: false }
+    auth: {
+      sso: false,
+      redirect: false
+    }
   }
 )
 let authed = false
