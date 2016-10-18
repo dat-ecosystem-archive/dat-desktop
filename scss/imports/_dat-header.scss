@@ -1,0 +1,44 @@
+// dat-header
+
+.dat-header {
+  height: 4rem;
+  padding-right: 1.5rem;
+  background-color: $color-green--hover;
+  color: $color-white;
+}
+
+.dat-header__menu-trigger {
+  float: left;
+  height: 4rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-left: .625rem;
+  width: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  .icon-menu {
+    fill: $color-neutral--20;
+  }
+  &:hover, &:focus {
+    .icon-menu {
+      fill: $color-white;
+    }
+  }
+}
+
+.dat-header__title {
+  float: left;
+  font-size: 1.25rem;
+  padding-top: 1.15rem;
+}
+
+.dat-header__actions {
+  float: right;
+}
+
+.dat-header--dark {
+  background-color: $color-neutral;
+}

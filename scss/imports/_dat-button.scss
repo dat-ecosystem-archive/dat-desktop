@@ -1,0 +1,61 @@
+// dat-button
+
+.dat-button {
+  float: left;
+  margin-top: .8rem;
+  margin-right: 3rem;
+  button {
+    &:hover, &:focus, &:active {
+      color: $color-neutral--04;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
+
+
+.btn__icon-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  svg {
+    width: 1.1em;
+    max-height: 1.6em;
+    fill: $color-neutral--60;
+    &:hover, &:focus {
+      fill: $color-neutral;
+    }
+  }
+}
+
+.btn__icon-text {
+  margin-left: .5em;
+}
+
+.dat-header-action {
+  cursor: pointer;
+  .btn__icon-img {
+    width: 100%;
+    max-width: 1.25rem;
+    max-height: 1rem;
+  }
+  &:hover, &:focus {
+    outline: none;
+  }
+}
+
+.btn__reveal-text {
+  .btn__icon-text {
+    transition-property: width, margin, opacity;
+    transition-duration: $transition-duration;
+    transition-timing-function: $transition-timing-function;
+    transition-timing-function: 1s;
+  }
+  &:not(:hover) {
+    .btn__icon-text {
+      width: 0;
+      margin-left: 0;
+      opacity: 0;
+    }
+  }
+}

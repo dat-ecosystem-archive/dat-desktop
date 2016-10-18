@@ -1,0 +1,18 @@
+// dat-import
+
+.dat-import {
+  float: left;
+  position: relative;
+  margin-top: .5rem;
+}
+
+.dat-import--input {
+  height: 3rem;
+  padding-right: 1rem;
+  padding-left: 3rem;
+  border-radius: 2px;
+  border: none;
+  &:hover, &:focus, &:active {
+    outline: none;
+  }
+}
