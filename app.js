@@ -185,7 +185,7 @@ const lock = new Auth0Lock(
   'publicbits.auth0.com',
   {
     languageDictionary: {
-      title: ''
+      title: 'Welcome!'
     },
     theme: {
       primaryColor: '#35B44F',
