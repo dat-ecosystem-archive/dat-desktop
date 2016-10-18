@@ -184,6 +184,13 @@ const lock = new Auth0Lock(
   'DWrTFyyzp3QZq8S3PZ5dfJd3T8xNf5kY',
   'publicbits.auth0.com',
   {
+    languageDictionary: {
+      title: ''
+    },
+    theme: {
+      primaryColor: '#35B44F',
+      logo: 'public/img/dat-data-logo.svg'
+    },
     auth: {
       sso: false,
       redirect: false
