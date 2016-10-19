@@ -5,6 +5,7 @@ const hyperdrive = require('hyperdrive')
 const {app, process: remoteProcess, dialog} = require('electron').remote
 const {ipcRenderer: ipc, clipboard} = require('electron')
 const fs = require('fs')
+const path = require('path')
 const yo = require('yo-yo')
 const bytewise = require('bytewise')
 const liveStream = require('level-live-stream')
@@ -22,6 +23,14 @@ const collect = require('collect-stream')
 
 const argv = minimist(remoteProcess.argv.slice(2))
 const root = argv.data || `${app.getPath('downloads')}/dat`
+const env = argv.env || 'dev'
+var config
+try {
+  config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config', `env_${env}.json`)).toString())
+} catch (err) {
+  console.error('Config file is unreadable.')
+  console.trace(err)
+}
 try { fs.mkdirSync(root) } catch (_) {}
 
 const db = level(`${root}/.db`, {
@@ -181,8 +190,8 @@ ipc.send('ready')
 
 const test = true
 const lock = new Auth0Lock(
-  'DWrTFyyzp3QZq8S3PZ5dfJd3T8xNf5kY',
-  'publicbits.auth0.com',
+  config.AUTH0_KEY,
+  config.AUTH0_URL,
   {
     languageDictionary: {
       title: 'Welcome!'
