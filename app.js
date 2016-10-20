@@ -5,7 +5,6 @@ const hyperdrive = require('hyperdrive')
 const {app, process: remoteProcess, dialog} = require('electron').remote
 const {ipcRenderer: ipc, clipboard} = require('electron')
 const fs = require('fs')
-const path = require('path')
 const yo = require('yo-yo')
 const bytewise = require('bytewise')
 const liveStream = require('level-live-stream')
@@ -21,17 +20,10 @@ const assert = require('assert')
 const jsAlert = require('js-alert')
 const collect = require('collect-stream')
 const auth = require('./models/auth')
-
 const argv = minimist(remoteProcess.argv.slice(2))
+const config = require('./config')(argv)
+
 const root = argv.data || `${app.getPath('downloads')}/dat`
-const env = argv.env || 'dev'
-var config
-try {
-  config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config', `env_${env}.json`)).toString())
-} catch (err) {
-  console.error('Config file is unreadable.')
-  console.trace(err)
-}
 try { fs.mkdirSync(root) } catch (_) {}
 
 const db = level(`${root}/.db`, {
