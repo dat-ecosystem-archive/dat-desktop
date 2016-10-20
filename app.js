@@ -20,6 +20,7 @@ const rmrf = require('rimraf')
 const assert = require('assert')
 const jsAlert = require('js-alert')
 const collect = require('collect-stream')
+const auth = require('./models/auth')
 
 const argv = minimist(remoteProcess.argv.slice(2))
 const root = argv.data || `${app.getPath('downloads')}/dat`
@@ -120,7 +121,8 @@ function refresh (err) {
           path: path
         })
       })
-    }
+    },
+    logout: auth.logout
   })
   if (el) el = yo.update(el, fresh)
   else el = fresh
@@ -187,34 +189,4 @@ ipc.on('link', (ev, url) => {
 })
 
 ipc.send('ready')
-
-const test = true
-const lock = new Auth0Lock(
-  config.AUTH0_KEY,
-  config.AUTH0_URL,
-  {
-    languageDictionary: {
-      title: 'Welcome!'
-    },
-    theme: {
-      primaryColor: '#35B44F',
-      logo: 'public/img/dat-data-logo.svg'
-    },
-    auth: {
-      sso: false,
-      redirect: false
-    }
-  }
-)
-let authed = false
-
-if (test) lock.show()
-
-lock.on('authenticated', ({idToken}) => {
-  localStorage.setItem('id_token', idToken)
-  lock.getProfile(idToken, (err, profile) => {
-    if (err) throw err
-    localStorage.setItem('profile', JSON.stringify(profile))
-    console.log(profile)
-  })
-})
+auth.login(config)
