@@ -1,7 +1,7 @@
 'use strict'
 
 const encoding = require('dat-encoding')
-const svgSprite = require('dat-icons')
+const SvgSprite = require('dat-icons')
 const html = require('choo/html')
 const bytes = require('bytes')
 const css = require('yo-css')
@@ -17,15 +17,14 @@ const style = {
   }
 }
 
-document.body.innerHTML += svgSprite()
-
 module.exports = mainView
 
 // render the main view
 // obj -> html
 function mainView (props) {
   return html`
-    <div>
+    <body>
+      ${svgSprite()}
       ${header({
         create: props.create,
         download: props.download,
@@ -99,6 +98,12 @@ function mainView (props) {
           </tr>
         `)}
       </table>
-    </div>
+    </body>
   `
+}
+
+function svgSprite () {
+  const _el = document.createElement('div')
+  _el.innerHTML = SvgSprite()
+  return _el.childNodes[0]
 }

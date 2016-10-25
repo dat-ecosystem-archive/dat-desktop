@@ -5,20 +5,28 @@ const exec = require('child_process').exec
 const encoding = require('dat-encoding')
 const jsAlert = require('js-alert')
 const html = require('choo/html')
+const assert = require('assert')
 const fs = require('fs')
 
 module.exports = createModel
 
-function createModel (rootDir, db, archives, drive, createArchive) {
+function createModel (args) {
+  assert.ok(args.createArchive, 'models/app: createArchive is not defined')
+  assert.ok(args.archives, 'models/app: archives is not defined')
+  assert.ok(args.drive, 'models/app: drive is not defined')
+  assert.ok(args.db, 'models/app: db is not defined')
+
   return {
+    namespace: 'app',
     state: renderProps(),
     reducers: {
       update: renderProps
     }
   }
+
   function renderProps () {
     return {
-      dats: archives,
+      dats: args.archives,
       open: archive => {
         // TODO cross platform
         exec(`open "${archive.path}"`, err => {
@@ -42,7 +50,7 @@ function createModel (rootDir, db, archives, drive, createArchive) {
         `.outerHTML)
       },
       delete: dat => {
-        db.del(['archive', dat.key], err => {
+        args.db.del(['archive', dat.key], err => {
           if (err) throw err
         })
       },
@@ -55,7 +63,7 @@ function createModel (rootDir, db, archives, drive, createArchive) {
         fs.stat(target, (err, stat) => {
           if (err) throw err
 
-          const archive = createArchive(drive, {
+          const archive = args.createArchive(args.drive, {
             isFile: stat.isFile(),
             path: target
           })
@@ -64,7 +72,7 @@ function createModel (rootDir, db, archives, drive, createArchive) {
             archive.finalize(err => {
               if (err) throw err
 
-              db.put(['archive', archive.key], {
+              args.db.put(['archive', archive.key], {
                 path: target,
                 isFile: stat.isFile()
               })
@@ -74,9 +82,9 @@ function createModel (rootDir, db, archives, drive, createArchive) {
       },
       download: link => {
         const key = encoding.decode(link)
-        const path = `${rootDir}/${encoding.encode(key)}`
+        const path = `${args.rootDir}/${encoding.encode(key)}`
         fs.mkdir(path, () => {
-          db.put(['archive', key], {
+          args.db.put(['archive', key], {
             key: link,
             path: path
           })
