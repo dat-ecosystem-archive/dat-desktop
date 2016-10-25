@@ -30,7 +30,7 @@ const drive = hyperdrive(db)
 const archives = new Map()
 let el
 
-liveStream(db, archives, createArchive, refresh)
+liveStream(db, archives, drive, createArchive, refresh)
 refresh()
 document.body.appendChild(el)
 
