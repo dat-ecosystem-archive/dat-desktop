@@ -1,17 +1,9 @@
 const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron')
 const defaultMenu = require('electron-default-menu')
-const createServer = require('./server')
 
 const env = process.env.NODE_ENV
 
 let win, file, link
-
-// boot up the asset server
-// TODO(yw): make this run on a random port
-// TODO(yw): use a static bundle for production
-// TODO(yw): move the HTML file to a package
-// TODO(yw): listen for server callback
-createServer(8093)
 
 // handle electron events
 ipcMain.on('ready', () => {
@@ -31,6 +23,8 @@ ipcMain.on('ready', () => {
 // null -> null
 function createWindow () {
   win = new BrowserWindow({ width: 1000 })
+
+  // TODO(yw): move the HTML file to a separate package
   win.loadURL(`file://${__dirname}/index.html`)
   if (env === 'development') {
     win.webContents.openDevTools({
