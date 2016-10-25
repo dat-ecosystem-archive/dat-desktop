@@ -7,7 +7,6 @@ const bytes = require('bytes')
 const header = require('./header')
 const css = require('yo-css')
 const svgSprite = require('dat-icons')
-const icon = require('./icon')
 
 const style = {
   table: {
