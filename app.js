@@ -5,32 +5,34 @@ const log = require('choo-log')
 const css = require('sheetify')
 const choo = require('choo')
 
-// css
-css('tachyons')
+require('./_app')
 
-// init
-const opts = {}
-const app = choo()
-app.router(['/', mainView])
+// // css
+// css('tachyons')
 
-// logic
-const logic = bulk(__dirname, [ 'models/*' ])
-Object.keys(logic).forEach((key) => {
-  Object.keys(logic[key]).forEach((key) => {
-    app.model(logic.actions[key](opts))
-  })
-})
+// // init
+// const opts = {}
+// const app = choo()
+// app.router(['/', mainView])
 
-// start
-app.use(log())
-mount('body', app.start({ href: false }))
+// // logic
+// const logic = bulk(__dirname, [ 'models/*' ])
+// Object.keys(logic).forEach((key) => {
+//   Object.keys(logic[key]).forEach((key) => {
+//     app.model(logic.actions[key](opts))
+//   })
+// })
 
-function mainView (state, prev, send) {
-  return html`
-    <body>
-      <main>
-        <h1 class="f-6">choo choo</h1>
-      </main>
-    </body>
-  `
-}
+// // start
+// app.use(log())
+// mount('body', app.start({ href: false }))
+
+// function mainView (state, prev, send) {
+//   return html`
+//     <body>
+//       <main>
+//         <h1 class="f-6">choo choo</h1>
+//       </main>
+//     </body>
+//   `
+// }
