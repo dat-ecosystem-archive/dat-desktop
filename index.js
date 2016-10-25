@@ -11,7 +11,7 @@ let win, file, link
 // TODO(yw): use a static bundle for production
 // TODO(yw): move the HTML file to a package
 // TODO(yw): listen for server callback
-createServer(8080)
+createServer(8093)
 
 // handle electron events
 ipcMain.on('ready', () => {
