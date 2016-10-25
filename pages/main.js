@@ -6,8 +6,8 @@ const html = require('choo/html')
 const bytes = require('bytes')
 const css = require('yo-css')
 
-const button = require('./button')
-const header = require('./header')
+const button = require('../elements/button')
+const header = require('../elements/header')
 
 const style = {
   table: {

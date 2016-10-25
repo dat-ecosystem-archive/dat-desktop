@@ -48,7 +48,6 @@ ipc.send('ready')
 function refresh (err) {
   if (err) throw err
   const props = createProps()
-  console.log(props)
   const fresh = render(props)
   if (el) el = yo.update(el, fresh)
   else el = fresh
