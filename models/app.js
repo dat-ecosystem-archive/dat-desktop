@@ -9,94 +9,99 @@ const assert = require('assert')
 const fs = require('fs')
 
 const liveStream = require('../lib/live-stream')
+const Model = require('../lib/create-model')
 
 module.exports = createModel
 
-function createModel (args) {
-  assert.ok(args.createArchive, 'models/app: createArchive is not defined')
-  assert.ok(args.archives, 'models/app: archives is not defined')
-  assert.ok(args.drive, 'models/app: drive is not defined')
-  assert.ok(args.db, 'models/app: db is not defined')
+function createModel (opts) {
+  assert.ok(opts.createArchive, 'models/app: createArchive is not defined')
+  assert.ok(opts.drive, 'models/app: drive is not defined')
+  assert.ok(opts.db, 'models/app: db is not defined')
 
-  return {
-    namespace: 'app',
-    state: renderProps(),
-    reducers: {
-      update: renderProps
-    },
-    subscriptions: {
-      livestream: function (send, done) {
-        liveStream(args, () => send('app:update', done))
-      }
-    }
-  }
+  const model = Model('app')
 
-  function renderProps () {
-    return {
-      dats: args.archives,
-      open: archive => {
-        // TODO cross platform
-        exec(`open "${archive.path}"`, err => {
-          if (err) throw err
-        })
-      },
-      share: dat => {
-        const link = `dat://${encoding.encode(dat.key)}`
-        clipboard.writeText(link)
-        jsAlert.alert(html`
-          <div>
-            <p>Your dat link:</p>
-            <p>
-              <input type="text" value=${link}/>
-            </p>
-            <p>
-              This link has also been copied to the clipboard for your
-              convenience.
-            </p>
-          </div>
-        `.outerHTML)
-      },
-      delete: dat => {
-        args.db.del(['archive', dat.key], err => {
-          if (err) throw err
-        })
-      },
-      create: () => {
-        const files = dialog.showOpenDialog({
-          properties: ['openFile', 'openDirectory']
-        })
-        if (!files || !files.length) return
-        const target = files[0]
-        fs.stat(target, (err, stat) => {
+  // we're setting the updateIndex to force refreshes because the underlying
+  // data structure is mutable
+  model.state({
+    updateIndex: 0,
+    archives: {}
+  })
+
+  model.subscription('livestream', (send, done) => {
+    liveStream(opts, (archives) => send('app:updateArchives', archives, done))
+  })
+
+  model.reducer('updateArchives', (state, data) => {
+    return { archives: data }
+  })
+
+  model.effect('open', (archive) => {
+    // TODO(jg): cross platform
+    exec(`open "${archive.path}"`, err => {
+      if (err) throw err
+    })
+  })
+  model.effect('create', function create (state, data, send, done) {
+    const files = dialog.showOpenDialog({
+      properties: ['openFile', 'openDirectory']
+    })
+    if (!files || !files.length) return
+    const target = files[0]
+    fs.stat(target, (err, stat) => {
+      if (err) throw err
+
+      const archive = opts.createArchive(opts.drive, {
+        isFile: stat.isFile(),
+        path: target
+      })
+      hyperImport(archive, target, err => {
+        if (err) throw err
+        archive.finalize(err => {
           if (err) throw err
 
-          const archive = args.createArchive(args.drive, {
-            isFile: stat.isFile(),
-            path: target
+          opts.db.put(['archive', archive.key], {
+            path: target,
+            isFile: stat.isFile()
           })
-          hyperImport(archive, target, err => {
-            if (err) throw err
-            archive.finalize(err => {
-              if (err) throw err
+        })
+      })
+    })
+  })
+  model.effect('delete', (state, data, send, done) => {
+    const dat = data
+    opts.db.del(['archive', dat.key], err => {
+      if (err) throw err
+    })
+  })
+  model.effect('share', (state, data, send, done) => {
+    const dat = data
+    const link = `dat://${encoding.encode(dat.key)}`
+    clipboard.writeText(link)
+    jsAlert.alert(html`
+      <div>
+        <p>Your dat link:</p>
+        <p>
+          <input type="text" value=${link}/>
+        </p>
+        <p>
+          This link has also been copied to the clipboard for your
+          convenience.
+        </p>
+      </div>
+    `.outerHTML)
+  })
+  model.effect('download', (state, data, send, done) => {
+    const link = data
+    const key = encoding.decode(link)
+    const path = `${opts.rootDir}/${encoding.encode(key)}`
+    fs.mkdir(path, () => {
+      opts.db.put(['archive', key], {
+        key: link,
+        path: path
+      })
+      done()
+    })
+  })
 
-              args.db.put(['archive', archive.key], {
-                path: target,
-                isFile: stat.isFile()
-              })
-            })
-          })
-        })
-      },
-      download: link => {
-        const key = encoding.decode(link)
-        const path = `${args.rootDir}/${encoding.encode(key)}`
-        fs.mkdir(path, () => {
-          args.db.put(['archive', key], {
-            key: link,
-            path: path
-          })
-        })
-      }
-    }
-  }
+  return model.start()
 }

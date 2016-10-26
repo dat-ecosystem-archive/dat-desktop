@@ -12,13 +12,12 @@ const RootDir = require('./lib/get-root-dir')
 const mainView = require('./pages/main')
 const Db = require('./lib/db')
 
-const archives = new Map()
 const rootDir = RootDir()
 try { fs.mkdirSync(rootDir) } catch (_) {}
 const db = Db(rootDir)
 const drive = hyperdrive(db)
 
-const opts = { rootDir, db, archives, drive, createArchive }
+const opts = { rootDir, db, drive, createArchive }
 const app = choo()
 app.use(log())
 

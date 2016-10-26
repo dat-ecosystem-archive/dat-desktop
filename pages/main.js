@@ -21,14 +21,14 @@ module.exports = mainView
 
 // render the main view
 // obj -> html
-function mainView (props) {
+function mainView (state, prev, send) {
+  const dats = state.app.dats
   return html`
     <body>
       ${svgSprite()}
       ${header({
-        create: props.create,
-        download: props.download,
-        logout: props.logout
+        create: () => send('app:create'),
+        download: (link) => send('app:download', link)
       })}
       <table style=${css(style.table)} class="dat-list">
         <thead style=${css(style.heading)} class="dat-list__header">
@@ -39,7 +39,7 @@ function mainView (props) {
           <th class="cell-right">Size</th>
           <th></th>
         </thead>
-        ${Array.from(props.dats.values()).map((dat) => html`
+        ${Array.from(dats.values()).map((dat) => html`
           <tr class="dat-list__item">
             <td>
               <div class="dat-hexagon">
@@ -80,19 +80,19 @@ function mainView (props) {
                 icon: 'open-in-finder',
                 text: '',
                 klass: 'row-action',
-                click: () => props.open(dat)
+                click: () => send('app:open', dat)
               })}
               ${button({
                 icon: 'link',
                 text: '',
                 klass: 'row-action',
-                click: () => props.share(dat)
+                click: () => send('app:share', dat)
               })}
               ${button({
                 icon: 'delete',
                 text: '',
                 klass: 'row-action',
-                click: () => props.delete(dat)
+                click: () => send('app:delete', dat)
               })}
             </td>
           </tr>
