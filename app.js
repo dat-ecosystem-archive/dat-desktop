@@ -8,7 +8,6 @@ const choo = require('choo')
 const fs = require('fs')
 
 const createArchive = require('./lib/create-archive')
-const liveStream = require('./lib/live-stream')
 const RootDir = require('./lib/get-root-dir')
 const mainView = require('./pages/main')
 const Db = require('./lib/db')
@@ -20,9 +19,6 @@ const db = Db(rootDir)
 const drive = hyperdrive(db)
 
 const opts = { rootDir, db, archives, drive, createArchive }
-liveStream(opts, function refresh () {
-  console.log('refreshed')
-})
 const app = choo()
 app.use(log())
 

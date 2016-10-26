@@ -8,6 +8,8 @@ const html = require('choo/html')
 const assert = require('assert')
 const fs = require('fs')
 
+const liveStream = require('../lib/live-stream')
+
 module.exports = createModel
 
 function createModel (args) {
@@ -21,6 +23,11 @@ function createModel (args) {
     state: renderProps(),
     reducers: {
       update: renderProps
+    },
+    subscriptions: {
+      livestream: function (send, done) {
+        liveStream(args, () => send('app:update', done))
+      }
     }
   }
 
