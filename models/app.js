@@ -19,20 +19,23 @@ function createModel (opts) {
   assert.ok(opts.db, 'models/app: db is not defined')
 
   const model = Model('app')
+  const archives = new Map()
 
   // we're setting the updateIndex to force refreshes because the underlying
   // data structure is mutable
   model.state({
     updateIndex: 0,
-    archives: {}
+    archives: archives
   })
 
   model.subscription('livestream', (send, done) => {
-    liveStream(opts, (archives) => send('app:updateArchives', archives, done))
+    liveStream(opts, archives, (archives) => {
+      send('app:updateArchives', archives, done)
+    })
   })
 
   model.reducer('updateArchives', (state, data) => {
-    return { archives: data }
+    return { updateIndex: state.updateIndex + 1 }
   })
 
   model.effect('open', (archive) => {

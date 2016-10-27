@@ -29,7 +29,7 @@ Object.keys(globs).forEach((globname) => {
 })
 
 // start
-app.router(['/', (state, prev, send) => mainView(state.app)])
+app.router(['/', mainView])
 mount('body', app.start())
 
 // initialize IPC stuff

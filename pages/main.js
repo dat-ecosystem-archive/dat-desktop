@@ -10,11 +10,7 @@ const button = require('../elements/button')
 const header = require('../elements/header')
 
 const style = {
-  table: {
-    borderCollapse: 'collapse'
-  },
-  heading: {
-  }
+  table: { borderCollapse: 'collapse' }
 }
 
 module.exports = mainView
@@ -22,7 +18,7 @@ module.exports = mainView
 // render the main view
 // obj -> html
 function mainView (state, prev, send) {
-  const dats = state.app.dats
+  const dats = state.app.archives
   return html`
     <body>
       ${svgSprite()}
