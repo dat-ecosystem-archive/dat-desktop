@@ -19,7 +19,7 @@ function createModel (opts) {
   assert.ok(opts.db, 'models/app: db is not defined')
 
   const model = Model('app')
-  const archives = new Map()
+  const archives = {}
 
   // we're setting the updateIndex to force refreshes because the underlying
   // data structure is mutable
