@@ -28,13 +28,17 @@ function mainView (state, prev, send) {
       })}
       <table style=${css(style.table)} class="dat-list">
         <thead style=${css(style.heading)} class="dat-list__header">
-          <th></th>
-          <th>Link</th>
-          <th>Download</th>
-          <th class="cell-right">Network</th>
-          <th class="cell-right">Size</th>
+          <tr>
+            <th></th>
+            <th>Link</th>
+            <th>Download</th>
+            <th class="cell-right">Network</th>
+            <th class="cell-right">Size</th>
+          </tr>
         </thead>
-        ${createTable(dats, send)}
+        <tbody>
+          ${createTable(dats, send)}
+        </tbody>
       </table>
     </body>
   `
@@ -100,6 +104,7 @@ function createTable (dats, send) {
       </tr>
     `
   })
+  console.log(arr)
   return arr
 }
 
