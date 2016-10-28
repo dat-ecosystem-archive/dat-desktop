@@ -1,6 +1,6 @@
 'use strict'
 
-const yo = require('yo-yo')
+const yo = require('choo/html')
 const button = require('./button')
 const encoding = require('dat-encoding')
 const icon = require('./icon')

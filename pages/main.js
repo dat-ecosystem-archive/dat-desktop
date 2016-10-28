@@ -33,70 +33,74 @@ function mainView (state, prev, send) {
           <th>Download</th>
           <th class="cell-right">Network</th>
           <th class="cell-right">Size</th>
-          <th></th>
         </thead>
-        ${Object.keys(dats).map((key) => {
-          const dat = dats[key]
-          return html`
-            <tr class="dat-list__item">
-              <td>
-                <div class="dat-hexagon">
-                  ${dat.downloaded ? '↑' : '↓'}
-                </div>
-              </td>
-              <td>
-                <div class="cell-truncate">
-                  ${dat.title || `#${encoding.encode(dat.key)}`}
-                  <br />
-                  <small style="color:#7C8792">
-                    ${dat.owner
-                      ? 'Read & Write'
-                      : 'Read-only'}
-                    ${dat.title && `· #${encoding.encode(dat.key)}`}
-                  </small>
-                </div>
-              </td>
-              ${'TODO download state' && ''}
-              <td>
-                <div class="progress">
-                  <div class="progress__counter">
-                    ${Math.round(dat.progress * 100)}%
-                  </div>
-                  <div class="progress__bar">
-                    <div class="progress__line progress__line--progress" style="width: ${Math.round(dat.progress * 100)}%"></div>
-                  </div>
-                </div>
-              </td>
-              <td class="cell-right">${dat.swarm.connections}</td>
-              <td class="cell-right">
-                ${bytes(dat.content && dat.content.bytes) || '?'}
-              </td>
-              <td>
-                ${button({
-                  icon: 'open-in-finder',
-                  text: '',
-                  klass: 'row-action',
-                  click: () => send('app:open', dat)
-                })}
-                ${button({
-                  icon: 'link',
-                  text: '',
-                  klass: 'row-action',
-                  click: () => send('app:share', dat)
-                })}
-                ${button({
-                  icon: 'delete',
-                  text: '',
-                  klass: 'row-action',
-                  click: () => send('app:delete', dat)
-                })}
-              </td>
-            </tr>
-          ` })
-        }
+        ${createTable(dats, send)}
       </table>
     </body>
   `
+}
+
+function createTable (dats, send) {
+  const arr = Object.keys(dats).map((key) => {
+    const dat = dats[key]
+    return html`
+      <tr class="dat-list__item">
+        <td>
+          <div class="dat-hexagon">
+            ${dat.downloaded ? '↑' : '↓'}
+          </div>
+        </td>
+        <td>
+          <div class="cell-truncate">
+            ${dat.title || `#${encoding.encode(dat.key)}`}
+            <br />
+            <small style="color:#7C8792">
+              ${dat.owner
+                ? 'Read & Write'
+                : 'Read-only'}
+              ${dat.title && `· #${encoding.encode(dat.key)}`}
+            </small>
+          </div>
+        </td>
+        ${'TODO download state' && ''}
+        <td>
+          <div class="progress">
+            <div class="progress__counter">
+              ${Math.round(dat.progress * 100)}%
+            </div>
+            <div class="progress__bar">
+              <div class="progress__line progress__line--progress" style="width: ${Math.round(dat.progress * 100)}%"></div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-right">${dat.swarm.connections}</td>
+        <td class="cell-right">
+          ${bytes(dat.content && dat.content.bytes) || '?'}
+        </td>
+        <td>
+          ${button({
+            icon: 'open-in-finder',
+            text: '',
+            klass: 'row-action',
+            click: () => send('app:open', dat)
+          })}
+          ${button({
+            icon: 'link',
+            text: '',
+            klass: 'row-action',
+            click: () => send('app:share', dat)
+          })}
+          ${button({
+            icon: 'delete',
+            text: '',
+            klass: 'row-action',
+            click: () => send('app:delete', dat)
+          })}
+        </td>
+      </tr>
+    `
+  })
+  return arr
 }
 
 function svgSprite () {
