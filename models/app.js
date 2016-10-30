@@ -38,8 +38,9 @@ function createModel (opts) {
     return { updateIndex: state.updateIndex + 1 }
   })
 
-  model.effect('open', (archive) => {
+  model.effect('open', (state, data) => {
     // TODO(jg): cross platform
+    const archive = data
     exec(`open "${archive.path}"`, err => {
       if (err) throw err
     })
