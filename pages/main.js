@@ -44,8 +44,10 @@ function mainView (state, prev, send) {
   `
 }
 
+// create the inner table element
+// ([obj], fn) -> html
 function createTable (dats, send) {
-  const arr = Object.keys(dats).map((key) => {
+  return Object.keys(dats).map((key) => {
     const dat = dats[key]
     return html`
       <tr class="dat-list__item">
@@ -104,8 +106,6 @@ function createTable (dats, send) {
       </tr>
     `
   })
-  console.log(arr)
-  return arr
 }
 
 function svgSprite () {
