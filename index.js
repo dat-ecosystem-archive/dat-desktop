@@ -5,6 +5,7 @@ const env = process.env.NODE_ENV
 
 let win, file, link
 
+// handle electron events
 ipcMain.on('ready', () => {
   if (file) {
     let path = file
@@ -18,8 +19,12 @@ ipcMain.on('ready', () => {
   }
 })
 
+// create the HTML window inside the electron client
+// null -> null
 function createWindow () {
   win = new BrowserWindow({ width: 1000 })
+
+  // TODO(yw): move the HTML file to a separate package
   win.loadURL(`file://${__dirname}/index.html`)
   if (env === 'development') {
     win.webContents.openDevTools({

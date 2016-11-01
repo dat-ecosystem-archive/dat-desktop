@@ -1,6 +1,6 @@
 'use strict'
 
-const yo = require('yo-yo')
+const yo = require('choo/html')
 const css = require('yo-css')
 
 module.exports = (props) => {

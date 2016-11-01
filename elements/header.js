@@ -1,6 +1,6 @@
 'use strict'
 
-const yo = require('yo-yo')
+const yo = require('choo/html')
 const button = require('./button')
 const encoding = require('dat-encoding')
 const icon = require('./icon')
@@ -27,11 +27,6 @@ module.exports = (props) => {
       </div>
       <div class="dat-header__title">All Dats</div>
       <div class="dat-header__actions">
-        ${button({
-          text: 'Logout',
-          click: props.logout,
-          klass: 'btn btn--transparent header-action header-action--add'
-        })}
         ${button({
           icon: 'create-new-dat',
           text: 'Create New Dat',
