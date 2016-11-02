@@ -1,4 +1,3 @@
-const hyperImport = require('hyperdrive-import-files')
 const dialog = require('electron').remote.dialog
 const clipboard = require('electron').clipboard
 const exec = require('child_process').exec
@@ -15,7 +14,6 @@ module.exports = createModel
 
 function createModel (opts) {
   assert.ok(opts.createArchive, 'models/app: createArchive is not defined')
-  assert.ok(opts.drive, 'models/app: drive is not defined')
   assert.ok(opts.db, 'models/app: db is not defined')
 
   const model = Model('app')
@@ -54,18 +52,26 @@ function createModel (opts) {
     fs.stat(target, (err, stat) => {
       if (err) throw err
 
-      const archive = opts.createArchive(opts.drive, {
-        isFile: stat.isFile(),
+      const archive = opts.createArchive({
+        // TODO add back .isFile
+        // isFile: stat.isFile(),
         path: target
       })
-      hyperImport(archive, target, err => {
+      archive.open(err => {
         if (err) throw err
-        archive.finalize(err => {
+        archive.close(err => {
           if (err) throw err
+          // TODO https://github.com/joehand/dat-js/issues/18
+          archive.db.close(err => {
+            if (err) throw err
 
-          opts.db.put(['archive', archive.key], {
-            path: target,
-            isFile: stat.isFile()
+            // TODO use archive.key, https://github.com/joehand/dat-js/issues/33
+            opts.db.put(['archive', archive.archive.key], {
+              path: target,
+              key: encoding.encode(archive.archive.key)
+              // TODO add back .isFile
+              // isFile: stat.isFile()
+            })
           })
         })
       })

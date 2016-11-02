@@ -53,7 +53,7 @@ function createTable (dats, send) {
       <tr class="dat-list__item">
         <td>
           <div class="dat-hexagon">
-            ${dat.downloaded ? '↑' : '↓'}
+            ${'TODO: always false' && dat.archive && dat.archive.downloaded ? '↑' : '↓'}
           </div>
         </td>
         <td>
@@ -61,14 +61,13 @@ function createTable (dats, send) {
             ${dat.title || `#${encoding.encode(dat.key)}`}
             <br />
             <small style="color:#7C8792">
-              ${dat.owner
+              ${dat.archive && dat.archive.owner
                 ? 'Read & Write'
                 : 'Read-only'}
               ${dat.title && `· #${encoding.encode(dat.key)}`}
             </small>
           </div>
         </td>
-        ${'TODO download state' && ''}
         <td>
           <div class="progress">
             <div class="progress__counter">
@@ -79,9 +78,9 @@ function createTable (dats, send) {
             </div>
           </div>
         </td>
-        <td class="cell-right">${dat.swarm.connections}</td>
+        <td class="cell-right">${'TODO https://github.com/joehand/dat-js/issues/32 dat.stats.connections' && 0}</td>
         <td class="cell-right">
-          ${bytes(dat.content && dat.content.bytes) || '?'}
+          ${bytes(dat.stats.bytesTotal)}
         </td>
         <td>
           ${button({

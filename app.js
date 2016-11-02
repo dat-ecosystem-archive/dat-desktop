@@ -1,5 +1,4 @@
 const ipc = require('electron').ipcRenderer
-const hyperdrive = require('hyperdrive')
 const encoding = require('dat-encoding')
 const bulk = require('bulk-require')
 const mount = require('choo/mount')
@@ -15,9 +14,8 @@ const Db = require('./lib/db')
 const rootDir = RootDir()
 try { fs.mkdirSync(rootDir) } catch (_) {}
 const db = Db(rootDir)
-const drive = hyperdrive(db)
 
-const opts = { rootDir, db, drive, createArchive }
+const opts = { rootDir, db, createArchive }
 const app = choo()
 app.use(log())
 
