@@ -1,5 +1,5 @@
 node_modules
-public/css/main.css
+app/node_modules
+app/public/css/main.css
 .DS_Store
-dmgs
 npm-debug.log
