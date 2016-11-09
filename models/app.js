@@ -63,7 +63,8 @@ function createModel (opts) {
 
             opts.db.put(['archive', archive.key], {
               path: target,
-              key: encoding.encode(archive.key)
+              key: encoding.encode(archive.key),
+              owner: true
             })
           })
         })
