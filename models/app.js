@@ -61,7 +61,7 @@ function createModel (opts) {
   })
   model.effect('create', function create (state, data, send, done) {
     const files = dialog.showOpenDialog({
-      properties: ['openFile', 'openDirectory']
+      properties: ['openDirectory']
     })
     if (!files || !files.length) return
     const target = files[0]
