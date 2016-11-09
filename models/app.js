@@ -27,8 +27,24 @@ function createModel (opts) {
   })
 
   model.subscription('livestream', (send, done) => {
-    liveStream(opts, archives, (archives) => {
-      send('app:updateArchives', archives, done)
+    liveStream(opts, archives, () => {
+      send('app:updateArchives', Object.keys(archives).reduce((acc, key) => {
+        const archive = archives[key]
+        acc[key] = {
+          key: archive.key,
+          title: archive.title,
+          owner: archive.owner,
+          progress: archive.progress,
+          stats: {
+            peers: archive.stats.peers,
+            bytesTotal: archive.stats.bytesTotal
+          },
+          archive: {
+            downloaded: archive.archive && archive.archive.downloaded
+          }
+        }
+        return acc
+      }, {}), done)
     })
   })
 
