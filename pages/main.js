@@ -61,7 +61,7 @@ function createTable (dats, send) {
             ${dat.title || `#${encoding.encode(dat.key)}`}
             <br />
             <small style="color:#7C8792">
-              ${dat.archive && dat.archive.owner
+              ${dat.owner
                 ? 'Read & Write'
                 : 'Read-only'}
               ${dat.title && `· #${encoding.encode(dat.key)}`}
@@ -78,7 +78,7 @@ function createTable (dats, send) {
             </div>
           </div>
         </td>
-        <td class="cell-right">${'TODO https://github.com/joehand/dat-js/issues/32 dat.stats.connections' && 0}</td>
+        <td class="cell-right">${dat.stats.peers}</td>
         <td class="cell-right">
           ${bytes(dat.stats.bytesTotal)}
         </td>

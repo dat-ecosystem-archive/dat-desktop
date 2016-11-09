@@ -65,10 +65,9 @@ function createModel (opts) {
           archive.db.close(err => {
             if (err) throw err
 
-            // TODO use archive.key, https://github.com/joehand/dat-js/issues/33
-            opts.db.put(['archive', archive.archive.key], {
+            opts.db.put(['archive', archive.key], {
               path: target,
-              key: encoding.encode(archive.archive.key)
+              key: encoding.encode(archive.key)
               // TODO add back .isFile
               // isFile: stat.isFile()
             })
