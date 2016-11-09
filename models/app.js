@@ -52,11 +52,7 @@ function createModel (opts) {
     fs.stat(target, (err, stat) => {
       if (err) throw err
 
-      const archive = opts.createArchive({
-        // TODO add back .isFile
-        // isFile: stat.isFile(),
-        path: target
-      })
+      const archive = opts.createArchive({ path: target })
       archive.open(err => {
         if (err) throw err
         archive.close(err => {
@@ -68,8 +64,6 @@ function createModel (opts) {
             opts.db.put(['archive', archive.key], {
               path: target,
               key: encoding.encode(archive.key)
-              // TODO add back .isFile
-              // isFile: stat.isFile()
             })
           })
         })
