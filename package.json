@@ -3,14 +3,15 @@
   "productName": "Dat Desktop",
   "version": "1.0.1",
   "license": "MIT",
-  "repository": "juliangruber/dat-desktop",
+  "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
   "scripts": {
-    "rebuild": "cd app && npm rebuild --runtime=electron --target=$(electron --version) --disturl=https://atom.io/download/atom-shell --abi=$(electron --abi)",
-    "build-css": "node-sass --importer node_modules/node-sass-magic-importer --include-path app/scss app/scss/main.scss app/public/css/main.css",
-    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "rebuild": "./scripts/build rebuild",
+    "clean": "rm -rf node_modules/ && rm -rf app/node_modules/",
+    "build-css": "./scripts/build css",
     "start": "NODE_ENV=development electron app",
-    "test": "standard app"
+    "test": "standard app",
+    "postinstall": "./scripts/build postinstall"
   },
   "devDependencies": {
     "appdmg": "^0.4.5",

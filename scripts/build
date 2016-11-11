@@ -1,0 +1,45 @@
+#!/bin/sh
+
+usage () {
+  printf 'Usage: scripts/build [-h]'
+}
+
+rebuild () {
+  cd "./app" || exit 1
+  printf '[scripts/build] rebuilding native deps \n'
+  electron_version="$(electron --version | sed s/v//)"
+  electron_abi="$(electron --abi)"
+  npm rebuild \
+    --runtime=electron \
+    --target="$electron_version" \
+    --disturl=https://atom.io/download/atom-shell \
+    --abi="$electron_abi" > /dev/null
+}
+
+build_css () {
+  printf '[scripts/build] building css\n'
+  node-sass \
+    --importer node_modules/node-sass-magic-importer \
+    --include-path app/scss app/scss/main.scss app/public/css/main.css \
+    > /dev/null
+}
+
+postinstall () {
+  printf '[scripts/build] installing app deps \n'
+  _currdir="$(pwd)"
+  cd "./app" || exit 1
+  npm install
+  cd "$_currdir" || exit 1
+  build_css
+  rebuild
+}
+
+# parse CLI flags
+while true; do
+  case "$1" in
+    rebuild ) shift; rebuild; break ;;
+    css ) shift; build_css; break ;;
+    postinstall ) shift; postinstall; break ;;
+    * ) usage; break ;;
+  esac
+done
