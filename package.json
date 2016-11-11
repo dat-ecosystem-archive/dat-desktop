@@ -15,7 +15,7 @@
     "dat-design": "^2.0.0",
     "dat-encoding": "^3.0.0",
     "electron-default-menu": "^1.0.0",
-    "electron": "1.4.4",
+    "electron": "1.4.6",
     "hyperdrive": "^7.3.0",
     "hyperdrive-archive-swarm": "^3.1.0",
     "hyperdrive-import-files": "^2.2.0",
