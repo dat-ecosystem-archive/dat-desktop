@@ -37,7 +37,7 @@
     "build-dmg": "appdmg dmg.json dist/Dat-$npm_package_version.dmg && rm -Rf dist/Dat-darwin-x64",
     "deps": "dependency-check package.json app.js",
     "package": "npm run build-app && npm run build-dmg",
-    "rebuild": "npm rebuild --runtime=electron --target=1.4.4 --disturl=https://atom.io/download/atom-shell --abi=50 && cd node_modules/appdmg/ && rm -Rf node_modules && npm install",
+    "rebuild": "npm rebuild --runtime=electron --target=$(electron --version)  --disturl=https://atom.io/download/atom-shell --abi=$(electron --abi) && cd node_modules/appdmg/ && rm -Rf node_modules && npm install",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""
