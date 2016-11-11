@@ -53,7 +53,7 @@ function createTable (dats, send) {
       <tr class="dat-list__item">
         <td>
           <div class="dat-hexagon">
-            ${'TODO: always false' && dat.archive && dat.archive.downloaded ? '↑' : '↓'}
+            ${dat.owner ? '↑' : '↓'}
           </div>
         </td>
         <td>
