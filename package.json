@@ -6,7 +6,7 @@
   "repository": "juliangruber/dat-desktop",
   "description": "Dat Desktop App",
   "scripts": {
-    "rebuild": "cd app && npm rebuild --runtime=electron --target=1.4.4 --disturl=https://atom.io/download/atom-shell --abi=50",
+    "rebuild": "cd app && npm rebuild --runtime=electron --target=$(electron --version) --disturl=https://atom.io/download/atom-shell --abi=$(electron --abi)",
     "build-css": "node-sass --importer node_modules/node-sass-magic-importer --include-path app/scss app/scss/main.scss app/public/css/main.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\"",
     "start": "NODE_ENV=development electron app",
