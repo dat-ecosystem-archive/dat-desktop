@@ -3,7 +3,7 @@
   "productName": "Dat Desktop",
   "version": "1.0.1",
   "license": "MIT",
-  "repository": "juliangruber/dat-desktop",
+  "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
   "dependencies": {
     "bulk-require": "^1.0.0",
@@ -33,13 +33,15 @@
   },
   "scripts": {
     "build-app": "electron-packager . Dat --platform=darwin --arch=x64 --out=dist/ --overwrite --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns",
-    "build-css": "node-sass --importer node_modules/node-sass-magic-importer --include-path scss scss/main.scss public/css/main.css",
     "build-dmg": "appdmg dmg.json dist/Dat-$npm_package_version.dmg && rm -Rf dist/Dat-darwin-x64",
     "deps": "dependency-check package.json app.js",
     "package": "npm run build-app && npm run build-dmg",
-    "rebuild": "npm rebuild --runtime=electron --target=$(electron --version)  --disturl=https://atom.io/download/atom-shell --abi=$(electron --abi) && cd node_modules/appdmg/ && rm -Rf node_modules && npm install",
+    "rebuild": "./scripts/build rebuild",
+    "clean": "rm -rf node_modules/",
+    "build-css": "./scripts/build css",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps",
+    "postinstall": "./scripts/build postinstall",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""
   },
   "devDependencies": {
