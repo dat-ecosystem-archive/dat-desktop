@@ -10,7 +10,7 @@
     "bytes": "^2.4.0",
     "bytewise": "^1.1.0",
     "choo": "^4.0.0-5",
-    "choo-log": "^2.0.1",
+    "choo-log": "^3.0.0",
     "collect-stream": "^1.1.1",
     "dat-design": "^2.0.0",
     "dat-encoding": "^3.0.0",
