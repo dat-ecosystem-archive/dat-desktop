@@ -11,7 +11,6 @@ WIP desktop app for [dat](https://github.com/maxogden/dat).
 
 ```bash
 $ npm install
-$ (cd app && npm install)
 $ npm run rebuild
 $ npm start
 ```
