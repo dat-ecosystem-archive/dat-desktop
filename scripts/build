@@ -5,7 +5,6 @@ usage () {
 }
 
 rebuild () {
-  cd "./app" || exit 1
   printf '[scripts/build] rebuilding native deps \n'
   electron_version="$(electron --version | sed s/v//)"
   electron_abi="$(electron --abi)"
@@ -26,10 +25,7 @@ build_css () {
 
 postinstall () {
   printf '[scripts/build] installing app deps \n'
-  _currdir="$(pwd)"
-  cd "./app" || exit 1
   npm install
-  cd "$_currdir" || exit 1
   build_css
   rebuild
 }
