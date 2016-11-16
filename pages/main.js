@@ -53,7 +53,7 @@ function createTable (dats, send) {
       <tr class="dat-list__item">
         <td>
           <div class="dat-hexagon">
-            ${dat.downloaded ? '↑' : '↓'}
+            ${dat.owner ? '↑' : '↓'}
           </div>
         </td>
         <td>
@@ -68,7 +68,6 @@ function createTable (dats, send) {
             </small>
           </div>
         </td>
-        ${'TODO download state' && ''}
         <td>
           <div class="progress">
             <div class="progress__counter">
@@ -79,9 +78,9 @@ function createTable (dats, send) {
             </div>
           </div>
         </td>
-        <td class="cell-right">${dat.swarm.connections}</td>
+        <td class="cell-right">${dat.stats.peers}</td>
         <td class="cell-right">
-          ${bytes(dat.content && dat.content.bytes) || '?'}
+          ${bytes(dat.stats.bytesTotal)}
         </td>
         <td>
           ${button({

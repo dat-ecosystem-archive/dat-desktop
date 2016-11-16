@@ -1,4 +1,3 @@
-const hyperImport = require('hyperdrive-import-files')
 const dialog = require('electron').remote.dialog
 const clipboard = require('electron').clipboard
 const exec = require('child_process').exec
@@ -15,7 +14,6 @@ module.exports = createModel
 
 function createModel (opts) {
   assert.ok(opts.createArchive, 'models/app: createArchive is not defined')
-  assert.ok(opts.drive, 'models/app: drive is not defined')
   assert.ok(opts.db, 'models/app: db is not defined')
 
   const model = Model('app')
@@ -29,7 +27,7 @@ function createModel (opts) {
   })
 
   model.subscription('livestream', (send, done) => {
-    liveStream(opts, archives, (archives) => {
+    liveStream(opts, archives, () => {
       send('app:updateArchives', archives, done)
     })
   })
@@ -47,25 +45,27 @@ function createModel (opts) {
   })
   model.effect('create', function create (state, data, send, done) {
     const files = dialog.showOpenDialog({
-      properties: ['openFile', 'openDirectory']
+      properties: ['openDirectory']
     })
     if (!files || !files.length) return
     const target = files[0]
     fs.stat(target, (err, stat) => {
       if (err) throw err
 
-      const archive = opts.createArchive(opts.drive, {
-        isFile: stat.isFile(),
-        path: target
-      })
-      hyperImport(archive, target, err => {
+      const archive = opts.createArchive({ path: target })
+      archive.open(err => {
         if (err) throw err
-        archive.finalize(err => {
+        archive.close(err => {
           if (err) throw err
+          // TODO https://github.com/joehand/dat-js/issues/18
+          archive.db.close(err => {
+            if (err) throw err
 
-          opts.db.put(['archive', archive.key], {
-            path: target,
-            isFile: stat.isFile()
+            opts.db.put(['archive', archive.key], {
+              path: target,
+              key: encoding.encode(archive.key),
+              owner: true
+            })
           })
         })
       })
