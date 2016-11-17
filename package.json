@@ -5,6 +5,7 @@
   "license": "MIT",
   "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
+  "author": "Dat Team",
   "dependencies": {
     "bulk-require": "^1.0.0",
     "bytes": "^2.4.0",
@@ -15,7 +16,6 @@
     "dat-colors": "^2.0.0",
     "dat-encoding": "^3.0.0",
     "dat-js": "^3.8.0",
-    "electron": "1.4.6",
     "electron-default-menu": "^1.0.0",
     "electron-window": "^0.8.1",
     "envobj": "^1.0.2",
@@ -42,17 +42,26 @@
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps",
     "postinstall": "./scripts/build postinstall",
-    "watch-css": "nodemon -e scss -x \"npm run build-css\""
+    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "pack": "build --dir",
+    "dist": "build"
   },
   "devDependencies": {
     "appdmg": "^0.4.5",
     "bulkify": "^1.4.2",
     "dat-icons": "^1.3.0",
     "dependency-check": "^2.6.0",
-    "electron-packager": "^7.0.2",
+    "electron": "1.4.6",
+    "electron-builder": "^8.6.0",
     "node-sass": "^3.8.0",
     "node-sass-magic-importer": "^1.0.1",
     "nodemon": "^1.9.2",
     "standard": "^7.1.2"
+  },
+  "build": {
+    "appId": "com.dat.desktop",
+    "mac": {
+      "category": "your.app.category.type"
+    }
   }
 }
