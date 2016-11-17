@@ -49,6 +49,12 @@ function mainView (state, prev, send) {
 function createTable (dats, send) {
   return Object.keys(dats).map((key) => {
     const dat = dats[key]
+    const stats = dat.hyperStats && dat.hyperStats.get()
+    const progress = stats
+      ? stats.blocksTotal
+        ? Math.round(((stats.blocksProgress / stats.blocksTotal) | 0) * 100)
+        : 100
+      : 0
     return html`
       <tr class="dat-list__item">
         <td>
@@ -71,10 +77,10 @@ function createTable (dats, send) {
         <td>
           <div class="progress">
             <div class="progress__counter">
-              ${Math.round(dat.progress * 100)}%
+              ${progress}%
             </div>
             <div class="progress__bar">
-              <div class="progress__line progress__line--progress" style="width: ${Math.round(dat.progress * 100)}%"></div>
+              <div class="progress__line progress__line--progress" style="width: ${progress}%"></div>
             </div>
           </div>
         </td>
