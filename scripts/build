@@ -19,7 +19,7 @@ build_css () {
   printf '[scripts/build] building css\n'
   node-sass \
     --importer node_modules/node-sass-magic-importer \
-    --include-path app/scss app/scss/main.scss app/public/css/main.css \
+    --include-path app/scss scss/main.scss public/css/main.css \
     > /dev/null
 }
 
