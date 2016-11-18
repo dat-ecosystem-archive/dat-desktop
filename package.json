@@ -62,6 +62,12 @@
     "appId": "com.dat.desktop",
     "mac": {
       "category": "your.app.category.type"
+    },
+    "dmg": {
+      "contents": [
+        { "x": 220, "y": 200 },
+        { "x": 448, "y": 200, "type": "link", "path": "/Applications" }
+      ]
     }
   }
 }
