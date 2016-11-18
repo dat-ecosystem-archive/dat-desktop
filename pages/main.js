@@ -80,7 +80,16 @@ function createTable (dats, send) {
               ${progress}%
             </div>
             <div class="progress__bar">
-              <div class="progress__line progress__line--progress" style="width: ${progress}%"></div>
+              <div
+                class="progress__line progress__line--${
+                  progress < 1
+                    ? dat.stats.peers > 0
+                      ? 'loading'
+                      : 'paused'
+                    : 'complete'
+                }"
+                style="width: ${progress}%"
+              ></div>
             </div>
           </div>
         </td>
