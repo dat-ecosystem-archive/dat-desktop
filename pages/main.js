@@ -55,6 +55,11 @@ function createTable (dats, send) {
         ? Math.round(((stats.blocksProgress / stats.blocksTotal) | 0) * 100)
         : 100
       : 0
+    const state = progress < 1
+      ? dat.stats.peers > 0
+        ? 'loading'
+        : 'paused'
+      : 'complete'
     return html`
       <tr class="dat-list__item">
         <td>
@@ -81,13 +86,7 @@ function createTable (dats, send) {
             </div>
             <div class="progress__bar">
               <div
-                class="progress__line progress__line--${
-                  progress < 1
-                    ? dat.stats.peers > 0
-                      ? 'loading'
-                      : 'paused'
-                    : 'complete'
-                }"
+                class="progress__line progress__line--${state}"
                 style="width: ${progress}%"
               ></div>
             </div>
