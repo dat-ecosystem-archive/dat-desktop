@@ -40,6 +40,7 @@
     "rebuild": "./scripts/build rebuild",
     "clean": "rm -rf node_modules/",
     "build-css": "./scripts/build css",
+    "build-background": "./scripts/build background",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps",
     "postinstall": "./scripts/build postinstall",

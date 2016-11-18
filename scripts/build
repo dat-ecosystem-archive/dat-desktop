@@ -23,9 +23,18 @@ build_css () {
     > /dev/null
 }
 
+build_background () {
+  printf '[scripts/build] building background\n'
+  tiffutil \
+    -cathidpicheck \
+    build/background.png build/background\@2x.png \
+    -out build/background.tiff
+}
+
 postinstall () {
   printf '[scripts/build] installing app deps \n'
   build_css
+  build_background
   rebuild
 }
 
@@ -34,6 +43,7 @@ while true; do
   case "$1" in
     rebuild ) shift; rebuild; break ;;
     css ) shift; build_css; break ;;
+    background ) shift; build_background; break ;;
     postinstall ) shift; postinstall; break ;;
     * ) usage; break ;;
   esac
