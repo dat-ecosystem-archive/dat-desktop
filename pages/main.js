@@ -64,7 +64,11 @@ function createTable (dats, send) {
       <tr class="dat-list__item">
         <td>
           <div class="dat-hexagon">
-            ${dat.owner ? '↑' : '↓'}
+            ${{
+              loading: '↓',
+              paused: '',
+              complete: '↑'
+            }[state]}
           </div>
         </td>
         <td>
