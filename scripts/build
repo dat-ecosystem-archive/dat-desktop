@@ -25,7 +25,6 @@ build_css () {
 
 postinstall () {
   printf '[scripts/build] installing app deps \n'
-  npm install
   build_css
   rebuild
 }
