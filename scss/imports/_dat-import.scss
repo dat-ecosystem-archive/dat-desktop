@@ -3,11 +3,11 @@
 .dat-import {
   float: left;
   position: relative;
-  margin-top: .5rem;
+  margin-top: .1rem;
 }
 
 .dat-import--input {
-  height: 3rem;
+  height: 2rem;
   padding-right: 1rem;
   padding-left: 3rem;
   border-radius: 2px;
@@ -15,4 +15,10 @@
   &:hover, &:focus, &:active {
     outline: none;
   }
+}
+
+// XXX: override
+.dat-import--icon {
+  top: calc(1rem - (1.5rem / 2));
+  left: 0.5rem;
 }

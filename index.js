@@ -22,7 +22,7 @@ ipcMain.on('ready', () => {
 // create the HTML window inside the electron client
 // null -> null
 function createWindow () {
-  win = new BrowserWindow({ width: 1000 })
+  win = new BrowserWindow({ width: 1000, titleBarStyle: 'hidden-inset' })
 
   // TODO(yw): move the HTML file to a separate package
   win.loadURL(`file://${__dirname}/index.html`)

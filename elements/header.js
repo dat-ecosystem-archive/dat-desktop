@@ -25,7 +25,6 @@ module.exports = (props) => {
           id: 'menu'
         })}
       </div>
-      <div class="dat-header__title">All Dats</div>
       <div class="dat-header__actions">
         ${button({
           icon: 'create-new-dat',
