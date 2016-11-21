@@ -5,6 +5,7 @@
   padding-right: 1.5rem;
   background-color: $color-green--hover;
   color: $color-white;
+  -webkit-app-region: drag;
 }
 
 .dat-header__menu-trigger {
