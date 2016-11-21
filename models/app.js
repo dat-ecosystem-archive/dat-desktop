@@ -52,18 +52,18 @@ function createModel (opts) {
     fs.stat(target, (err, stat) => {
       if (err) throw err
 
-      const archive = opts.createArchive({ path: target })
-      archive.open(err => {
+      const dat = opts.createArchive({ path: target })
+      dat.open(err => {
         if (err) throw err
-        archive.close(err => {
+        dat.close(err => {
           if (err) throw err
           // TODO https://github.com/joehand/dat-js/issues/18
-          archive.db.close(err => {
+          dat.db.close(err => {
             if (err) throw err
 
-            opts.db.put(['archive', archive.key], {
+            opts.db.put(['archive', dat.archive.key], {
               path: target,
-              key: encoding.encode(archive.key),
+              key: encoding.encode(dat.archive.key),
               owner: true
             })
           })
