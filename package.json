@@ -1,6 +1,6 @@
 {
   "name": "dat-desktop",
-  "productName": "Dat Desktop",
+  "productName": "Dat",
   "version": "1.0.1",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
@@ -60,7 +60,7 @@
     "standard": "^7.1.2"
   },
   "build": {
-    "appId": "com.dat.desktop",
+    "appId": "com.datproject.dat",
     "mac": {
       "category": "your.app.category.type"
     },
