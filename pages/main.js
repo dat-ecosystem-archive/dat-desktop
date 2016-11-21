@@ -60,16 +60,15 @@ function createTable (dats, send) {
         ? 'loading'
         : 'paused'
       : 'complete'
+    const hexContent = {
+      loading: '↓',
+      paused: '',
+      complete: '↑'
+    }[state]
     return html`
       <tr class="dat-list__item">
         <td>
-          <div class="dat-hexagon">
-            ${{
-              loading: '↓',
-              paused: '',
-              complete: '↑'
-            }[state]}
-          </div>
+          <div class="dat-hexagon">${hexContent}</div>
         </td>
         <td>
           <div class="cell-truncate">
