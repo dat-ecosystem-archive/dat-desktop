@@ -24,7 +24,6 @@
     "insert-css": "^1.0.0",
     "js-alert": "^1.0.4",
     "level": "^1.4.0",
-    "level-live-stream": "1.4.11",
     "minimist": "^1.2.0",
     "sheetify": "^5.1.1",
     "subleveldown": "^2.1.0",
