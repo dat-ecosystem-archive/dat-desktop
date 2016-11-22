@@ -1,16 +1,9 @@
 'use strict'
 
 const yo = require('choo/html')
-const css = require('yo-css')
 const icon = require('./icon')
 
 module.exports = (props, click) => {
-  const style = {
-    border: 0,
-    backgroundColor: 'transparent',
-    textTransform: 'uppercase',
-    color: 'inherit'
-  }
   if (typeof click === 'function') props.click = click
 
   var child
@@ -27,7 +20,7 @@ module.exports = (props, click) => {
   }
 
   return yo`
-    <button onclick=${props.click} style=${css(style, props.style)} class=${props.klass || ''}>
+    <button onclick=${props.click} class="button-reset ${props.cls || ''}">
       ${child}
     </button>
   `

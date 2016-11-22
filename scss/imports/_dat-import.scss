@@ -1,9 +1,17 @@
-// dat-import
+// example:
+// <div class="dat-import">
+//   <div class="dat-import--icon">
+//     <img src="./public/img/link.svg" />
+//   </div>
+//   <input type="text" readonly="true" value="" id="share-link" data-intro="" class="dat-import--input">
+// </div>
 
+// dat-import
 .dat-import {
+  position: relative;
+  overflow: hidden;
   float: left;
   position: relative;
-  margin-top: .1rem;
 }
 
 .dat-import--input {
@@ -12,13 +20,23 @@
   padding-left: 3rem;
   border-radius: 2px;
   border: none;
+  color: $color-neutral--60;
+  text-transform: uppercase;
+  letter-spacing: .025em
   &:hover, &:focus, &:active {
     outline: none;
+    color: $color-neutral;
   }
 }
 
-// XXX: override
 .dat-import--icon {
-  top: calc(1rem - (1.5rem / 2));
-  left: 0.5rem;
+  $icon-height: 1.2rem;
+  position: absolute;
+  top: calc(1rem - (#{$icon-height} / 2));
+  left: .5rem;
+  pointer-events: none;
+  display: block;
+  width: $icon-height;
+  height: $icon-height;
+  fill: $color-neutral--40;
 }

@@ -1,0 +1,11 @@
+// action buttons in top bar (header)
+.header-action {
+  color: $color-neutral--20;
+  svg {
+    width: 1.1em;
+    max-height: 1.6em;
+  }
+  &:hover, &:focus {
+    color: $color-white;
+  }
+}

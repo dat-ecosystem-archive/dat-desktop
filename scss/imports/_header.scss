@@ -1,0 +1,23 @@
+// dat-header
+
+.dat-header {
+  height: 3rem;
+  padding: .5rem .75rem;
+  background-color: $color-neutral;
+  color: $color-white;
+  -webkit-app-region: drag;
+}
+
+.menu-trigger {
+  height: 2rem;
+  padding-left: .625rem;
+  width: 2.5rem;
+  .icon-menu {
+    fill: $color-neutral--20;
+  }
+  &:hover, &:focus {
+    .icon-menu {
+      fill: $color-white;
+    }
+  }
+}

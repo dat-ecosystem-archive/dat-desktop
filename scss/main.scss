@@ -7,9 +7,13 @@
  * More magic importer features:
  * https://github.com/maoberlehner/node-sass-magic-importer
  */
-@import "~dat-design/scss/base.scss";
+
+@import "~tachyons/css/tachyons.css";
 @import "imports/base";
-@import "imports/dat-button";
-@import "imports/dat-header";
+@import "imports/header";
+@import "imports/header-action";
 @import "imports/dat-import";
-@import "imports/dat-list";
+@import "imports/progress";
+@import "imports/table";
+@import "imports/row-state";
+@import "imports/row-action";
