@@ -7,7 +7,7 @@ const path = require('path')
 const delegateEvents = require('./lib/delegate-electron-events')
 
 const windowStyles = {
-  width: 1000,
+  width: 960,
   titleBarStyle: 'hidden-inset'
 }
 
