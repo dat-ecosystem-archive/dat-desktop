@@ -17,6 +17,8 @@
     "dat-js": "^3.8.0",
     "electron": "1.4.6",
     "electron-default-menu": "^1.0.0",
+    "electron-window": "^0.8.1",
+    "envobj": "^1.0.2",
     "hyperdrive-stats": "^2.2.5",
     "insert-css": "^1.0.0",
     "js-alert": "^1.0.4",

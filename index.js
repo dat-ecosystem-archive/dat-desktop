@@ -1,60 +1,30 @@
-const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron')
 const defaultMenu = require('electron-default-menu')
+const { app, shell, Menu } = require('electron')
+const window = require('electron-window')
+const Env = require('envobj')
+const path = require('path')
 
-const env = process.env.NODE_ENV
+const delegateEvents = require('./lib/delegate-electron-events')
 
-let win, file, link
-
-// handle electron events
-ipcMain.on('ready', () => {
-  if (file) {
-    let path = file
-    file = null
-    win.webContents.send('file', path)
-  }
-  if (link) {
-    let url = link
-    link = null
-    win.webContents.send('link', url)
-  }
-})
-
-// create the HTML window inside the electron client
-// null -> null
-function createWindow () {
-  win = new BrowserWindow({ width: 1000, titleBarStyle: 'hidden-inset' })
-
-  // TODO(yw): move the HTML file to a separate package
-  win.loadURL(`file://${__dirname}/index.html`)
-  if (env === 'development') {
-    win.webContents.openDevTools({
-      mode: 'detach'
-    })
-  }
-  win.on('closed', () => { win = null })
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)))
+const windowStyles = {
+  width: 1000,
+  titleBarStyle: 'hidden-inset'
 }
 
+const env = Env({ NODE_ENV: 'production' })
+const emitter = delegateEvents() // make sure we don't miss events while booting
+
 app.on('ready', () => {
-  app.ready = true
-  createWindow()
-})
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})
-app.on('activate', () => {
-  if (!win && app.ready) createWindow()
-})
-app.on('will-finish-launching', () => {
-  app.on('open-file', (ev, path) => {
-    ev.preventDefault()
-    if (win) win.webContents.send('file', path)
-    else file = path
-  })
-  app.on('open-url', (ev, url) => {
-    ev.preventDefault()
-    if (win) win.webContents.send('link', url)
-    else link = url
+  const mainWindow = window.createWindow(windowStyles)
+  const indexPath = path.join(__dirname, 'index.html')
+
+  emitter.on('open-file', (file) => mainWindow.webContents.send('file', file))
+  emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
+
+  mainWindow.showUrl(indexPath, () => {
+    Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)))
+    if (env.NODE_ENV === 'development') {
+      mainWindow.webContents.openDevTools({ mode: 'detach' })
+    }
   })
 })
