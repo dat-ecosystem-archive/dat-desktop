@@ -1,3 +1,4 @@
+// TODO: use dat-colors, remove sass variables. kriesse
 $color-white: #FFFFFF;
 
 $color-neutral: #293648;
@@ -45,6 +46,23 @@ body {
 
 body, input, textarea, select, button {
   font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
+}
+
+// nativize for electron desktop feel
+
+html {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.is-selectable {
+  -webkit-user-select: auto;
+  cursor: auto;
 }
 
 .f7 {
