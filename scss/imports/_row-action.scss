@@ -1,0 +1,12 @@
+// icon-only buttons at end of dat row
+.row-action {
+  color: $color-neutral--20;
+  svg {
+    width: 1.1em;
+    max-height: 1.6em;
+  }
+  &:hover, &:focus {
+    outline: none;
+    color: $color-neutral--50;
+  }
+}

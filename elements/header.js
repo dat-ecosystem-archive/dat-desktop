@@ -19,17 +19,17 @@ module.exports = (props) => {
     }
   }
   return yo`
-    <header class="dat-header dat-header--dark">
-      <div class="dat-header__menu-trigger">
-        ${icon({
-          id: 'menu'
-        })}
-      </div>
-      <div class="dat-header__actions">
+    <header class="dat-header">
+      ${button({
+        icon: 'menu',
+        text: '',
+        cls: 'fr button-reset menu-trigger'
+      })}
+      <div class="fr">
         ${button({
           icon: 'create-new-dat',
           text: 'Create New Dat',
-          klass: 'btn btn--transparent header-action header-action--add',
+          cls: 'fr ml3 header-action',
           click: props.create
         })}
         <div class="dat-import">

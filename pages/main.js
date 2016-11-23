@@ -4,14 +4,9 @@ const encoding = require('dat-encoding')
 const SvgSprite = require('dat-icons')
 const html = require('choo/html')
 const bytes = require('bytes')
-const css = require('yo-css')
 
 const button = require('../elements/button')
 const header = require('../elements/header')
-
-const style = {
-  table: { borderCollapse: 'collapse' }
-}
 
 module.exports = mainView
 
@@ -26,14 +21,15 @@ function mainView (state, prev, send) {
         create: () => send('app:create'),
         download: (link) => send('app:download', link)
       })}
-      <table style=${css(style.table)} class="dat-list">
-        <thead style=${css(style.heading)} class="dat-list__header">
+      <table class="w-100 collapse table">
+        <thead class="table__header">
           <tr>
             <th></th>
-            <th>Link</th>
-            <th>Download</th>
-            <th class="cell-right">Network</th>
-            <th class="cell-right">Size</th>
+            <th class="tl">Link</th>
+            <th class="tl">Download</th>
+            <th class="tr">Network</th>
+            <th class="tr">Size</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +62,7 @@ function createTable (dats, send) {
       complete: '↑'
     }[state]
     return html`
-      <tr class="dat-list__item">
+      <tr class="table__item">
         <td>
           <div class="dat-hexagon">${hexContent}</div>
         </td>
@@ -74,12 +70,12 @@ function createTable (dats, send) {
           <div class="cell-truncate">
             ${dat.title || `#${encoding.encode(dat.key)}`}
             <br />
-            <small style="color:#7C8792">
+            <span class="f7">
               ${dat.owner
                 ? 'Read & Write'
                 : 'Read-only'}
               ${dat.title && `· #${encoding.encode(dat.key)}`}
-            </small>
+            </span>
           </div>
         </td>
         <td>
@@ -95,27 +91,27 @@ function createTable (dats, send) {
             </div>
           </div>
         </td>
-        <td class="cell-right">${dat.stats.peers}</td>
-        <td class="cell-right">
+        <td class="tr">${dat.stats.peers}</td>
+        <td class="tr">
           ${bytes(dat.stats.bytesTotal)}
         </td>
         <td>
           ${button({
             icon: 'open-in-finder',
             text: '',
-            klass: 'row-action',
+            cls: 'row-action',
             click: () => send('app:open', dat)
           })}
           ${button({
             icon: 'link',
             text: '',
-            klass: 'row-action',
+            cls: 'row-action',
             click: () => send('app:share', dat)
           })}
           ${button({
             icon: 'delete',
             text: '',
-            klass: 'row-action',
+            cls: 'row-action',
             click: () => send('app:delete', dat)
           })}
         </td>

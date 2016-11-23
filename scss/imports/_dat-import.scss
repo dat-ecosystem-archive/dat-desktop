@@ -1,24 +1,57 @@
+// example:
+// <div class="dat-import">
+//   <div class="dat-import--icon">
+//     <img src="./public/img/link.svg" />
+//   </div>
+//   <input type="text" readonly="true" value="" id="share-link" data-intro="" class="dat-import--input">
+// </div>
+
 // dat-import
 
+$input-height: 2rem;
+$icon-height: 1.2rem;
+
 .dat-import {
-  float: left;
   position: relative;
-  margin-top: .1rem;
+  float: left;
 }
 
 .dat-import--input {
-  height: 2rem;
+  height: $input-height;
+  width: 10rem;
   padding-right: 1rem;
-  padding-left: 3rem;
+  padding-left: 2.5rem;
   border-radius: 2px;
   border: none;
+  background-color: transparent;
+  color: $color-neutral--20;
+  text-transform: uppercase;
+  letter-spacing: .025em;
+  transition-property: width;
+  transition-duration: .15s;
+  transition-timing-function: ease-in;
   &:hover, &:focus, &:active {
     outline: none;
   }
+  &:hover {
+    color: $color-white;
+  }
+  &:focus, &:active {
+    width: 20rem;
+    outline: none;
+    background-color: $color-white;
+    color: $color-neutral;
+  }
 }
 
-// XXX: override
 .dat-import--icon {
-  top: calc(1rem - (1.5rem / 2));
-  left: 0.5rem;
+  $icon-height: 1.2rem;
+  position: absolute;
+  top: calc(#{$input-height} / 2 - #{$icon-height} / 2);
+  left: .5rem;
+  pointer-events: none;
+  display: block;
+  width: $icon-height;
+  height: $icon-height;
+  fill: $color-neutral--20;
 }

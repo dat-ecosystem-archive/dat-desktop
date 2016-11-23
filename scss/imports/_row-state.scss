@@ -1,0 +1,31 @@
+// hexagon
+
+.dat-hexagon {
+  position: relative;
+  width: 20px;
+  height: 11.55px;
+  margin: 5.77px 0;
+  text-align: center;
+  background-color: $color-green--hover;
+  color: $color-white;
+  line-height: .8;
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+  }
+  &:before {
+    bottom: 100%;
+    border-bottom: 5.77px solid $color-green--hover;
+  }
+
+  &:after {
+    top: 100%;
+    width: 0;
+    border-top: 5.77px solid $color-green--hover;
+  }
+}

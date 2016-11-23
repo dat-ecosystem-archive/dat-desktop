@@ -1,0 +1,77 @@
+// progress bar
+
+$progress-height: .5rem;
+$bar-height: $progress-height;
+$counter-width: 3rem;
+
+.progress {
+  overflow: hidden;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+.progress__bar {
+  height: $progress-height;
+  width: calc(100% - #{$counter-width});
+  float: left;
+  overflow: hidden;
+  background-color: $color-neutral--20;
+  border-radius: 2px;
+}
+
+.progress__line {
+  width: 0%;
+  height: $progress-height;
+  background-color: $color-info;
+  border-radius: 2px;
+}
+
+.progress__line--loading {
+  $tile-width: 28px;
+  $stripe-width: 5px;
+  @keyframes move-bg {
+    0% {
+      background-position: $tile-width 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+  overflow: hidden;
+  position: relative;
+  height: $bar-height;
+  &:before {
+    content: '';
+    width: 100%;
+    height: $bar-height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent $stripe-width,
+      rgba(255,255,255,.1) $stripe-width,
+      rgba(255,255,255,.1) (2 * $stripe-width)
+    );
+    background-size: $tile-width $bar-height;
+    animation: move-bg .75s linear infinite;
+  }
+}
+
+.progress__line--complete {
+  background-color: $color-green;
+}
+
+.progress__line--paused {
+  background-color: $color-neutral--60;
+}
+
+.progress__counter {
+  float: right;
+  min-width: $counter-width;
+  margin-top: -.4rem;
+  text-align: right;
+  font-size: .875rem;
+  color: $color-neutral--60;
+}

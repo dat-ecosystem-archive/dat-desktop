@@ -1,0 +1,58 @@
+
+// table
+
+.table {
+  width: 100%;
+  th, td {
+    &:not(:last-child) {
+      padding-right: 1rem;
+    }
+  }
+}
+
+.table__header {
+  th {
+    height: 4rem;
+    font-size: .8125rem;
+    font-weight: normal;
+    color: $color-neutral--60;
+    &:first-child {
+      width: 5.5rem;
+    }
+    &:last-child {
+      width: 8.25rem;
+    }
+    &:not(:first-child) {
+      border-bottom: 1px solid $color-neutral--20;
+    }
+  }
+}
+
+.table__item {
+  td {
+    height: 4rem;
+    vertical-align: middle;
+    padding-top: 1rem;
+    &:first-child {
+      padding-left: 2.5rem;
+    }
+  }
+  &:hover {
+    td {
+      background-color: $color-neutral--04;
+    }
+  }
+}
+
+// truncate dat link
+.cell-truncate {
+  width: 25vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// making sure the progress bar is not to tiny
+.progress {
+  min-width: 10rem;
+}
