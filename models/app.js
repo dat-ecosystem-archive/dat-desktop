@@ -7,7 +7,7 @@ const jsAlert = require('js-alert')
 const html = require('choo/html')
 const assert = require('assert')
 const fs = require('fs')
-const Manager = require('../lib/manage-dats')
+const Manager = require('../lib/dat-manager')
 
 const Model = require('../lib/create-model')
 const rootDir = require('../lib/root-dir')
@@ -17,10 +17,10 @@ module.exports = createModel
 function createModel (cb) {
   const model = Model('app')
 
-  const manager = Manager()
+  const manager = new Manager()
 
   model.subscription('manager', (send, done) => {
-    manager.events.on('update', () => {
+    manager.on('update', () => {
       send('app:updateArchives', manager.get(), done)
     })
   })
@@ -55,7 +55,7 @@ function createModel (cb) {
   })
   model.effect('delete', (state, data, send, done) => {
     const dat = data
-    manager.deleteDat(dat, done)
+    manager.remove(dat, done)
   })
   model.effect('share', (state, data, send, done) => {
     const dat = data
@@ -76,13 +76,13 @@ function createModel (cb) {
   })
   model.effect('download', (state, data, send, done) => {
     const link = data
-    manager.importDat(link, done)
+    manager.download(link, done)
   })
 
   // initialize IPC stuff
   ipc.on('link', (ev, url) => {
     const key = encoding.decode(url)
-    manager.importDat(key, err => {
+    manager.download(key, err => {
       if (err) throw err
     })
   })
