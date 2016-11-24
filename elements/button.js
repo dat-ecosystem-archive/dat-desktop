@@ -9,18 +9,21 @@ module.exports = (props, click) => {
   var child
   if (props.icon) {
     child = yo`
-    <div class="btn__icon-wrapper">
+    <div class="btn-wrapper">
       ${icon({
         id: props.icon
       })}
-      <span class="btn__icon-text">${props.text}</span>
+      <span class="btn-text ml1">${props.text}</span>
     </div>`
   } else {
-    child = props.text
+    child = yo`
+    <div class="btn-wrapper">
+      <span class="btn-text">${props.text}</span>
+    </div>`
   }
 
   return yo`
-    <button onclick=${props.click} class="button-reset ${props.cls || ''}">
+    <button onclick=${props.click} class="${props.cls || ''}">
       ${child}
     </button>
   `

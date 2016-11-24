@@ -1,11 +1,34 @@
 // action buttons in top bar (header)
 .header-action {
-  color: $color-neutral--20;
+  height: 2rem;
+  display: inline-block;
+  border: 1px solid $color-neutral--30;
+  background: transparent;
+  color: $color-neutral--30;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: .025em;
   svg {
     width: 1.1em;
     max-height: 1.6em;
+    fill: currentColor;
+    vertical-align: middle;
   }
   &:hover, &:focus {
+    outline: none;
     color: $color-white;
+    border-color: $color-white;
+  }
+  .btn-text {
+    font-size: .75rem;
+  }
+}
+
+.header-action-no-border {
+  border-color: transparent;
+  &:hover, &:focus {
+    border-color: transparent;
   }
 }
