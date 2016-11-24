@@ -69,27 +69,10 @@ img {
   font-size: .75rem;
 }
 
-// TODO: move this into button component once we have sheetify
-.button-reset {
-  height: 2rem;
-  display: inline-block;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  color: inherit;
-  font: inherit;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: .025em;
-  svg {
-    fill: currentColor;
-    width: 2em;
-    vertical-align: middle;
-  }
-  &:hover, &:focus {
-    outline: none;
-  }
-  .btn__icon-text {
-    padding-left: .25rem;
-  }
+.btn-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

@@ -13,34 +13,44 @@ $icon-height: 1.2rem;
 
 .dat-import {
   position: relative;
-  float: left;
+  display: inline-block;
+  &:hover {
+    .dat-import--input::-webkit-input-placeholder {
+      color: $color-white;
+    }
+    .dat-import--icon {
+      fill: $color-white;
+    }
+  }
 }
 
 .dat-import--input {
   height: $input-height;
-  width: 10rem;
-  padding-right: 1rem;
-  padding-left: 2.5rem;
-  border-radius: 2px;
-  border: none;
+  width: 6.75rem;
+  padding-right: .5rem;
+  padding-left: 2rem;
+  font-size: .75rem;
+  border: 1px solid transparent;
   background-color: transparent;
-  color: $color-neutral--20;
+  color: $color-neutral--30;
+  opacity: 1;
   text-transform: uppercase;
   letter-spacing: .025em;
   transition-property: width;
   transition-duration: .15s;
   transition-timing-function: ease-in;
-  &:hover, &:focus, &:active {
-    outline: none;
+  &::-webkit-input-placeholder {
+    color: $color-neutral--30;
+    opacity: 1;
   }
-  &:hover {
-    color: $color-white;
-  }
-  &:focus, &:active {
-    width: 20rem;
+  .dat-import &:focus, &:active {
+    width: 14rem;
     outline: none;
     background-color: $color-white;
     color: $color-neutral;
+    &::-webkit-input-placeholder {
+      color: $color-neutral--30;
+    }
   }
 }
 
@@ -53,5 +63,5 @@ $icon-height: 1.2rem;
   display: block;
   width: $icon-height;
   height: $icon-height;
-  fill: $color-neutral--20;
+  fill: $color-neutral--30;
 }

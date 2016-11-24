@@ -20,24 +20,28 @@ module.exports = (props) => {
   }
   return yo`
     <header class="dat-header">
-      ${button({
-        icon: 'menu',
-        text: '',
-        cls: 'fr button-reset menu-trigger'
-      })}
       <div class="fr">
-        ${button({
-          icon: 'create-new-dat',
-          text: 'Create New Dat',
-          cls: 'fr ml3 header-action',
-          click: props.create
-        })}
         <div class="dat-import">
           <svg class="dat-import--icon">
             <use xlink:href="#daticon-link" />
           </svg>
           <input type="text" placeholder="Import dat" onkeydown=${keydown} class="dat-import--input">
         </div>
+        ${button({
+          icon: 'create-new-dat',
+          text: 'Create New Dat',
+          cls: 'ml3 header-action header-action-no-border',
+          click: props.create
+        })}
+        ${button({
+          text: 'Log In',
+          cls: 'ml3 header-action'
+        })}
+        ${button({
+          icon: 'menu',
+          text: '',
+          cls: 'ml3 header-action header-action-no-border menu-trigger'
+        })}
       </div>
     </header>
   `
