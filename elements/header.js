@@ -21,12 +21,12 @@ module.exports = (props) => {
   return yo`
     <header class="dat-header">
       <div class="fr">
-        <div class="dat-import">
-          <svg class="dat-import--icon">
+        <label for="test" class="dat-import">
+          <input name="test" type="text" placeholder="Import dat" onkeydown=${keydown} class="dat-import-input">
+          <svg>
             <use xlink:href="#daticon-link" />
           </svg>
-          <input type="text" placeholder="Import dat" onkeydown=${keydown} class="dat-import--input">
-        </div>
+        </label>
         ${button({
           icon: 'create-new-dat',
           text: 'Create New Dat',

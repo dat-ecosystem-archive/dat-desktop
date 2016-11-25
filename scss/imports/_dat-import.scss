@@ -1,9 +1,9 @@
 // example:
 // <div class="dat-import">
-//   <div class="dat-import--icon">
+//   <div class="dat-import-icon">
 //     <img src="./public/img/link.svg" />
 //   </div>
-//   <input type="text" readonly="true" value="" id="share-link" data-intro="" class="dat-import--input">
+//   <input type="text" readonly="true" value="" id="share-link" data-intro="" class="dat-import-input">
 // </div>
 
 // dat-import
@@ -11,20 +11,30 @@
 $input-height: 2rem;
 $icon-height: 1.2rem;
 
+
 .dat-import {
   position: relative;
   display: inline-block;
-  &:hover {
-    .dat-import--input::-webkit-input-placeholder {
-      color: $color-white;
-    }
-    .dat-import--icon {
-      fill: $color-white;
-    }
+  padding: 0;
+  border: 0;
+  svg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: .4rem;
+    padding-left: .5rem;
+    $icon-height: 1.2rem;
+    pointer-events: none;
+    display: block;
+    width: $icon-height;
+    height: $icon-height;
+    fill: $color-neutral--30;
   }
 }
 
-.dat-import--input {
+// The input element receives :hover and :focus styles. The svg is styled using the sibling selector, and must follow right after the input element. 
+.dat-import-input {
   height: $input-height;
   width: 6.75rem;
   padding-right: .5rem;
@@ -43,7 +53,15 @@ $icon-height: 1.2rem;
     color: $color-neutral--30;
     opacity: 1;
   }
-  .dat-import &:focus, &:active {
+  &:hover {
+    &::-webkit-input-placeholder {
+      color: $color-white;
+    }
+    & + svg {
+      fill: $color-white;
+    }
+  }
+  &:focus, &:active {
     width: 14rem;
     outline: none;
     background-color: $color-white;
@@ -51,17 +69,8 @@ $icon-height: 1.2rem;
     &::-webkit-input-placeholder {
       color: $color-neutral--30;
     }
+    & + svg {
+      fill: $color-neutral--50;
+    }
   }
-}
-
-.dat-import--icon {
-  $icon-height: 1.2rem;
-  position: absolute;
-  top: calc(#{$input-height} / 2 - #{$icon-height} / 2);
-  left: .5rem;
-  pointer-events: none;
-  display: block;
-  width: $icon-height;
-  height: $icon-height;
-  fill: $color-neutral--30;
 }
