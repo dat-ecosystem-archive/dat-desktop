@@ -22,7 +22,7 @@ function mainView (state, prev, send) {
         download: (link) => send('app:download', link)
       })}
       <table class="w-100 collapse table">
-        <thead class="table__header">
+        <thead class="table-header">
           <tr>
             <th></th>
             <th class="tl">Link</th>
@@ -62,7 +62,7 @@ function createTable (dats, send) {
       complete: '↑'
     }[state]
     return html`
-      <tr class="table__item">
+      <tr class="table-item">
         <td>
           <div class="dat-hexagon">${hexContent}</div>
         </td>
@@ -96,24 +96,26 @@ function createTable (dats, send) {
           ${bytes(dat.stats.bytesTotal)}
         </td>
         <td>
-          ${button({
-            icon: 'open-in-finder',
-            text: '',
-            cls: 'row-action',
-            click: () => send('app:open', dat)
-          })}
-          ${button({
-            icon: 'link',
-            text: '',
-            cls: 'row-action',
-            click: () => send('app:share', dat)
-          })}
-          ${button({
-            icon: 'delete',
-            text: '',
-            cls: 'row-action',
-            click: () => send('app:delete', dat)
-          })}
+          <div class="flex">
+            ${button({
+              icon: 'open-in-finder',
+              text: '',
+              cls: 'row-action',
+              click: () => send('app:open', dat)
+            })}
+            ${button({
+              icon: 'link',
+              text: '',
+              cls: 'row-action',
+              click: () => send('app:share', dat)
+            })}
+            ${button({
+              icon: 'delete',
+              text: '',
+              cls: 'row-action',
+              click: () => send('app:delete', dat)
+            })}
+          </div>
         </td>
       </tr>
     `
