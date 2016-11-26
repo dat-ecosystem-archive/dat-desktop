@@ -62,7 +62,7 @@
   "build": {
     "appId": "com.datproject.dat",
     "mac": {
-      "category": "your.app.category.type"
+      "category": "public.app-category.utilities"
     },
     "dmg": {
       "contents": [
