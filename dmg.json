@@ -1,9 +1,0 @@
-{
-  "title": "Dat",
-  "icon": "public/img/app.icns",
-  "background": "public/img/Background.png",
-  "contents": [
-    { "x": 220, "y": 200, "type": "file", "path": "dist/Dat-darwin-x64/Dat.app" },
-    { "x": 448, "y": 200, "type": "link", "path": "/Applications" }
-  ]
-}
