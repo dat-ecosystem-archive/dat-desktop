@@ -1,45 +1,47 @@
 const dialog = require('electron').remote.dialog
 const clipboard = require('electron').clipboard
+const ipc = require('electron').ipcRenderer
 const exec = require('child_process').exec
 const encoding = require('dat-encoding')
 const jsAlert = require('js-alert')
 const html = require('choo/html')
 const assert = require('assert')
 const fs = require('fs')
+const Manager = require('../lib/dat-manager')
 
-const liveStream = require('../lib/live-stream')
 const Model = require('../lib/create-model')
+const rootDir = require('../lib/root-dir')
 
 module.exports = createModel
 
-function createModel (opts) {
-  assert.ok(opts.createArchive, 'models/app: createArchive is not defined')
-  assert.ok(opts.db, 'models/app: db is not defined')
-
+function createModel (cb) {
   const model = Model('app')
-  const archives = {}
+
+  const manager = new Manager()
+
+  model.subscription('manager', (send, done) => {
+    manager.on('update', () => {
+      send('app:updateArchives', manager.get(), done)
+    })
+  })
+
+  model.reducer('updateArchives', (state, data) => {
+    return {
+      updateIndex: state.updateIndex + 1,
+      archives: data
+    }
+  })
 
   // we're setting the updateIndex to force refreshes because the underlying
   // data structure is mutable
   model.state({
     updateIndex: 0,
-    archives: archives
+    archives: []
   })
 
-  model.subscription('livestream', (send, done) => {
-    liveStream(opts, archives, () => {
-      send('app:updateArchives', archives, done)
-    })
-  })
-
-  model.reducer('updateArchives', (state, data) => {
-    return { updateIndex: state.updateIndex + 1 }
-  })
-
-  model.effect('open', (state, data) => {
-    // TODO(jg): cross platform
-    const archive = data
-    exec(`open "${archive.path}"`, err => {
+  model.effect('open', (state, dat) => {
+    // TODO cross platform
+    exec(`open "${dat.dir}"`, err => {
       if (err) throw err
     })
   })
@@ -48,34 +50,12 @@ function createModel (opts) {
       properties: ['openDirectory']
     })
     if (!files || !files.length) return
-    const target = files[0]
-    fs.stat(target, (err, stat) => {
-      if (err) throw err
-
-      const dat = opts.createArchive({ path: target })
-      dat.open(err => {
-        if (err) throw err
-        dat.close(err => {
-          if (err) throw err
-          // TODO https://github.com/joehand/dat-js/issues/18
-          dat.db.close(err => {
-            if (err) throw err
-
-            opts.db.put(['archive', dat.archive.key], {
-              path: target,
-              key: encoding.encode(dat.archive.key),
-              owner: true
-            })
-          })
-        })
-      })
-    })
+    const dir = files[0]
+    manager.create(dir, done)
   })
   model.effect('delete', (state, data, send, done) => {
     const dat = data
-    opts.db.del(['archive', dat.key], err => {
-      if (err) throw err
-    })
+    manager.remove(dat, done)
   })
   model.effect('share', (state, data, send, done) => {
     const dat = data
@@ -96,16 +76,18 @@ function createModel (opts) {
   })
   model.effect('download', (state, data, send, done) => {
     const link = data
-    const key = encoding.decode(link)
-    const path = `${opts.rootDir}/${encoding.encode(key)}`
-    fs.mkdir(path, () => {
-      opts.db.put(['archive', key], {
-        key: link,
-        path: path
-      })
-      done()
+    manager.download(link, done)
+  })
+
+  // initialize IPC stuff
+  ipc.on('link', (ev, url) => {
+    const key = encoding.decode(url)
+    manager.download(key, err => {
+      if (err) throw err
     })
   })
+
+  ipc.send('ready')
 
   return model.start()
 }

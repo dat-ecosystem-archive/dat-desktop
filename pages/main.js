@@ -43,8 +43,7 @@ function mainView (state, prev, send) {
 // create the inner table element
 // ([obj], fn) -> html
 function createTable (dats, send) {
-  return Object.keys(dats).map((key) => {
-    const dat = dats[key]
+  return dats.map(dat => {
     const stats = dat.hyperStats && dat.hyperStats.get()
     const progress = stats
       ? stats.blocksTotal
