@@ -6,7 +6,10 @@ const html = require('choo/html')
 const bytes = require('bytes')
 
 const button = require('../elements/button')
-const header = require('../elements/header')
+const Header = require('../elements/header')
+const Modal = require('../elements/modal')
+
+const modal = Modal()
 
 module.exports = mainView
 
@@ -14,28 +17,36 @@ module.exports = mainView
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
   const dats = state.app.archives
+
+  const header = Header({
+    create: () => send('app:create'),
+    download: (link) => send('app:download', link)
+  })
+
+  const table = html`
+    <table class="w-100 collapse table">
+      <thead class="table-header">
+        <tr>
+          <th class="cell-1"></th>
+          <th class="tl cell-2">Link</th>
+          <th class="tl cell-3">Download</th>
+          <th class="tr cell-4">Size</th>
+          <th class="tr cell-5">Network</th>
+          <th class="cell-6"></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${createTable(dats, send)}
+      </tbody>
+    </table>
+  `
+
   return html`
     <body>
       ${svgSprite()}
-      ${header({
-        create: () => send('app:create'),
-        download: (link) => send('app:download', link)
-      })}
-      <table class="w-100 collapse table">
-        <thead class="table-header">
-          <tr>
-            <th class="cell-1"></th>
-            <th class="tl cell-2">Link</th>
-            <th class="tl cell-3">Download</th>
-            <th class="tr cell-4">Size</th>
-            <th class="tr cell-5">Network</th>
-            <th class="cell-6"></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${createTable(dats, send)}
-        </tbody>
-      </table>
+      ${header}
+      ${table}
+      ${modal(state.location.search.modal)}
     </body>
   `
 }
