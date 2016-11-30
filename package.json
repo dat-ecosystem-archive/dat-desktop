@@ -65,12 +65,25 @@
     },
     "dmg": {
       "contents": [
-        { "x": 220, "y": 200 },
-        { "x": 448, "y": 200, "type": "link", "path": "/Applications" }
+        {
+          "x": 220,
+          "y": 200
+        },
+        {
+          "x": 448,
+          "y": 200,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     },
     "protocols": [
-      { "name": "Dat Link", "schemes": ["dat"] }
+      {
+        "name": "Dat Link",
+        "schemes": [
+          "dat"
+        ]
+      }
     ]
   }
 }
