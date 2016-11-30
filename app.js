@@ -11,11 +11,7 @@ const app = choo()
 app.use(log())
 
 // import & init models
-const globs = bulk(__dirname, [ 'models/*' ])
-Object.keys(globs).forEach((globname) => {
-  const globmatch = globs[globname]
-  Object.keys(globmatch).forEach((key) => app.model(globmatch[key]()))
-})
+app.model(require('./models/app')())
 
 // start
 app.router(['/', mainView])

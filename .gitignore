@@ -4,3 +4,4 @@ public/css/main.css
 dmgs
 npm-debug.log
 build/background.tiff
+bundle.js
