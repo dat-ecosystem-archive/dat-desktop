@@ -6,11 +6,7 @@ const encoding = require('dat-encoding')
 const jsAlert = require('js-alert')
 const Model = require('choo-model')
 const html = require('choo/html')
-const assert = require('assert')
-const fs = require('fs')
 const Manager = require('../lib/dat-manager')
-
-const rootDir = require('../lib/root-dir')
 
 module.exports = createModel
 
