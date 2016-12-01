@@ -7,6 +7,7 @@
   "description": "Dat Desktop App",
   "author": "Dat Team",
   "dependencies": {
+    "bindingify": "^1.0.0",
     "bulk-require": "^1.0.0",
     "bytes": "^2.4.0",
     "bytewise": "^1.1.0",
@@ -35,8 +36,8 @@
   "scripts": {
     "build-app": "electron-packager . Dat --platform=darwin --arch=x64 --out=dist/ --overwrite --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns",
     "build-dmg": "appdmg dmg.json dist/Dat-$npm_package_version.dmg && rm -Rf dist/Dat-darwin-x64",
-    "bundle": "browserify --fast --ignore-missing --node --full-paths --exclude=electron --global-transform=./lib/transform.js app.js > bundle.js",
-    "watch-js": "watchify --fast --ignore-missing --node --full-paths --exclude=electron --global-transform=./lib/transform.js app.js --verbose -o bundle.js",
+    "bundle": "browserify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js > bundle.js",
+    "watch-js": "watchify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js --verbose -o bundle.js",
     "deps": "dependency-check package.json app.js",
     "package": "npm run build-app && npm run build-dmg",
     "rebuild": "./scripts/build rebuild",
