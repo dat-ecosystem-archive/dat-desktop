@@ -34,6 +34,8 @@
   "scripts": {
     "build-app": "electron-packager . Dat --platform=darwin --arch=x64 --out=dist/ --overwrite --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns",
     "build-dmg": "appdmg dmg.json dist/Dat-$npm_package_version.dmg && rm -Rf dist/Dat-darwin-x64",
+    "bundle": "browserify --fast --ignore-missing --node --full-paths --exclude=electron --global-transform=./lib/transform.js app.js > bundle.js",
+    "watch-js": "watchify --fast --ignore-missing --node --full-paths --exclude=electron --global-transform=./lib/transform.js app.js --verbose -o bundle.js",
     "deps": "dependency-check package.json app.js",
     "package": "npm run build-app && npm run build-dmg",
     "rebuild": "./scripts/build rebuild",
@@ -49,6 +51,7 @@
   },
   "devDependencies": {
     "appdmg": "^0.4.5",
+    "browserify": "^13.1.1",
     "bulkify": "^1.4.2",
     "dependency-check": "^2.6.0",
     "electron": "1.4.6",
@@ -56,7 +59,9 @@
     "node-sass": "^3.8.0",
     "node-sass-magic-importer": "^1.0.1",
     "nodemon": "^1.9.2",
-    "standard": "^7.1.2"
+    "standard": "^7.1.2",
+    "through2": "^2.0.3",
+    "watchify": "^3.7.0"
   },
   "build": {
     "appId": "com.datproject.dat",
