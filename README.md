@@ -3,7 +3,7 @@
 
 WIP desktop app for [dat](https://github.com/maxogden/dat).
 
-![](screenshot.png)
+![screenshot](screenshot.png)
 
 [![Build Status](https://travis-ci.org/juliangruber/dat-desktop.svg?branch=master)](https://travis-ci.org/juliangruber/dat-desktop)
 
@@ -15,10 +15,13 @@ $ npm run rebuild
 $ npm start
 ```
 
-## Watch and compile SCSS
+## Build assets
 
 ```bash
-$ npm run watch-css
+$ npm run build-css         # build CSS
+$ npm run watch-css         # watch and rebuild CSS
+$ npm run bundle            # build JS
+$ npm run watch-js          # watch and rebuild JS
 ```
 
 Then drop files onto the app window and watch the console.

@@ -1,9 +1,6 @@
-const encoding = require('dat-encoding')
-const bulk = require('bulk-require')
 const mount = require('choo/mount')
 const log = require('choo-log')
 const choo = require('choo')
-const fs = require('fs')
 
 const mainView = require('./pages/main')
 
