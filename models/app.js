@@ -4,13 +4,9 @@ const ipc = require('electron').ipcRenderer
 const exec = require('child_process').exec
 const encoding = require('dat-encoding')
 const jsAlert = require('js-alert')
+const Model = require('choo-model')
 const html = require('choo/html')
-const assert = require('assert')
-const fs = require('fs')
 const Manager = require('../lib/dat-manager')
-
-const Model = require('../lib/create-model')
-const rootDir = require('../lib/root-dir')
 
 module.exports = createModel
 

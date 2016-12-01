@@ -12,6 +12,7 @@
     "bytewise": "^1.1.0",
     "choo": "^4.0.0-5",
     "choo-log": "^3.0.0",
+    "choo-model": "^1.0.0",
     "collect-stream": "^1.1.1",
     "dat-colors": "^2.0.0",
     "dat-encoding": "^3.0.0",
