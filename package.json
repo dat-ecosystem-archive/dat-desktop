@@ -1,21 +1,24 @@
 {
   "name": "dat-desktop",
-  "productName": "Dat Desktop",
+  "productName": "Dat",
   "version": "1.0.1",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
+  "author": "Dat Team",
   "dependencies": {
+    "bindingify": "^1.0.0",
     "bulk-require": "^1.0.0",
     "bytes": "^2.4.0",
     "bytewise": "^1.1.0",
     "choo": "^4.0.0-5",
     "choo-log": "^3.0.0",
+    "choo-model": "^1.0.0",
     "collect-stream": "^1.1.1",
     "dat-colors": "^2.0.0",
     "dat-encoding": "^3.0.0",
-    "dat-js": "^3.8.0",
-    "electron": "1.4.6",
+    "dat-icons": "^1.3.0",
+    "dat-node": "^0.1.0",
     "electron-default-menu": "^1.0.0",
     "electron-window": "^0.8.1",
     "envobj": "^1.0.2",
@@ -23,7 +26,6 @@
     "insert-css": "^1.0.0",
     "js-alert": "^1.0.4",
     "level": "^1.4.0",
-    "level-live-stream": "1.4.11",
     "minimist": "^1.2.0",
     "sheetify": "^5.1.1",
     "subleveldown": "^2.1.0",
@@ -34,25 +36,61 @@
   "scripts": {
     "build-app": "electron-packager . Dat --platform=darwin --arch=x64 --out=dist/ --overwrite --extend-info extend.plist --app-bundle-id=com.dat.desktop --icon=public/img/app.icns",
     "build-dmg": "appdmg dmg.json dist/Dat-$npm_package_version.dmg && rm -Rf dist/Dat-darwin-x64",
+    "bundle": "browserify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js > bundle.js",
+    "watch-js": "watchify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js --verbose -o bundle.js",
     "deps": "dependency-check package.json app.js",
     "package": "npm run build-app && npm run build-dmg",
     "rebuild": "./scripts/build rebuild",
     "clean": "rm -rf node_modules/",
     "build-css": "./scripts/build css",
+    "build-background": "./scripts/build background",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps",
     "postinstall": "./scripts/build postinstall",
-    "watch-css": "nodemon -e scss -x \"npm run build-css\""
+    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "pack": "build --dir",
+    "dist": "build"
   },
   "devDependencies": {
     "appdmg": "^0.4.5",
+    "browserify": "^13.1.1",
     "bulkify": "^1.4.2",
-    "dat-icons": "^1.3.0",
     "dependency-check": "^2.6.0",
-    "electron-packager": "^7.0.2",
+    "electron": "1.4.6",
+    "electron-builder": "^8.6.0",
     "node-sass": "^3.8.0",
     "node-sass-magic-importer": "^1.0.1",
     "nodemon": "^1.9.2",
-    "standard": "^7.1.2"
+    "standard": "^7.1.2",
+    "through2": "^2.0.3",
+    "watchify": "^3.7.0"
+  },
+  "build": {
+    "appId": "com.datproject.dat",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 220,
+          "y": 200
+        },
+        {
+          "x": 448,
+          "y": 200,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "protocols": [
+      {
+        "name": "Dat Link",
+        "schemes": [
+          "dat"
+        ]
+      }
+    ]
   }
 }
