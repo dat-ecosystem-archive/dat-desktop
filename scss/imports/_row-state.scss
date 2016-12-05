@@ -4,7 +4,7 @@
   position: relative;
   width: 20px;
   height: 11.55px;
-  margin: 5.77px 0;
+  margin: 5.77px auto;
   text-align: center;
   background-color: $color-green--hover;
   color: $color-white;
@@ -22,7 +22,6 @@
     bottom: 100%;
     border-bottom: 5.77px solid $color-green--hover;
   }
-
   &:after {
     top: 100%;
     width: 0;

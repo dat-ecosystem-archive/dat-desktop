@@ -24,12 +24,12 @@ function mainView (state, prev, send) {
       <table class="w-100 collapse table">
         <thead class="table-header">
           <tr>
-            <th></th>
-            <th class="tl">Link</th>
-            <th class="tl">Download</th>
-            <th class="tr">Network</th>
-            <th class="tr">Size</th>
-            <th></th>
+            <th class="cell-1"></th>
+            <th class="tl cell-2">Link</th>
+            <th class="tl cell-3">Download</th>
+            <th class="tr cell-4">Size</th>
+            <th class="tr cell-5">Network</th>
+            <th class="cell-6"></th>
           </tr>
         </thead>
         <tbody>
@@ -57,15 +57,15 @@ function createTable (dats, send) {
       : 'complete'
     const hexContent = {
       loading: '↓',
-      paused: '',
+      paused: 'II',
       complete: '↑'
     }[state]
     return html`
       <tr class="table-item">
-        <td>
+        <td class="cell-1">
           <div class="dat-hexagon">${hexContent}</div>
         </td>
-        <td>
+        <td class="cell-2">
           <div class="cell-truncate">
             ${dat.title || `#${encoding.encode(dat.key)}`}
             <br />
@@ -77,7 +77,7 @@ function createTable (dats, send) {
             </span>
           </div>
         </td>
-        <td>
+        <td class="cell-3">
           <div class="progress">
             <div class="progress__counter">
               ${progress}%
@@ -90,12 +90,17 @@ function createTable (dats, send) {
             </div>
           </div>
         </td>
-        <td class="tr">${dat.stats.peers}</td>
-        <td class="tr">
+        <td class="tr cell-4">
           ${bytes(dat.stats.bytesTotal)}
         </td>
-        <td>
-          <div class="flex">
+        <td class="tr cell-5">
+          <svg class="network-svg">
+            <use xlink:href="#daticon-network" />
+          </svg>
+          ${dat.stats.peers}
+        </td>
+        <td class="cell-6">
+          <div class="flex justify-end">
             ${button({
               icon: 'open-in-finder',
               text: '',

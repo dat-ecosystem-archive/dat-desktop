@@ -2,11 +2,12 @@
 
 $progress-height: .5rem;
 $bar-height: $progress-height;
-$counter-width: 3rem;
+$counter-width: 2.5rem;
 
 .progress {
+  min-width: 8rem;
   overflow: hidden;
-  padding-top: .5rem;
+  padding-top: .85rem;
   padding-bottom: .5rem;
 }
 
@@ -73,5 +74,4 @@ $counter-width: 3rem;
   margin-top: -.4rem;
   text-align: right;
   font-size: .875rem;
-  color: $color-neutral--60;
 }
