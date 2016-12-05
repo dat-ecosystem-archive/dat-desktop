@@ -3,11 +3,12 @@
 
 .table {
   width: 100%;
-  th, td {
-    &:not(:last-child) {
-      padding-right: 1rem;
-    }
-  }
+}
+
+th, td {
+  padding-right: .75rem;
+  padding-left: .75rem;
+  font-size: .875rem;
 }
 
 .table-header {
@@ -17,7 +18,8 @@
     font-weight: normal;
     color: $color-neutral--60;
     &:first-child {
-      width: 3.5rem;
+      width: 3rem;
+      padding: 0;
     }
     &:last-child {
       width: 8.25rem;
@@ -33,9 +35,6 @@
     height: 4rem;
     vertical-align: middle;
     padding-top: 1rem;
-    &:first-child {
-      padding-left: 1.75rem;
-    }
   }
   &:hover {
     td {
@@ -44,15 +43,29 @@
   }
 }
 
+.cell-1 {
+  width: 5rem;
+}
+.cell-2 {
+  width: 17rem;
+}
+.cell-3 {
+  width: 15rem;
+}
+.cell-4 {
+  width: 5.5rem;
+}
+.cell-5 {
+  width: 6rem;
+}
+.cell-6 {
+  width: 10.25rem;
+}
+
 // truncate dat link
 .cell-truncate {
-  width: 25vw;
+  width: 26vw; // TODO kriesse: make this scale up at medium breakpoint
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-// making sure the progress bar is not to tiny
-.progress {
-  min-width: 10rem;
 }
