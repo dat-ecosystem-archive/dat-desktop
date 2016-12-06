@@ -8,7 +8,8 @@ const delegateEvents = require('./lib/delegate-electron-events')
 
 const windowStyles = {
   width: 960,
-  titleBarStyle: 'hidden-inset'
+  titleBarStyle: 'hidden-inset',
+  minWidth: 640
 }
 
 const env = Env({ NODE_ENV: 'production' })
