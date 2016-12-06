@@ -7,6 +7,9 @@ css('dat-colors')
 
 var prefix = css`
   :host {
+    --input-height: 2rem;
+    --icon-height: 1.2rem;
+    --button-width: 2rem;
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
     position: relative;
   }
@@ -31,14 +34,55 @@ var prefix = css`
     width: 1.1em;
     max-height: 1.6em;
   }
+  .dat-input {
+    height: var(--input-height);
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    border: 0;
+  }
+  .dat-input-button {
+    width: var(--button-width);
+    height: calc(var(--input-height) - 2px);
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    background-color: var(--color-neutral-10);
+    border: none;
+    cursor: pointer;
+  }
+  .dat-input-svg,
+  .dat-input-button-svg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: .4rem;
+    padding-left: .5rem;
+    pointer-events: none;
+    display: block;
+    width: var(--icon-height);
+    height: var(--icon-height);
+    fill: var(--color-neutral-30);
+  }
+  .dat-input-button-svg {
+    left: auto;
+    right: 0;
+  }
   .modal-input {
     height: 2rem;
-    padding-right: .5rem;
+    padding-right: calc(var(--button-width) + .25rem);
     padding-left: 2rem;
     font-size: .875rem;
     border: 1px solid var(--color-neutral-30);
     background-color: transparent;
     color: var(--color-green-hover);
+  }
+  .modal-input:hover,
+  .modal-input:focus {
+    outline: none;
+    border-color: var(--color-info-hover);
   }
 `
 
@@ -90,11 +134,16 @@ function createWidget () {
     return html`
       <section class="${prefix} flex flex-column items-center justify-center pa3 bg-white">
         <h3>Copy Dat Link</h3>
-        <label for="dat-link" class="dat-import">
-          <input name="dat-link" type="text" placeholder="Import dat" value=${link} class="modal-input">
-          <svg>
+        <label for="dat-link" class="dat-input">
+          <input name="dat-link" type="text" value=${link} class="modal-input">
+          <svg class="dat-input-svg">
             <use xlink:href="#daticon-link" />
           </svg>
+          <button class="dat-input-button">
+            <svg class="dat-input-button-svg">
+              <use xlink:href="#daticon-clipboard" />
+            </svg>
+          </button>
         </label>
         <p class="f7">
           Anyone with this link can view your Dat.
