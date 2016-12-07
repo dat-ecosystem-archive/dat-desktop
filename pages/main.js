@@ -21,13 +21,32 @@ function mainView (state, prev, send) {
     download: (link) => send('app:download', link)
   })
 
+  // show welcome state, empty state or archives overview in the main view
+  if (dats.length) {
+    return html`
+      <body>
+        ${svgSprite()}
+        ${header}
+        ${Table(dats, send)}
+        ${modal(state.location.search.modal)}
+      </body>
+    `
+  } else {
+    return html`
+      <body>
+        ${svgSprite()}
+        ${header}
+        ${EmptyState()}
+      </body>
+    `
+  }
+}
+
+function EmptyState () {
   return html`
-    <body>
-      ${svgSprite()}
-      ${header}
-      ${Table(dats, send)}
-      ${modal(state.location.search.modal)}
-    </body>
+    <main>
+      <div>[ unstyled empty state ]</div>
+    </main>
   `
 }
 

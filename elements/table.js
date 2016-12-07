@@ -2,7 +2,7 @@ const encoding = require('dat-encoding')
 const bytes = require('prettier-bytes')
 const html = require('choo/html')
 
-const button = require('../elements/button')
+const button = require('./button')
 
 module.exports = tableElement
 
