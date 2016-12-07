@@ -1,6 +1,6 @@
 const encoding = require('dat-encoding')
+const bytes = require('prettier-bytes')
 const html = require('choo/html')
-const bytes = require('bytes')
 
 const button = require('../elements/button')
 
