@@ -25,7 +25,8 @@ var prefix = css`
     text-align: center;
     color: var(--color-neutral-40);
   }
-  .exit:hover, .exit:focus {
+  .exit:hover,
+  .exit:focus {
     color: var(--color-neutral);
   }
   .exit-svg {
@@ -51,26 +52,35 @@ var prefix = css`
     background-color: var(--color-neutral-10);
     border: none;
     cursor: pointer;
+    color: var(--color-neutral-30);
+  }
+  .dat-input-button:hover,
+  .dat-input-button:focus {
+    outline: none;
+    color: var(--color-green-hover);
   }
   .dat-input-svg,
   .dat-input-button-svg {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 0;
     padding-top: .4rem;
     padding-left: .5rem;
     pointer-events: none;
     display: block;
     width: var(--icon-height);
     height: var(--icon-height);
+  }
+  .dat-input-svg {
+    left: 0;
     fill: var(--color-neutral-30);
   }
   .dat-input-button-svg {
-    left: auto;
-    right: 0;
+    right: .3rem;
+    fill: currentColor;
   }
-  .modal-input {
+  .dat-input-input {
+    width: 100%;
     height: 2rem;
     padding-right: calc(var(--button-width) + .25rem);
     padding-left: 2rem;
@@ -79,10 +89,16 @@ var prefix = css`
     background-color: transparent;
     color: var(--color-green-hover);
   }
-  .modal-input:hover,
-  .modal-input:focus {
+  .dat-input-input:hover,
+  .dat-input-input:focus {
     outline: none;
-    border-color: var(--color-info-hover);
+  }
+  .dat-input-check {
+    color: var(--color-info)
+  }
+  .dat-input-check-svg {
+    width: var(--icon-height);
+    height: 1rem;
   }
 `
 
@@ -132,10 +148,16 @@ function createWidget () {
 
   function createHtml (link) {
     return html`
-      <section class="${prefix} flex flex-column items-center justify-center pa3 bg-white">
+      <section class="${prefix} flex flex-column justify-center pa3 bg-white">
         <h3>Copy Dat Link</h3>
+        <p class="f7">
+          <svg class="dat-input-check-svg">
+            <use xlink:href="#daticon-check" />
+          </svg>
+          Link copied to clipboard
+        </p>
         <label for="dat-link" class="dat-input">
-          <input name="dat-link" type="text" value=${link} class="modal-input">
+          <input name="dat-link" type="text" value=${link} class="dat-input-input">
           <svg class="dat-input-svg">
             <use xlink:href="#daticon-link" />
           </svg>
