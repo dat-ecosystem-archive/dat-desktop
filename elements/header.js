@@ -30,17 +30,17 @@ module.exports = (props) => {
         ${button({
           icon: 'create-new-dat',
           text: 'Create New Dat',
-          cls: 'ml3 header-action header-action-no-border',
+          cls: 'ml2 header-action header-action-no-border',
           click: props.create
         })}
         ${button({
           text: 'Log In',
-          cls: 'ml3 header-action'
+          cls: 'ml2 header-action'
         })}
         ${button({
           icon: 'menu',
           text: '',
-          cls: 'ml3 header-action header-action-no-border menu-trigger'
+          cls: 'ml2 header-action header-action-no-border menu-trigger'
         })}
       </div>
     </header>
