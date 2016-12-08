@@ -86,7 +86,7 @@ var prefix = css`
     padding-left: 2rem;
     font-size: .875rem;
     border: 1px solid var(--color-neutral-30);
-    background-color: transparent;
+    background-color: var(--color-white);
     color: var(--color-green-hover);
   }
   .dat-input-input:hover,
@@ -94,11 +94,27 @@ var prefix = css`
     outline: none;
   }
   .dat-input-check {
-    color: var(--color-info)
+    color: var(--color-info);
+    top: 2rem;
   }
   .dat-input-check-svg {
     width: var(--icon-height);
-    height: 1rem;
+    height: .875rem;
+    vertical-align: -.15rem;
+    fill: currentColor;
+  }
+  .color-info {
+    color: var(--color-info);
+  }
+  .confirmation {
+    right: 0;
+    opacity: 0;
+    top: -.5rem;
+  }
+  .show-confirmation {
+    top: -1.2rem;
+    opacity: 1;
+    transition: all .15s ease-out;
   }
 `
 
@@ -148,16 +164,16 @@ function createWidget () {
 
   function createHtml (link) {
     return html`
-      <section class="${prefix} flex flex-column justify-center pa3 bg-white">
-        <h3>Copy Dat Link</h3>
-        <p class="f7">
-          <svg class="dat-input-check-svg">
-            <use xlink:href="#daticon-check" />
-          </svg>
-          Link copied to clipboard
-        </p>
+      <section class="${prefix} flex flex-column justify-center pa3 ph4 bg-white">
+        <h3 class="mt0">Copy Dat Link</h3>
         <label for="dat-link" class="dat-input">
-          <input name="dat-link" type="text" value=${link} class="dat-input-input">
+          <p class="f7 mt0 mb0 tr absolute color-info confirmation">
+            <svg class="dat-input-check-svg">
+              <use xlink:href="#daticon-check" />
+            </svg>
+            Link copied to clipboard
+          </p>
+          <input name="dat-link" type="text" value=${link} class="relative dat-input-input">
           <svg class="dat-input-svg">
             <use xlink:href="#daticon-link" />
           </svg>
