@@ -14,7 +14,6 @@
   "dependencies": {
     "bindingify": "^1.0.0",
     "bulk-require": "^1.0.0",
-    "bytes": "^2.4.0",
     "bytewise": "^1.1.0",
     "cache-element": "^2.0.0",
     "choo": "^4.0.0-6",
@@ -36,6 +35,7 @@
     "minimist": "^1.2.0",
     "modal-element": "^2.0.0",
     "on-load": "^3.2.0",
+    "prettier-bytes": "^1.0.3",
     "sheetify": "^5.2.0",
     "subleveldown": "^2.1.0",
     "tachyons": "^4.5.4",
