@@ -1,16 +1,16 @@
 // dat-header
 
 .dat-header {
-  height: 3rem;
-  padding: .5rem .75rem;
+  height: 2.5rem;
+  padding: .25rem .75rem;
   background-color: $color-neutral;
   color: $color-white;
   -webkit-app-region: drag;
 }
 
 .menu-trigger {
+  display: none !important; //kriesse: show after log in
   height: 2rem;
-  width: 2.5rem;
   .icon-menu {
     fill: $color-neutral--20;
   }
