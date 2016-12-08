@@ -12,7 +12,7 @@ const modal = Modal()
 
 css('dat-colors')
 
-var prefix = css`
+const prefix = css`
   :host {
     position: relative;
     background: url()
