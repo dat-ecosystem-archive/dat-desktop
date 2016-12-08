@@ -1,11 +1,11 @@
 const widget = require('cache-element/widget')
 const Modal = require('../lib/modal-element')
 const html = require('choo/html')
-var css = require('sheetify')
+const css = require('sheetify')
 
 css('dat-colors')
 
-var prefix = css`
+const prefix = css`
   :host {
     --input-height: 2rem;
     --icon-height: 1.2rem;
