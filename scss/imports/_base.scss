@@ -39,6 +39,32 @@ $color-danger--hover: #B33C38;
 $color-danger--darker: #A52724;
 $color-danger--disabled: #EBA8A6;
 
+body {
+  min-width: 480px;
+  line-height: 1.5;
+}
+
+body, input, textarea, select, button {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
+}
+
+// nativize for electron desktop feel
+html {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.is-selectable {
+  -webkit-user-select: auto;
+  cursor: auto;
+}
+
+// custom color classes
 
 .color-neutral-30 {
   color: var(--color-neutral-30);
@@ -56,40 +82,8 @@ $color-danger--disabled: #EBA8A6;
   color: var(--color-green-disabled);
 }
 
-body {
-  min-width: 480px;
-  line-height: 1.5;
-}
-
-body, input, textarea, select, button {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
-}
-
-// nativize for electron desktop feel
-
-html {
-  -webkit-user-select: none;
-  -webkit-user-drag: none;
-  cursor: default;
-}
-
-img {
-  -webkit-user-drag: none;
-}
-
-.is-selectable {
-  -webkit-user-select: auto;
-  cursor: auto;
-}
+// custom font-sizes
 
 .f7 {
   font-size: .75rem;
-}
-
-.btn-wrapper {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 }

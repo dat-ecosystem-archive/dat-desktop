@@ -12,18 +12,9 @@ const prefix = css`
     --icon-height: 1.2rem;
     --button-width: 2rem;
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
-    position: relative;
   }
   .exit {
-    width: 2rem;
-    height: 2rem;
-    padding: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: transparent;
     border: none;
-    text-align: center;
     color: var(--color-neutral-40);
   }
   .exit:hover,
@@ -37,21 +28,16 @@ const prefix = css`
   }
   .dat-input {
     height: var(--input-height);
-    position: relative;
-    display: inline-block;
-    padding: 0;
     border: 0;
   }
   .dat-input-button {
     width: var(--button-width);
     height: calc(var(--input-height) - 2px);
-    position: absolute;
     top: 1px;
     right: 1px;
     bottom: 1px;
     background-color: var(--color-neutral-10);
     border: none;
-    cursor: pointer;
     color: var(--color-neutral-30);
   }
   .dat-input-button:hover,
@@ -100,9 +86,6 @@ const prefix = css`
     width: var(--icon-height);
     height: .875rem;
     vertical-align: -.15rem;
-  }
-  .color-blue {
-    color: var(--color-blue);
   }
   .confirmation {
     right: 0;
@@ -162,20 +145,20 @@ function createWidget () {
 
   function createHtml (link) {
     return html`
-      <section class="${prefix} flex flex-column justify-center pa3 ph4 bg-white">
+      <section class="${prefix} relative flex flex-column justify-center pa3 ph4 bg-white">
         <h3 class="mt0">Copy Dat Link</h3>
-        <label for="dat-link" class="dat-input">
+        <label for="dat-link" class="relative dat-input">
           <p class="f7 mt0 mb0 tr absolute color-blue confirmation">
             ${icon({
               id: 'check'
             })}
             Link copied to clipboard
           </p>
-          <input name="dat-link" type="text" value=${link} class="relative dat-input-input">
+          <input name="dat-link" type="text" value=${link} class="relative dib pa0 dat-input-input">
           ${icon({
             id: 'link'
           })}
-          <button class="dat-input-button">
+          <button class="absolute pointer dat-input-button">
             ${icon({
               id: 'clipboard'
             })}
@@ -184,7 +167,7 @@ function createWidget () {
         <p class="f7">
           Anyone with this link can view your Dat.
         </p>
-        <button onclick=${handleExit} class="pointer exit" aria-label="Close">
+        <button onclick=${handleExit} class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit" aria-label="Close">
           ${icon({
             id: 'cross'
           })}

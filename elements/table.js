@@ -9,7 +9,6 @@ const icon = require('./icon')
 css('dat-colors')
 
 const table = css`
-
   :host {
     width: 100%;
   }
@@ -33,13 +32,13 @@ const table = css`
   th:last-child {
     width: 8.25rem;
   }
-  tr td {
+  td {
     height: 4rem;
     vertical-align: middle;
     padding-top: 1rem;
   }
   tr:hover td {
-  background-color: var(--color-neutral--04);
+    background-color: var(--color-neutral--04);
   }
   .cell-1 {
     width: 5rem;
@@ -52,6 +51,7 @@ const table = css`
   }
   .cell-4 {
     width: 5.5rem;
+    white-space: nowrap;
   }
   .cell-5 {
     width: 6rem;
@@ -70,11 +70,7 @@ const table = css`
     display: inline-block;
     border: 0;
     background: transparent;
-    cursor: pointer;
-    color: inherit;
     text-align: center;
-    text-transform: uppercase;
-    letter-spacing: .025em;
     color: var(--color-neutral-20);
   }
   .row-action svg {

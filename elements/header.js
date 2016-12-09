@@ -22,11 +22,8 @@ const header = css `
     border: 1px solid var(--color-neutral-30);
     background: transparent;
     color: var(--color-neutral-30);
-    cursor: pointer;
     text-align: center;
     vertical-align: middle;
-    text-transform: uppercase;
-    letter-spacing: .025em;
   }
   .header-action svg {
     width: 1.1em;
