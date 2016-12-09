@@ -75,6 +75,7 @@ module.exports = mainView
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
+  const modalLink = state.location.search.modal
   const dats = state.app.archives
 
   const header = Header({
@@ -82,17 +83,7 @@ function mainView (state, prev, send) {
     download: (link) => send('app:download', link)
   })
 
-  // show welcome state, empty state or archives overview in the main view
-  if (dats.length) {
-    return html`
-      <body>
-        ${svgSprite()}
-        ${header}
-        ${Table(dats, send)}
-        ${modal(state.location.search.modal)}
-      </body>
-    `
-  } else {
+  if (!dats.length) {
     return html`
       <body>
         ${svgSprite()}
@@ -101,6 +92,25 @@ function mainView (state, prev, send) {
       </body>
     `
   }
+
+  if (modalLink) {
+    return html`
+      <body>
+        ${svgSprite()}
+        ${header}
+        ${Table(dats, send)}
+        ${modal(modalLink)}
+      </body>
+    `
+  }
+
+  return html`
+    <body>
+      ${svgSprite()}
+      ${header}
+      ${Table(dats, send)}
+    </body>
+  `
 }
 
 function EmptyState () {
