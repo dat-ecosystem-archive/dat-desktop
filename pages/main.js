@@ -103,9 +103,9 @@ function EmptyState () {
         <div class="link">
           ${icon({
             id: 'link',
-            cls: 'color-info-disabled'
+            cls: 'color-blue-disabled'
           })}
-          <h3 class="f3 ttu mt0 mb0 color-info-disabled">Import Dat</h3>
+          <h3 class="f3 ttu mt0 mb0 color-blue-disabled">Import Dat</h3>
           <p class="f6 color-neutral-30">
             Download an existing dataset
             <br>

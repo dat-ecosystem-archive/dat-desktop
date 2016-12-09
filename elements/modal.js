@@ -93,7 +93,7 @@ const prefix = css`
     outline: none;
   }
   .dat-input-check {
-    color: var(--color-info);
+    color: var(--color-blue);
     top: 2rem;
   }
   .icon-check {
@@ -101,8 +101,8 @@ const prefix = css`
     height: .875rem;
     vertical-align: -.15rem;
   }
-  .color-info {
-    color: var(--color-info);
+  .color-blue {
+    color: var(--color-blue);
   }
   .confirmation {
     right: 0;
@@ -165,7 +165,7 @@ function createWidget () {
       <section class="${prefix} flex flex-column justify-center pa3 ph4 bg-white">
         <h3 class="mt0">Copy Dat Link</h3>
         <label for="dat-link" class="dat-input">
-          <p class="f7 mt0 mb0 tr absolute color-info confirmation">
+          <p class="f7 mt0 mb0 tr absolute color-blue confirmation">
             ${icon({
               id: 'check'
             })}

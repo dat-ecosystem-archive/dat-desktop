@@ -141,7 +141,7 @@ function createTable (dats, send) {
       : 'complete'
 
     const hexContent = {
-      loading: icon({id: 'hexagon-down', cls: 'color-info'}),
+      loading: icon({id: 'hexagon-down', cls: 'color-blue'}),
       paused: icon({id: 'hexagon-pause', cls: 'color-neutral-30'}),
       complete: icon({id: 'hexagon-up', cls: 'color-green'})
     }[state]

@@ -19,10 +19,10 @@ $color-green--hover: #24943A;
 $color-green--darker: #147F26;
 $color-green--disabled:#99D9A6;
 
-$color-info: #2980B9;
-$color-info--hover: #1B679A;
-$color-info--darker: #0d4d84;
-$color-info--disabled: #94BFDC;
+$color-blue: #2980B9;
+$color-blue--hover: #1B679A;
+$color-blue--darker: #0d4d84;
+$color-blue--disabled: #94BFDC;
 
 $color-success: #159F84;
 $color-success--hover: #0B856D;
@@ -43,11 +43,11 @@ $color-danger--disabled: #EBA8A6;
 .color-neutral-30 {
   color: var(--color-neutral-30);
 }
-.color-info {
-  color: var(--color-info);
+.color-blue {
+  color: var(--color-blue);
 }
-.color-info-disabled {
-  color: var(--color-info-disabled);
+.color-blue-disabled {
+  color: var(--color-blue-disabled);
 }
 .color-green {
   color: var(--color-green);
