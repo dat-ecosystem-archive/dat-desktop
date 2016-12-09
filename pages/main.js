@@ -7,6 +7,7 @@ const html = require('choo/html')
 const Header = require('../elements/header')
 const Table = require('../elements/table')
 const Modal = require('../elements/modal')
+const icon = require('../elements/icon')
 
 const modal = Modal()
 
@@ -49,25 +50,15 @@ const prefix = css`
     right: 8.5rem;
     color: red;
   }
-  .create-new-dat-svg,
-  .link-svg {
+  .icon-create-new-dat,
+  .icon-link {
     width: 3rem;
     height: 3rem;
     fill: currentColor;
   }
-  .link-svg {
+  .icon-link {
     margin-bottom: -.75rem;
   }
-  .color-neutral-30 {
-    color: var(--color-neutral-30);
-  }
-  .color-info-disabled {
-    color: var(--color-info-disabled);
-  }
-  .color-green-disabled {
-    color: var(--color-green-disabled);
-  }
-
 `
 
 module.exports = mainView
@@ -110,9 +101,10 @@ function EmptyState () {
       <div class="tutorial">
         <img src="./public/img/lines.svg" alt="" class="lines">
         <div class="link">
-          <svg class="color-info-disabled link-svg">
-            <use xlink:href="#daticon-link" />
-          </svg>
+          ${icon({
+            id: 'link',
+            cls: 'color-info-disabled'
+          })}
           <h3 class="f3 ttu mt0 mb0 color-info-disabled">Import Dat</h3>
           <p class="f6 color-neutral-30">
             Download an existing dataset
@@ -121,9 +113,10 @@ function EmptyState () {
           </p>
         </div>
         <div class="tr create-new-dat">
-          <svg class="color-green-disabled create-new-dat-svg">
-            <use xlink:href="#daticon-create-new-dat" />
-          </svg>
+          ${icon({
+            id: 'create-new-dat',
+            cls: 'color-green-disabled'
+          })}
           <h3 class="f3 ttu mt0 mb0 color-green-disabled">Create New Dat</h3>
           <p class="f6 color-neutral-30">
             … or select one of your local

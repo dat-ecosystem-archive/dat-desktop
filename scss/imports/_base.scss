@@ -39,6 +39,23 @@ $color-danger--hover: #B33C38;
 $color-danger--darker: #A52724;
 $color-danger--disabled: #EBA8A6;
 
+
+.color-neutral-30 {
+  color: var(--color-neutral-30);
+}
+.color-info {
+  color: var(--color-info);
+}
+.color-info-disabled {
+  color: var(--color-info-disabled);
+}
+.color-green {
+  color: var(--color-green);
+}
+.color-green-disabled {
+  color: var(--color-green-disabled);
+}
+
 body {
   min-width: 480px;
   line-height: 1.5;
