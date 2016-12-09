@@ -93,6 +93,12 @@ const table = css`
   .row-action:last-child {
     padding-right: 0;
   }
+  .icon-network {
+    color: var(--color-neutral-20);
+    vertical-align: middle;
+    width: 1.1em;
+    max-height: 1.6em;
+  }
 `
 
 module.exports = tableElement

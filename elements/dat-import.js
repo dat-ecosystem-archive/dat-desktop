@@ -10,29 +10,18 @@ css('dat-colors')
 const prefix = css`
   :host {
     --icon-height: 1.2rem;
-
-    position: relative;
-    display: inline-block;
-    padding: 0;
-    border: 0;
     color: var(--color-neutral-30);
   }
 
-  svg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    padding-top: .4rem;
+  .icon-link {
+    padding-top: .32rem;
     padding-left: .5rem;
     pointer-events: none;
-    display: block;
     width: var(--icon-height);
     height: var(--icon-height);
   }
-
-  .input {
-    height: 2rem;
+  input {
+    height: 1.75rem;
     width: 6.75rem;
     padding-right: .5rem;
     padding-left: 2rem;
@@ -47,26 +36,26 @@ const prefix = css`
     transition-duration: .15s;
     transition-timing-function: ease-in;
   }
-  .input::-webkit-input-placeholder {
+  input::-webkit-input-placeholder {
     color: var(--color-neutral-30);
     opacity: 1;
   }
-  .input:hover,
-  .input:hover::-webkit-input-placeholder,
-  .input:hover + svg {
+  input:hover,
+  input:hover::-webkit-input-placeholder,
+  input:hover + svg {
     color: var(--color-white);
   }
-  .input:focus,
-  .input:active {
+  input:focus,
+  input:active {
     width: 14rem;
     outline: none;
     background-color: var(--color-white);
     color: var(--color-neutral);
   }
-  .input:focus::-webkit-input-placeholder,
-  .input:active::-webkit-input-placeholder,
-  .input:focus + svg,
-  .input:active + svg {
+  input:focus::-webkit-input-placeholder,
+  input:active::-webkit-input-placeholder,
+  input:focus + svg,
+  input:active + svg {
     color: var(--color-neutral-50);
   }
 `
@@ -85,10 +74,11 @@ module.exports = (props) => {
     }
   }
   return yo`
-    <label for="dat-import" class="${prefix}">
-      <input name="dat-import" type="text" placeholder="Import dat" onkeydown=${keydown} class="input">
+    <label for="dat-import" class="relative dib pa0 b--none  ${prefix}">
+      <input name="dat-import" type="text" placeholder="Import dat" onkeydown=${keydown} class="input-reset">
       ${icon({
-        id: 'link'
+        id: 'link',
+        cls: 'absolute top-0 bottom-0 left-0'
       })}
     </label>
   `
