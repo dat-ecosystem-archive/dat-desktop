@@ -1,5 +1,6 @@
 const widget = require('cache-element/widget')
 const Modal = require('../lib/modal-element')
+const icon = require('./icon')
 const html = require('choo/html')
 const css = require('sheetify')
 
@@ -29,8 +30,7 @@ const prefix = css`
   .exit:focus {
     color: var(--color-neutral);
   }
-  .exit-svg {
-    fill: currentColor;
+  .icon-cross {
     vertical-align: middle;
     width: 1.1em;
     max-height: 1.6em;
@@ -59,8 +59,8 @@ const prefix = css`
     outline: none;
     color: var(--color-green-hover);
   }
-  .dat-input-svg,
-  .dat-input-button-svg {
+  .icon-link,
+  .icon-clipboard {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -71,13 +71,12 @@ const prefix = css`
     width: var(--icon-height);
     height: var(--icon-height);
   }
-  .dat-input-svg {
+  .icon-link {
     left: 0;
-    fill: var(--color-neutral-30);
+    color: var(--color-neutral-30);
   }
-  .dat-input-button-svg {
+  .icon-clipboard {
     right: .3rem;
-    fill: currentColor;
   }
   .dat-input-input {
     width: 100%;
@@ -97,11 +96,10 @@ const prefix = css`
     color: var(--color-info);
     top: 2rem;
   }
-  .dat-input-check-svg {
+  .icon-check {
     width: var(--icon-height);
     height: .875rem;
     vertical-align: -.15rem;
-    fill: currentColor;
   }
   .color-info {
     color: var(--color-info);
@@ -168,28 +166,28 @@ function createWidget () {
         <h3 class="mt0">Copy Dat Link</h3>
         <label for="dat-link" class="dat-input">
           <p class="f7 mt0 mb0 tr absolute color-info confirmation">
-            <svg class="dat-input-check-svg">
-              <use xlink:href="#daticon-check" />
-            </svg>
+            ${icon({
+              id: 'check'
+            })}
             Link copied to clipboard
           </p>
           <input name="dat-link" type="text" value=${link} class="relative dat-input-input">
-          <svg class="dat-input-svg">
-            <use xlink:href="#daticon-link" />
-          </svg>
+          ${icon({
+            id: 'link'
+          })}
           <button class="dat-input-button">
-            <svg class="dat-input-button-svg">
-              <use xlink:href="#daticon-clipboard" />
-            </svg>
+            ${icon({
+              id: 'clipboard'
+            })}
           </button>
         </label>
         <p class="f7">
           Anyone with this link can view your Dat.
         </p>
         <button onclick=${handleExit} class="pointer exit" aria-label="Close">
-          <svg class="exit-svg">
-            <use xlink:href="#daticon-cross" />
-          </svg>
+          ${icon({
+            id: 'cross'
+          })}
         </button>
       </section>
     `

@@ -1,21 +1,21 @@
 'use strict'
 
-const yo = require('choo/html')
-const icon = require('./icon')
 const encoding = require('dat-encoding')
+const icon = require('./icon')
+const yo = require('choo/html')
 const css = require('sheetify')
 
 css('dat-colors')
 
 const prefix = css`
   :host {
-    --input-height: 2rem;
     --icon-height: 1.2rem;
 
     position: relative;
     display: inline-block;
     padding: 0;
     border: 0;
+    color: var(--color-neutral-30);
   }
 
   svg {
@@ -29,11 +29,10 @@ const prefix = css`
     display: block;
     width: var(--icon-height);
     height: var(--icon-height);
-    fill: var(--color-neutral-30);
   }
 
   .input {
-    height: var(--input-height);
+    height: 2rem;
     width: 6.75rem;
     padding-right: .5rem;
     padding-left: 2rem;
@@ -52,11 +51,10 @@ const prefix = css`
     color: var(--color-neutral-30);
     opacity: 1;
   }
-  .input:hover::-webkit-input-placeholder {
-    color: var(--color-white);
-  }
+  .input:hover,
+  .input:hover::-webkit-input-placeholder,
   .input:hover + svg {
-    fill: var(--color-white);
+    color: var(--color-white);
   }
   .input:focus,
   .input:active {
@@ -66,12 +64,10 @@ const prefix = css`
     color: var(--color-neutral);
   }
   .input:focus::-webkit-input-placeholder,
-  .input:active::-webkit-input-placeholder {
-    color: var(--color-neutral-30);
-  }
+  .input:active::-webkit-input-placeholder,
   .input:focus + svg,
   .input:active + svg {
-    fill: var(--color-neutral-50);
+    color: var(--color-neutral-50);
   }
 `
 
@@ -91,9 +87,9 @@ module.exports = (props) => {
   return yo`
     <label for="dat-import" class="${prefix}">
       <input name="dat-import" type="text" placeholder="Import dat" onkeydown=${keydown} class="input">
-      <svg>
-        <use xlink:href="#daticon-link" />
-      </svg>
+      ${icon({
+        id: 'link'
+      })}
     </label>
   `
 }

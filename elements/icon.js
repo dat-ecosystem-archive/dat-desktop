@@ -5,7 +5,8 @@ const css = require('yo-css')
 
 module.exports = (props) => {
   const style = {
-    maxWidth: '30px'
+    maxWidth: '2rem',
+    fill: 'currentColor'
   }
 
   return yo`
