@@ -149,28 +149,20 @@ function createWidget () {
         <h3 class="mt0">Copy Dat Link</h3>
         <label for="dat-link" class="relative dat-input">
           <p class="f7 mt0 mb0 tr absolute color-blue confirmation">
-            ${icon({
-              id: 'check'
-            })}
+            ${icon({id: 'check'})}
             Link copied to clipboard
           </p>
           <input name="dat-link" type="text" value=${link} class="relative dib pa0 dat-input-input">
-          ${icon({
-            id: 'link'
-          })}
+          ${icon({id: 'link'})}
           <button class="absolute pointer dat-input-button">
-            ${icon({
-              id: 'clipboard'
-            })}
+            ${icon({id: 'clipboard'})}
           </button>
         </label>
         <p class="f7">
           Anyone with this link can view your Dat.
         </p>
         <button onclick=${handleExit} class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit" aria-label="Close">
-          ${icon({
-            id: 'cross'
-          })}
+          ${icon({id: 'cross'})}
         </button>
       </section>
     `
