@@ -15,14 +15,6 @@ rebuild () {
     --abi="$electron_abi" > /dev/null
 }
 
-build_css () {
-  printf '[scripts/build] building css\n'
-  node-sass \
-    --importer node_modules/node-sass-magic-importer \
-    --include-path app/scss scss/main.scss public/css/main.css \
-    > /dev/null
-}
-
 build_background () {
   printf '[scripts/build] building background\n'
   tiffutil \
@@ -33,7 +25,6 @@ build_background () {
 
 postinstall () {
   printf '[scripts/build] installing app deps \n'
-  build_css
   build_background
   rebuild
 }
@@ -42,7 +33,7 @@ postinstall () {
 while true; do
   case "$1" in
     rebuild ) shift; rebuild; break ;;
-    css ) shift; build_css; break ;;
+    css ) shift; break ;;
     background ) shift; build_background; break ;;
     postinstall ) shift; postinstall; break ;;
     * ) usage; break ;;

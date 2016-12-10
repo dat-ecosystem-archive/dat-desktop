@@ -18,8 +18,6 @@ $ npm start
 ## Build assets
 
 ```bash
-$ npm run build-css         # build CSS
-$ npm run watch-css         # watch and rebuild CSS
 $ npm run bundle            # build JS
 $ npm run watch-js          # watch and rebuild JS
 ```
