@@ -15,14 +15,14 @@ function createModel (cb) {
 
   model.subscription('manager', (send, done) => {
     manager.on('update', () => {
-      send('repos:updateArchives', manager.get(), done)
+      send('repos:update', manager.get(), done)
     })
   })
 
-  model.reducer('updateArchives', (state, data) => {
+  model.reducer('update', (state, data) => {
     return {
       updateIndex: state.updateIndex + 1,
-      archives: data
+      values: data
     }
   })
 
@@ -30,7 +30,7 @@ function createModel (cb) {
   // data structure is mutable
   model.state({
     updateIndex: 0,
-    archives: []
+    values: []
   })
 
   model.effect('open', (state, dat) => {
