@@ -9,13 +9,13 @@ const Manager = require('../lib/dat-manager')
 module.exports = createModel
 
 function createModel (cb) {
-  const model = Model('app')
+  const model = Model('repos')
 
   const manager = new Manager()
 
   model.subscription('manager', (send, done) => {
     manager.on('update', () => {
-      send('app:updateArchives', manager.get(), done)
+      send('repos:updateArchives', manager.get(), done)
     })
   })
 

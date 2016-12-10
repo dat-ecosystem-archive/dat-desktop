@@ -7,7 +7,7 @@ const choo = require('choo')
 const opts = {
   filter: (state) => {
     state = xtend(state)
-    delete state.app
+    delete state.repos
     return state
   }
 }
@@ -17,7 +17,8 @@ persist(opts, (p) => {
   app.use(log())
   app.use(p)
 
-  app.model(require('./models/app')())
+  app.model(require('./models/main-view')())
+  app.model(require('./models/repos')())
 
   app.router(['/', require('./pages/main')])
   mount('body', app.start())

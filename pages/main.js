@@ -76,11 +76,11 @@ module.exports = mainView
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
   const modalLink = state.location.search.modal
-  const dats = state.app.archives
+  const dats = state.repos.archives
 
   const header = Header({
-    create: () => send('app:create'),
-    download: (link) => send('app:download', link)
+    create: () => send('repos:create'),
+    download: (link) => send('repos:download', link)
   })
 
   if (!dats.length) {

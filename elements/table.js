@@ -94,19 +94,19 @@ function createTable (dats, send) {
               icon: 'open-in-finder',
               text: '',
               cls: 'row-action',
-              click: () => send('app:open', dat)
+              click: () => send('repos:open', dat)
             })}
             ${button({
               icon: 'link',
               text: '',
               cls: 'row-action',
-              click: () => send('app:share', dat)
+              click: () => send('repos:share', dat)
             })}
             ${button({
               icon: 'delete',
               text: '',
               cls: 'row-action',
-              click: () => send('app:delete', dat)
+              click: () => send('repos:delete', dat)
             })}
           </div>
         </td>
