@@ -68,13 +68,23 @@ module.exports = mainView
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
+  const showWelcomeScreen = state.mainView.showWelcomeScreen
   const modalLink = state.location.search.modal
-  const dats = state.repos.archives
+  const dats = state.repos.values
 
   const header = Header({
     create: () => send('repos:create'),
     download: (link) => send('repos:download', link)
   })
+
+  if (showWelcomeScreen) {
+    return html`
+      <body>
+        ${svgSprite()}
+        ${WelcomeScreen({ onexit: () => send('mainView:closeWelcomeScreen') })}
+      </body>
+    `
+  }
 
   if (!dats.length) {
     return html`
@@ -103,6 +113,16 @@ function mainView (state, prev, send) {
       ${header}
       ${Table(dats, send)}
     </body>
+  `
+}
+
+function WelcomeScreen (methods) {
+  const onExit = methods.onexit
+  return html`
+    <main>
+      <p>Welcome to dat desktop!</p>
+      <button onclick=${onExit}>Close screen</button>
+    </main>
   `
 }
 
