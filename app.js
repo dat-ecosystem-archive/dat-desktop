@@ -1,15 +1,24 @@
+const persist = require('choo-persist')
 const mount = require('choo/mount')
 const log = require('choo-log')
+const xtend = require('xtend')
 const choo = require('choo')
 
-const mainView = require('./pages/main')
+const opts = {
+  filter: (state) => {
+    state = xtend(state)
+    delete state.app
+    return state
+  }
+}
 
-const app = choo()
-app.use(log())
+persist(opts, (p) => {
+  const app = choo()
+  app.use(log())
+  app.use(p)
 
-// import & init models
-app.model(require('./models/app')())
+  app.model(require('./models/app')())
 
-// start
-app.router(['/', mainView])
-mount('body', app.start())
+  app.router(['/', require('./pages/main')])
+  mount('body', app.start())
+})
