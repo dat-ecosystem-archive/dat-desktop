@@ -12,6 +12,7 @@ const icon = require('../elements/icon')
 const modal = Modal()
 
 css('dat-colors')
+css('tachyons')
 
 const prefix = css`
   :host {
