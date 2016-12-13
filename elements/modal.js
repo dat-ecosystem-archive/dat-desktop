@@ -13,24 +13,24 @@ const prefix = css`
     --button-width: 2rem;
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
   }
-  .exit {
+  :host .exit {
     border: none;
     color: var(--color-neutral-40);
   }
-  .exit:hover,
-  .exit:focus {
+  :host .exit:hover,
+  :host .exit:focus {
     color: var(--color-neutral);
   }
-  .icon-cross {
+  :host .icon-cross {
     vertical-align: middle;
     width: 1.1em;
     max-height: 1.6em;
   }
-  .dat-input {
+  :host .dat-input {
     height: var(--input-height);
     border: 0;
   }
-  .dat-input-button {
+  :host .dat-input-button {
     width: var(--button-width);
     height: calc(var(--input-height) - 2px);
     top: 1px;
@@ -40,13 +40,13 @@ const prefix = css`
     border: none;
     color: var(--color-neutral-30);
   }
-  .dat-input-button:hover,
-  .dat-input-button:focus {
+  :host .dat-input-button:hover,
+  :host .dat-input-button:focus {
     outline: none;
     color: var(--color-green-hover);
   }
-  .icon-link,
-  .icon-clipboard {
+  :host .icon-link,
+  :host .icon-clipboard {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -57,14 +57,14 @@ const prefix = css`
     width: var(--icon-height);
     height: var(--icon-height);
   }
-  .icon-link {
+  :host .icon-link {
     left: 0;
     color: var(--color-neutral-30);
   }
-  .icon-clipboard {
+  :host .icon-clipboard {
     right: .3rem;
   }
-  .dat-input-input {
+  :host .dat-input-input {
     width: 100%;
     height: 2rem;
     padding-right: calc(var(--button-width) + .25rem);
@@ -74,25 +74,25 @@ const prefix = css`
     background-color: var(--color-white);
     color: var(--color-green-hover);
   }
-  .dat-input-input:hover,
-  .dat-input-input:focus {
+  :host .dat-input-input:hover,
+  :host .dat-input-input:focus {
     outline: none;
   }
-  .dat-input-check {
+  :host .dat-input-check {
     color: var(--color-blue);
     top: 2rem;
   }
-  .icon-check {
+  :host .icon-check {
     width: var(--icon-height);
     height: .875rem;
     vertical-align: -.15rem;
   }
-  .confirmation {
+  :host .confirmation {
     right: 0;
     opacity: 0;
     top: -.5rem;
   }
-  .show-confirmation {
+  :host .show-confirmation {
     top: -1.2rem;
     opacity: 1;
     transition: all .15s ease-out;

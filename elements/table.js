@@ -12,60 +12,61 @@ const table = css`
   :host {
     width: 100%;
   }
-  th, td {
+  :host th,
+  :host td {
     padding-right: .75rem;
     padding-left: .75rem;
     font-size: .875rem;
   }
-  th {
+  :host th {
     height: 4rem;
     font-size: .8125rem;
     font-weight: normal;
     color: var(--color-neutral-60);
     border-bottom: 1px solid var(--color-neutral-20);
   }
-  th:first-child {
+  :host th:first-child {
     width: 3rem;
     padding: 0;
     border: none;
   }
-  th:last-child {
+  :host th:last-child {
     width: 8.25rem;
   }
-  td {
+  :host td {
     height: 4rem;
     vertical-align: middle;
     padding-top: 1rem;
   }
-  tr:hover td {
+  :host tr:hover td {
     background-color: var(--color-neutral--04);
   }
-  .cell-1 {
+  :host .cell-1 {
     width: 5rem;
   }
-  .cell-2 {
+  :host .cell-2 {
     width: 17rem;
   }
-  .cell-3 {
+  :host .cell-3 {
     width: 15rem;
   }
-  .cell-4 {
+  :host .cell-4 {
     width: 5.5rem;
     white-space: nowrap;
   }
-  .cell-5 {
+  :host .cell-5 {
     width: 6rem;
   }
-  .cell-6 {
+  :host .cell-6 {
     width: 10.25rem;
   }
-  .cell-truncate {
+  :host .cell-truncate {
     width: 26vw;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .row-action {
+  :host .row-action {
     height: 2rem;
     display: inline-block;
     border: 0;
@@ -73,23 +74,23 @@ const table = css`
     text-align: center;
     color: var(--color-neutral-20);
   }
-  .row-action svg {
+  :host .row-action svg {
     vertical-align: middle;
     width: 1.1em;
     max-height: 1.6em;
   }
-  .row-action:hover,
-  .row-action:focus {
+  :host .row-action:hover,
+  :host .row-action:focus {
     outline: none;
     color: var(--color-neutral-50);
   }
-  .row-action:first-child {
+  :host .row-action:first-child {
     padding-left: 0;
   }
-  .row-action:last-child {
+  :host .row-action:last-child {
     padding-right: 0;
   }
-  .icon-network {
+  :host .icon-network {
     color: var(--color-neutral-20);
     vertical-align: middle;
     width: 1.1em;
@@ -109,7 +110,7 @@ const progressBar = css`
     padding-bottom: .5rem;
   }
 
-  .bar {
+  :host .bar {
     height: var(--progress-height);
     width: calc(100% - var(--counter-width));
     float: left;
@@ -118,7 +119,7 @@ const progressBar = css`
     border-radius: 2px;
   }
 
-  .line {
+  :host .line {
     width: 0%;
     height: var(--progress-height);
     background-color: var(--color-blue);
@@ -134,7 +135,7 @@ const progressBar = css`
     }
   }
 
-  .line-loading {
+  :host .line-loading {
     --tile-width: 28px;
     --stripe-width: 5px;
 
@@ -142,7 +143,7 @@ const progressBar = css`
     position: relative;
     height: var(--bar-height);
   }
-  .line-loading:before {
+  :host .line-loading:before {
     content: '';
     width: 100%;
     height: var(--bar-height);
@@ -160,15 +161,15 @@ const progressBar = css`
     animation: move-bg .75s linear infinite;
   }
 
-  .line-complete {
+  :host .line-complete {
     background-color: var(--color-green);
   }
 
-  .line-paused {
+  :host .line-paused {
     background-color: var(--color-neutral-60);
   }
 
-  .counter {
+  :host .counter {
     float: right;
     min-width: var(--counter-width);
     margin-top: -.4rem;

@@ -13,14 +13,14 @@ const prefix = css`
     color: var(--color-neutral-30);
   }
 
-  .icon-link {
+  :host .icon-link {
     padding-top: .32rem;
     padding-left: .5rem;
     pointer-events: none;
     width: var(--icon-height);
     height: var(--icon-height);
   }
-  input {
+  :host input {
     height: 1.75rem;
     width: 6.75rem;
     padding-right: .5rem;
@@ -36,26 +36,26 @@ const prefix = css`
     transition-duration: .15s;
     transition-timing-function: ease-in;
   }
-  input::-webkit-input-placeholder {
+  :host input::-webkit-input-placeholder {
     color: var(--color-neutral-30);
     opacity: 1;
   }
-  input:hover,
-  input:hover::-webkit-input-placeholder,
-  input:hover + svg {
+  :host input:hover,
+  :host input:hover::-webkit-input-placeholder,
+  :host input:hover + svg {
     color: var(--color-white);
   }
-  input:focus,
-  input:active {
+  :host input:focus,
+  :host input:active {
     width: 14rem;
     outline: none;
     background-color: var(--color-white);
     color: var(--color-neutral);
   }
-  input:focus::-webkit-input-placeholder,
-  input:active::-webkit-input-placeholder,
-  input:focus + svg,
-  input:active + svg {
+  :host input:focus::-webkit-input-placeholder,
+  :host input:active::-webkit-input-placeholder,
+  :host input:focus + svg,
+  :host input:active + svg {
     color: var(--color-neutral-50);
   }
 `

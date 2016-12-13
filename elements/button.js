@@ -9,7 +9,7 @@ const prefix = css`
     text-transform: uppercase;
     letter-spacing: .025em;
   }
-  .btn-wrapper {
+  :host .btn-wrapper {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;

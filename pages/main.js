@@ -19,45 +19,45 @@ const prefix = css`
     position: relative;
     background: url()
   }
-  .skeleton {
+  :host .skeleton {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     max-width: 100vw;
   }
-  .tutorial {
+  :host .tutorial {
     display: none;
   }
-  .lines {
+  :host .lines {
     position: absolute;
     top: .25rem;
     right: 6rem;
     width: 17rem;
     z-index: 3;
   }
-  .create-new-dat,
-  .link {
+  :host .create-new-dat,
+  :host .link {
     position: absolute;
     width: 16rem;
     background-color: var(--color-white);
   }
-  .create-new-dat {
+  :host .create-new-dat {
     top: 13.75rem;
     right: 2rem;
   }
-  .link {
+  :host .link {
     top: 6rem;
     right: 8.5rem;
     color: red;
   }
-  .icon-create-new-dat,
-  .icon-link {
+  :host .icon-create-new-dat,
+  :host .icon-link {
     width: 3rem;
     height: 3rem;
     fill: currentColor;
   }
-  .icon-link {
+  :host .icon-link {
     margin-bottom: -.75rem;
   }
 `
