@@ -1,6 +1,9 @@
 const mount = require('choo/mount')
 const log = require('choo-log')
 const choo = require('choo')
+const css = require('sheetify')
+
+css('./public/css/base.css', { global: true })
 
 const mainView = require('./pages/main')
 

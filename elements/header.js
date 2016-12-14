@@ -1,35 +1,70 @@
 'use strict'
 
-const yo = require('choo/html')
+const html = require('choo/html')
+const css = require('sheetify')
 const button = require('./button')
-const encoding = require('dat-encoding')
+const datImport = require('./dat-import')
+
+css('dat-colors')
+
+const header = css `
+  :host {
+    height: 2.5rem;
+    padding: .25rem .75rem;
+    background-color: var(--color-neutral);
+    color: var(--color-white);
+    -webkit-app-region: drag;
+  }
+
+  .header-action {
+    height: 1.75rem;
+    display: inline-block;
+    border: 1px solid var(--color-neutral-30);
+    background: transparent;
+    color: var(--color-neutral-30);
+    text-align: center;
+    vertical-align: middle;
+  }
+  .header-action svg {
+    width: 1.1em;
+  }
+  .header-action:hover,
+  .header-action:focus {
+    outline: none;
+    color: var(--color-white);
+    border-color: var(--color-white);
+  }
+  .header-action .btn-text {
+    font-size: .75rem;
+  }
+  .header-action-no-border {
+    border-color: transparent;
+  }
+  .header-action-no-border:hover,
+  .header-action-no-border:focus {
+      border-color: transparent;
+    }
+  .menu-trigger {
+//    display: none !important;
+
+    height: 2rem;
+    color: var(--color-neutral--20);
+  }
+  .menu-trigger:hover,
+  .menu-trigger:focus {
+    color: var(--color-white);
+  }
+`
 
 module.exports = (props) => {
-  const keydown = (e) => {
-    if (e.keyCode === 13) {
-      const link = e.target.value
-      try {
-        encoding.decode(link)
-      } catch (err) {
-        throw new Error('Invalid link')
-      }
-      e.target.value = ''
-      props.download(link)
-    }
-  }
-  return yo`
-    <header class="dat-header">
+  return html`
+    <header class="${header}">
       <div class="fr">
-        <label for="test" class="dat-import">
-          <input name="test" type="text" placeholder="Import dat" onkeydown=${keydown} class="dat-import-input">
-          <svg>
-            <use xlink:href="#daticon-link" />
-          </svg>
-        </label>
+        ${datImport()}
         ${button({
           icon: 'create-new-dat',
           text: 'Create New Dat',
-          cls: 'ml2 header-action header-action-no-border',
+          cls: 'ml2 b--transparent header-action header-action-no-border',
           click: props.create
         })}
         ${button({

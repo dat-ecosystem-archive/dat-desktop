@@ -1,0 +1,42 @@
+body {
+  line-height: 1.5;
+}
+
+body, input, textarea, select, button {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
+}
+
+html {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.is-selectable {
+  -webkit-user-select: auto;
+  cursor: auto;
+}
+
+.color-neutral-30 {
+  color: var(--color-neutral-30);
+}
+.color-blue {
+  color: var(--color-blue);
+}
+.color-blue-disabled {
+  color: var(--color-blue-disabled);
+}
+.color-green {
+  color: var(--color-green);
+}
+.color-green-disabled {
+  color: var(--color-green-disabled);
+}
+
+.f7 {
+  font-size: .75rem;
+}
