@@ -1,5 +1,4 @@
 const dialog = require('electron').remote.dialog
-const clipboard = require('electron').clipboard
 const ipc = require('electron').ipcRenderer
 const exec = require('child_process').exec
 const encoding = require('dat-encoding')
@@ -58,7 +57,6 @@ function createModel (cb) {
   model.effect('share', (state, data, send, done) => {
     const dat = data
     const encodedKey = encoding.encode(dat.key)
-    clipboard.writeText(`dat://${encodedKey}`)
     send('location:set', `?modal=${encodedKey}`, done)
   })
 

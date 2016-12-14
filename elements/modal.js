@@ -1,3 +1,4 @@
+const clipboard = require('electron').clipboard
 const widget = require('cache-element/widget')
 const Modal = require('../lib/modal-element')
 const icon = require('./icon')
@@ -102,48 +103,29 @@ const prefix = css`
 module.exports = createWidget
 
 function createWidget () {
-  let link = null
-
-  let modal = Modal(html`<div></div>`, () => {
-    link = null
-  })
-
   return widget({
-    onload: function () {
-      if (link) modal.show(createHtml(link))
-    },
-    onunload: function () {
-      link = null
-      modal.hide()
-    },
-    onupdate: function (el, newLink) {
-      if (!link && newLink) {
-        // fresh link
-        link = newLink
-        modal.show(createHtml(link))
-      } else if (!newLink) {
-        // link was cleared
-        link = null
-        modal.hide()
-      } else if (newLink && (link !== newLink)) {
-        // ohey, we moved to a different link
-        link = newLink
-        modal.show(createHtml(link))
-      }
-    },
     render: function (newLink) {
-      link = newLink
-      if (link) {
-        modal.show(createHtml(link))
-      } else {
-        modal.hide()
+      const modal = Modal(null, { onexit: onExit })
+
+      var link = 'dat://' + newLink
+      modal.show(render(link, false, onCopy, onExit))
+
+      return modal
+
+      function onCopy () {
+        clipboard.writeText(link)
+        modal.show(render(link, true, onCopy, onExit))
       }
 
-      return html`<div>${modal}</div>` // this fixes a bug in modal-element
+      function onExit () {
+        window.history.back()
+      }
     }
   })
 
-  function createHtml (link) {
+  function render (link, isCopied, onCopy, onExit) {
+    const confirmClass = (isCopied) ? 'show-confirmation' : ''
+
     return html`
       <section class="${prefix} relative flex flex-column justify-center pa3 ph4 bg-white">
         <h3 class="mt0">Copy Dat Link</h3>
@@ -161,16 +143,10 @@ function createWidget () {
         <p class="f7">
           Anyone with this link can view your Dat.
         </p>
-        <button onclick=${handleExit} class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit" aria-label="Close">
+        <button onclick=${onExit} class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit" aria-label="Close">
           ${icon({id: 'cross'})}
         </button>
       </section>
     `
-
-    function handleExit () {
-      link = null
-      modal.hide()
-      window.history.back()
-    }
   }
 }
