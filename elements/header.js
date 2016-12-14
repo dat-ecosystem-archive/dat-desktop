@@ -5,8 +5,6 @@ const css = require('sheetify')
 const button = require('./button')
 const datImport = require('./dat-import')
 
-css('dat-colors')
-
 const header = css `
   :host {
     height: 2.5rem;

@@ -5,8 +5,6 @@ const icon = require('./icon')
 const html = require('choo/html')
 const css = require('sheetify')
 
-css('dat-colors')
-
 const prefix = css`
   :host {
     --input-height: 2rem;

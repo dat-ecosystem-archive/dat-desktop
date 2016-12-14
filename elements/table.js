@@ -6,8 +6,6 @@ const css = require('sheetify')
 const button = require('./button')
 const icon = require('./icon')
 
-css('dat-colors')
-
 const table = css`
   :host {
     width: 100%;

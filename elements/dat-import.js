@@ -5,8 +5,6 @@ const icon = require('./icon')
 const yo = require('choo/html')
 const css = require('sheetify')
 
-css('dat-colors')
-
 const prefix = css`
   :host {
     --icon-height: 1.2rem;

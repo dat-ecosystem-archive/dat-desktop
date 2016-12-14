@@ -13,6 +13,7 @@ const modal = Modal()
 
 css('dat-colors')
 css('tachyons')
+css('../public/css/base.css')
 
 const prefix = css`
   :host {
