@@ -230,14 +230,18 @@ function createTable (dats, send) {
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            ${dat.title || `#${encoding.encode(dat.key)}`}
-            <br />
-            <span class="f7">
-              ${dat.owner
-                ? 'Read & Write'
-                : 'Read-only'}
-              ${dat.title && `· #${encoding.encode(dat.key)}`}
-            </span>
+            <h2>
+              ${dat.title || `#${encoding.encode(dat.key)}`}
+            </h2>
+            <p class="f7 color-neutral-60">
+              <span class="ttu">${dat.author} • </span>
+              <span>
+                ${dat.owner
+                  ? 'Read & Write'
+                  : 'Read-only'}
+                ${dat.title && `· #${encoding.encode(dat.key)}`}
+              </span>
+            </p>
           </div>
         </td>
         <td class="cell-3">
