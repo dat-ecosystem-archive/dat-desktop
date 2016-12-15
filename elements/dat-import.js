@@ -19,8 +19,8 @@ const prefix = css`
     height: var(--icon-height);
   }
   :host input {
-    height: 1.75rem;
-    width: 6.75rem;
+    height: 2rem;
+    width: 8rem;
     padding-right: .5rem;
     padding-left: 2rem;
     font-size: .75rem;

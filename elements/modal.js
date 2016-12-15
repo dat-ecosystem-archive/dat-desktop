@@ -7,9 +7,9 @@ const css = require('sheetify')
 
 const prefix = css`
   :host {
-    --input-height: 2rem;
-    --icon-height: 1.2rem;
-    --button-width: 2rem;
+    min-width: 25rem;
+    padding: 2rem 2.5rem 3rem;
+    background-color: var(--color-white);
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
   }
   :host .exit {
@@ -24,8 +24,15 @@ const prefix = css`
     vertical-align: middle;
     width: 1.1em;
     max-height: 1.6em;
+    transition: color .025s ease-out;
   }
-  :host .dat-input {
+`
+
+const input = css`
+  :host {
+    --input-height: 3rem;
+    --icon-height: 1.2rem;
+    --button-width: 3rem;
     height: var(--input-height);
     border: 0;
   }
@@ -49,33 +56,41 @@ const prefix = css`
     position: absolute;
     top: 0;
     bottom: 0;
-    padding-top: .4rem;
-    padding-left: .5rem;
+    padding-top: calc(var(--icon-height) - .35rem);
+    padding-left: .75rem;
     pointer-events: none;
     display: block;
     width: var(--icon-height);
     height: var(--icon-height);
+    transition: color .025s ease-out;
   }
   :host .icon-link {
     left: 0;
     color: var(--color-neutral-30);
   }
   :host .icon-clipboard {
-    right: .3rem;
+    right: .8rem;
   }
   :host .dat-input-input {
     width: 100%;
-    height: 2rem;
-    padding-right: calc(var(--button-width) + .25rem);
-    padding-left: 2rem;
-    font-size: .875rem;
-    border: 1px solid var(--color-neutral-30);
+    height: var(--input-height);
+    padding-right: var(--button-width);
+    padding-left: 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid var(--color-neutral-20);
     background-color: var(--color-white);
     color: var(--color-green-hover);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   :host .dat-input-input:hover,
   :host .dat-input-input:focus {
     outline: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   :host .dat-input-check {
     color: var(--color-blue);
@@ -90,6 +105,7 @@ const prefix = css`
     right: 0;
     opacity: 0;
     top: -.5rem;
+    color: var(--color-blue);
   }
   :host .show-confirmation {
     top: -1.2rem;
@@ -125,10 +141,10 @@ function createWidget () {
     const confirmClass = (isCopied) ? 'show-confirmation' : ''
 
     return html`
-      <section class="${prefix} relative flex flex-column justify-center pa3 ph4 bg-white">
-        <h3 class="mt0">Copy Dat Link</h3>
-        <label for="dat-link" class="relative dat-input">
-          <p class="f7 mt0 mb0 tr absolute color-blue confirmation ${confirmClass}">
+      <section class="relative flex flex-column justify-center ${prefix}">
+        <h3 class="f4">Copy Dat Link</h3>
+        <label for="dat-link" class="relative mt4 mb4 ${input}">
+          <p class="f7 mt0 mb0 tr absolute confirmation ${confirmClass}">
             ${icon({id: 'check'})}
             Link copied to clipboard
           </p>
@@ -142,7 +158,7 @@ function createWidget () {
             ${icon({id: 'clipboard'})}
           </button>
         </label>
-        <p class="f7">
+        <p class="f7 color-neutral-70">
           Anyone with this link can view your Dat.
         </p>
         <button
