@@ -11,21 +11,22 @@ const prefix = css`
     padding: 2rem 2.5rem 3rem;
     background-color: var(--color-white);
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
+    .exit {
+      border: none;
+      color: var(--color-neutral-40);
+      &:hover,
+      &:focus {
+        color: var(--color-neutral);
+      }
+    }
+    .icon-cross {
+      vertical-align: middle;
+      width: 1.1em;
+      max-height: 1.6em;
+      transition: color .025s ease-out;
+    }
   }
-  :host .exit {
-    border: none;
-    color: var(--color-neutral-40);
-  }
-  :host .exit:hover,
-  :host .exit:focus {
-    color: var(--color-neutral);
-  }
-  :host .icon-cross {
-    vertical-align: middle;
-    width: 1.1em;
-    max-height: 1.6em;
-    transition: color .025s ease-out;
-  }
+
 `
 
 const input = css`
@@ -35,82 +36,81 @@ const input = css`
     --button-width: 3rem;
     height: var(--input-height);
     border: 0;
-  }
-  :host .dat-input-button {
-    width: var(--button-width);
-    height: calc(var(--input-height) - 2px);
-    top: 1px;
-    right: 1px;
-    bottom: 1px;
-    background-color: var(--color-neutral-10);
-    border: none;
-    color: var(--color-neutral-30);
-  }
-  :host .dat-input-button:hover,
-  :host .dat-input-button:focus {
-    outline: none;
-    color: var(--color-green-hover);
-  }
-  :host .icon-link,
-  :host .icon-clipboard {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    padding-top: calc(var(--icon-height) - .35rem);
-    padding-left: .75rem;
-    pointer-events: none;
-    display: block;
-    width: var(--icon-height);
-    height: var(--icon-height);
-    transition: color .025s ease-out;
-  }
-  :host .icon-link {
-    left: 0;
-    color: var(--color-neutral-30);
-  }
-  :host .icon-clipboard {
-    right: .8rem;
-  }
-  :host .dat-input-input {
-    width: 100%;
-    height: var(--input-height);
-    padding-right: var(--button-width);
-    padding-left: 2.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border: 1px solid var(--color-neutral-20);
-    background-color: var(--color-white);
-    color: var(--color-green-hover);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  :host .dat-input-input:hover,
-  :host .dat-input-input:focus {
-    outline: none;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  :host .dat-input-check {
-    color: var(--color-blue);
-    top: 2rem;
-  }
-  :host .icon-check {
-    width: var(--icon-height);
-    height: .875rem;
-    vertical-align: -.15rem;
-  }
-  :host .confirmation {
-    right: 0;
-    opacity: 0;
-    top: -.5rem;
-    color: var(--color-blue);
-  }
-  :host .show-confirmation {
-    top: -1.2rem;
-    opacity: 1;
-    transition: all .15s ease-out;
+    .dat-input-button {
+      width: var(--button-width);
+      height: calc(var(--input-height) - 2px);
+      top: 1px;
+      right: 1px;
+      bottom: 1px;
+      background-color: var(--color-neutral-10);
+      border: none;
+      color: var(--color-neutral-30);
+      &:hover,
+      &:focus {
+        outline: none;
+        color: var(--color-green-hover);
+      }
+    }
+
+    .icon-link,
+    .icon-clipboard {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      padding-top: calc(var(--icon-height) - .35rem);
+      padding-left: .75rem;
+      pointer-events: none;
+      display: block;
+      width: var(--icon-height);
+      height: var(--icon-height);
+      transition: color .025s ease-out;
+    }
+    .icon-link {
+      left: 0;
+      color: var(--color-neutral-30);
+    }
+    .icon-clipboard {
+      right: .8rem;
+    }
+    .dat-input-input {
+      width: 100%;
+      height: var(--input-height);
+      padding-right: var(--button-width);
+      padding-left: 2.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 1px solid var(--color-neutral-20);
+      background-color: var(--color-white);
+      color: var(--color-green-hover);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      &:hover,
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .dat-input-check {
+      color: var(--color-blue);
+      top: 2rem;
+    }
+    .icon-check {
+      width: var(--icon-height);
+      height: .875rem;
+      vertical-align: -.15rem;
+    }
+    .confirmation {
+      right: 0;
+      opacity: 0;
+      top: -.5rem;
+      color: var(--color-blue);
+    }
+    .show-confirmation {
+      top: -1.2rem;
+      opacity: 1;
+      transition: all .15s ease-out;
+    }
   }
 `
 

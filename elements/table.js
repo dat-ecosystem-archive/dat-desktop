@@ -9,90 +9,90 @@ const icon = require('./icon')
 const table = css`
   :host {
     width: 100%;
-  }
-  :host th,
-  :host td {
-    padding-right: .75rem;
-    padding-left: .75rem;
-    font-size: .875rem;
-  }
-  :host th {
-    height: 4rem;
-    font-size: .8125rem;
-    font-weight: normal;
-    color: var(--color-neutral-60);
-    border-bottom: 1px solid var(--color-neutral-20);
-  }
-  :host th:first-child {
-    width: 3rem;
-    padding: 0;
-    border: none;
-  }
-  :host th:last-child {
-    width: 8.25rem;
-  }
-  :host td {
-    height: 4rem;
-    vertical-align: middle;
-    padding-top: 1rem;
-  }
-  :host tr:hover td {
-    background-color: var(--color-neutral--04);
-  }
-  :host .cell-1 {
-    width: 5rem;
-  }
-  :host .cell-2 {
-    width: 17rem;
-  }
-  :host .cell-3 {
-    width: 15rem;
-  }
-  :host .cell-4 {
-    width: 5.5rem;
-    white-space: nowrap;
-  }
-  :host .cell-5 {
-    width: 6rem;
-  }
-  :host .cell-6 {
-    width: 10.25rem;
-  }
-  :host .cell-truncate {
-    width: 26vw;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  :host .row-action {
-    height: 2rem;
-    display: inline-block;
-    border: 0;
-    background: transparent;
-    text-align: center;
-    color: var(--color-neutral-20);
-  }
-  :host .row-action svg {
-    vertical-align: middle;
-    width: 1.1em;
-    max-height: 1.6em;
-  }
-  :host .row-action:hover,
-  :host .row-action:focus {
-    outline: none;
-    color: var(--color-neutral-50);
-  }
-  :host .row-action:first-child {
-    padding-left: 0;
-  }
-  :host .row-action:last-child {
-    padding-right: 0;
-  }
-  :host .icon-network {
-    color: var(--color-neutral-20);
-    vertical-align: middle;
-    width: 1.1em;
-    max-height: 1.6em;
+    th,
+    td {
+      padding-right: .75rem;
+      padding-left: .75rem;
+      font-size: .875rem;
+    }
+    th {
+      height: 4rem;
+      font-size: .8125rem;
+      font-weight: normal;
+      color: var(--color-neutral-60);
+      border-bottom: 1px solid var(--color-neutral-20);
+      &:first-child {
+        width: 3rem;
+        padding: 0;
+        border: none;
+      }
+      &:last-child {
+        width: 8.25rem;
+      }
+    }
+    td {
+      height: 4rem;
+      vertical-align: middle;
+      padding-top: 1rem;
+    }
+    tr:hover td {
+      background-color: var(--color-neutral--04);
+    }
+    .cell-1 {
+      width: 5rem;
+    }
+    .cell-2 {
+      width: 17rem;
+    }
+    .cell-3 {
+      width: 15rem;
+    }
+    .cell-4 {
+      width: 5.5rem;
+      white-space: nowrap;
+    }
+    .cell-5 {
+      width: 6rem;
+    }
+    .cell-6 {
+      width: 10.25rem;
+    }
+    .cell-truncate {
+      width: 26vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row-action {
+      height: 2rem;
+      display: inline-block;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      color: var(--color-neutral-20);
+      svg {
+        vertical-align: middle;
+        width: 1.1em;
+        max-height: 1.6em;
+      }
+      &:hover,
+      &:focus {
+        outline: none;
+        color: var(--color-neutral-50);
+      }
+      &:first-child {
+        padding-left: 0;
+      }
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+    .icon-network {
+      color: var(--color-neutral-20);
+      vertical-align: middle;
+      width: 1.1em;
+      max-height: 1.6em;
+    }
   }
 `
 
@@ -106,74 +106,67 @@ const progressBar = css`
     overflow: hidden;
     padding-top: .85rem;
     padding-bottom: .5rem;
-  }
-
-  :host .bar {
-    height: var(--progress-height);
-    width: calc(100% - var(--counter-width));
-    float: left;
-    overflow: hidden;
-    background-color: var(--color-neutral-20);
-    border-radius: 2px;
-  }
-
-  :host .line {
-    width: 0%;
-    height: var(--progress-height);
-    background-color: var(--color-blue);
-    border-radius: 2px;
-  }
-
-  @keyframes move-bg {
-    0% {
-      background-position: var(--tile-width) 0;
+    .bar {
+      height: var(--progress-height);
+      width: calc(100% - var(--counter-width));
+      float: left;
+      overflow: hidden;
+      background-color: var(--color-neutral-20);
+      border-radius: 2px;
     }
-    100% {
-      background-position: 0 0;
+    .line {
+      width: 0%;
+      height: var(--progress-height);
+      background-color: var(--color-blue);
+      border-radius: 2px;
+    }
+    @keyframes move-bg {
+      0% {
+        background-position: var(--tile-width) 0;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+    .line-loading {
+      --tile-width: 28px;
+      --stripe-width: 5px;
+      overflow: hidden;
+      position: relative;
+      height: var(--bar-height);
+      &:before {
+        content: '';
+        width: 100%;
+        height: var(--bar-height);
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-image: repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent var(--stripe-width),
+          rgba(255,255,255,.1) var(--stripe-width),
+          rgba(255,255,255,.1) calc(2 * var(--stripe-width))
+        );
+        background-size: var(--tile-width) var(--bar-height);
+        animation: move-bg .75s linear infinite;
+      }
+    }
+    .line-complete {
+      background-color: var(--color-green);
+    }
+    .line-paused {
+      background-color: var(--color-neutral-60);
+    }
+    .counter {
+      float: right;
+      min-width: var(--counter-width);
+      margin-top: -.4rem;
+      text-align: right;
+      font-size: .875rem;
     }
   }
 
-  :host .line-loading {
-    --tile-width: 28px;
-    --stripe-width: 5px;
-
-    overflow: hidden;
-    position: relative;
-    height: var(--bar-height);
-  }
-  :host .line-loading:before {
-    content: '';
-    width: 100%;
-    height: var(--bar-height);
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent var(--stripe-width),
-      rgba(255,255,255,.1) var(--stripe-width),
-      rgba(255,255,255,.1) calc(2 * var(--stripe-width))
-    );
-    background-size: var(--tile-width) var(--bar-height);
-    animation: move-bg .75s linear infinite;
-  }
-
-  :host .line-complete {
-    background-color: var(--color-green);
-  }
-
-  :host .line-paused {
-    background-color: var(--color-neutral-60);
-  }
-
-  :host .counter {
-    float: right;
-    min-width: var(--counter-width);
-    margin-top: -.4rem;
-    text-align: right;
-    font-size: .875rem;
-  }
 `
 
 module.exports = tableElement
