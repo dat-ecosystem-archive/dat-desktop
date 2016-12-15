@@ -230,7 +230,7 @@ function createTable (dats, send) {
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            <h2>
+            <h2 class="normal">
               ${dat.title || `#${encoding.encode(dat.key)}`}
             </h2>
             <p class="f7 color-neutral-60">
