@@ -8,7 +8,7 @@
   "author": "Dat Team",
   "browserify": {
     "transform": [
-      "sheetify/transform"
+      ["sheetify/transform", { "use": "sheetify-nested" } ]
     ]
   },
   "dependencies": {
@@ -60,6 +60,7 @@
     "electron": "1.4.6",
     "electron-builder": "^8.6.0",
     "nodemon": "^1.9.2",
+    "sheetify-nested": "^1.0.2",
     "standard": "^7.1.2",
     "through2": "^2.0.3",
     "watchify": "^3.7.0"

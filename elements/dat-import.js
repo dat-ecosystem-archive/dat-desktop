@@ -9,52 +9,51 @@ const prefix = css`
   :host {
     --icon-height: 1.2rem;
     color: var(--color-neutral-30);
-  }
-
-  :host .icon-link {
-    padding-top: .32rem;
-    padding-left: .5rem;
-    pointer-events: none;
-    width: var(--icon-height);
-    height: var(--icon-height);
-  }
-  :host input {
-    height: 2rem;
-    width: 8rem;
-    padding-right: .5rem;
-    padding-left: 2rem;
-    font-size: .75rem;
-    border: 1px solid transparent;
-    background-color: transparent;
-    color: var(--color-neutral-30);
-    opacity: 1;
-    text-transform: uppercase;
-    letter-spacing: .025em;
-    transition-property: width;
-    transition-duration: .15s;
-    transition-timing-function: ease-in;
-  }
-  :host input::-webkit-input-placeholder {
-    color: var(--color-neutral-30);
-    opacity: 1;
-  }
-  :host input:hover,
-  :host input:hover::-webkit-input-placeholder,
-  :host input:hover + svg {
-    color: var(--color-white);
-  }
-  :host input:focus,
-  :host input:active {
-    width: 14rem;
-    outline: none;
-    background-color: var(--color-white);
-    color: var(--color-neutral);
-  }
-  :host input:focus::-webkit-input-placeholder,
-  :host input:active::-webkit-input-placeholder,
-  :host input:focus + svg,
-  :host input:active + svg {
-    color: var(--color-neutral-50);
+    .icon-link {
+      padding-top: .42rem;
+      padding-left: .5rem;
+      pointer-events: none;
+      width: var(--icon-height);
+      height: var(--icon-height);
+    }
+    input {
+      height: 2rem;
+      width: 8rem;
+      padding-right: .5rem;
+      padding-left: 2rem;
+      font-size: .75rem;
+      border: 1px solid transparent;
+      background-color: transparent;
+      color: var(--color-neutral-30);
+      opacity: 1;
+      text-transform: uppercase;
+      letter-spacing: .025em;
+      transition-property: width;
+      transition-duration: .15s;
+      transition-timing-function: ease-in;
+      &::-webkit-input-placeholder {
+        color: var(--color-neutral-30);
+        opacity: 1;
+      }
+      &:hover,
+      &:hover::-webkit-input-placeholder,
+      &:hover + svg {
+        color: var(--color-white);
+      }
+      &:focus,
+      &:active {
+        width: 14rem;
+        outline: none;
+        background-color: var(--color-white);
+        color: var(--color-neutral);
+      }
+      &:focus::-webkit-input-placeholder,
+      &:active::-webkit-input-placeholder,
+      &:focus + svg,
+      &:active + svg {
+        color: var(--color-neutral-50);
+      }
+    }
   }
 `
 
