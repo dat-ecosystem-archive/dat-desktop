@@ -14,7 +14,7 @@ const header = css `
     -webkit-app-region: drag;
   }
 
-  .header-action {
+  :host .header-action {
     height: 1.75rem;
     display: inline-block;
     border: 1px solid var(--color-neutral-30);
@@ -23,33 +23,32 @@ const header = css `
     text-align: center;
     vertical-align: middle;
   }
-  .header-action svg {
+  :host .header-action svg {
     width: 1.1em;
   }
-  .header-action:hover,
-  .header-action:focus {
+  :host .header-action:hover,
+  :host .header-action:focus {
     outline: none;
     color: var(--color-white);
     border-color: var(--color-white);
   }
-  .header-action .btn-text {
+  :host .header-action .btn-text {
     font-size: .75rem;
   }
-  .header-action-no-border {
+  :host .header-action-no-border {
     border-color: transparent;
   }
-  .header-action-no-border:hover,
-  .header-action-no-border:focus {
-      border-color: transparent;
-    }
-  .menu-trigger {
-//    display: none !important;
-
+  :host .header-action-no-border:hover,
+  :host .header-action-no-border:focus {
+    border-color: transparent;
+  }
+  :host .menu-trigger {
+    display: none !important;
     height: 2rem;
     color: var(--color-neutral--20);
   }
-  .menu-trigger:hover,
-  .menu-trigger:focus {
+  :host .menu-trigger:hover,
+  :host .menu-trigger:focus {
     color: var(--color-white);
   }
 `
