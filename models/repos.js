@@ -55,11 +55,16 @@ function createModel (cb) {
     send('location:set', `?delete=${encodedKey}`, done)
   })
 
-  model.effect('delete', (state, data, send, done) => {
-    const link = link
+  model.effect('deleteConfirm', (state, data, send, done) => {
+    const link = data
+    console.log(data)
     var dats = manager.get()
     dats.map(function (dat) {
-      if (dat.key === link) manager.remove(dat, done)
+      if (encoding.encode(dat.key) === link) {
+        manager.remove(dat, function () {
+          window.history.back()
+        })
+      }
     })
   })
 
