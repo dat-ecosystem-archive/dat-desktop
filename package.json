@@ -42,7 +42,7 @@
   },
   "scripts": {
     "bundle": "browserify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js > bundle.js",
-    "watch-js": "watchify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js --verbose -o bundle.js",
+    "watch": "watchify --fast --ignore-missing --node --full-paths --exclude=electron -g bindingify app.js --verbose -o bundle.js",
     "deps": "dependency-check package.json app.js",
     "rebuild": "./scripts/build rebuild",
     "clean": "rm -rf node_modules/",
