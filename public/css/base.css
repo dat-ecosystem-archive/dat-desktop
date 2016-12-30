@@ -39,6 +39,16 @@ img {
   -webkit-user-drag: none;
 }
 
+button {
+  border: none;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
 .is-selectable {
   -webkit-user-select: auto;
   cursor: auto;

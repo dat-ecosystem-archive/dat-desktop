@@ -8,13 +8,34 @@ const prefix = css`
   :host {
     text-transform: uppercase;
     letter-spacing: .025em;
+    .btn-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
   }
-  :host .btn-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  .filled-green {
+    padding: .5rem .75rem;
+    font-size: .75rem;
+    background-color: var(--color-green);
+    color: var(--color-neutral-04);
+  }
+  .filled-green:hover,
+  .filled-green:focus {
+    background-color: var(--color-green-hover);
+    color: var(--color-white);
+  }
+  .plain {
+    padding: .5rem .75rem;
+    font-size: .75rem;
+    background-color: transparent;
+    color: var(--color-neutral-40);
+  }
+  .plain:hover,
+  .plain:focus {
+    color: var(--color-neutral-70);
   }
 `
 
@@ -38,7 +59,7 @@ module.exports = (props, click) => {
   }
 
   return html`
-    <button onclick=${props.click} class="pointer ${prefix} ${props.cls || ''}">
+    <button onclick=${props.click} class="pointer ${prefix} ${props.style || ''} ${props.cls || ''}">
       ${child}
     </button>
   `
