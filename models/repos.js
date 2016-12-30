@@ -57,7 +57,6 @@ function createModel (cb) {
 
   model.effect('deleteConfirm', (state, data, send, done) => {
     const link = data
-    console.log(data)
     var dats = manager.get()
     dats.map(function (dat) {
       if (encoding.encode(dat.key) === link) {
