@@ -39,6 +39,7 @@ function createModel (cb) {
       if (err) throw err
     })
   })
+
   model.effect('create', function create (state, data, send, done) {
     const files = dialog.showOpenDialog({
       properties: ['openDirectory']
@@ -50,14 +51,27 @@ function createModel (cb) {
 
   model.effect('delete', (state, data, send, done) => {
     const dat = data
-    manager.remove(dat, done)
+    const encodedKey = encoding.encode(dat.key)
+    send('location:set', `?delete=${encodedKey}`, done)
+  })
+
+  model.effect('deleteConfirm', (state, data, send, done) => {
+    const link = data
+    var dats = manager.get()
+    dats.map(function (dat) {
+      if (encoding.encode(dat.key) === link) {
+        manager.remove(dat, function () {
+          window.history.back()
+        })
+      }
+    })
   })
 
   // copy a dat share link to clipboard and open a modal
   model.effect('share', (state, data, send, done) => {
     const dat = data
     const encodedKey = encoding.encode(dat.key)
-    send('location:set', `?modal=${encodedKey}`, done)
+    send('location:set', `?share=${encodedKey}`, done)
   })
 
   model.effect('download', (state, data, send, done) => {

@@ -6,10 +6,10 @@ const html = require('choo/html')
 
 const Header = require('../elements/header')
 const Table = require('../elements/table')
-const Modal = require('../elements/modal')
+const linkModal = require('../elements/link-modal')()
+const deleteModal = require('../elements/delete-modal')()
 const icon = require('../elements/icon')
 
-const modal = Modal()
 
 css('dat-colors')
 css('tachyons')
@@ -69,7 +69,8 @@ module.exports = mainView
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
   const showWelcomeScreen = state.mainView.showWelcomeScreen
-  const modalLink = state.location.search.modal
+  const shareLink = state.location.search.share
+  const deleteLink = state.location.search.delete
   const dats = state.repos.values
 
   const header = Header({
@@ -96,13 +97,24 @@ function mainView (state, prev, send) {
     `
   }
 
-  if (modalLink) {
+  if (shareLink) {
     return html`
       <body>
         ${svgSprite()}
         ${header}
         ${Table(dats, send)}
-        ${modal(modalLink)}
+        ${linkModal(shareLink)}
+      </body>
+    `
+  }
+
+  if (deleteLink) {
+    return html`
+      <body>
+        ${svgSprite()}
+        ${header}
+        ${Table(dats, send)}
+        ${deleteModal(() => send('repos:deleteConfirm', deleteLink))}
       </body>
     `
   }
