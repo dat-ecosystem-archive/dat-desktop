@@ -8,7 +8,12 @@
   "author": "Dat Team",
   "browserify": {
     "transform": [
-      ["sheetify/transform", { "use": "sheetify-nested" } ]
+      [
+        "sheetify/transform",
+        {
+          "use": "sheetify-nested"
+        }
+      ]
     ]
   },
   "dependencies": {
@@ -27,6 +32,7 @@
     "electron-default-menu": "^1.0.0",
     "electron-window": "^0.8.1",
     "envobj": "^1.0.2",
+    "explain-error": "^1.0.3",
     "global": "^4.3.1",
     "hyperdrive-stats": "^2.2.5",
     "level": "^1.4.0",
