@@ -19,7 +19,7 @@ $ npm start
 
 ```bash
 $ npm run bundle            # build JS
-$ npm run watch-js          # watch and rebuild JS
+$ npm run watch             # watch and rebuild JS
 ```
 
 Then drop files onto the app window and watch the console.
