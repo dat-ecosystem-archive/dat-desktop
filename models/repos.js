@@ -46,6 +46,11 @@ function createModel (cb) {
     })
     if (!files || !files.length) return
     const dir = files[0]
+    send('repos:add-dir', dir, done)
+  })
+
+  model.effect('add-dir', function create (state, data, send, done) {
+    var dir = data
     manager.create(dir, done)
   })
 
