@@ -8,6 +8,7 @@ const Header = require('../elements/header')
 const Table = require('../elements/table')
 const linkModal = require('../elements/link-modal')()
 const deleteModal = require('../elements/delete-modal')()
+const button = require('../elements/button')
 const icon = require('../elements/icon')
 
 
@@ -16,7 +17,7 @@ css('tachyons')
 css('../public/css/base.css')
 css('../public/css/colors.css')
 
-const prefix = css`
+const skeleton = css`
   :host {
     position: relative;
     .skeleton {
@@ -60,6 +61,19 @@ const prefix = css`
     .icon-link {
       margin-bottom: -.75rem;
     }
+  }
+`
+
+const welcome = css`
+  :host {
+    height: 100vh;
+    background-color: var(--color-neutral);
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 `
 
@@ -131,16 +145,24 @@ function mainView (state, prev, send) {
 function WelcomeScreen (methods) {
   const onExit = methods.onexit
   return html`
-    <main>
-      <p>Welcome to dat desktop!</p>
-      <button onclick=${onExit}>Close screen</button>
+    <main class="${welcome}">
+      <img src="./public/img/logo-dat-desktop.svg" alt="" class="">
+      <p class="mv4">
+        Dat syncs data across the distributed web. Optimized for speed, simplicity, and security.
+      </p>
+      ${button({
+        text: 'Get Started',
+        style: 'filled-green',
+        cls: '',
+        click: onExit
+      })}
     </main>
   `
 }
 
 function EmptyState () {
   return html`
-    <main class="${prefix}">
+    <main class="${skeleton}">
       <img src="./public/img/table-skeleton-2.svg" alt="" class="skeleton">
       <div class="tutorial">
         <img src="./public/img/lines.svg" alt="" class="lines">
