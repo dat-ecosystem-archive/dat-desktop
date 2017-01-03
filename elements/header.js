@@ -44,13 +44,16 @@ const header = css `
     }
 
     .menu-trigger {
-      display: none !important;
       height: 2rem;
       color: var(--color-neutral--20);
       &:hover,
       &:focus {
         color: var(--color-white);
       }
+    }
+    .log-in-button,
+    .menu-trigger {
+      display: none !important;
     }
   }
 `
@@ -68,7 +71,7 @@ module.exports = (props) => {
         })}
         ${button({
           text: 'Log In',
-          cls: 'ml2 header-action'
+          cls: 'ml2 header-action log-in-button'
         })}
         ${button({
           icon: 'menu',
