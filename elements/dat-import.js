@@ -18,7 +18,7 @@ const prefix = css`
     }
     input {
       height: 2rem;
-      width: 8rem;
+      width: 7.25rem;
       padding-right: .5rem;
       padding-left: 2rem;
       font-size: .75rem;
