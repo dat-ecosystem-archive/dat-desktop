@@ -14,6 +14,6 @@ function onUncaughtException (send, done) {
   })
 }
 
-setTimeout(function () {
-  throw new Error('whathca derp')
-}, 2000)
+// setTimeout(function () {
+//   throw new Error('whathca derp')
+// }, 2000)
