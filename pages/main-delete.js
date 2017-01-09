@@ -2,7 +2,7 @@ const html = require('choo/html')
 
 const ConfirmModal = require('../elements/confirm-modal')
 const Header = require('../elements/header')
-const sprite = require('./elements/sprite')
+const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 
 var confirmModal = ConfirmModal()
