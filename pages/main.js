@@ -148,7 +148,7 @@ function WelcomeScreen (methods) {
     <main class="${welcome}">
       <img src="./public/img/logo-dat-desktop.svg" alt="" class="">
       <p class="mv4">
-        Dat syncs data across the distributed web. Optimized for speed, simplicity, and security.
+        Share data on the distributed web.
       </p>
       ${button({
         text: 'Get Started',
