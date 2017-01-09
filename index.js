@@ -1,5 +1,5 @@
 const defaultMenu = require('electron-default-menu')
-const { app, shell, Menu } = require('electron')
+const { app, shell, Menu, ipcMain } = require('electron')
 const window = require('electron-window')
 const Env = require('envobj')
 const path = require('path')
@@ -20,6 +20,7 @@ app.on('ready', () => {
   const mainWindow = window.createWindow(windowStyles)
   const indexPath = path.join(__dirname, 'index.html')
 
+  ipcMain.on('quit', () => app.quit()) // TODO: ping backend with error
   emitter.on('open-file', (file) => mainWindow.webContents.send('file', file))
   emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
 
