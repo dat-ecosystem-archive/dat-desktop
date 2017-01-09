@@ -8,6 +8,7 @@ const button = require('./button')
 
 const prefix = css`
   :host {
+    min-width: 20rem;
     min-width: 25rem;
     padding: 2rem 2.5rem 2rem;
     background-color: var(--color-white);
@@ -56,8 +57,8 @@ function createWidget () {
       <section class="relative flex flex-column justify-center ${prefix}">
         <h3 class="f4">Unexpected issue</h3>
         <p class="mt3 mb4 f7 color-neutral-70">
-          There was an unexpected issue. We will need to close the app. Sorry
-          for the inconvenience and we will work to fix this ASAP.
+          There was an unexpected issue. We will need to close the app.
+          Sorry for the inconvenience and we will work to fix this ASAP.
         </p>
         <p>
           ${button({
