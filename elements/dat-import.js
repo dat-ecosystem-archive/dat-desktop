@@ -71,7 +71,7 @@ module.exports = (props) => {
     }
   }
   return yo`
-    <label for="dat-import" class="relative dib pa0 b--none  ${prefix}">
+    <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
       <input name="dat-import" type="text" placeholder="Import dat" onkeydown=${keydown} class="input-reset">
       ${icon({
         id: 'link',

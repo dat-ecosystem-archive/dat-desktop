@@ -1,9 +1,11 @@
 const widget = require('cache-element/widget')
-const icon = require('./icon')
-const button = require('./button')
-const Modal = require('../lib/modal-element')
 const html = require('choo/html')
+const assert = require('assert')
 const css = require('sheetify')
+
+const Modal = require('../lib/modal-element')
+const button = require('./button')
+const icon = require('./icon')
 
 const prefix = css`
   :host {
@@ -32,15 +34,19 @@ module.exports = createWidget
 
 function createWidget () {
   return widget({
-    render: function (onOk) {
-      console.log('onOk', onOk)
+    render: function (deleteArchive) {
+      assert.equal(typeof deleteArchive, 'function', 'elements/delete-modal: deleteArchive should be type function')
+
       const modal = Modal(null, { onexit: onExit })
-
       modal.show(render(onOk, onExit))
-
       return modal
 
       function onExit () {
+        window.history.back()
+      }
+
+      function onOk () {
+        deleteArchive()
         window.history.back()
       }
     }

@@ -21,7 +21,7 @@ function view (state, prev, send) {
       ${sprite()}
       ${header}
       ${Table(archives, send)}
-      ${deleteModal(link)}
+      ${deleteModal(() => send('repos:deleteConfirm', link))}
     </body>
   `
 }
