@@ -5,7 +5,7 @@ const css = require('sheetify')
 
 const Header = require('../elements/header')
 const button = require('../elements/button')
-const sprite = require('./elements/sprite')
+const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const icon = require('../elements/icon')
 
@@ -162,4 +162,3 @@ function EmptyState () {
     </main>
   `
 }
-
