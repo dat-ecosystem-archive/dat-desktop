@@ -23,6 +23,7 @@ persist(opts, (p) => {
   app.model(require('./models/main-view')())
   app.model(require('./models/repos')())
   app.model(require('./models/window')())
+  app.model(require('./models/error')())
 
   app.router(['/', require('./pages/main')])
   mount('body', app.start())
