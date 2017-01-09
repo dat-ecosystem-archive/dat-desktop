@@ -1,21 +1,13 @@
 'use strict'
 
-const SvgSprite = require('dat-icons')
-const css = require('sheetify')
 const html = require('choo/html')
+const css = require('sheetify')
 
 const Header = require('../elements/header')
-const Table = require('../elements/table')
-const linkModal = require('../elements/link-modal')()
-const deleteModal = require('../elements/delete-modal')()
 const button = require('../elements/button')
+const sprite = require('./elements/sprite')
+const Table = require('../elements/table')
 const icon = require('../elements/icon')
-
-
-css('dat-colors')
-css('tachyons')
-css('../public/css/base.css')
-css('../public/css/colors.css')
 
 const skeleton = css`
   :host {
@@ -83,8 +75,6 @@ module.exports = mainView
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
   const showWelcomeScreen = state.mainView.showWelcomeScreen
-  const shareLink = state.location.search.share
-  const deleteLink = state.location.search.delete
   const dats = state.repos.values
 
   const header = Header({
@@ -95,7 +85,7 @@ function mainView (state, prev, send) {
   if (showWelcomeScreen) {
     return html`
       <body>
-        ${svgSprite()}
+        ${sprite()}
         ${WelcomeScreen({ onexit: () => send('mainView:closeWelcomeScreen') })}
       </body>
     `
@@ -104,38 +94,16 @@ function mainView (state, prev, send) {
   if (!dats.length) {
     return html`
       <body>
-        ${svgSprite()}
+        ${sprite()}
         ${header}
         ${EmptyState()}
       </body>
     `
   }
 
-  if (shareLink) {
-    return html`
-      <body>
-        ${svgSprite()}
-        ${header}
-        ${Table(dats, send)}
-        ${linkModal(shareLink)}
-      </body>
-    `
-  }
-
-  if (deleteLink) {
-    return html`
-      <body>
-        ${svgSprite()}
-        ${header}
-        ${Table(dats, send)}
-        ${deleteModal(() => send('repos:deleteConfirm', deleteLink))}
-      </body>
-    `
-  }
-
   return html`
     <body>
-      ${svgSprite()}
+      ${sprite()}
       ${header}
       ${Table(dats, send)}
     </body>
@@ -195,8 +163,3 @@ function EmptyState () {
   `
 }
 
-function svgSprite () {
-  const _el = document.createElement('div')
-  _el.innerHTML = SvgSprite()
-  return _el.childNodes[0]
-}

@@ -33,6 +33,7 @@ module.exports = createWidget
 function createWidget () {
   return widget({
     render: function (onOk) {
+      console.log('onOk', onOk)
       const modal = Modal(null, { onexit: onExit })
 
       modal.show(render(onOk, onExit))

@@ -1,11 +1,16 @@
 const persist = require('choo-persist')
 const mount = require('choo/mount')
 const log = require('choo-log')
+const css = require('sheetify')
 const xtend = require('xtend')
 const choo = require('choo')
-const css = require('sheetify')
 
-css('./public/css/base.css', { global: true })
+const params = require('./lib/param-router')
+
+css('dat-colors')
+css('tachyons')
+css('./public/css/base.css')
+css('./public/css/colors.css')
 
 const opts = {
   filter: (state) => {
@@ -21,10 +26,17 @@ persist(opts, (p) => {
   app.use(p)
 
   app.model(require('./models/main-view')())
-  app.model(require('./models/repos')())
   app.model(require('./models/window')())
+  app.model(require('./models/repos')())
   app.model(require('./models/error')())
 
-  app.router(['/', require('./pages/main')])
+  app.router([
+    ['/', params({
+      default: require('./pages/main'),
+      share: require('./pages/main-share'),
+      delete: require('./pages/main-delete')
+    })]
+  ])
+
   mount('body', app.start())
 })
