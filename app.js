@@ -33,6 +33,7 @@ persist(opts, (p) => {
   app.router([
     ['/', params({
       default: require('./pages/main'),
+      error: require('./pages/main-error'),
       share: require('./pages/main-share'),
       delete: require('./pages/main-delete')
     })]
