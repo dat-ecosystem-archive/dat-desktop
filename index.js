@@ -7,6 +7,7 @@ const doctor = require('dat-doctor')
 const { Writable } = require('stream')
 const { autoUpdater } = require('electron-auto-updater')
 const os = require('os')
+const fs = require('fs')
 
 const delegateEvents = require('./lib/delegate-electron-events')
 
@@ -48,29 +49,40 @@ app.on('ready', () => {
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
     } else {
+      const skipFile = `${app.getPath('userData')}/skip`
       const platform = `${os.platform()}_${os.arch()}`
       const version = app.getVersion()
       const log = str => mainWindow.webContents.send('log', str)
+
       autoUpdater.setFeedURL(`http://dat.land:6000/update/${platform}/${version}`)
       autoUpdater.on('error', err => log(err.stack))
       autoUpdater.on('checking-for-update', () => log('checking for update'))
       autoUpdater.on('update-available', () => log('update available'))
       autoUpdater.on('update-not-available', () => log('update not available'))
       autoUpdater.on('download-progress', p => log('download progress ' + p.percent))
-      autoUpdater.on('update-downloaded', (ev, notes, name) => {
+      autoUpdater.on('update-downloaded', (ev, notes, version) => {
         log('update downloaded')
-        dialog.showMessageBox(mainWindow, {
-          type: 'question',
-          buttons: ['Install and Relaunch', 'Skip Update'],
-          defaultId: 0,
-          title: 'A new version of Dat Desktop is ready to install!',
-          message: `Dat Desktop ${name} has been downloaded and is ready to use! Would you like to install it and relaunch Dat Desktop now?`
-        }, res => {
-          if (res === 0) {
-            log('updating...')
-            autoUpdater.quitAndInstall()
-            app.quit()
-          }
+        fs.readFile(skipFile, { encoding: 'utf8' }, (err, skipVersion) => {
+          if (version === skipVersion) return log('skip update')
+
+          dialog.showMessageBox(mainWindow, {
+            type: 'question',
+            buttons: ['Install and Relaunch', 'Skip Update'],
+            defaultId: 0,
+            title: 'A new version of Dat Desktop is ready to install!',
+            message: `Dat Desktop ${version} has been downloaded and is ready to use! Would you like to install it and relaunch Dat Desktop now?`
+          }, res => {
+            const update = res === 0
+            if (update) {
+              log('updating...')
+              autoUpdater.quitAndInstall()
+            } else {
+              log('skip update')
+              fs.writeFile(skipFile, version, err => {
+                if (err) throw err
+              })
+            }
+          })
         })
       })
       autoUpdater.checkForUpdates()
