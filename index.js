@@ -45,6 +45,10 @@ app.on('ready', () => {
   emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
 
   mainWindow.showUrl(indexPath, () => {
+    menu[0].submenu.splice(1, 0, {
+      label: 'Check for Updates...',
+      click: () => {}
+    })
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
