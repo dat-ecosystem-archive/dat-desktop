@@ -30,6 +30,7 @@
     "level": "^1.4.0",
     "minimist": "^1.2.0",
     "on-load": "^3.2.0",
+    "once": "^1.4.0",
     "open": "0.0.5",
     "prettier-bytes": "^1.0.3",
     "sheetify": "^6.0.0",
