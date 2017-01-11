@@ -49,7 +49,7 @@ app.on('ready', () => {
       label: 'Check for Updates...',
       click: () => {
         updates.check(mainWindow, log, (err, version) => {
-          if (err) return
+          if (err || !version) return
           updates.ask(mainWindow, version, log, (err, update) => {
             if (err) throw err
             if (update) autoUpdater.quitAndInstall()
