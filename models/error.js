@@ -19,7 +19,7 @@ function onUncaughtException (send, done) {
     var data = {
       search: { error: true }
     }
-    console.error(err)
+    console.error(err.stack)
     send('location:set', data, done)
   })
 }
