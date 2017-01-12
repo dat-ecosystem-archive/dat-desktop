@@ -62,7 +62,7 @@ module.exports = (props) => {
   return html`
     <header class="${header}">
       <div class="fr">
-        ${datImport()}
+        ${datImport(props)}
         ${button({
           icon: 'create-new-dat',
           text: 'Create New Dat',
