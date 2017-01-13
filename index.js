@@ -5,9 +5,8 @@ const Env = require('envobj')
 const path = require('path')
 const doctor = require('dat-doctor')
 const { Writable } = require('stream')
-const { autoUpdater } = require('electron-auto-updater')
+const autoUpdater = require('./lib/auto-updater')
 
-const updates = require('./lib/updates')
 const delegateEvents = require('./lib/delegate-electron-events')
 
 const windowStyles = {
@@ -45,18 +44,6 @@ app.on('ready', () => {
   emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
 
   mainWindow.showUrl(indexPath, () => {
-    menu[0].submenu.splice(1, 0, {
-      label: 'Check for Updates...',
-      click: () => {
-        updates.check(mainWindow, log, (err, version) => {
-          if (err || !version) return
-          updates.ask(mainWindow, version, log, (err, update) => {
-            if (err) throw err
-            if (update) autoUpdater.quitAndInstall()
-          })
-        })
-      }
-    })
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
