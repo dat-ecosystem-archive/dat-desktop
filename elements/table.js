@@ -198,7 +198,7 @@ function createTable (dats, send) {
     const stats = dat.hyperStats && dat.hyperStats.get()
     const progress = stats
       ? stats.blocksTotal
-        ? Math.round(((stats.blocksProgress / stats.blocksTotal) | 0) * 100)
+        ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
         : 100
       : 0
 

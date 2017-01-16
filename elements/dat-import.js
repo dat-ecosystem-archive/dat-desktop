@@ -18,7 +18,7 @@ const prefix = css`
     }
     input {
       height: 2rem;
-      width: 8rem;
+      width: 7.25rem;
       padding-right: .5rem;
       padding-left: 2rem;
       font-size: .75rem;
@@ -71,7 +71,7 @@ module.exports = (props) => {
     }
   }
   return yo`
-    <label for="dat-import" class="relative dib pa0 b--none  ${prefix}">
+    <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
       <input name="dat-import" type="text" placeholder="Import dat" onkeydown=${keydown} class="input-reset">
       ${icon({
         id: 'link',

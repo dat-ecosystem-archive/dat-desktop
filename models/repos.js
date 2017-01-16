@@ -1,8 +1,8 @@
 const dialog = require('electron').remote.dialog
 const ipc = require('electron').ipcRenderer
-const exec = require('child_process').exec
 const encoding = require('dat-encoding')
 const Model = require('choo-model')
+const open = require('open')
 
 const Manager = require('../lib/dat-manager')
 
@@ -34,8 +34,7 @@ function createModel (cb) {
   })
 
   model.effect('open', (state, dat) => {
-    // TODO cross platform
-    exec(`open "${dat.dir}"`, err => {
+    open(dat.dir, (err) => {
       if (err) throw err
     })
   })

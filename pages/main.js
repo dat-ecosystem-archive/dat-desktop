@@ -1,22 +1,15 @@
 'use strict'
 
-const SvgSprite = require('dat-icons')
-const css = require('sheetify')
 const html = require('choo/html')
+const css = require('sheetify')
 
 const Header = require('../elements/header')
+const button = require('../elements/button')
+const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
-const linkModal = require('../elements/link-modal')()
-const deleteModal = require('../elements/delete-modal')()
 const icon = require('../elements/icon')
 
-
-css('dat-colors')
-css('tachyons')
-css('../public/css/base.css')
-css('../public/css/colors.css')
-
-const prefix = css`
+const skeleton = css`
   :host {
     position: relative;
     .skeleton {
@@ -63,14 +56,25 @@ const prefix = css`
   }
 `
 
+const welcome = css`
+  :host {
+    height: 100vh;
+    background-color: var(--color-neutral);
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+`
+
 module.exports = mainView
 
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
   const showWelcomeScreen = state.mainView.showWelcomeScreen
-  const shareLink = state.location.search.share
-  const deleteLink = state.location.search.delete
   const dats = state.repos.values
 
   const header = Header({
@@ -81,7 +85,7 @@ function mainView (state, prev, send) {
   if (showWelcomeScreen) {
     return html`
       <body>
-        ${svgSprite()}
+        ${sprite()}
         ${WelcomeScreen({ onexit: () => send('mainView:closeWelcomeScreen') })}
       </body>
     `
@@ -90,38 +94,16 @@ function mainView (state, prev, send) {
   if (!dats.length) {
     return html`
       <body>
-        ${svgSprite()}
+        ${sprite()}
         ${header}
         ${EmptyState()}
       </body>
     `
   }
 
-  if (shareLink) {
-    return html`
-      <body>
-        ${svgSprite()}
-        ${header}
-        ${Table(dats, send)}
-        ${linkModal(shareLink)}
-      </body>
-    `
-  }
-
-  if (deleteLink) {
-    return html`
-      <body>
-        ${svgSprite()}
-        ${header}
-        ${Table(dats, send)}
-        ${deleteModal(() => send('repos:deleteConfirm', deleteLink))}
-      </body>
-    `
-  }
-
   return html`
     <body>
-      ${svgSprite()}
+      ${sprite()}
       ${header}
       ${Table(dats, send)}
     </body>
@@ -131,16 +113,24 @@ function mainView (state, prev, send) {
 function WelcomeScreen (methods) {
   const onExit = methods.onexit
   return html`
-    <main>
-      <p>Welcome to dat desktop!</p>
-      <button onclick=${onExit}>Close screen</button>
+    <main class="${welcome}">
+      <img src="./public/img/logo-dat-desktop.svg" alt="" class="">
+      <p class="mv4">
+        Share data on the distributed web.
+      </p>
+      ${button({
+        text: 'Get Started',
+        style: 'filled-green',
+        cls: '',
+        click: onExit
+      })}
     </main>
   `
 }
 
 function EmptyState () {
   return html`
-    <main class="${prefix}">
+    <main class="${skeleton}">
       <img src="./public/img/table-skeleton-2.svg" alt="" class="skeleton">
       <div class="tutorial">
         <img src="./public/img/lines.svg" alt="" class="lines">
@@ -171,10 +161,4 @@ function EmptyState () {
       </div>
     </main>
   `
-}
-
-function svgSprite () {
-  const _el = document.createElement('div')
-  _el.innerHTML = SvgSprite()
-  return _el.childNodes[0]
 }

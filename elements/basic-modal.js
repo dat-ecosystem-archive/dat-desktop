@@ -1,12 +1,14 @@
 const widget = require('cache-element/widget')
-const icon = require('./icon')
-const button = require('./button')
-const Modal = require('../lib/modal-element')
 const html = require('choo/html')
+const assert = require('assert')
 const css = require('sheetify')
+
+const Modal = require('../lib/modal-element')
+const button = require('./button')
 
 const prefix = css`
   :host {
+    min-width: 20rem;
     min-width: 25rem;
     padding: 2rem 2.5rem 2rem;
     background-color: var(--color-white);
@@ -32,14 +34,19 @@ module.exports = createWidget
 
 function createWidget () {
   return widget({
-    render: function (onOk) {
+    render: function (deleteArchive) {
+      assert.equal(typeof deleteArchive, 'function', 'elements/delete-modal: deleteArchive should be type function')
+
       const modal = Modal(null, { onexit: onExit })
-
       modal.show(render(onOk, onExit))
-
       return modal
 
       function onExit () {
+        window.history.back()
+      }
+
+      function onOk () {
+        deleteArchive()
         window.history.back()
       }
     }
@@ -48,32 +55,19 @@ function createWidget () {
   function render (onOk, onExit) {
     return html`
       <section class="relative flex flex-column justify-center ${prefix}">
-        <h3 class="f4">Remove Dat</h3>
+        <h3 class="f4">Unexpected issue</h3>
         <p class="mt3 mb4 f7 color-neutral-70">
-          Are you sure you want to remove this dat?
-          <br>
-          This can’t be undone.
+          There was an unexpected issue. We will need to close the app.
+          Sorry for the inconvenience and we will work to fix this ASAP.
         </p>
         <p>
           ${button({
-            text: 'Yes, Remove Dat',
+            text: 'Close',
             style: 'filled-green',
             cls: 'fr ml3',
             click: onOk
           })}
-          ${button({
-            text: 'No, Cancel',
-            style: 'plain',
-            cls: 'fr',
-            click: onExit
-          })}
         </p>
-        <button
-          onclick=${onExit}
-          class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
-          aria-label="Close">
-          ${icon({id: 'cross'})}
-        </button>
       </section>`
   }
 }
