@@ -94,5 +94,7 @@ function createModel (cb) {
 
   ipc.send('ready')
 
+  ipc.on('log', (ev, str) => console.log(str))
+
   return model.start()
 }

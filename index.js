@@ -4,6 +4,7 @@ const window = require('electron-window')
 const Env = require('envobj')
 const path = require('path')
 const doctor = require('dat-doctor')
+const Writable = require('stream').Writable
 
 const delegateEvents = require('./lib/delegate-electron-events')
 
@@ -16,17 +17,24 @@ const windowStyles = {
 
 const env = Env({ NODE_ENV: 'production' })
 const emitter = delegateEvents() // make sure we don't miss events while booting
+let mainWindow
 
 const menu = defaultMenu(app, shell)
 menu[menu.length - 1].submenu.push({
   label: 'Doctor',
   click: () => {
-    doctor({ out: process.stderr })
+    const out = Writable({
+      write (chunk, env, done) {
+        if (mainWindow) mainWindow.webContents.send('log', chunk.toString())
+        done()
+      }
+    })
+    doctor({ out })
   }
 })
 
 app.on('ready', () => {
-  const mainWindow = window.createWindow(windowStyles)
+  mainWindow = window.createWindow(windowStyles)
   const indexPath = path.join(__dirname, 'index.html')
 
   emitter.on('open-file', (file) => mainWindow.webContents.send('file', file))
