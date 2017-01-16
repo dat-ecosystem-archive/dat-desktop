@@ -27,7 +27,6 @@
     "explain-error": "^1.0.3",
     "global": "^4.3.1",
     "hyperdrive-stats": "^2.2.5",
-    "hyperquest": "^2.1.2",
     "level": "^1.4.0",
     "minimist": "^1.2.0",
     "ms": "^0.7.2",
