@@ -45,28 +45,11 @@ app.on('ready', () => {
 
   mainWindow.showUrl(indexPath, () => {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
+
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
     } else {
-      updates.check(mainWindow, log, (err, version) => {
-        if (err || !version) return
-
-        updates.maybeSkip(version, log, (err, skip) => {
-          if (err) throw err
-          if (skip) return
-
-          updates.ask(mainWindow, version, log, (err, update) => {
-            if (err) throw err
-            if (update) {
-              autoUpdater.quitAndInstall()
-            } else {
-              updates.setSkip(version, err => {
-                if (err) throw err
-              })
-            }
-          })
-        })
-      })
+      autoUpdater({ log })
     }
   })
 })
