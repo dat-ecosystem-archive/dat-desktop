@@ -4,7 +4,7 @@ const window = require('electron-window')
 const Env = require('envobj')
 const path = require('path')
 const doctor = require('dat-doctor')
-const Writable = require('stream').Writable
+const { Writable } = require('stream')
 
 const delegateEvents = require('./lib/delegate-electron-events')
 
