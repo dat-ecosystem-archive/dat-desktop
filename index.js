@@ -3,6 +3,8 @@ const { app, shell, Menu, ipcMain } = require('electron')
 const window = require('electron-window')
 const Env = require('envobj')
 const path = require('path')
+const doctor = require('dat-doctor')
+const { Writable } = require('stream')
 
 const delegateEvents = require('./lib/delegate-electron-events')
 
@@ -15,9 +17,24 @@ const windowStyles = {
 
 const env = Env({ NODE_ENV: 'production' })
 const emitter = delegateEvents() // make sure we don't miss events while booting
+let mainWindow
+
+const menu = defaultMenu(app, shell)
+menu[menu.length - 1].submenu.push({
+  label: 'Doctor',
+  click: () => {
+    const out = Writable({
+      write (chunk, env, done) {
+        if (mainWindow) mainWindow.webContents.send('log', chunk.toString())
+        done()
+      }
+    })
+    doctor({ out })
+  }
+})
 
 app.on('ready', () => {
-  const mainWindow = window.createWindow(windowStyles)
+  mainWindow = window.createWindow(windowStyles)
   const indexPath = path.join(__dirname, 'index.html')
 
   ipcMain.on('quit', () => app.quit()) // TODO: ping backend with error
@@ -25,7 +42,7 @@ app.on('ready', () => {
   emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
 
   mainWindow.showUrl(indexPath, () => {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)))
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
     }
