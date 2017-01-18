@@ -14,12 +14,12 @@ const opts = {
   browserField: false,
   insertGlobalVars: {
     '__dirname': (file, basedir) => {
-      var dir = path.dirname('./' + path.relative(basedir, file))
-      return JSON.stringify(dir)
+      return '__dirname + "/" + ' +
+        JSON.stringify(path.dirname(path.relative(basedir, file)))
     },
     '__filename': (file, basedir) => {
-      var filename = './' + path.relative(basedir, file)
-      return JSON.stringify(filename)
+      return '__filename + "/" + ' +
+        JSON.stringify(path.relative(basedir, file))
     },
     'process': undefined,
     'global': undefined,
@@ -37,18 +37,8 @@ if (watch) {
 const b = browserify(`${__dirname}/../app.js`, opts)
 
 b.exclude('electron')
-b.transform('bindings-browserify/transform', {
-  global: true
-})
-b.transform('aliasify', {
-  global: true,
-  aliases: {
-    bindings: 'bindings-browserify'
-  }
-})
-b.transform('sheetify/transform', {
-  use: ['sheetify-nested']
-})
+b.transform('bindingify', { global: true })
+b.transform('sheetify/transform', { use: ['sheetify-nested'] })
 
 const bundle = () => {
   process.stderr.write(`${new Date()} bundling...`)
