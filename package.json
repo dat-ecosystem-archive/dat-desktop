@@ -53,7 +53,7 @@
     "dist": "build"
   },
   "devDependencies": {
-    "browserify": "juliangruber/node-browserify#fix/dat-desktop",
+    "browserify": "^13.3.0",
     "bulkify": "^1.4.2",
     "dependency-check": "^2.6.0",
     "electron": "1.4.6",

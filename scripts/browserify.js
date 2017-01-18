@@ -3,6 +3,7 @@
 const browserify = require('browserify')
 const watchify = require('watchify')
 const fs = require('fs')
+const path = require('path')
 
 const watch = process.argv[2] === 'watch'
 
@@ -12,6 +13,14 @@ const opts = {
   builtins: false,
   browserField: false,
   insertGlobalVars: {
+    '__dirname': (file, basedir) => {
+      var dir = path.dirname('./' + path.relative(basedir, file))
+      return JSON.stringify(dir)
+    },
+    '__filename': (file, basedir) => {
+      var filename = './' + path.relative(basedir, file)
+      return JSON.stringify(filename)
+    },
     'process': undefined,
     'global': undefined,
     'Buffer': undefined,
