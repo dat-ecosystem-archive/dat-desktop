@@ -6,21 +6,6 @@
   "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
   "author": "Dat Team",
-  "browserify": {
-    "transform": [
-      [
-        "sheetify/transform",
-        {
-          "use": "sheetify-nested"
-        }
-      ]
-    ]
-  },
-  "aliasify": {
-    "aliases": {
-      "bindings": "bindings-browserify"
-    }
-  },
   "dependencies": {
     "aliasify": "^2.1.0",
     "bindings-browserify": "^2.0.0",
@@ -56,7 +41,7 @@
   },
   "scripts": {
     "bundle": "scripts/browserify.js",
-    "watch": "watchify --fast --ignore-missing --no-builtins --insert-global-vars=\"__filename,__dirname\" --no-browser-field --exclude=electron -g bindings-browserify/transform -g aliasify app.js --verbose -o bundle.js",
+    "watch": "scripts/browserify.js watch",
     "deps": "dependency-check package.json app.js",
     "rebuild": "./scripts/build rebuild",
     "clean": "rm -rf node_modules/",

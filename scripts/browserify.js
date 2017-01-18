@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 const browserify = require('browserify')
+const watchify = require('watchify')
 const fs = require('fs')
 
-const b = browserify(`${__dirname}/../app.js`, {
+const watch = process.argv[2] === 'watch'
+
+const opts = {
   insertGlobals: true,
   ignoreMissing: true,
   builtins: false,
@@ -14,7 +17,15 @@ const b = browserify(`${__dirname}/../app.js`, {
     'Buffer': undefined,
     'Buffer.isBuffer': undefined
   }
-})
+}
+
+if (watch) {
+  opts.cache = {}
+  opts.packageCache = {}
+  opts.plugin = [watchify]
+}
+
+const b = browserify(`${__dirname}/../app.js`, opts)
 
 b.exclude('electron')
 b.transform('bindings-browserify/transform', {
@@ -30,4 +41,11 @@ b.transform('sheetify/transform', {
   use: ['sheetify-nested']
 })
 
-b.bundle().pipe(fs.createWriteStream(`${__dirname}/../bundle.js`))
+const bundle = () => {
+  process.stderr.write(`${new Date()} bundling...`)
+  b.bundle().pipe(fs.createWriteStream(`${__dirname}/../bundle.js`))
+  .on('finish', () => process.stderr.write('ok!\n'))
+}
+
+b.on('update', bundle)
+bundle()
