@@ -44,7 +44,7 @@ app.on('ready', () => {
   emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
 
   mainWindow.showUrl(indexPath, () => {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)))
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
     } else {
