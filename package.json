@@ -31,7 +31,7 @@
     "choo-model": "^1.0.0",
     "choo-persist": "^2.0.0",
     "collect-stream": "^1.1.1",
-    "dat-colors": "^3.0.0",
+    "dat-colors": "^3.2.0",
     "dat-doctor": "^1.2.1",
     "dat-encoding": "^4.0.1",
     "dat-icons": "^1.3.0",
