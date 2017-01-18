@@ -9,7 +9,7 @@ const button = require('./button')
 const prefix = css`
   :host {
     min-width: 20rem;
-    min-width: 25rem;
+    max-width: 25rem;
     padding: 2rem 2.5rem 2rem;
     background-color: var(--color-white);
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
