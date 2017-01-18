@@ -55,7 +55,7 @@
     "yo-yo": "^1.3.1"
   },
   "scripts": {
-    "bundle": "browserify --fast --ignore-missing --no-builtins --insert-global-vars=\"__filename,__dirname\" --no-browser-field --exclude=electron -g bindings-browserify/transform -g aliasify app.js > bundle.js",
+    "bundle": "scripts/browserify.js",
     "watch": "watchify --fast --ignore-missing --no-builtins --insert-global-vars=\"__filename,__dirname\" --no-browser-field --exclude=electron -g bindings-browserify/transform -g aliasify app.js --verbose -o bundle.js",
     "deps": "dependency-check package.json app.js",
     "rebuild": "./scripts/build rebuild",
