@@ -5,6 +5,7 @@ const Env = require('envobj')
 const path = require('path')
 const doctor = require('dat-doctor')
 const { Writable } = require('stream')
+const autoUpdater = require('./lib/auto-updater')
 
 const delegateEvents = require('./lib/delegate-electron-events')
 
@@ -36,6 +37,7 @@ menu[menu.length - 1].submenu.push({
 app.on('ready', () => {
   mainWindow = window.createWindow(windowStyles)
   const indexPath = path.join(__dirname, 'index.html')
+  const log = str => mainWindow.webContents.send('log', str)
 
   ipcMain.on('quit', () => app.quit()) // TODO: ping backend with error
   emitter.on('open-file', (file) => mainWindow.webContents.send('file', file))
@@ -45,6 +47,8 @@ app.on('ready', () => {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
+    } else {
+      autoUpdater({ log })
     }
   })
 })
