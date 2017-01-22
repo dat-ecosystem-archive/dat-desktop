@@ -1,9 +1,7 @@
-const widget = require('cache-element/widget')
+const Modal = require('base-elements/modal')
 const html = require('choo/html')
-const assert = require('assert')
 const css = require('sheetify')
 
-const Modal = require('../lib/modal-element')
 const button = require('./button')
 
 const prefix = css`
@@ -33,24 +31,16 @@ const prefix = css`
 module.exports = createWidget
 
 function createWidget () {
-  return widget({
-    render: function (deleteArchive) {
-      assert.equal(typeof deleteArchive, 'function', 'elements/delete-modal: deleteArchive should be type function')
-
-      const modal = Modal(null, { onexit: onExit })
-      modal.show(render(onOk, onExit))
-      return modal
-
-      function onExit () {
-        window.history.back()
-      }
-
-      function onOk () {
-        deleteArchive()
-        window.history.back()
-      }
-    }
+  const modal = Modal({
+    render: render,
+    onexit: onexit
   })
+
+  return modal
+
+  function onexit () {
+    window.history.back()
+  }
 
   function render (onOk, onExit) {
     return html`
@@ -65,9 +55,10 @@ function createWidget () {
             text: 'Close',
             style: 'filled-green',
             cls: 'fr ml3',
-            click: onOk
+            click: onexit
           })}
         </p>
-      </section>`
+      </section>
+    `
   }
 }
