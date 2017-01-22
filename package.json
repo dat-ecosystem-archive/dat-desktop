@@ -9,7 +9,6 @@
   "dependencies": {
     "aliasify": "^2.1.0",
     "bytewise": "^1.1.0",
-    "cache-element": "^2.0.0",
     "choo": "^4.0.0-6",
     "choo-log": "^3.0.0",
     "choo-model": "^1.0.0",
