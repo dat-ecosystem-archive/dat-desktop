@@ -8,6 +8,7 @@
   "author": "Dat Team",
   "dependencies": {
     "aliasify": "^2.1.0",
+    "base-elements": "^2.1.0",
     "bytewise": "^1.1.0",
     "choo": "^4.0.0-6",
     "choo-log": "^3.0.0",
