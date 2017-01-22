@@ -17,7 +17,7 @@ function createModel (cb) {
   model.subscription('manager', (send, done) => {
     manager.on('update', debounce(() => {
       send('repos:update', manager.get(), done)
-    }), 1000, true)
+    }), 1500, true)
   })
 
   model.reducer('update', (state, data) => {
