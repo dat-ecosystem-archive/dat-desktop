@@ -1,6 +1,7 @@
 const dialog = require('electron').remote.dialog
 const ipc = require('electron').ipcRenderer
 const encoding = require('dat-encoding')
+const debounce = require('debounce')
 const Model = require('choo-model')
 const open = require('open')
 
@@ -14,9 +15,9 @@ function createModel (cb) {
   const manager = new Manager()
 
   model.subscription('manager', (send, done) => {
-    manager.on('update', () => {
+    manager.on('update', debounce(() => {
       send('repos:update', manager.get(), done)
-    })
+    }), 1000, true)
   })
 
   model.reducer('update', (state, data) => {
