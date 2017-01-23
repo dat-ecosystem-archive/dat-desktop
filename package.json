@@ -62,6 +62,7 @@
     "dependency-check": "^2.6.0",
     "electron": "1.4.14",
     "electron-builder": "^8.6.0",
+    "envify": "^4.0.0",
     "nodemon": "^1.9.2",
     "sheetify-nested": "^1.0.2",
     "standard": "^7.1.2",
