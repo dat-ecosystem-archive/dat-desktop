@@ -32,10 +32,7 @@ const prefix = css`
 module.exports = createWidget
 
 function createWidget () {
-  const modal = Modal({
-    render: render,
-    onexit: onexit
-  })
+  const modal = Modal({ render, onexit })
 
   return modal
 
