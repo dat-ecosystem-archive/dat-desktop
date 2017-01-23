@@ -20,6 +20,15 @@ const env = Env({ NODE_ENV: 'production' })
 const emitter = delegateEvents() // make sure we don't miss events while booting
 let mainWindow
 
+const shouldQuit = app.makeSingleInstance(() => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.focus()
+  }
+})
+
+if (shouldQuit) app.quit()
+
 const menu = defaultMenu(app, shell)
 menu[menu.length - 1].submenu.push({
   label: 'Doctor',
