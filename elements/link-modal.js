@@ -120,11 +120,7 @@ function createModal () {
   let link = ''
   let el = ''
 
-  const modal = Modal({
-    onunload: onunload,
-    onexit: onexit,
-    render: render
-  })
+  const modal = Modal({ onunload, onexit, render })
 
   return modal
 
