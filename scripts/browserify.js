@@ -37,6 +37,7 @@ if (watch) {
 const b = browserify(`${__dirname}/../app.js`, opts)
 
 b.exclude('electron')
+b.exclude('dat-node')
 b.transform('bindingify', { global: true })
 b.transform('envify')
 b.transform('sheetify/transform', { use: ['sheetify-nested'] })
