@@ -25,6 +25,12 @@ const opts = {
     'global': undefined,
     'Buffer': undefined,
     'Buffer.isBuffer': undefined
+  },
+  postFilter: (id, file, pkg) => {
+    if (file.indexOf('node_modules') > -1 && file.indexOf('sheetify') === -1) {
+      return false
+    }
+    return true
   }
 }
 
@@ -36,9 +42,6 @@ if (watch) {
 
 const b = browserify(`${__dirname}/../app.js`, opts)
 
-b.exclude('electron')
-b.exclude('dat-node')
-b.transform('bindingify', { global: true })
 b.transform('envify')
 b.transform('sheetify/transform', { use: ['sheetify-nested'] })
 
