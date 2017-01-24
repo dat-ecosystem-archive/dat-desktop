@@ -58,7 +58,6 @@
     "dist": "build"
   },
   "devDependencies": {
-    "bindingify": "yoshuawuyts/bindingify#fix/sodium",
     "browserify": "^13.3.0",
     "bulkify": "^1.4.2",
     "dependency-check": "^2.6.0",
