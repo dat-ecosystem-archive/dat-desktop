@@ -18,7 +18,7 @@ const opts = {
         JSON.stringify(path.dirname(path.relative(basedir, file)))
     },
     '__filename': (file, basedir) => {
-      return '__filename + "/" + ' +
+      return '__dirname + "/" + ' +
         JSON.stringify(path.relative(basedir, file))
     },
     'process': undefined,
