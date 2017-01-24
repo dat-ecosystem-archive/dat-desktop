@@ -227,7 +227,7 @@ function createTable (dats, send) {
               ${dat.title || `#${encoding.encode(dat.key)}`}
             </h2>
             <p class="f7 color-neutral-60">
-              <span class="ttu">${dat.author} • </span>
+              <span class="ttc">${dat.author || 'Anonymous'} • </span>
               <span>
                 ${dat.owner
                   ? 'Read & Write'

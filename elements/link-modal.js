@@ -1,9 +1,9 @@
 const clipboard = require('electron').clipboard
-const widget = require('cache-element/widget')
-const Modal = require('../lib/modal-element')
-const icon = require('./icon')
+const Modal = require('base-elements/modal')
+const morph = require('nanomorph')
 const html = require('choo/html')
 const css = require('sheetify')
+const icon = require('./icon')
 
 const prefix = css`
   :host {
@@ -26,7 +26,6 @@ const prefix = css`
       transition: color .025s ease-out;
     }
   }
-
 `
 
 const input = css`
@@ -114,47 +113,44 @@ const input = css`
   }
 `
 
-module.exports = createWidget
+module.exports = createModal
 
-function createWidget () {
-  return widget({
-    render: function (newLink) {
-      const modal = Modal(null, { onexit: onExit })
+function createModal () {
+  let isCopied = false
+  let link = ''
+  let el = ''
 
-      var link = 'dat://' + newLink
-      modal.show(render(link, false, onCopy, onExit))
+  const modal = Modal({ onunload, onexit, render })
 
-      return modal
+  return modal
 
-      function onCopy () {
-        clipboard.writeText(link)
-        modal.show(render(link, true, onCopy, onExit))
-      }
+  function onexit () {
+    window.history.back()
+  }
 
-      function onExit () {
-        window.history.back()
-      }
-    }
-  })
+  function onunload () {
+    isCopied = false
+    link = ''
+    el = null
+  }
 
-  function render (link, isCopied, onCopy, onExit) {
+  function render (newLink) {
+    if (!link) link = 'dat://' + newLink
     const confirmClass = (isCopied) ? 'show-confirmation' : ''
 
-    return html`
+    let _el = html`
       <section class="relative flex flex-column justify-center ${prefix}">
-        <h3 class="f4">Copy Dat Link</h3>
+        <h3 class="f4">
+          Copy Dat Link
+        </h3>
         <label for="dat-link" class="relative mt4 mb4 ${input}">
           <p class="f7 mt0 mb0 tr absolute confirmation ${confirmClass}">
             ${icon({id: 'check'})}
             Link copied to clipboard
           </p>
-          <input
-            name="dat-link"
-            type="text"
-            value=${link}
-            class="relative dib pa0 dat-input-input">
+          <input name="dat-link" type="text" value=${link} class="relative dib pa0 dat-input-input">
           ${icon({id: 'link'})}
-          <button class="absolute pointer dat-input-button" onclick=${onCopy}>
+          <button class="absolute pointer dat-input-button" onclick=${onclick}>
             ${icon({id: 'clipboard'})}
           </button>
         </label>
@@ -162,12 +158,22 @@ function createWidget () {
           Anyone with this link can view your Dat.
         </p>
         <button
-          onclick=${onExit}
+          onclick=${onexit}
           class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
           aria-label="Close">
           ${icon({id: 'cross'})}
         </button>
       </section>
     `
+
+    if (!el) el = _el
+    return _el
+
+    function onclick () {
+      isCopied = true
+      clipboard.writeText(link)
+      var _el = render()
+      morph(_el, el)
+    }
   }
 }

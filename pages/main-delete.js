@@ -5,7 +5,7 @@ const Header = require('../elements/header')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 
-var confirmModal = ConfirmModal()
+const confirmModal = ConfirmModal()
 
 module.exports = view
 

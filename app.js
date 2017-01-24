@@ -22,8 +22,11 @@ const opts = {
 
 persist(opts, (p) => {
   const app = choo()
-  app.use(log())
   app.use(p)
+
+  if (process.env.NODE_ENV === 'development') {
+    app.use(log())
+  }
 
   app.model(require('./models/main-view')())
   app.model(require('./models/window')())

@@ -1,9 +1,11 @@
 const html = require('choo/html')
 
-const linkModal = require('../elements/link-modal')()
+const LinkModal = require('../elements/link-modal')
 const Header = require('../elements/header')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
+
+const linkModal = LinkModal()
 
 module.exports = view
 
