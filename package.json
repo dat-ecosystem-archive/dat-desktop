@@ -46,6 +46,7 @@
     "build-background": "./scripts/build background",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps",
+    "test:integration": "NODE_ENV=development node tests",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
@@ -60,7 +61,9 @@
     "envify": "^4.0.0",
     "nodemon": "^1.9.2",
     "sheetify-nested": "^1.0.2",
+    "spectron": "^3.5.0",
     "standard": "^7.1.2",
+    "tape": "^4.6.3",
     "through2": "^2.0.3",
     "watchify": "^3.7.0"
   },
