@@ -27,6 +27,7 @@ const opts = {
     'Buffer.isBuffer': undefined
   },
   postFilter: (id, file, pkg) => {
+    if (!file) return false
     if (file.indexOf('node_modules') > -1 && file.indexOf('sheetify') === -1) {
       return false
     }
