@@ -35,7 +35,7 @@ function createModel (cb) {
   })
 
   model.effect('open', (state, dat) => {
-    open(dat.dir, (err) => {
+    open(dat.path, (err) => {
       if (err) throw err
     })
   })
