@@ -13,7 +13,6 @@ rebuild () {
     --target="$electron_version" \
     --disturl=https://atom.io/download/atom-shell \
     --abi="$electron_abi" \
-    --build-from-source \
     > /dev/null
 }
 
