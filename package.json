@@ -1,7 +1,7 @@
 {
   "name": "dat-desktop",
   "productName": "Dat",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
@@ -55,7 +55,7 @@
     "test": "standard && npm run deps",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build --publish=onTagOrDraft"
   },
   "devDependencies": {
     "browserify": "^13.3.0",
