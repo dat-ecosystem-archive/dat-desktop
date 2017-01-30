@@ -197,7 +197,7 @@ function createTable (dats, send) {
   return dats.map(dat => {
     const progress = dat.stats.blocksTotal
       ? Math.round(dat.stats.blocksProgress / dat.stats.blocksTotal * 100)
-      : 100
+      : 0
 
     const state = progress < 100
       ? dat.network.connected > 0
