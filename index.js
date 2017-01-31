@@ -43,7 +43,7 @@ menu[menu.length - 1].submenu.push({
   }
 })
 
-app.on('ready', () => {
+const onReady = () => {
   mainWindow = window.createWindow(windowStyles)
   const indexPath = path.join(__dirname, 'index.html')
   const log = str => mainWindow.webContents.send('log', str)
@@ -60,4 +60,14 @@ app.on('ready', () => {
       autoUpdater({ log })
     }
   })
+}
+
+app.on('ready', () => {
+  if (env.NODE_ENV === 'development') {
+    const browserify = require('./lib/browserify')
+    const b = browserify({ watch: true })
+    b.once('bundle', onReady)
+  } else {
+    onReady()
+  }
 })
