@@ -59,9 +59,6 @@ const table = css`
     }
     .cell-truncate {
       width: 26vw;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .row-action {
       height: 2rem;
@@ -223,10 +220,10 @@ function createTable (dats, send) {
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            <h2 class="normal">
+            <h2 class="normal truncate">
               ${dat.title || `#${encoding.encode(dat.key)}`}
             </h2>
-            <p class="f7 color-neutral-60">
+            <p class="f7 color-neutral-60 truncate">
               <span class="ttc">${dat.author || 'Anonymous'} • </span>
               <span>
                 ${dat.owner
