@@ -28,6 +28,7 @@ const opts = {
   },
   postFilter: (id, file, pkg) => {
     if (!file) return false
+    file = path.relative(path.join(__dirname, '..'), file)
     if (file.indexOf('node_modules') > -1 && file.indexOf('sheetify') === -1) {
       return false
     }
