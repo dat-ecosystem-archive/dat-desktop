@@ -18,6 +18,7 @@ const skeleton = css`
       left: 1.25rem;
       width: 232px;
       max-width: 100vw;
+      height: 1000px;
     }
     .tutorial {
 

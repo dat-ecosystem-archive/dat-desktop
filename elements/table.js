@@ -170,21 +170,23 @@ module.exports = tableElement
 
 function tableElement (dats, send) {
   return html`
-    <table class="w-100 collapse ${table}">
-      <thead>
-        <tr>
-          <th class="cell-1"></th>
-          <th class="tl cell-2">Link</th>
-          <th class="tl cell-3">Download</th>
-          <th class="tr cell-4">Size</th>
-          <th class="tr cell-5">Network</th>
-          <th class="cell-6"></th>
-        </tr>
-      </thead>
-      <tbody>
-        ${createTable(dats, send)}
-      </tbody>
-    </table>
+    <main>
+      <table class="w-100 collapse ${table}">
+        <thead>
+          <tr>
+            <th class="cell-1"></th>
+            <th class="tl cell-2">Link</th>
+            <th class="tl cell-3">Download</th>
+            <th class="tr cell-4">Size</th>
+            <th class="tr cell-5">Network</th>
+            <th class="cell-6"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${createTable(dats, send)}
+        </tbody>
+      </table>
+    </main>
   `
 }
 
