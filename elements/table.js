@@ -117,17 +117,17 @@ const progressBar = css`
       background-color: var(--color-blue);
       border-radius: 2px;
     }
-    @keyframes move-bg {
-      0% {
-        background-position: var(--tile-width) 0;
-      }
-      100% {
-        background-position: 0 0;
-      }
-    }
     .line-loading {
       --tile-width: 28px;
       --stripe-width: 5px;
+      @keyframes move-bg {
+        0% {
+          background-position: var(--tile-width) 0;
+        }
+        100% {
+          background-position: 0 0;
+        }
+      };
       overflow: hidden;
       position: relative;
       height: var(--bar-height);
@@ -153,7 +153,7 @@ const progressBar = css`
       background-color: var(--color-green);
     }
     .line-paused {
-      background-color: var(--color-neutral-60);
+      background-color: var(--color-neutral-40);
     }
     .counter {
       float: right;
@@ -165,6 +165,8 @@ const progressBar = css`
   }
 
 `
+
+console.log(progressBar)
 
 module.exports = tableElement
 
