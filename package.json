@@ -44,7 +44,7 @@
     "yo-yo": "^1.3.1"
   },
   "scripts": {
-    "bundle": "scripts/browserify.js",
+    "bundle": "./scripts/build bundle",
     "watch": "scripts/browserify.js watch",
     "deps": "dependency-check package.json app.js",
     "rebuild": "./scripts/build rebuild",
