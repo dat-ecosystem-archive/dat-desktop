@@ -18,6 +18,8 @@ function model () {
 
 function onUncaughtException (send, done) {
   process.on('uncaughtException', function (err) {
+    if (err._thrown) return
+
     const data = {
       search: { error: true }
     }
@@ -38,8 +40,10 @@ function onUncaughtException (send, done) {
     xhr(opts, function (err) {
       if (err) console.error(err)
     })
-    console.error(err.stack)
     send('location:set', data, done)
+
+    err._thrown = true
+    throw err
   })
 }
 

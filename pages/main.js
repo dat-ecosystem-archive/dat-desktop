@@ -14,15 +14,16 @@ const skeleton = css`
     position: relative;
     .skeleton {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+      top: 1.5rem;
+      left: 1.25rem;
+      width: 232px;
       max-width: 100vw;
+      height: 1000px;
     }
     .tutorial {
-      display: none;
+
     }
-    .lines {
+    .dotted-lines {
       position: absolute;
       top: .25rem;
       right: 6rem;
@@ -32,12 +33,11 @@ const skeleton = css`
     .create-new-dat,
     .link {
       position: absolute;
-      width: 16rem;
-      background-color: var(--color-white);
+      width: 15rem;
     }
     .create-new-dat {
-      top: 13.75rem;
-      right: 2rem;
+      top: 14.5rem;
+      right: 4rem;
     }
     .link {
       top: 6rem;
@@ -46,8 +46,8 @@ const skeleton = css`
     }
     .icon-create-new-dat,
     .icon-link {
-      width: 3rem;
-      height: 3rem;
+      width: 2rem;
+      height: 2rem;
       fill: currentColor;
     }
     .icon-link {
@@ -131,16 +131,16 @@ function WelcomeScreen (methods) {
 function EmptyState () {
   return html`
     <main class="${skeleton}">
-      <img src="./public/img/table-skeleton-2.svg" alt="" class="skeleton">
+      <img src="./public/img/table-skeleton.svg" alt="" class="skeleton">
       <div class="tutorial">
-        <img src="./public/img/lines.svg" alt="" class="lines">
+        <img src="./public/img/dotted-lines.svg" alt="" class="dotted-lines">
         <div class="link">
           ${icon({
             id: 'link',
             cls: 'color-blue-disabled'
           })}
-          <h3 class="f3 ttu mt0 mb0 color-blue-disabled">Import Dat</h3>
-          <p class="f6 color-neutral-30">
+          <h3 class="f4 ttu mt0 mb0 color-blue-disabled">Import Dat</h3>
+          <p class="f7 color-neutral-40">
             Download an existing dataset
             <br>
             by entering its dat link…
@@ -151,8 +151,8 @@ function EmptyState () {
             id: 'create-new-dat',
             cls: 'color-green-disabled'
           })}
-          <h3 class="f3 ttu mt0 mb0 color-green-disabled">Create New Dat</h3>
-          <p class="f6 color-neutral-30">
+          <h3 class="f4 ttu mt0 mb0 color-green-disabled">Create New Dat</h3>
+          <p class="f7 color-neutral-40">
             … or select one of your local
             <br>
             datasets and start sharing it.
