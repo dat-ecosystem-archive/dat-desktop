@@ -166,8 +166,6 @@ const progressBar = css`
 
 `
 
-console.log(progressBar)
-
 module.exports = tableElement
 
 function tableElement (dats, send) {
@@ -196,12 +194,15 @@ function tableElement (dats, send) {
 // ([obj], fn) -> html
 function createTable (dats, send) {
   return dats.map(dat => {
-    const progress = dat.stats.blocksTotal
-      ? Math.round(dat.stats.blocksProgress / dat.stats.blocksTotal * 100)
+    const stats = dat.stats && dat.stats.get()
+    const progress = (stats)
+      ? stats.blocksTotal
+        ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
+        : 0
       : 0
 
-    const state = progress < 100
-      ? dat.network.connected > 0
+    const state = progress < 1
+      ? dat.stats.peers > 0
         ? 'loading'
         : 'paused'
       : 'complete'
@@ -222,15 +223,15 @@ function createTable (dats, send) {
         <td class="cell-2">
           <div class="cell-truncate">
             <h2 class="normal truncate">
-              ${dat.title || `#${encoding.encode(dat.key)}`}
+              ${dat.metadata.title || `#${encoding.encode(dat.key)}`}
             </h2>
             <p class="f7 color-neutral-60 truncate">
-              <span class="">${dat.author || 'Anonymous'} • </span>
+              <span class="">${dat.metadata.author || 'Anonymous'} • </span>
               <span>
                 ${dat.owner
                   ? 'Read & Write'
                   : 'Read-only'}
-                ${dat.title && `· #${encoding.encode(dat.key)}`}
+                ${dat.metadata.title && `· #${encoding.encode(dat.key)}`}
               </span>
             </p>
           </div>
@@ -249,13 +250,13 @@ function createTable (dats, send) {
           </div>
         </td>
         <td class="tr cell-4">
-          ${bytes(dat.stats.bytesTotal)}
+          ${bytes((stats) ? stats.bytesTotal : 0)}
         </td>
         <td class="tr cell-5">
           ${icon({
             id: 'network'
           })}
-          ${dat.network.connected}
+          ${(stats) ? stats.peers : 0}
         </td>
         <td class="cell-6">
           <div class="flex justify-end">
@@ -275,7 +276,7 @@ function createTable (dats, send) {
               icon: 'delete',
               text: '',
               cls: 'row-action',
-              click: () => send('repos:delete', dat)
+              click: () => send('repos:remove', dat)
             })}
           </div>
         </td>
@@ -283,3 +284,4 @@ function createTable (dats, send) {
     `
   })
 }
+0

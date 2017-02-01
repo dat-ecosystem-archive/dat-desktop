@@ -16,15 +16,15 @@ function dropFile (send, done) {
   window.ondragover = (e) => e.preventDefault()
   window.ondrop = (e) => {
     e.preventDefault()
-    const dir = e.dataTransfer &&
+    const dirname = e.dataTransfer &&
       e.dataTransfer.files &&
       e.dataTransfer.files[0] &&
       e.dataTransfer.files[0].path
-    if (!dir) return
-    fs.stat(dir, (err, stat) => {
-      if (err) return done(explain(err, 'models/window: fs.stat error on dir'))
+    if (!dirname) return
+    fs.stat(dirname, (err, stat) => {
+      if (err) return done(explain(err, 'models/window: fs.stat error on dirname'))
       if (!stat.isDirectory()) return
-      send('repos:add-dir', dir, done)
+      send('repos:create', dirname, done)
     })
   }
 }

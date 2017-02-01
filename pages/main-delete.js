@@ -10,12 +10,12 @@ const confirmModal = ConfirmModal()
 module.exports = view
 
 function view (state, prev, send) {
-  const link = state.location.search.delete
+  const key = state.location.search.delete
   const archives = state.repos.values
 
   const header = Header({
     create: () => send('repos:create'),
-    download: (link) => send('repos:download', link)
+    download: (key) => send('repos:clone', key)
   })
 
   return html`
@@ -23,7 +23,10 @@ function view (state, prev, send) {
       ${sprite()}
       ${header}
       ${Table(archives, send)}
-      ${confirmModal(() => send('repos:deleteConfirm', link))}
+      ${confirmModal(() => send('repos:remove', {
+        confirmed: true,
+        key: key
+      }))}
     </body>
   `
 }
