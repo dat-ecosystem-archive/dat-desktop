@@ -43,7 +43,7 @@ menu[menu.length - 1].submenu.push({
   }
 })
 
-const onReady = () => {
+function onReady () {
   mainWindow = window.createWindow(windowStyles)
   const indexPath = path.join(__dirname, 'index.html')
   const log = str => mainWindow.webContents.send('log', str)
