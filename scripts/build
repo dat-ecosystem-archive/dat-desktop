@@ -24,10 +24,17 @@ build_background () {
     -out build/background.tiff
 }
 
+bundle () {
+  printf '[scripts/build] bundling javascript \n'
+  node scripts/browserify.js \
+    2> /dev/null
+}
+
 postinstall () {
   printf '[scripts/build] installing app deps \n'
   build_background
   rebuild
+  bundle
 }
 
 # parse CLI flags
@@ -36,6 +43,7 @@ while true; do
     rebuild ) shift; rebuild; break ;;
     css ) shift; break ;;
     background ) shift; build_background; break ;;
+    bundle ) shift; bundle; break ;;
     postinstall ) shift; postinstall; break ;;
     * ) usage; break ;;
   esac
