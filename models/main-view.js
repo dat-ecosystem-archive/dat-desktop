@@ -7,11 +7,11 @@ function createModel (cb) {
       showWelcomeScreen: true
     },
     reducers: {
-      showWelcomeScreen: showWelcomeScreen
+      closeWelcomeScreen: closeWelcomeScreen
     }
   }
 }
 
-function showWelcomeScreen (state, action) {
+function closeWelcomeScreen (state, action) {
   return { showWelcomeScreen: false }
 }
