@@ -12,7 +12,6 @@
     "bytewise": "^1.1.0",
     "choo": "^4.0.0-6",
     "choo-log": "^3.0.0",
-    "choo-model": "^1.0.0",
     "choo-persist": "^2.0.0",
     "collect-stream": "^1.1.1",
     "dat-colors": "^3.2.0",
