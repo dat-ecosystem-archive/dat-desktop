@@ -74,7 +74,7 @@ module.exports = mainView
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, prev, send) {
-  const showWelcomeScreen = state.mainView.showWelcomeScreen
+  const showWelcomeScreen = state.mainView.welcome
   const dats = state.repos.values
 
   const header = Header({
@@ -82,11 +82,16 @@ function mainView (state, prev, send) {
     download: (link) => send('repos:download', link)
   })
 
+  document.title = 'Dat Desktop'
+
   if (showWelcomeScreen) {
+    document.title = 'Dat Desktop | Welcome'
     return html`
       <body>
         ${sprite()}
-        ${WelcomeScreen({ onexit: () => send('mainView:closeWelcomeScreen') })}
+        ${WelcomeScreen({
+          onexit: () => send('mainView:toggleWelcomeScreen', { toggle: false })
+        })}
       </body>
     `
   }
