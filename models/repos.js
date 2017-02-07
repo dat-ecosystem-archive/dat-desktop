@@ -65,7 +65,7 @@ function createModel (cb) {
   }
 
   function openDat (state, dat) {
-    open(dat.dir, (err) => {
+    open(dat.path, (err) => {
       if (err) throw err
     })
   }

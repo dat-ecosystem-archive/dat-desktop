@@ -196,15 +196,12 @@ function tableElement (dats, send) {
 // ([obj], fn) -> html
 function createTable (dats, send) {
   return dats.map(dat => {
-    const stats = dat.hyperStats && dat.hyperStats.get()
-    const progress = stats
-      ? stats.blocksTotal
-        ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
-        : 100
+    const progress = dat.stats.blocksTotal
+      ? Math.round(dat.stats.blocksProgress / dat.stats.blocksTotal * 100)
       : 0
 
-    const state = progress < 1
-      ? dat.stats.peers > 0
+    const state = progress < 100
+      ? dat.network.connected > 0
         ? 'loading'
         : 'paused'
       : 'complete'
@@ -258,7 +255,7 @@ function createTable (dats, send) {
           ${icon({
             id: 'network'
           })}
-          ${dat.stats.peers}
+          ${dat.network.connected}
         </td>
         <td class="cell-6">
           <div class="flex justify-end">
