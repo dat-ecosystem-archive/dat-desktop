@@ -18,6 +18,12 @@ time, mark, audio, video {
 
 body {
   line-height: 1.5;
+  overflow: hidden;
+}
+
+main {
+  overflow-y: auto;
+  height: calc(100vh - 2.5rem) /* height of header */
 }
 
 body, input, textarea, select, button {

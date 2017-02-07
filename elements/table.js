@@ -59,9 +59,6 @@ const table = css`
     }
     .cell-truncate {
       width: 26vw;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .row-action {
       height: 2rem;
@@ -120,17 +117,17 @@ const progressBar = css`
       background-color: var(--color-blue);
       border-radius: 2px;
     }
-    @keyframes move-bg {
-      0% {
-        background-position: var(--tile-width) 0;
-      }
-      100% {
-        background-position: 0 0;
-      }
-    }
     .line-loading {
       --tile-width: 28px;
       --stripe-width: 5px;
+      @keyframes move-bg {
+        0% {
+          background-position: var(--tile-width) 0;
+        }
+        100% {
+          background-position: 0 0;
+        }
+      };
       overflow: hidden;
       position: relative;
       height: var(--bar-height);
@@ -156,7 +153,7 @@ const progressBar = css`
       background-color: var(--color-green);
     }
     .line-paused {
-      background-color: var(--color-neutral-60);
+      background-color: var(--color-neutral-40);
     }
     .counter {
       float: right;
@@ -169,25 +166,29 @@ const progressBar = css`
 
 `
 
+console.log(progressBar)
+
 module.exports = tableElement
 
 function tableElement (dats, send) {
   return html`
-    <table class="w-100 collapse ${table}">
-      <thead>
-        <tr>
-          <th class="cell-1"></th>
-          <th class="tl cell-2">Link</th>
-          <th class="tl cell-3">Download</th>
-          <th class="tr cell-4">Size</th>
-          <th class="tr cell-5">Network</th>
-          <th class="cell-6"></th>
-        </tr>
-      </thead>
-      <tbody>
-        ${createTable(dats, send)}
-      </tbody>
-    </table>
+    <main>
+      <table class="w-100 collapse ${table}">
+        <thead>
+          <tr>
+            <th class="cell-1"></th>
+            <th class="tl cell-2">Link</th>
+            <th class="tl cell-3">Download</th>
+            <th class="tr cell-4">Size</th>
+            <th class="tr cell-5">Network</th>
+            <th class="cell-6"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${createTable(dats, send)}
+        </tbody>
+      </table>
+    </main>
   `
 }
 
@@ -220,11 +221,11 @@ function createTable (dats, send) {
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            <h2 class="normal">
+            <h2 class="normal truncate">
               ${dat.title || `#${encoding.encode(dat.key)}`}
             </h2>
-            <p class="f7 color-neutral-60">
-              <span class="ttc">${dat.author || 'Anonymous'} • </span>
+            <p class="f7 color-neutral-60 truncate">
+              <span class="">${dat.author || 'Anonymous'} • </span>
               <span>
                 ${dat.owner
                   ? 'Read & Write'
