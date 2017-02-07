@@ -40,8 +40,15 @@ function createModel (cb) {
       delete: deleteDat,
       download: downloadDat,
       'add-dir': addDirectory,
-      deleteConfirm: deleteConfirmed
+      deleteConfirm: deleteConfirmed,
+      shareState: shareState
     }
+  }
+
+  // note: this is a slight hack; next version of choo will
+  // allow effects to have access to all state
+  function shareState (state, action, send, done) {
+    done(null, state)
   }
 
   function handleManagerUpdate (send, done) {
