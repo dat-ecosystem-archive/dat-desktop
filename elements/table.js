@@ -196,14 +196,7 @@ function tableElement (dats, send) {
 // ([obj], fn) -> html
 function createTable (dats, send) {
   return dats.map(dat => {
-    const stats = dat.hyperStats && dat.hyperStats.get()
-    const progress = stats
-      ? stats.blocksTotal
-        ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
-        : 100
-      : 0
-
-    const state = progress < 1
+    const state = dat.progress < 1
       ? dat.stats.peers > 0
         ? 'loading'
         : 'paused'
@@ -241,12 +234,12 @@ function createTable (dats, send) {
         <td class="cell-3">
           <div class="${progressBar}">
             <div class="counter">
-              ${progress}%
+              ${dat.progress}%
             </div>
             <div class="bar">
               <div
                 class="line line-${state}"
-                style="width: ${progress}%"
+                style="width: ${dat.progress}%"
               ></div>
             </div>
           </div>
