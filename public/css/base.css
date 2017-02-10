@@ -28,6 +28,9 @@ main {
 
 body, input, textarea, select, button {
   font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
+  &:focus {
+    outline: none;
+  }
 }
 
 input, textarea, select, button {
