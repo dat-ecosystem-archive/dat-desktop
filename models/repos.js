@@ -179,6 +179,11 @@ function createManager (multidat, onupdate) {
   }
 
   function create (dir, opts, cb) {
+    if (!cb) {
+      cb = opts
+      opts = {}
+    }
+
     assert.equal(typeof dir, 'string', 'models/repos: dat-manager: dir should be a string')
     assert.equal(typeof opts, 'object', 'models/repos: dat-manager: opts should be a object')
     assert.equal(typeof cb, 'function', 'models/repos: dat-manager: cb should be a function')
