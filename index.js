@@ -6,6 +6,7 @@ const path = require('path')
 const doctor = require('dat-doctor')
 const { Writable } = require('stream')
 const autoUpdater = require('./lib/auto-updater')
+const colors = require('dat-colors')
 
 const delegateEvents = require('./lib/delegate-electron-events')
 
@@ -13,7 +14,8 @@ const windowStyles = {
   width: 800,
   height: 600,
   titleBarStyle: 'hidden-inset',
-  minWidth: 640
+  minWidth: 640,
+  backgroundColor: colors.neutral
 }
 
 const env = Env({ NODE_ENV: 'production' })
