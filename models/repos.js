@@ -65,16 +65,20 @@ function createModel () {
           if (err) return next(err)
           next(null, multidat)
         })
+      },
+      function (multidat, next) {
+        manager = createManager(multidat, function (err, dats) {
+          if (err) return done(err)
+          send('repos:update', dats, next)
+        })
+      },
+      function (_, next) {
+        // show the welcome screen if you start without any dats
+        send('mainView:loadWelcomeScreenPerhaps', done)
       }
     ]
 
-    waterfall(tasks, function (err, multidat) {
-      if (err) return done(err)
-      manager = createManager(multidat, function (err, dats) {
-        if (err) return done(err)
-        send('repos:update', dats, done)
-      })
-    })
+    waterfall(tasks, done)
   }
 
   // share state with external model

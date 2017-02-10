@@ -5,11 +5,8 @@ module.exports = createModel
 function createModel (cb) {
   return {
     namespace: 'mainView',
-    subscriptions: {
-      start: start
-    },
     effects: {
-      loadWelcomeScreen: loadWelcomeScreen
+      loadWelcomeScreenPerhaps: loadWelcomeScreenPerhaps
     },
     state: {
       welcome: true
@@ -20,11 +17,7 @@ function createModel (cb) {
   }
 }
 
-function start (send, done) {
-  send('mainView:loadWelcomeScreen', done)
-}
-
-function loadWelcomeScreen (state, action, send, done) {
+function loadWelcomeScreenPerhaps (state, action, send, done) {
   send('repos:shareState', function (err, reposState) {
     if (err) return done(err)
     if (reposState.values.length) return done()
