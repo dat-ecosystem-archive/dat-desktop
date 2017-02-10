@@ -1,7 +1,7 @@
 
-# dat-desktop
+# Dat Desktop
 
-Desktop app for [dat](https://datproject.org/).
+Desktop app for [Dat](https://datproject.org/).
 
 ![screenshot](screenshot.png)
 
@@ -37,7 +37,7 @@ index.js       Electron application entry
 ## FAQ
 
 ### How can I speed up downloading Electron?
-If you're Europe / US you might want to use a different mirror for `electron`.
+If you’re Europe / US you might want to use a different mirror for `electron`.
 You can set the `ELECTRON_MIRROR` variable to point to a different provider:
 ```sh
 # Europe / US
