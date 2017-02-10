@@ -93,7 +93,7 @@ const table = css`
   }
 `
 
-const progressBar = css`
+const progressbar = css`
   :host {
     --progress-height: .5rem;
     --bar-height: var(--progress-height);
@@ -195,23 +195,38 @@ function tableElement (dats, send) {
 function createTable (dats, send) {
   return dats.map(dat => {
     const stats = dat.stats && dat.stats.get()
-    const progress = (stats)
-      ? stats.blocksTotal
-        ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
-        : 0
-      : 0
+    let progress = (dat.owner)
+      ? 100
+      : (!stats)
+        ? 0
+        : (stats.blocksTotal)
+          ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
+          : 0
 
-    const state = progress < 1
-      ? dat.stats.peers > 0
-        ? 'loading'
-        : 'paused'
-      : 'complete'
+    // place an upper bound of 100% on progress. We've encountered situations
+    // where blocks downloaded exceeds total block. Once that's fixed this
+    // should be safe to be removed
+    progress = Math.min(progress, 100)
+
+    const state = (dat.owner)
+      ? 'complete'
+      : (progress === 100)
+        ? 'complete'
+        : (dat.stats.peers === 0)
+          ? 'paused'
+          : 'loading'
 
     const hexContent = {
       loading: icon({id: 'hexagon-down', cls: 'color-blue'}),
       paused: icon({id: 'hexagon-pause', cls: 'color-neutral-30'}),
       complete: icon({id: 'hexagon-up', cls: 'color-green'})
     }[state]
+
+    var progressbarLine = (state === 'loading')
+      ? 'line-loading'
+      : (state === 'paused')
+        ? 'line-paused'
+        : 'line-complete'
 
     return html`
       <tr>
@@ -228,24 +243,20 @@ function createTable (dats, send) {
             <p class="f7 color-neutral-60 truncate">
               <span class="">${dat.metadata.author || 'Anonymous'} • </span>
               <span>
-                ${dat.owner
-                  ? 'Read & Write'
-                  : 'Read-only'}
+                ${dat.owner ? 'Read & Write' : 'Read-only'}
                 ${dat.metadata.title && `· #${encoding.encode(dat.key)}`}
               </span>
             </p>
           </div>
         </td>
         <td class="cell-3">
-          <div class="${progressBar}">
+          <div class="${progressbar}">
             <div class="counter">
               ${progress}%
             </div>
             <div class="bar">
-              <div
-                class="line line-${state}"
-                style="width: ${progress}%"
-              ></div>
+              <div class="line ${progressbarLine}" style="width: ${progress}%">
+              </div>
             </div>
           </div>
         </td>
@@ -284,4 +295,3 @@ function createTable (dats, send) {
     `
   })
 }
-0
