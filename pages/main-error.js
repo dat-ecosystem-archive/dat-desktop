@@ -14,7 +14,7 @@ function view (state, prev, send) {
 
   const header = Header({
     create: () => send('repos:create'),
-    download: (link) => send('repos:download', link)
+    download: (link) => send('repos:clone', link)
   })
 
   return html`
