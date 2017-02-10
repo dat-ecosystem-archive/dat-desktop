@@ -66,6 +66,7 @@ const welcome = css`
     align-items: center;
     justify-content: center;
     text-align: center;
+    -webkit-app-region: drag;
   }
 `
 

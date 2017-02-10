@@ -30,6 +30,10 @@ body, input, textarea, select, button {
   font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
 }
 
+input, textarea, select, button {
+  -webkit-user-drag: none;
+}
+
 html {
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -52,6 +56,10 @@ button {
 .is-selectable {
   -webkit-user-select: auto;
   cursor: auto;
+}
+
+.is-draggable {
+  -webkit-app-region: drag;
 }
 
 /* additional font sizes to tachyons */
