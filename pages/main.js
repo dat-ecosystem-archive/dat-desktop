@@ -13,20 +13,16 @@ const skeleton = css`
   :host {
     position: relative;
     .skeleton {
-      position: absolute;
-      top: 1.5rem;
+      position: fixed;
+      top: 3.5rem;
       left: 1.25rem;
       width: 232px;
       max-width: 100vw;
-      height: 1000px;
-    }
-    .tutorial {
-
     }
     .dotted-lines {
       position: absolute;
       top: .25rem;
-      right: 6rem;
+      right: 5.5rem;
       width: 17rem;
       z-index: 3;
     }
