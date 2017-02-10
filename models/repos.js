@@ -216,11 +216,10 @@ function createManager (multidat, onupdate) {
       update()
     })
 
-    stats.on('update', update)
-    stats.on('files-counted', update)
-    stats.on('archive-finalized', update)
-    stats.on('archive-updated', update)
-    stats.on('download-finished', update)
-    stats.on('swarm-update', update)
+    dat.archive.on('download', update)
+    dat.network.on('connection', function (peer) {
+      update()
+      peer.once('close', update)
+    })
   }
 }
