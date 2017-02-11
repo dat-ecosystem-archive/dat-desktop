@@ -37,7 +37,7 @@ tape('onboarding', function (t) {
       .then((isVisible) => t.equal(isVisible, true))
       .then(() => app.client.click('button'))
       .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop'))
+      .then((title) => t.ok(title.match(/Dat Desktop/)))
       .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
   })
 
@@ -48,15 +48,19 @@ tape('onboarding', function (t) {
       .then((isVisible) => t.equal(isVisible, true))
       .then(() => app.client.click('button'))
       .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop'))
+      .then((title) => t.ok(title, 'Dat Desktop | Welcome'))
       .then(() => app.stop())
       .then(() => Promise.resolve(app = createApp()))
       .then(() => waitForLoad(app))
       .then(() => app.browserWindow.isVisible())
-      .then((isVisible) => t.equal(isVisible, true))
       .then(() => app.client.click('button'))
-      .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop'))
+      .then(() => wait())
+      .then(() => app.client.getText('.tutorial'))
+      .then((val) => {
+        val = val.toLowerCase()
+        t.ok(val.indexOf('create new dat') > -1)
+        t.ok(val.indexOf('import dat') > -1)
+      })
       .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
   })
 
@@ -86,9 +90,9 @@ tape('working with dats', function (t) {
     .then(() => app.browserWindow.isVisible())
     .then((isVisible) => t.equal(isVisible, true))
     .then(() => app.client.click('button'))
-    .then(() => wait(2000))
+    .then(() => wait())
     .then(() => app.client.element('button#create-new-dat').click())
-    .then(() => wait(500))
+    .then(() => wait())
     .then(() => app.client.getText('tbody'))
     .then((text) => {
       t.ok(text.match(/hello world/), 'contains title')
@@ -99,7 +103,16 @@ tape('working with dats', function (t) {
     .then((text) => t.ok(text.match(/0/), 'contains network size'))
     .then(() => app.client.element('button.delete').click())
     .then(() => app.client.element('button.confirm-button').click())
-    .then(() => wait(2000))
+    .then(() => wait())
+    .then(() => app.client.getText('.tutorial'))
+    .then((text) => t.ok(text.toLowerCase().match(/create new dat/), 'now the dat is gone and welcome screen is back'))
+    .then(() => app.stop())
+    .then(() => Promise.resolve(app = createApp()))
+    .then(() => waitForLoad(app))
+    .then(() => app.browserWindow.isVisible())
+    .then((isVisible) => t.equal(isVisible, true))
+    .then(() => app.client.click('button'))
+    .then(() => wait())
     .then(() => app.client.getText('.tutorial'))
     .then((text) => t.ok(text.toLowerCase().match(/create new dat/), 'now the dat is gone and welcome screen is back'))
     .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
@@ -110,7 +123,7 @@ function createApp () {
   return new spectron.Application({
     path: path.join(__dirname, '../node_modules/.bin/electron'),
     args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA],
-    env: { NODE_ENV: 'development', RUNNING_IN_SPECTRON: true }
+    env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true }
   })
 }
 
@@ -137,8 +150,9 @@ function wait (ms) {
 
 // Quit the app, end the test, either in success (!err) or failure (err)
 function endTest (app, t, err) {
-  rimraf.sync(TEST_DATA)
-  return app.stop().then(function () {
-    t.end(err)
+  return rimraf(TEST_DATA, function () {
+    app.stop().then(function () {
+      t.end(err)
+    })
   })
 }
