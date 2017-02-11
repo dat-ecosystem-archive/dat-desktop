@@ -5,6 +5,7 @@ const Env = require('envobj')
 const path = require('path')
 const doctor = require('dat-doctor')
 const { Writable } = require('stream')
+
 const autoUpdater = require('./lib/auto-updater')
 const colors = require('dat-colors')
 
