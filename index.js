@@ -58,7 +58,7 @@ function onReady () {
 
   mainWindow.showUrl(indexPath, () => {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
-    if (env.NODE_ENV === 'development' || env.NODE_ENV === 'test') {
+    if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
     }
     if (env.NODE_ENV === 'production') {

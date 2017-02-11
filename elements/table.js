@@ -202,7 +202,7 @@ function row (dat, send) {
 
   var deleteButton = button.icon('Remove Dat', {
     icon: icon('delete'),
-    class: 'row-action',
+    class: 'delete row-action',
     onclick: function (e) {
       // FIXME: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
