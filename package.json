@@ -46,7 +46,7 @@
     "build-background": "./scripts/build background",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:integration",
-    "test:integration": "NODE_ENV=development RUNNING_IN_SPECTRON=true node tests",
+    "test:integration": "node tests",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"

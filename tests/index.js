@@ -1,6 +1,10 @@
 var spectron = require('spectron')
 var path = require('path')
 var tape = require('tape')
+var rimraf = require('rimraf')
+
+var TEST_DATA = path.join(__dirname, 'tests', 'db')
+
 //
 // tape('init', function (t) {
 //   t.test('should be able to boot up the app', function (t) {
@@ -64,7 +68,7 @@ var tape = require('tape')
 //       .then(() => app.browserWindow.isVisible())
 //       .then((isVisible) => t.equal(isVisible, true))
 //       .then(() => app.client.click('button'))
-//       .then(wait)
+//       .then(() => wait())
 //       .then(() => app.client.getText('.tutorial'))
 //       .then((val) => {
 //         val = val.toLowerCase()
@@ -86,16 +90,19 @@ tape('working with dats', function (t) {
     .then(() => wait())
     .then(() => app.client.element('#create-new-dat').click())
     .then(() => wait())
-    .then(() => wait())
-    // .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
+    .then(() => app.client.getText('tbody'))
+    .then((text) => {
+      t.ok(text.match(/hello world/, 'contains title'))
+    })
+    .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
 })
 
 // Create a new app instance
 function createApp () {
   return new spectron.Application({
     path: path.join(__dirname, '../node_modules/.bin/electron'),
-    args: [path.join(__dirname, '../index.js')],
-    env: { NODE_ENV: 'test' }
+    args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA],
+    env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true }
   })
 }
 
@@ -122,6 +129,7 @@ function wait (ms) {
 
 // Quit the app, end the test, either in success (!err) or failure (err)
 function endTest (app, t, err) {
+  rimraf.sync(TEST_DATA)
   return app.stop().then(function () {
     t.end(err)
   })
