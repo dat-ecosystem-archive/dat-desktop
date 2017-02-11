@@ -27,6 +27,17 @@ const prefix = css`
     background-color: var(--color-green-hover);
     color: var(--color-white);
   }
+  .filled-red {
+    padding: .5rem .75rem;
+    font-size: .75rem;
+    background-color: var(--color-red);
+    color: var(--color-neutral-04);
+  }
+  .filled-red:hover,
+  .filled-red:focus {
+    background-color: var(--color-red-hover);
+    color: var(--color-white);
+  }
   .plain {
     padding: .5rem .75rem;
     font-size: .75rem;

@@ -1,11 +1,11 @@
 const html = require('choo/html')
 
-const BasicModal = require('../elements/basic-modal')
+const Modal = require('../elements/crash-modal')
 const Header = require('../elements/header')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 
-var basicModal = BasicModal()
+var modal = Modal()
 
 module.exports = view
 
@@ -22,7 +22,7 @@ function view (state, prev, send) {
       ${sprite()}
       ${header}
       ${Table(archives, send)}
-      ${basicModal(() => send('error:quit'))}
+      ${modal(() => send('error:quit'))}
     </body>
   `
 }
