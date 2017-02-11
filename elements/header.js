@@ -60,7 +60,7 @@ const header = css `
   }
 `
 
-function headerElement (props, ready) {
+function headerElement (props) {
   var ready = props.ready
   if (!ready) {
     return html`<header class="${header}"></header>`
