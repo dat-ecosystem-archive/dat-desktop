@@ -5,3 +5,4 @@ dmgs
 npm-debug.log
 build/background.tiff
 bundle.js
+.dat
