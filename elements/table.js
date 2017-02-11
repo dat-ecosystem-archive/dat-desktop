@@ -195,12 +195,13 @@ function tableElement (dats, send) {
 function createTable (dats, send) {
   return dats.map(dat => {
     const stats = dat.stats && dat.stats.get()
+    var peers = dat.network.connected
     let progress = (dat.owner)
       ? 100
       : (!stats)
         ? 0
         : (stats.blocksTotal)
-          ? Math.round(stats.blocksProgress / stats.blocksTotal * 100)
+          ? Math.round((stats.blocksProgress / stats.blocksTotal) * 100)
           : 0
 
     // place an upper bound of 100% on progress. We've encountered situations
@@ -212,7 +213,7 @@ function createTable (dats, send) {
       ? 'complete'
       : (progress === 100)
         ? 'complete'
-        : (dat.stats.peers === 0)
+        : (peers === 0)
           ? 'paused'
           : 'loading'
 
@@ -261,13 +262,13 @@ function createTable (dats, send) {
           </div>
         </td>
         <td class="tr cell-4">
-          ${bytes((stats) ? stats.bytesTotal : 0)}
+          ${bytes((dat.archive.content) ? dat.archive.content.bytes : 'N/A')}
         </td>
         <td class="tr cell-5">
           ${icon({
             id: 'network'
           })}
-          ${(stats) ? stats.peers : 0}
+          ${peers}
         </td>
         <td class="cell-6">
           <div class="flex justify-end">
