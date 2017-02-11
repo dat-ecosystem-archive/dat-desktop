@@ -5,6 +5,8 @@ const css = require('sheetify')
 const button = require('./button')
 const datImport = require('./dat-import')
 
+module.exports = headerElement
+
 const header = css `
   :host {
     height: 2.5rem;
@@ -58,7 +60,11 @@ const header = css `
   }
 `
 
-module.exports = (props) => {
+function headerElement (props, ready) {
+  var ready = props.ready
+  if (!ready) {
+    return html`<header class="${header}"></header>`
+  }
   return html`
     <header class="${header}">
       <div class="fr">

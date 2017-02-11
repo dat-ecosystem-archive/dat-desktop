@@ -5,6 +5,8 @@ const icon = require('./icon')
 const yo = require('choo/html')
 const css = require('sheetify')
 
+module.exports = datImportElement
+
 const prefix = css`
   :host {
     --icon-height: 1.2rem;
@@ -57,8 +59,22 @@ const prefix = css`
   }
 `
 
-module.exports = (props) => {
-  const keydown = (e) => {
+function datImportElement (props) {
+  return yo`
+    <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
+      <input name="dat-import"
+        type="text"
+        placeholder="Import dat"
+        onkeydown=${onKeyDown}
+        class="input-reset">
+      ${icon({
+        id: 'link',
+        cls: 'absolute top-0 bottom-0 left-0'
+      })}
+    </label>
+  `
+
+  function onKeyDown (e) {
     if (e.keyCode === 13) {
       const link = e.target.value
       try {
@@ -70,13 +86,4 @@ module.exports = (props) => {
       props.download(link)
     }
   }
-  return yo`
-    <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
-      <input name="dat-import" type="text" placeholder="Import dat" onkeydown=${keydown} class="input-reset">
-      ${icon({
-        id: 'link',
-        cls: 'absolute top-0 bottom-0 left-0'
-      })}
-    </label>
-  `
 }

@@ -12,8 +12,10 @@ module.exports = view
 function view (state, prev, send) {
   const shareLink = state.location.search.share
   const archives = state.repos.values
+  const ready = state.repos.ready
 
   const header = Header({
+    ready: ready,
     create: () => send('repos:create'),
     download: (link) => send('repos:clone', link)
   })
