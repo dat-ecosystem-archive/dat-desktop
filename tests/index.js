@@ -3,7 +3,8 @@ var path = require('path')
 var tape = require('tape')
 var rimraf = require('rimraf')
 
-var TEST_DATA = path.join(__dirname, 'db')
+var TEST_DATA = path.join(__dirname, 'test_data')
+var TEST_DATA_DB = path.join(TEST_DATA, 'multidat.json')
 
 tape('init', function (t) {
   t.test('should be able to boot up the app', function (t) {
