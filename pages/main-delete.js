@@ -12,8 +12,10 @@ module.exports = view
 function view (state, prev, send) {
   const key = state.location.search.delete
   const archives = state.repos.values
+  const ready = state.repos.ready
 
   const header = Header({
+    ready: ready,
     create: () => send('repos:create'),
     download: (key) => send('repos:clone', key)
   })

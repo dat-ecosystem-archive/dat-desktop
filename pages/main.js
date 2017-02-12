@@ -73,8 +73,10 @@ module.exports = mainView
 function mainView (state, prev, send) {
   const showWelcomeScreen = state.mainView.welcome
   const dats = state.repos.values
+  const ready = state.repos.ready
 
   const header = Header({
+    ready: ready,
     create: () => send('repos:create'),
     download: (link) => send('repos:clone', link)
   })
