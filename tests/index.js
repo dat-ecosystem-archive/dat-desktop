@@ -122,7 +122,7 @@ tape('working with dats', function (t) {
 function createApp () {
   return new spectron.Application({
     path: path.join(__dirname, '../node_modules/.bin/electron'),
-    args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA],
+    args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA, '--db', TEST_DATA_DB],
     env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true }
   })
 }
@@ -150,9 +150,11 @@ function wait (ms) {
 
 // Quit the app, end the test, either in success (!err) or failure (err)
 function endTest (app, t, err) {
-  return rimraf(TEST_DATA, function () {
-    app.stop().then(function () {
-      t.end(err)
+  return rimraf(TEST_DATA, () => {
+    rimraf(path.join(__dirname, 'fixtures', '.dat'), () => {
+      app.stop().then(function () {
+        t.end(err)
+      })
     })
   })
 }
