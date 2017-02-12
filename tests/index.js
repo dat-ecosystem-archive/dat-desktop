@@ -142,7 +142,7 @@ function waitForLoad (app, t, opts) {
 
 // Returns a promise that resolves after 'ms' milliseconds. Default: 1 second
 function wait (ms) {
-  ms = ms || 2000
+  ms = ms || 3000
   return new Promise(function (resolve, reject) {
     setTimeout(resolve, ms)
   })
