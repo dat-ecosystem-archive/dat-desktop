@@ -262,7 +262,7 @@ function createTable (dats, send) {
           </div>
         </td>
         <td class="tr cell-4">
-          ${dat.archive.content ? bytes(dat.archive.content.bytes) : 'N/A'}
+          ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
         </td>
         <td class="tr cell-5">
           ${icon({
