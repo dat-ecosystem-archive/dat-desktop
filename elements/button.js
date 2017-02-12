@@ -16,6 +16,11 @@ const prefix = css`
       align-items: center;
     }
   }
+  .icon-only {
+    .btn-text {
+      display: none;
+    }
+  }
   .filled-green {
     padding: .5rem .75rem;
     font-size: .75rem;
@@ -59,7 +64,12 @@ module.exports = (props, click) => {
   }
 
   return html`
-    <button onclick=${props.click} class="pointer ${prefix} ${props.style || ''} ${props.cls || ''}">
+    <button
+      onclick=${props.click}
+      class="pointer ${prefix} ${props.style || ''} ${props.cls || ''}"
+      title=${props.title || props.text}
+      aria-label=${props.ariaLabel || props.text}
+      >
       ${child}
     </button>
   `

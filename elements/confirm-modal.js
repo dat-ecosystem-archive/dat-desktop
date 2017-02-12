@@ -70,7 +70,7 @@ function createWidget () {
         <button
           onclick=${onexit}
           class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
-          aria-label="Close">
+          aria-label="Close Modal">
           ${icon({id: 'cross'})}
         </button>
       </section>

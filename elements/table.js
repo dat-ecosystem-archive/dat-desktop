@@ -163,7 +163,6 @@ const progressbar = css`
       font-size: .875rem;
     }
   }
-
 `
 
 module.exports = tableElement
@@ -262,7 +261,7 @@ function createTable (dats, send) {
           </div>
         </td>
         <td class="tr cell-4">
-          ${bytes((dat.archive.content) ? dat.archive.content.bytes : 'N/A')}
+          ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
         </td>
         <td class="tr cell-5">
           ${icon({
@@ -273,20 +272,23 @@ function createTable (dats, send) {
         <td class="cell-6">
           <div class="flex justify-end">
             ${button({
+              text: 'Open in Finder',
+              style: 'icon-only',
               icon: 'open-in-finder',
-              text: '',
               cls: 'row-action',
               click: () => send('repos:open', dat)
             })}
             ${button({
+              text: 'Copy Dat Link',
+              style: 'icon-only',
               icon: 'link',
-              text: '',
               cls: 'row-action',
               click: () => send('repos:share', dat)
             })}
             ${button({
+              text: 'Remove Dat',
+              style: 'icon-only',
               icon: 'delete',
-              text: '',
               cls: 'row-action',
               click: () => send('repos:remove', dat)
             })}
