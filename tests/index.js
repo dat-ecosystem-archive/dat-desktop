@@ -59,8 +59,8 @@ tape('onboarding', function (t) {
       .then(() => app.client.getText('.tutorial'))
       .then((val) => {
         val = val.toLowerCase()
-        t.ok(val.indexOf('create new dat') > -1)
-        t.ok(val.indexOf('import dat') > -1)
+        t.ok(val.indexOf('create new dat') > -1, 'has create new dat text')
+        t.ok(val.indexOf('import dat') > -1, 'has import dat text')
       })
       .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
   })
@@ -76,8 +76,8 @@ tape('onboarding', function (t) {
       .then(() => app.client.getText('.tutorial'))
       .then((val) => {
         val = val.toLowerCase()
-        t.ok(val.indexOf('create new dat') > -1)
-        t.ok(val.indexOf('import dat') > -1)
+        t.ok(val.indexOf('create new dat') > -1, 'has create new dat text')
+        t.ok(val.indexOf('import dat') > -1, 'has import new dat text')
       })
       .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
   })
