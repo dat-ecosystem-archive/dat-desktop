@@ -150,7 +150,7 @@ function createModal () {
           </p>
           <input name="dat-link" type="text" value=${link} class="relative dib pa0 dat-input-input">
           ${icon({id: 'link'})}
-          <button class="absolute pointer dat-input-button" onclick=${onclick}>
+          <button class="absolute pointer dat-input-button" title="Copy to Clipboard" aria-label="Copy to Clipboard" onclick=${onclick}>
             ${icon({id: 'clipboard'})}
           </button>
         </label>
@@ -160,7 +160,7 @@ function createModal () {
         <button
           onclick=${onexit}
           class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
-          aria-label="Close">
+          aria-label="Close Modal">
           ${icon({id: 'cross'})}
         </button>
       </section>
