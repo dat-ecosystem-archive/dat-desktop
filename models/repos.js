@@ -150,7 +150,7 @@ function createModel () {
     try {
       var key = encoding.decode(data).toString('hex')
     } catch (e) {
-      return done(new Error('Key is not a valid Dat link'))
+      return done(new Error("The value you entered doesn't appear to be a valid Dat link"))
     }
 
     mkdirp(state.downloadsDir, function (err) {

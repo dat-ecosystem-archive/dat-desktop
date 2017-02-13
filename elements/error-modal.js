@@ -45,9 +45,9 @@ function createWidget () {
     return html`
       <div class="relative flex flex-column justify-center ${prefix}">
         <section class="pa4">
-          <h3 class="f4">Oops</h3>
+          <h3 class="f4">Oops, something went wrong</h3>
           <p class="mt3 mb4 f7 color-neutral-70">
-            Something went wrong there.
+            ${message}
           </p>
           <p>
             ${exitButton}
