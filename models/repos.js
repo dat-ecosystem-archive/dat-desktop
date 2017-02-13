@@ -56,7 +56,7 @@ function createModel () {
       function (next) {
         mkdirp(dbLocation, next)
       },
-      function (next) {
+      function (_, next) {
         mkdirp(downloadsDir, next)
       },
       function (_, next) {
