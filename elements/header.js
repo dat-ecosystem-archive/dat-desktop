@@ -1,6 +1,7 @@
 'use strict'
 
 const html = require('choo/html')
+const assert = require('assert')
 const css = require('sheetify')
 const button = require('./button')
 const datImport = require('./dat-import')
@@ -61,29 +62,45 @@ const header = css `
 `
 
 function headerElement (props) {
-  var ready = props.ready
-  if (!ready) {
+  var isReady = props.isReady
+  var onimport = props.onimport
+  var oncreate = props.oncreate
+
+  assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
+  assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
+  assert.equal(typeof oncreate, 'function', 'elements/header: oncreate should be type function')
+
+  if (!isReady) {
     return html`<header class="${header}"></header>`
   }
+
+  var importButton = datImport({ onsubmit: onimport })
+
+  var createButton = button({
+    icon: 'create-new-dat',
+    text: 'Create New Dat',
+    cls: 'ml2 b--transparent header-action header-action-no-border',
+    click: oncreate
+  })
+
+  var loginButton = button({
+    text: 'Log In',
+    cls: 'ml2 header-action log-in-button'
+  })
+
+  var menuButton = button({
+    icon: 'menu',
+    text: '',
+    cls: 'ml2 header-action header-action-no-border menu-trigger'
+  })
+
   return html`
     <header class="${header}">
       <div class="fr">
-        ${datImport(props)}
-        ${button({
-          icon: 'create-new-dat',
-          text: 'Create New Dat',
-          cls: 'ml2 b--transparent header-action header-action-no-border',
-          click: props.create
-        })}
-        ${button({
-          text: 'Log In',
-          cls: 'ml2 header-action log-in-button'
-        })}
-        ${button({
-          icon: 'menu',
-          text: '',
-          cls: 'ml2 header-action header-action-no-border menu-trigger'
-        })}
+        ${importButton}
+        ${createButton}
+        ${loginButton}
+        ${menuButton}
       </div>
     </header>
   `

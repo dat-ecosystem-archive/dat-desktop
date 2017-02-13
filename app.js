@@ -24,6 +24,12 @@ persist(opts, (p) => {
   const app = choo()
   app.use(p)
 
+  app.use({
+    onError: function (msg) {
+      console.log('oh no!', msg)
+    }
+  })
+
   if (process.env.NODE_ENV === 'development') {
     app.use(log())
   }
