@@ -20,10 +20,6 @@ function onUncaughtException (send, done) {
   process.on('uncaughtException', function (err) {
     if (err._thrown) return
 
-    const data = {
-      search: { error: true }
-    }
-
     const opts = {
       uri: 'https://crash-reporter.dat.land/report',
       method: 'PUT',
@@ -40,7 +36,7 @@ function onUncaughtException (send, done) {
     xhr(opts, function (err) {
       if (err) console.error(err)
     })
-    send('location:set', data, done)
+    send('location:set', '?error=true', done)
 
     err._thrown = true
     throw err
