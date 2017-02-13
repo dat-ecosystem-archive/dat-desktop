@@ -1,22 +1,28 @@
 const html = require('choo/html')
 
-const Modal = require('../elements/crash-modal')
+const CrashModal = require('../elements/error-modal')
 const Header = require('../elements/header')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 
-var modal = Modal()
+var Modal = CrashModal()
 
 module.exports = view
 
 function view (state, prev, send) {
   const archives = state.repos.values
-  const ready = state.repos.ready
+  const isReady = state.repos.ready
+  const message = state.error.message
 
   const header = Header({
-    ready: ready,
-    create: () => send('repos:create'),
-    download: (link) => send('repos:clone', link)
+    isReady: isReady,
+    oncreate: () => send('repos:create'),
+    onimport: (link) => send('repos:clone', link)
+  })
+
+  var modal = Modal(message, function () {
+    send('error:clear')
+    window.history.back()
   })
 
   return html`
@@ -24,7 +30,7 @@ function view (state, prev, send) {
       ${sprite()}
       ${header}
       ${Table(archives, send)}
-      ${modal(() => send('error:quit'))}
+      ${modal}
     </body>
   `
 }

@@ -1,16 +1,15 @@
 const html = require('choo/html')
 
-const ConfirmModal = require('../elements/confirm-modal')
+const Modal = require('../elements/crash-modal')
 const Header = require('../elements/header')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 
-const confirmModal = ConfirmModal()
+var modal = Modal()
 
 module.exports = view
 
 function view (state, prev, send) {
-  const key = state.location.search.delete
   const archives = state.repos.values
   const isReady = state.repos.ready
 
@@ -25,10 +24,7 @@ function view (state, prev, send) {
       ${sprite()}
       ${header}
       ${Table(archives, send)}
-      ${confirmModal(() => send('repos:remove', {
-        confirmed: true,
-        key: key
-      }))}
+      ${modal(() => send('error:quit'))}
     </body>
   `
 }

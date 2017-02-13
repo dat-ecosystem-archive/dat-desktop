@@ -1,9 +1,9 @@
 'use strict'
 
-const encoding = require('dat-encoding')
-const icon = require('./icon')
-const yo = require('choo/html')
+const html = require('choo/html')
+const assert = require('assert')
 const css = require('sheetify')
+const icon = require('./icon')
 
 module.exports = datImportElement
 
@@ -60,30 +60,29 @@ const prefix = css`
 `
 
 function datImportElement (props) {
-  return yo`
+  const onsubmit = props.onsubmit
+
+  assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
+
+  const linkIcon = icon({
+    id: 'link',
+    cls: 'absolute top-0 bottom-0 left-0'
+  })
+
+  return html`
     <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
       <input name="dat-import"
         type="text"
         placeholder="Import dat"
         onkeydown=${onKeyDown}
         class="input-reset">
-      ${icon({
-        id: 'link',
-        cls: 'absolute top-0 bottom-0 left-0'
-      })}
+      ${linkIcon}
     </label>
   `
 
   function onKeyDown (e) {
-    if (e.keyCode === 13) {
-      const link = e.target.value
-      try {
-        encoding.decode(link)
-      } catch (err) {
-        throw new Error('Invalid link')
-      }
-      e.target.value = ''
-      props.download(link)
-    }
+    const value = e.target.value
+    if (e.key !== 'Enter' || !value) return
+    onsubmit(value)
   }
 }

@@ -147,7 +147,12 @@ function createModel () {
   function cloneDat (state, data, send, done) {
     assert.ok(Buffer.isBuffer(data) || typeof data === 'string', 'repos-model.cloneDat: data should be a buffer or a string')
 
-    var key = encoding.decode(data).toString('hex')
+    try {
+      var key = encoding.decode(data).toString('hex')
+    } catch (e) {
+      return done(new Error("The value you entered doesn't appear to be a valid Dat link"))
+    }
+
     mkdirp(state.downloadsDir, function (err) {
       if (err) return done(err)
       var dir = path.join(state.downloadsDir, key)
