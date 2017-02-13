@@ -26,7 +26,7 @@ persist(opts, (p) => {
   app.use(p)
 
   if (process.env.NODE_ENV === 'development') {
-    // app.use(log())
+    app.use(log())
   }
 
   app.model(require('./models/main-view')())
