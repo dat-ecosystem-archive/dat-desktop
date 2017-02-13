@@ -81,7 +81,8 @@ function datImportElement (props) {
   `
 
   function onKeyDown (e) {
-    if (e.key !== 'Enter') return
-    onsubmit(e.target.value)
+    const value = e.target.value
+    if (e.key !== 'Enter' || !value) return
+    onsubmit(value)
   }
 }

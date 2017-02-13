@@ -7,13 +7,36 @@ module.exports = model
 function model () {
   return {
     namespace: 'error',
+    state: {
+      message: null
+    },
     subscriptions: {
       onUncaughtException: onUncaughtException
     },
     effects: {
+      display: display,
       quit: quit
+    },
+    reducers: {
+      clear: clear,
+      set: set
     }
   }
+}
+
+function set (state, error) {
+  return { message: error }
+}
+
+function clear () {
+  return { message: null }
+}
+
+function display (state, error, send, done) {
+  send('error:set', error, function (err) {
+    if (err) return done(err)
+    send('location:set', '?error=true', done)
+  })
 }
 
 function onUncaughtException (send, done) {
@@ -36,7 +59,7 @@ function onUncaughtException (send, done) {
     xhr(opts, function (err) {
       if (err) console.error(err)
     })
-    send('location:set', '?error=true', done)
+    send('location:set', '?crash=true', done)
 
     err._thrown = true
     throw err
