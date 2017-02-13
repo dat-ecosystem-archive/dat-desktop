@@ -99,8 +99,8 @@ function createWidget () {
   }
 
   function clearDatabase () {
-    const dbLocation = path.join(process.env.HOME)
-    const dbFile = path.join(dbLocation, '.dat-desktop-db.json')
+    const dbLocation = path.join(process.env.HOME, '.dat-desktop')
+    const dbFile = path.join(dbLocation, 'dats.json')
     fs.unlink(dbFile, onexit)
   }
 }
