@@ -63,7 +63,7 @@ function createModel () {
       },
       function (_, next) {
         const db = toilet(dbFile)
-        Multidat(db, next)
+        Multidat(db, { worker: true }, next)
       },
       function (multidat, next) {
         send('repos:ready', function (err) {
