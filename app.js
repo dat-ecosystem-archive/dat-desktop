@@ -50,11 +50,11 @@ persist(opts, (p) => {
 function onError (action) {
   return {
     onError: function (err, state, createSend) {
-      var send = createSend('handleError', function (err) {
+      var send = createSend('handleError')
+      send(action, err.message, function (err) {
         // if we hit this point the error handler has failed and we should crash
         if (err) throw err
       })
-      send(action, err.message)
     }
   }
 }
