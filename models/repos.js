@@ -198,7 +198,6 @@ function createManager (multidat, onupdate) {
 
     multidat.create(dir, opts, function (err, dat) {
       if (err) return cb(err)
-
       initDat(dat)
       update()
       cb(null, dat)
@@ -225,6 +224,21 @@ function createManager (multidat, onupdate) {
     var stats = dat.trackStats()
     dat.metadata = dat.metadata || {}
     dat.stats = stats
+
+    if (dat.owner) {
+      var importer = dat.importFiles({
+        watch: true,
+        resume: true,
+        ignoreHidden: true,
+        compareFileContent: true
+      }, function (err) {
+        if (err) throw err
+        update()
+      })
+      importer.on('file imported', function () {
+        update()
+      })
+    }
 
     multidat.readManifest(dat, function (_, manifest) {
       if (!manifest) return
