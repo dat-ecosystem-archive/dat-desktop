@@ -82,18 +82,13 @@ module.exports = function (dat, stats, send) {
       ? 'line-paused'
       : 'line-complete'
 
-  // place an upper bound of 100% on progress. We've encountered situations
-  // where blocks downloaded exceeds total block. Once that's fixed this
-  // should be safe to be removed
-  var progress = Math.min(stats.progress, 100)
-
   return html`
     <div class="${progressbar}">
       <div class="counter">
-        ${progress}%
+        ${stats.progress}%
       </div>
       <div class="bar">
-        <div class="line ${progressbarLine}" style="width: ${progress}%">
+        <div class="line ${progressbarLine}" style="width: ${stats.progress}%">
         </div>
       </div>
     </div>

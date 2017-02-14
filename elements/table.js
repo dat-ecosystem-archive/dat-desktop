@@ -130,6 +130,11 @@ function createTable (dats, send) {
           ? Math.round((stats.blocksProgress / stats.blocksTotal) * 100)
           : 0
 
+    // place an upper bound of 100% on progress. We've encountered situations
+    // where blocks downloaded exceeds total block. Once that's fixed this
+    // should be safe to be removed
+    stats.progress = Math.min(stats.progress, 100)
+
     stats.state = (dat.owner)
       ? 'complete'
       : (stats.progress === 100)
@@ -169,7 +174,7 @@ function createTable (dats, send) {
           ${status(dat, stats, send)}
         </td>
         <td class="tr cell-4">
-          ${(dat.archive.content.bytes) ? bytes(dat.archive.content.bytes) : 'N/A'}
+          ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
         </td>
         <td class="tr cell-5">
           ${icon({
