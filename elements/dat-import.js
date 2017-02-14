@@ -83,6 +83,7 @@ function datImportElement (props) {
   function onKeyDown (e) {
     const value = e.target.value
     if (e.key !== 'Enter' || !value) return
+    e.target.value = ''
     onsubmit(value)
   }
 }
