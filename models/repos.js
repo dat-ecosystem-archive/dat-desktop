@@ -251,6 +251,7 @@ function createManager (multidat, onupdate) {
 
     dat.on('update', update)
 
-    app.on('will-quit', () => dat.close())
+    app.on('before-quit', () => dat.close())
+    window.onbeforeunload = () => dat.close()
   }
 }
