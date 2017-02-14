@@ -10,7 +10,6 @@ const confirmModal = ConfirmModal()
 module.exports = view
 
 function view (state, prev, send) {
-  const key = state.location.search.delete
   const archives = state.repos.values
   const isReady = state.repos.ready
 
@@ -20,15 +19,19 @@ function view (state, prev, send) {
     onimport: (link) => send('repos:clone', link)
   })
 
+  // TODO: move 'key' out of closure, callback isn't being update
+  // correctly yet has previously been source of not being able to delete
+  // multiple dats in a row.
+  var modal = confirmModal(function () {
+    send('repos:remove', { confirmed: true })
+  })
+
   return html`
     <body>
       ${sprite()}
       ${header}
       ${Table(archives, send)}
-      ${confirmModal(() => send('repos:remove', {
-        confirmed: true,
-        key: key
-      }))}
+      ${modal}
     </body>
   `
 }

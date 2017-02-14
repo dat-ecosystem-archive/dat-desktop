@@ -26,6 +26,7 @@ function createModel () {
     namespace: 'repos',
     state: {
       downloadsDir: downloadsDir,
+      removalKey: null,
       ready: false,
       values: []
     },
@@ -34,6 +35,7 @@ function createModel () {
       onIpc: handleIpc
     },
     reducers: {
+      setRemovalKey: setRemovalKey,
       ready: multidatReady,
       update: updateDats
     },
@@ -84,6 +86,10 @@ function createModel () {
     waterfall(tasks, done)
   }
 
+  function setRemovalKey (state, key) {
+    return { removalKey: key }
+  }
+
   // share state with external model
   function shareState (state, data, send, done) {
     done(null, state)
@@ -129,14 +135,23 @@ function createModel () {
   }
 
   function removeDat (state, data, send, done) {
-    assert.ok(data.key, 'repos-model.deleteDat: data.key should exist')
-
     if (!data.confirmed) {
+      assert.ok(data.key, 'repos-model.deleteDat: data.key should exist')
       const encodedKey = encoding.encode(data.key)
-      send('location:set', `?delete=${encodedKey}`, done)
+      const uri = window.location.href + '?delete=' + encodedKey
+      const key = encoding.toStr(data.key)
+      send('repos:setRemovalKey', key, function (err) {
+        if (err) return done(err)
+        send('location:set', uri, done)
+      })
     } else {
-      const key = encoding.decode(data.key)
-      manager.close(key, done)
+      // removalKey is a temporary hack because the callback in the modal is
+      // referencing the wrong onclick event
+      var key = state.removalKey
+      send('repos:setRemovalKey', null, function (err) {
+        if (err) return done(err)
+        manager.close(key, done)
+      })
     }
   }
 

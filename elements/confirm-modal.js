@@ -32,9 +32,10 @@ const prefix = css`
 module.exports = createWidget
 
 function createWidget () {
-  const modal = Modal({ render, onexit })
-
-  return modal
+  return Modal({
+    render: render,
+    onexit: onexit
+  })
 
   function onexit () {
     window.history.back()
@@ -42,6 +43,20 @@ function createWidget () {
 
   function render (cb) {
     assert.equal(typeof cb, 'function', 'elements/confirm-modal: cb should be a function')
+
+    var deleteButton = button({
+      text: 'Yes, Remove Dat',
+      style: 'filled-green',
+      cls: 'fr ml3',
+      click: ondelete
+    })
+
+    var exitButton = button({
+      text: 'No, Cancel',
+      style: 'plain',
+      cls: 'fr',
+      click: onexit
+    })
 
     return html`
       <section class="relative flex flex-column justify-center ${prefix}">
@@ -54,18 +69,8 @@ function createWidget () {
           This can’t be undone.
         </p>
         <p>
-          ${button({
-            text: 'Yes, Remove Dat',
-            style: 'filled-green',
-            cls: 'fr ml3',
-            click: ondelete
-          })}
-          ${button({
-            text: 'No, Cancel',
-            style: 'plain',
-            cls: 'fr',
-            click: onexit
-          })}
+          ${deleteButton}
+          ${exitButton}
         </p>
         <button
           onclick=${onexit}
@@ -75,6 +80,7 @@ function createWidget () {
         </button>
       </section>
     `
+
     function ondelete () {
       cb()
       onexit()
