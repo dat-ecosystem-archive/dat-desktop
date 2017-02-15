@@ -215,7 +215,12 @@ function row (dat, send) {
         ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
       </td>
       <td class="tr cell-5">
-        ${icon({ id: 'network' })}
+        ${icon({
+          id: 'network',
+          cls: peers > 1 ? 'healthy' :
+            peers > 0 ? 'sick' :
+            'dead'
+        })}
         ${peers}
       </td>
       <td class="cell-6">
