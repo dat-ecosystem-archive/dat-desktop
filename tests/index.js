@@ -31,17 +31,6 @@ tape('init', function (t) {
 })
 
 tape('onboarding', function (t) {
-  t.test('welcome screen should appear, and be dismissable', function (t) {
-    var app = createApp()
-    waitForLoad(app)
-      .then(() => app.browserWindow.isVisible())
-      .then((isVisible) => t.equal(isVisible, true))
-      .then(() => app.client.click('button'))
-      .then(() => app.browserWindow.getTitle())
-      .then((title) => t.ok(title.match(/Dat Desktop/)))
-      .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
-  })
-
   t.test('welcome screen should show every time you open the app as long as you have no dats', function (t) {
     var app = createApp()
     waitForLoad(app)
@@ -64,23 +53,6 @@ tape('onboarding', function (t) {
       })
       .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
   })
-
-  t.test('make sure you can minimize, full screen, resize, and move the window')
-  t.test('after clicking away welcome screen you should see an empty list with import dat and create new dat', function (t) {
-    var app = createApp()
-    waitForLoad(app)
-      .then(() => app.browserWindow.isVisible())
-      .then((isVisible) => t.equal(isVisible, true))
-      .then(() => app.client.click('button'))
-      .then(() => wait())
-      .then(() => app.client.getText('.tutorial'))
-      .then((val) => {
-        val = val.toLowerCase()
-        t.ok(val.indexOf('create new dat') > -1, 'has create new dat text')
-        t.ok(val.indexOf('import dat') > -1, 'has import new dat text')
-      })
-      .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
-  })
 })
 
 tape('working with dats', function (t) {
@@ -92,25 +64,21 @@ tape('working with dats', function (t) {
     .then((isVisible) => t.equal(isVisible, true))
     .then(() => app.client.click('button'))
     .then(() => wait())
-    .then(() => app.client.element('button#create-new-dat').click())
+    .then(() => app.client.click('button')) // create new
     .then(() => wait())
-    .then(() => app.client.getText('tbody'))
+    .then(() => app.client.getText('.size'))
     .then((text) => {
-      t.ok(text.match(/hello world/), 'contains title')
-      t.ok(text.match(/karissa/), 'contains author')
       t.ok(text.match(/52 B/), 'contains correct size')
     })
-    .then(() => app.client.getText('tbody .network'))
+    .then(() => app.client.getText('.network'))
     .then((text) => t.ok(text.match(/0/), 'contains network size'))
     .then(() => app.stop())
     .then(() => Promise.resolve(app = createApp()))
     .then(() => waitForLoad(app))
     .then(() => app.browserWindow.isVisible())
     .then((isVisible) => t.equal(isVisible, true, 'reloaded and is visible'))
-    .then(() => app.client.getText('tbody'))
+    .then(() => app.client.getText('.size'))
     .then((text) => {
-      t.ok(text.match(/hello world/), 'contains title')
-      t.ok(text.match(/karissa/), 'contains author')
       t.ok(text.match(/52 B/), 'contains correct size')
     })
     .then(() => wait())

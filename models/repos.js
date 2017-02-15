@@ -17,10 +17,11 @@ const path = require('path')
 const Modal = require('../elements/modal')
 
 function noop () {}
-const mock = require('../tests/mocks')
 
 if (process.env.RUNNING_IN_SPECTRON) {
-  mock(dialog)
+  dialog.showOpenDialog = (opts, cb) => {
+    return [path.join(__dirname, '..', 'tests', 'fixtures')]
+  }
 }
 
 module.exports = createModel
