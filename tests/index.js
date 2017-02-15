@@ -63,7 +63,7 @@ tape('working with dats', function (t) {
     .then(() => app.browserWindow.isVisible())
     .then((isVisible) => t.equal(isVisible, true))
     .then(() => app.client.click('button'))
-    .then(() => wait())
+    .then(() => wait(4000))
     .then(() => app.client.click('button')) // create new
     .then(() => wait())
     .then(() => app.client.getText('.size'))
