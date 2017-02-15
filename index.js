@@ -62,6 +62,10 @@ function onReady () {
       autoUpdater({ log })
     }
   })
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 }
 
 app.on('ready', () => {
@@ -73,3 +77,5 @@ app.on('ready', () => {
     onReady()
   }
 })
+
+app.on('window-all-closed', () => app.quit())
