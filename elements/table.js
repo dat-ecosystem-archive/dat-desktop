@@ -217,9 +217,9 @@ function row (dat, send) {
       <td class="tr cell-5">
         ${icon({
           id: 'network',
-          cls: peers > 1 ? 'healthy' :
-            peers > 0 ? 'sick' :
-            'dead'
+          cls: peers > 1 ? 'healthy'
+            : peers > 0 ? 'sick'
+            : 'dead'
         })}
         ${peers}
       </td>
