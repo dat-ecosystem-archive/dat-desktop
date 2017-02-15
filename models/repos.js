@@ -11,6 +11,8 @@ const assert = require('assert')
 const mkdirp = require('mkdirp')
 const open = require('open')
 const path = require('path')
+const ConfirmModal = require('../elements/confirm-modal')
+const LinkModal = require('../elements/link-modal')
 
 module.exports = createModel
 
@@ -35,7 +37,6 @@ function createModel () {
       onIpc: handleIpc
     },
     reducers: {
-      setRemovalKey: setRemovalKey,
       ready: multidatReady,
       update: updateDats
     },
@@ -86,10 +87,6 @@ function createModel () {
     waterfall(tasks, done)
   }
 
-  function setRemovalKey (state, key) {
-    return { removalKey: key }
-  }
-
   // share state with external model
   function shareState (state, data, send, done) {
     done(null, state)
@@ -135,31 +132,19 @@ function createModel () {
   }
 
   function removeDat (state, data, send, done) {
-    if (!data.confirmed) {
-      assert.ok(data.key, 'repos-model.deleteDat: data.key should exist')
-      const encodedKey = encoding.encode(data.key)
-      const uri = window.location.href + '?delete=' + encodedKey
-      const key = encoding.toStr(data.key)
-      send('repos:setRemovalKey', key, function (err) {
-        if (err) return done(err)
-        send('location:set', uri, done)
-      })
-    } else {
-      // removalKey is a temporary hack because the callback in the modal is
-      // referencing the wrong onclick event
-      var key = state.removalKey
-      send('repos:setRemovalKey', null, function (err) {
-        if (err) return done(err)
-        manager.close(key, done)
-      })
-    }
+    const key = data.key
+    const modal = ConfirmModal()(function () {
+      manager.close(key, done)
+    })
+    document.body.appendChild(modal)
   }
 
   // copy a dat share link to clipboard and open a modal
   function shareDat (state, data, send, done) {
     assert.ok(data.key, 'repos-model.shareDat: data.key should exist')
     const encodedKey = encoding.encode(data.key)
-    send('location:set', `?share=${encodedKey}`, done)
+    const modal = LinkModal()(encodedKey)
+    document.body.appendChild(modal)
   }
 
   function cloneDat (state, data, send, done) {

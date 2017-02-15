@@ -36,15 +36,11 @@ persist(opts, (p) => {
 
   app.router([
     ['/', params({
-      default: require('./pages/main'),
-      crash: require('./pages/main-crash'),
-      error: require('./pages/main-error'),
-      share: require('./pages/main-share'),
-      delete: require('./pages/main-delete')
+      default: require('./pages/main')
     })]
   ])
 
-  mount('body', app.start())
+  mount('body div', app.start())
 })
 
 function onError (action) {

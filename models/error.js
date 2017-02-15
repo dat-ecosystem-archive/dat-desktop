@@ -1,6 +1,8 @@
 const version = require('../package.json').version
 const ipc = require('electron').ipcRenderer
 const xhr = require('xhr')
+const CrashModal = require('../elements/crash-modal')
+const ErrorModal = require('../elements/error-modal')
 
 module.exports = model
 
@@ -16,27 +18,13 @@ function model () {
     effects: {
       display: display,
       quit: quit
-    },
-    reducers: {
-      clear: clear,
-      set: set
     }
   }
 }
 
-function set (state, error) {
-  return { message: error }
-}
-
-function clear () {
-  return { message: null }
-}
-
 function display (state, error, send, done) {
-  send('error:set', error, function (err) {
-    if (err) return done(err)
-    send('location:set', '?error=true', done)
-  })
+  const modal = ErrorModal()(error.message)
+  document.body.appendChild(modal)
 }
 
 function onUncaughtException (send, done) {
@@ -59,7 +47,11 @@ function onUncaughtException (send, done) {
     xhr(opts, function (err) {
       if (err) console.error(err)
     })
-    send('location:set', '?crash=true', done)
+  
+    const modal = CrashModal()(() => {
+      send('error:quit', done)
+    })
+    document.body.appendChild(modal)
 
     err._thrown = true
     throw err
