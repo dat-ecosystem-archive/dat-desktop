@@ -5,8 +5,6 @@ const Header = require('../elements/header')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 
-const confirmModal = ConfirmModal()
-
 module.exports = view
 
 function view (state, prev, send) {
@@ -22,8 +20,10 @@ function view (state, prev, send) {
   // TODO: move 'key' out of closure, callback isn't being update
   // correctly yet has previously been source of not being able to delete
   // multiple dats in a row.
-  var modal = confirmModal(function () {
+  var modal = ConfirmModal()(function () {
     send('repos:remove', { confirmed: true })
+    const uri = window.location.origin + window.location.pathname
+    send('location:set', uri)
   })
 
   return html`

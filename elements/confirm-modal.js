@@ -83,7 +83,6 @@ function createWidget () {
 
     function ondelete () {
       cb()
-      onexit()
     }
   }
 }
