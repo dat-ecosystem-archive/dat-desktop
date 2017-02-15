@@ -47,7 +47,7 @@ function onUncaughtException (send, done) {
     xhr(opts, function (err) {
       if (err) console.error(err)
     })
-  
+
     const modal = CrashModal()(() => {
       send('error:quit', done)
     })
