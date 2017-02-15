@@ -77,6 +77,7 @@ tape('working with dats', function (t) {
     .then(() => waitForLoad(app))
     .then(() => app.browserWindow.isVisible())
     .then((isVisible) => t.equal(isVisible, true, 'reloaded and is visible'))
+    .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
       t.ok(text.match(/52 B/), 'contains correct size')
