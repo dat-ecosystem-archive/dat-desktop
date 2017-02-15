@@ -23,7 +23,7 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "ms": "^0.7.2",
-    "multidat": "^2.0.0",
+    "multidat": "github:juliangruber/multidat#dat-worker",
     "nanomorph": "^2.1.3",
     "open": "0.0.5",
     "prettier-bytes": "^1.0.3",

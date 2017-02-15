@@ -63,7 +63,7 @@ function createModel () {
       },
       function (_, next) {
         const db = toilet(dbFile)
-        Multidat(db, next)
+        Multidat(db, { worker: true }, next)
       },
       function (multidat, next) {
         send('repos:ready', function (err) {
@@ -211,6 +211,13 @@ function createManager (multidat, onupdate) {
     assert.equal(typeof opts, 'object', 'models/repos: dat-manager: opts should be a object')
     assert.equal(typeof cb, 'function', 'models/repos: dat-manager: cb should be a function')
 
+    opts = Object.assign(opts, {
+      watch: true,
+      resume: true,
+      ignoreHidden: true,
+      compareFileContent: true
+    })
+
     multidat.create(dir, opts, function (err, dat) {
       if (err) return cb(err)
       initDat(dat)
@@ -233,27 +240,7 @@ function createManager (multidat, onupdate) {
   }
 
   function initDat (dat) {
-    var network = dat.joinNetwork()
-    dat.network = network
-
-    var stats = dat.trackStats()
-    dat.metadata = dat.metadata || {}
-    dat.stats = stats
-
-    if (dat.owner) {
-      var importer = dat.importFiles({
-        watch: true,
-        resume: true,
-        ignoreHidden: true,
-        compareFileContent: true
-      }, function (err) {
-        if (err) throw err
-        update()
-      })
-      importer.on('file imported', function () {
-        update()
-      })
-    }
+    dat.metadata = {}
 
     multidat.readManifest(dat, function (_, manifest) {
       if (!manifest) return
@@ -262,10 +249,9 @@ function createManager (multidat, onupdate) {
       update()
     })
 
-    dat.archive.on('download', update)
-    dat.network.on('connection', function (peer) {
-      update()
-      peer.once('close', update)
-    })
+    dat.on('update', update)
+
+    app.on('before-quit', () => dat.close())
+    window.addEventListener('beforeunload', () => dat.close())
   }
 }
