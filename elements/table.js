@@ -196,6 +196,15 @@ function row (dat, send) {
     }
   })
 
+  var networkIcon = icon({
+    id: 'network',
+    cls: (peers > 1)
+      ? 'network-peers-many'
+      : (peers > 0)
+        ? 'network-peers-1'
+        : 'network-peers-0'
+  })
+
   return html`
     <tr id=${key}>
       <td class="cell-1">
@@ -224,12 +233,7 @@ function row (dat, send) {
         ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
       </td>
       <td class="tr cell-5">
-        ${icon({
-          id: 'network',
-          cls: peers > 1 ? 'network-peers-many'
-            : peers > 0 ? 'network-peers-1'
-            : 'network-peers-0'
-        })}
+        ${networkIcon}
         ${peers}
       </td>
       <td class="cell-6">
