@@ -86,31 +86,31 @@ function mainView (state, prev, send) {
   if (showWelcomeScreen) {
     document.title = 'Dat Desktop | Welcome'
     return html`
-      <body>
+      <div>
         ${sprite()}
         ${WelcomeScreen({
           onexit: () => send('mainView:toggleWelcomeScreen', { toggle: false })
         })}
-      </body>
+      </div>
     `
   }
 
   if (!dats.length) {
     return html`
-      <body>
+      <div>
         ${sprite()}
         ${header}
         ${EmptyState()}
-      </body>
+      </div>
     `
   }
 
   return html`
-    <body>
+    <div>
       ${sprite()}
       ${header}
       ${Table(dats, send)}
-    </body>
+    </div>
   `
 }
 

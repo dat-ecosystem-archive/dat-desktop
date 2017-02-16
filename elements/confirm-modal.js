@@ -34,11 +34,13 @@ module.exports = createWidget
 function createWidget () {
   return Modal({
     render: render,
-    onexit: onexit
+    onexit: onexit,
+    class: 'modal'
   })
 
   function onexit () {
-    window.history.back()
+    const el = document.querySelector('.modal')
+    if (el) el.parentNode.removeChild(el)
   }
 
   function render (cb) {

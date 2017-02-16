@@ -120,12 +120,18 @@ function createModal () {
   let link = ''
   let el = ''
 
-  const modal = Modal({ onunload, onexit, render })
+  const modal = Modal({
+    onunload: onunload,
+    onexit: onexit,
+    render: render,
+    class: 'modal'
+  })
 
   return modal
 
   function onexit () {
-    window.history.back()
+    const el = document.querySelector('.modal')
+    if (el) el.parentNode.removeChild(el)
   }
 
   function onunload () {
