@@ -236,8 +236,8 @@ function createManager (multidat, onupdate) {
 
     dat.on('update', update)
 
-    dat.stdout.on('data', d => console.log('DAT-WORKER %s', d))
-    dat.stderr.on('data', d => console.error('DAT-WORKER %s', d))
+    dat.stdout.on('data', d => console.log('DAT-WORKER %s', d.toString()))
+    dat.stderr.on('data', d => console.log('DAT-WORKER-ERROR %s', d.toString()))
 
     app.on('before-quit', () => dat.close())
     window.addEventListener('beforeunload', () => dat.close())
