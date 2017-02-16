@@ -121,9 +121,9 @@ function createModal () {
   let el = ''
 
   const modal = Modal({
-    onunload,
-    onexit,
-    render,
+    onunload: onunload,
+    onexit: onexit,
+    render: render,
     class: 'modal'
   })
 
