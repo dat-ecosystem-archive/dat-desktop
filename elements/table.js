@@ -92,6 +92,15 @@ const table = css`
       width: 1.1em;
       max-height: 1.6em;
     }
+    .network-peers-many {
+      color: var(--color-green);
+    }
+    .network-peers-1 {
+      color: var(--color-yellow);
+    }
+    .network-peers-0 {
+      color: var(--color-red);
+    }
   }
 `
 
@@ -217,9 +226,9 @@ function row (dat, send) {
       <td class="tr cell-5">
         ${icon({
           id: 'network',
-          cls: peers > 1 ? 'healthy'
-            : peers > 0 ? 'sick'
-            : 'dead'
+          cls: peers > 1 ? 'network-peers-many'
+            : peers > 0 ? 'network-peers-1'
+            : 'network-peers-0'
         })}
         ${peers}
       </td>
