@@ -9,7 +9,7 @@
   "dependencies": {
     "base-elements": "^2.2.1",
     "choo": "^4.0.0-6",
-    "choo-log": "yoshuawuyts/choo-log#fix/caller-undefined",
+    "choo-log": "^3.0.1",
     "choo-persist": "^2.0.0",
     "dat-colors": "^3.3.0",
     "dat-doctor": "^1.2.2",
