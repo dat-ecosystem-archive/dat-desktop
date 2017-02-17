@@ -64,7 +64,10 @@ function createModel () {
       },
       function (_, next) {
         const db = toilet(dbFile)
-        Multidat(db, { worker: true }, next)
+        Multidat(db, {
+          worker: true,
+          execPath: remoteProcess.execPath
+        }, next)
       },
       function (multidat, next) {
         send('repos:ready', function (err) {
