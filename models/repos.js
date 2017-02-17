@@ -241,5 +241,6 @@ function createManager (multidat, onupdate) {
 
     app.on('before-quit', () => dat.close())
     window.addEventListener('beforeunload', () => dat.close())
+    process.on('uncaughtException', () => dat.close())
   }
 }
