@@ -23,7 +23,8 @@ function model () {
 }
 
 function display (state, error, send, done) {
-  const modal = ErrorModal()(error.message)
+  const message = error.message || error
+  const modal = ErrorModal()(message)
   document.body.appendChild(modal)
 }
 
