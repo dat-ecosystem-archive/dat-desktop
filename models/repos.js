@@ -13,6 +13,7 @@ const open = require('open')
 const path = require('path')
 const ConfirmModal = require('../elements/confirm-modal')
 const LinkModal = require('../elements/link-modal')
+const ConsoleStream = require('console-stream')
 
 module.exports = createModel
 
@@ -66,7 +67,9 @@ function createModel () {
         const db = toilet(dbFile)
         Multidat(db, {
           worker: true,
-          execPath: remoteProcess.execPath
+          execPath: remoteProcess.execPath,
+          stdout: ConsoleStream(),
+          stderr: ConsoleStream(),
         }, next)
       },
       function (multidat, next) {
@@ -238,9 +241,6 @@ function createManager (multidat, onupdate) {
     })
 
     dat.on('update', update)
-
-    dat.stdout.on('data', d => console.log('DAT-WORKER %s', d.toString()))
-    dat.stderr.on('data', d => console.log('DAT-WORKER-ERROR %s', d.toString()))
 
     app.on('before-quit', () => dat.close())
     window.addEventListener('beforeunload', () => dat.close())

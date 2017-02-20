@@ -11,6 +11,7 @@
     "choo": "^4.0.0-6",
     "choo-log": "^3.0.1",
     "choo-persist": "^2.0.0",
+    "console-stream": "juliangruber/console-stream#fix/console",
     "dat-colors": "^3.3.0",
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
