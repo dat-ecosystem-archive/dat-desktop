@@ -26,8 +26,7 @@ build_background () {
 
 bundle () {
   printf '[scripts/build] bundling javascript \n'
-  node scripts/browserify.js \
-    2> /dev/null
+  node scripts/browserify.js
 }
 
 postinstall () {
