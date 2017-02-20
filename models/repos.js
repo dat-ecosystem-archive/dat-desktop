@@ -15,6 +15,9 @@ const ConfirmModal = require('../elements/confirm-modal')
 const LinkModal = require('../elements/link-modal')
 const ConsoleStream = require('console-stream')
 
+const electronModulePath = path.join(remoteProcess.resourcesPath, '/../node_modules/electron')
+const electronPath = require(electronModulePath)
+
 module.exports = createModel
 
 function createModel () {
@@ -67,7 +70,7 @@ function createModel () {
         const db = toilet(dbFile)
         Multidat(db, {
           worker: true,
-          execPath: remoteProcess.execPath,
+          execPath: electronPath,
           stdout: ConsoleStream(),
           stderr: ConsoleStream()
         }, next)
