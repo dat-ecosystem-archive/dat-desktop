@@ -69,7 +69,7 @@ function createModel () {
           worker: true,
           execPath: remoteProcess.execPath,
           stdout: ConsoleStream(),
-          stderr: ConsoleStream(),
+          stderr: ConsoleStream()
         }, next)
       },
       function (multidat, next) {
