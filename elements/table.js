@@ -221,7 +221,6 @@ function row (dat, send) {
             <span class="">${dat.metadata.author || 'Anonymous'} • </span>
             <span>
               ${dat.owner ? 'Read & Write' : 'Read-only'}
-              ${title}
             </span>
           </p>
         </div>
