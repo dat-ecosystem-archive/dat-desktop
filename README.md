@@ -1,7 +1,7 @@
 
 # Dat Desktop
 
-Desktop app for [Dat](https://datproject.org/).
+Desktop app for [Dat](https://datproject.org/). [Install instructions](https://datproject.org/install).
 
 ![screenshot](screenshot.png)
 
