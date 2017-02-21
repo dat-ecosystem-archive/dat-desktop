@@ -15,6 +15,7 @@ const windowStyles = {
   height: 600,
   titleBarStyle: 'hidden-inset',
   minWidth: 640,
+  minHeight: 395,
   backgroundColor: colors.neutral
 }
 
