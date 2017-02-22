@@ -89,17 +89,12 @@ function mainView (state, prev, send) {
       <div>
         ${sprite()}
         ${WelcomeScreen({
-          onexit: () => send('mainView:toggleWelcomeScreen', { toggle: false }),
-          onload: main => {
+          onexit: () => {
+            window.removeEventListener('keydown', captureKeyEvent)
+            send('mainView:toggleWelcomeScreen', { toggle: false })
+          },
+          onload: () => {
             window.addEventListener('keydown', captureKeyEvent)
-
-            function captureKeyEvent (e) {
-              const key = e.code
-              if (key === 'Enter' || key === 'Space') {
-                window.removeEventListener('keydown', captureKeyEvent)
-                send('mainView:toggleWelcomeScreen', { toggle: false })
-              }
-            }
           }
         })}
       </div>
@@ -123,6 +118,14 @@ function mainView (state, prev, send) {
       ${Table(dats, send)}
     </div>
   `
+
+  function captureKeyEvent (e) {
+    const key = e.code
+    if (key === 'Enter' || key === 'Space') {
+      window.removeEventListener('keydown', captureKeyEvent)
+      send('mainView:toggleWelcomeScreen', { toggle: false })
+    }
+  }
 }
 
 function WelcomeScreen (methods) {
