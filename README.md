@@ -1,15 +1,43 @@
+<h1 align="center">Dat Desktop</h1>
 
-# Dat Desktop
+<div align="center">
+  <strong>Peer to peer data sharing app built for humans.</strong>
+</div>
 
-Desktop app for [Dat](https://datproject.org/). [Install instructions](https://datproject.org/install).
+<br />
+
+<div align="center">
+  <!-- Build Status -->
+  <a href="https://travis-ci.org/datproject/dat-desktop">
+    <img src="https://img.shields.io/travis/datproject/dat-desktop/master.svg?style=flat-square"
+      alt="Build Status" />
+  </a>
+  <!-- Standard -->
+  <a href="https://codecov.io/github/yoshuawuyts/choo">
+    <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square"
+      alt="Standard" />
+  </a>
+</div>
 
 ![screenshot](screenshot.png)
 
-[![Build Status](https://travis-ci.org/datproject/dat-desktop.svg?branch=master)](https://travis-ci.org/datproject/dat-desktop)
+## Table of Content
+- [Download](#download)
+- [Commands](#commands)
+- [Directory Structure](#directory-structure)
+- [FAQ](#faq)
+- [License](#license)
 
-## Installing
-Visit the [Dat installation page](https://datproject.org/install) for
-download instructions. Currently only MacOS is supported.
+## Download
+
+To run the app locally check out our [download
+guide](https://datproject.org/install) or install directly from the command
+line using [Homebrew Cask](https://caskroom.github.io). Currently only MacOS is
+supported.
+
+```sh
+$ brew update && brew cask install dat
+```
 
 ## Commands
 
