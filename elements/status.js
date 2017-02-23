@@ -74,7 +74,7 @@ const progressbar = css`
 `
 module.exports = function (dat, stats, send) {
   if (dat.owner && dat.importer) {
-    return html`<div>Watching for updates...</div>`
+    return html`<div>Watching for updates…</div>`
   }
   var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
@@ -85,7 +85,7 @@ module.exports = function (dat, stats, send) {
   var progressText = (stats.progress === 100)
     ? `Download Complete. ↑ ${speed(dat.network.uploadSpeed)}`
     : (dat.network.connected) ? `↓ ${speed(netStats.downloadSpeed)} ↑ ${speed(netStats.uploadSpeed)}`
-    : 'waiting for peers...'
+    : 'waiting for peers…'
   function speed (n) {
     return (n || 0) + 'kB/s'
   }
