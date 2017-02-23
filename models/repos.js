@@ -9,7 +9,7 @@ const minimist = require('minimist')
 const toilet = require('toiletdb')
 const assert = require('assert')
 const mkdirp = require('mkdirp')
-const open = require('open')
+const shell = require('electron').shell
 const path = require('path')
 const ConfirmModal = require('../elements/confirm-modal')
 const LinkModal = require('../elements/link-modal')
@@ -121,7 +121,8 @@ function createModel () {
   // open the dat archive in the native filesystem explorer
   function openDirectory (state, data, send, done) {
     assert.ok(data.path, 'repos-model.openDirectory: data.path should exist')
-    open(data.path, done)
+    shell.openItem(data.path)
+    done()
   }
 
   // choose a directory and convert it to a dat archive
