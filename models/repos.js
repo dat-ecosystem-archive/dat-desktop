@@ -16,14 +16,6 @@ const LinkModal = require('../elements/link-modal')
 const ConsoleStream = require('console-stream')
 const Worker = require('dat-worker')
 
-let electronPath
-
-try {
-  electronPath = require(path.join(remoteProcess.resourcesPath, '/../node_modules/electron'))
-} catch (_) {
-  electronPath = require(path.join(app.getAppPath(), '/node_modules/electron'))
-}
-
 module.exports = createModel
 
 function createModel () {
@@ -76,7 +68,6 @@ function createModel () {
         const db = toilet(dbFile)
         Multidat(db, {
           dat: Worker,
-          execPath: electronPath,
           stdout: ConsoleStream(),
           stderr: ConsoleStream()
         }, next)
