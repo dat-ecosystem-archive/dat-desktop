@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 usage () {
   printf 'Usage: scripts/build [-h]'
@@ -31,7 +31,7 @@ bundle () {
 
 postinstall () {
   printf '[scripts/build] installing app deps \n'
-  build_background
+  [ `uname` == 'Darwin' ] && build_background
   rebuild || exit 1
   bundle
 }
