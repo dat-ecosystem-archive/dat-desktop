@@ -11,6 +11,9 @@ const icon = require('./icon')
 const table = css`
   :host {
     width: 100%;
+    tr:odd:hover td {
+      background: red;
+    }
     th,
     td {
       padding-right: .75rem;
@@ -34,7 +37,7 @@ const table = css`
     }
     td {
       height: 4rem;
-      vertical-align: middle;
+      vertical-align: top;
       padding-top: 1rem;
     }
     tr:hover td {
@@ -63,7 +66,7 @@ const table = css`
       width: 26vw;
     }
     .row-action {
-      height: 2rem;
+      height: 1.5rem;
       display: inline-block;
       border: 0;
       background: transparent;
@@ -115,8 +118,8 @@ function tableElement (dats, send) {
             <th class="cell-1"></th>
             <th class="tl cell-2">Link</th>
             <th class="tl cell-3">Status</th>
-            <th class="tr cell-4">Size</th>
-            <th class="tr cell-5">Network</th>
+            <th class="tl cell-4">Size</th>
+            <th class="tl cell-5">Peers</th>
             <th class="cell-6"></th>
           </tr>
         </thead>
@@ -214,7 +217,7 @@ function row (dat, send) {
       </td>
       <td class="cell-2">
         <div class="cell-truncate">
-          <h2 class="normal truncate">
+          <h2 class="f6 normal truncate">
             ${title}
           </h2>
           <p class="f7 color-neutral-60 truncate">
