@@ -81,11 +81,20 @@ module.exports = function (dat, stats, send) {
     : (stats.state === 'paused')
       ? 'line-paused'
       : 'line-complete'
+  var netStats = dat.stats.network
+  var progressText = (stats.progress === 100)
+    ? `Download Complete. ↑ ${speed(dat.network.uploadSpeed)}`
+    : (dat.network.connected) ? `↓ ${speed(netStats.downloadSpeed)} ↑ ${speed(netStats.uploadSpeed)}`
+    : 'waiting for peers...'
+  function speed (n) {
+    return (n || 0) + 'kB/s'
+  }
 
   return html`
     <div class="${progressbar}">
       <div class="counter">
         ${stats.progress}%
+        ${progressText}
       </div>
       <div class="bar">
         <div class="line ${progressbarLine}" style="width: ${stats.progress}%">
