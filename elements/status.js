@@ -87,7 +87,7 @@ module.exports = function (dat, stats, send) {
     : (dat.network.connected) ? `↓ ${speed(netStats.downloadSpeed)} ↑ ${speed(netStats.uploadSpeed)}`
     : 'waiting for peers...'
   function speed (n) {
-    return (n || 0) + 'kB/s'
+    return `${n || 0}kB/s`
   }
 
   return html`
