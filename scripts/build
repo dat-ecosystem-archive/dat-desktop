@@ -32,7 +32,7 @@ bundle () {
 postinstall () {
   printf '[scripts/build] installing app deps \n'
   build_background
-  rebuild
+  rebuild || exit 1
   bundle
 }
 
