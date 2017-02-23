@@ -89,7 +89,13 @@ function mainView (state, prev, send) {
       <div>
         ${sprite()}
         ${WelcomeScreen({
-          onexit: () => send('mainView:toggleWelcomeScreen', { toggle: false })
+          onexit: () => {
+            window.removeEventListener('keydown', captureKeyEvent)
+            send('mainView:toggleWelcomeScreen', { toggle: false })
+          },
+          onload: () => {
+            window.addEventListener('keydown', captureKeyEvent)
+          }
         })}
       </div>
     `
@@ -112,12 +118,22 @@ function mainView (state, prev, send) {
       ${Table(dats, send)}
     </div>
   `
+
+  function captureKeyEvent (e) {
+    const key = e.code
+    if (key === 'Enter' || key === 'Space') {
+      window.removeEventListener('keydown', captureKeyEvent)
+      send('mainView:toggleWelcomeScreen', { toggle: false })
+    }
+  }
 }
 
 function WelcomeScreen (methods) {
   const onExit = methods.onexit
+  const onLoad = methods.onload
+
   return html`
-    <main class="${welcome}">
+    <main class="${welcome}" onload=${onLoad}>
       <img src="./public/img/logo-dat-desktop.svg" alt="" class="">
       <p class="mv4">
         Share data on the distributed web.
