@@ -2,15 +2,13 @@
 
 const html = require('choo/html')
 const css = require('sheetify')
-const xtend = require('xtend')
+const icon = require('./icon')
 
-const iconElement = require('./icon')
-
-const baseStyles = css`
+const prefix = css`
   :host {
     text-transform: uppercase;
     letter-spacing: .025em;
-    .btn-inner-wrapper {
+    .btn-wrapper {
       display: flex;
       flex-wrap: nowrap;
       flex-direction: row;
@@ -19,11 +17,10 @@ const baseStyles = css`
     }
   }
   .icon-only {
-    .btn-text { display: none }
+    .btn-text {
+      display: none;
+    }
   }
-`
-
-var greenStyles = css`
   .filled-green {
     padding: .5rem .75rem;
     font-size: .75rem;
@@ -35,9 +32,6 @@ var greenStyles = css`
     background-color: var(--color-green-hover);
     color: var(--color-white);
   }
-`
-
-var redStyles = css`
   .filled-red {
     padding: .5rem .75rem;
     font-size: .75rem;
@@ -49,9 +43,6 @@ var redStyles = css`
     background-color: var(--color-red-hover);
     color: var(--color-white);
   }
-`
-
-var plainStyles = css`
   .plain {
     padding: .5rem .75rem;
     font-size: .75rem;
@@ -64,88 +55,33 @@ var plainStyles = css`
   }
 `
 
-buttonElement.green = greenButton
-buttonElement.red = redButton
-module.exports = plainButton
+module.exports = (props, click) => {
+  if (typeof click === 'function') props.click = click
 
-// States:
-// - Text only
-// - Icon only
-// - Text and icon
-function buttonElement (innerText, opts) {
-  if (!opts) {
-    opts = innerText
-    innerText = ''
-  }
-
-  var iconId = opts.icon
-  var innerHTML = null
-
-  if (innerText && !iconId) {
-    innerHTML = html`
-      <div class="btn-inner-wrapper">
-        <span class="btn-text">${innerText}</span>
-      </div>
-    `
-  } else if (!innerText && iconId) {
-    innerHTML = html`
-      <div class="btn-inner-wrapper">
-        ${iconElement({ id: iconId })}
-      </div>
-    `
+  var child
+  if (props.icon) {
+    child = html`
+    <div class="btn-wrapper">
+      ${icon({
+        id: props.icon
+      })}
+      <span class="btn-text ml1">${props.text}</span>
+    </div>`
   } else {
-    innerHTML = html`
-      <div class="btn-inner-wrapper">
-        ${iconElement({ id: iconId })}
-        <span class="btn-text ml1">${innerText}</span>
-      </div>
-    `
+    child = html`
+    <div class="btn-wrapper">
+      <span class="btn-text">${props.text}</span>
+    </div>`
   }
-
-  var defaultProps = {
-    'aria-label': opts.text,
-    'title': opts.text
-  }
-
-  var buttonProps = xtend(defaultProps, opts)
-  buttonProps.class = 'pointer ' + baseStyles + ' ' + buttonProps.class
 
   return html`
-    <button ${buttonProps}>
-      ${innerHTML}
+    <button
+      onclick=${props.click}
+      class="pointer ${prefix} ${props.style || ''} ${props.cls || ''}"
+      title=${props.title || props.text}
+      aria-label=${props.ariaLabel || props.text}
+      >
+      ${child}
     </button>
   `
-}
-
-function greenButton (innerText, opts) {
-  if (!opts) {
-    opts = innerText
-    innerText = ''
-  }
-
-  opts = opts || {}
-  opts.class = (opts.class) ? greenStyles + ' ' + opts.class : greenStyles
-  return buttonElement(innerText, opts)
-}
-
-function redButton (innerText, opts) {
-  if (!opts) {
-    opts = innerText
-    innerText = ''
-  }
-
-  opts = opts || {}
-  opts.class = (opts.class) ? redStyles + ' ' + opts.class : redStyles
-  return buttonElement(innerText, opts)
-}
-
-function plainButton (innerText, opts) {
-  if (!opts) {
-    opts = innerText
-    innerText = ''
-  }
-
-  opts = opts || {}
-  opts.class = (opts.class) ? plainStyles + ' ' + opts.class : plainStyles
-  return buttonElement(innerText, opts)
 }

@@ -4,8 +4,8 @@ const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
+const button = require('./newButton')
 const status = require('./status')
-const button = require('./button')
 const icon = require('./icon')
 
 const table = css`
@@ -173,28 +173,22 @@ function row (dat, send) {
     complete: icon({id: 'hexagon-up', cls: 'color-green hover-color-green-hover'})
   }[stats.state]
 
-  var finderButton = button({
-    text: 'Open in Finder',
-    style: 'icon-only',
-    icon: 'open-in-finder',
-    cls: 'row-action',
+  var finderButton = button.icon('Open in Finder', {
+    icon: icon('open-in-finder'),
+    class: 'row-action',
     click: () => send('repos:open', dat)
   })
 
-  var linkButton = button({
-    text: 'Copy Dat Link',
-    style: 'icon-only',
-    icon: 'link',
-    cls: 'row-action',
+  var linkButton = button.icon('Share Dat', {
+    icon: icon('link'),
+    class: 'row-action',
     click: () => send('repos:share', dat)
   })
 
-  var deleteButton = button({
-    text: 'Remove Dat',
-    style: 'icon-only',
-    icon: 'delete',
-    cls: 'row-action',
-    click: function (e) {
+  var deleteButton = button.icon('Remove Dat', {
+    icon: icon('my-icon'),
+    class: 'row-action',
+    onclick: function (e) {
       // TODO: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
       var target = e.target
@@ -210,7 +204,7 @@ function row (dat, send) {
 
   var networkIcon = icon({
     id: 'network',
-    cls: (peers > 1)
+    class: (peers > 1)
       ? 'network-peers-many'
       : (peers > 0)
         ? 'network-peers-1'
