@@ -6,7 +6,7 @@ const css = require('sheetify')
 
 const button = require('./newButton')
 const status = require('./status')
-const icon = require('./icon')
+const icon = require('./newIcon')
 
 const table = css`
   :host {
@@ -168,9 +168,9 @@ function row (dat, send) {
         : 'loading'
 
   const hexContent = {
-    loading: icon({id: 'hexagon-down', cls: 'color-blue hover-color-blue-hover'}),
-    paused: icon({id: 'hexagon-x', cls: 'color-neutral-30 hover-color-neutral-40'}),
-    complete: icon({id: 'hexagon-up', cls: 'color-green hover-color-green-hover'})
+    loading: icon('hexagon-down', {class: 'color-blue hover-color-blue-hover'}),
+    paused: icon('hexagon-x', {class: 'color-neutral-30 hover-color-neutral-40'}),
+    complete: icon('hexagon-up', {class: 'color-green hover-color-green-hover'})
   }[stats.state]
 
   var finderButton = button.icon('Open in Finder', {
@@ -202,8 +202,7 @@ function row (dat, send) {
     }
   })
 
-  var networkIcon = icon({
-    id: 'network',
+  var networkIcon = icon('network', {
     class: (peers > 1)
       ? 'network-peers-many'
       : (peers > 0)

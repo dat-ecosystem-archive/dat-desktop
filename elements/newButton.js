@@ -5,8 +5,6 @@ const assert = require('assert')
 const css = require('sheetify')
 const xtend = require('xtend')
 
-const iconElement = require('./icon')
-
 const baseStyles = css`
   :host {
     text-transform: uppercase;
@@ -79,10 +77,10 @@ function buttonElement (innerText, opts) {
     innerText = ''
   }
 
-  var iconId = opts.icon
+  var icon = opts.icon
   var innerHTML = null
 
-  if (innerText && !iconId) {
+  if (innerText && !icon) {
     innerHTML = html`
       <div class="btn-inner-wrapper">
         <span class="btn-text">${innerText}</span>
@@ -91,7 +89,7 @@ function buttonElement (innerText, opts) {
   } else {
     innerHTML = html`
       <div class="btn-inner-wrapper">
-        ${iconElement({ id: iconId })}
+        ${icon}
         <span class="btn-text ml1">${innerText}</span>
       </div>
     `
