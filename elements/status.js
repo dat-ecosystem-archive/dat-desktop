@@ -9,8 +9,7 @@ const progressbar = css`
 
     min-width: 8rem;
     overflow: hidden;
-    padding-top: .85rem;
-    padding-bottom: .5rem;
+    padding-top: .4rem;
     .bar {
       height: var(--progress-height);
       width: calc(100% - var(--counter-width));
@@ -72,25 +71,49 @@ const progressbar = css`
     }
   }
 `
+
+const progressSubline = css`
+  :host {
+    .arrow {
+      vertical-align: top;
+    }
+  }
+`
+
 module.exports = function (dat, stats, send) {
   if (dat.owner && dat.importer) {
-    return html`<div>Watching for updates...</div>`
+    return html`<div>Watching for updates…</div>`
   }
   var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
     : (stats.state === 'paused')
       ? 'line-paused'
       : 'line-complete'
+  var netStats = dat.stats.network
+  var progressText = (stats.progress === 100)
+    ? `Complete. ↑ ${speed(dat.network.uploadSpeed)}`
+    : (dat.network.connected) ? html`<span><span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}</span>`
+    : 'waiting for peers…'
+  function speed (n) {
+    return `${n || 0}kB/s`
+  }
 
   return html`
-    <div class="${progressbar}">
-      <div class="counter">
-        ${stats.progress}%
-      </div>
-      <div class="bar">
-        <div class="line ${progressbarLine}" style="width: ${stats.progress}%">
+    <div>
+      <div class="${progressbar}">
+        <div class="counter">
+          ${stats.progress}%
+        </div>
+        <div class="bar">
+          <div class="line ${progressbarLine}" style="width: ${stats.progress}%">
+          </div>
         </div>
       </div>
+      <p class="f7 color-neutral-60 truncate">
+        <span class="${progressSubline}">
+          ${progressText}
+        </span>
+      </p>
     </div>
   `
 }

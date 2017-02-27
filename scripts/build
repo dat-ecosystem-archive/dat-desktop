@@ -1,13 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 usage () {
   printf 'Usage: scripts/build [-h]'
 }
 
 rebuild () {
-  printf '[scripts/build] rebuilding native deps \n'
   electron_version="$(electron --version | sed s/v//)"
   electron_abi="$(electron --abi)"
+  printf '[scripts/build] rebuilding native deps\n'
+  printf '[scripts/build] detected electron=%s abi=%s\n' "$electron_version" "$electron_abi"
   npm rebuild \
     --runtime=electron \
     --target="$electron_version" \
@@ -31,7 +32,7 @@ bundle () {
 
 postinstall () {
   printf '[scripts/build] installing app deps \n'
-  build_background
+  [ `uname` == 'Darwin' ] && build_background
   rebuild || exit 1
   bundle
 }
