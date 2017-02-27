@@ -2,7 +2,7 @@ const Modal = require('base-elements/modal')
 const html = require('choo/html')
 const css = require('sheetify')
 
-const button = require('./button')
+const button = require('./newButton')
 
 const prefix = css`
   :host {
@@ -35,11 +35,9 @@ function createWidget () {
   })
 
   function render (message, onexit) {
-    var exitButton = button({
-      text: 'Ok',
-      style: 'filled-green',
-      cls: 'fr ml3',
-      click: onexit
+    var exitButton = button.green('Ok', {
+      class: 'fr ml3',
+      onclick: onexit
     })
 
     return html`

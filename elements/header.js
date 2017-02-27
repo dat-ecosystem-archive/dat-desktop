@@ -3,8 +3,10 @@
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
-const button = require('./button')
+
+const button = require('./newButton')
 const datImport = require('./dat-import')
+const icon = require('./newIcon')
 
 module.exports = headerElement
 
@@ -76,17 +78,13 @@ function headerElement (props) {
 
   var importButton = datImport({ onsubmit: onimport })
 
-  var createButton = button({
-    icon: 'create-new-dat',
-    text: 'Create New Dat',
-    cls: 'ml2 b--transparent header-action header-action-no-border',
-    click: oncreate
+  var createButton = button('Create New Dat', {
+    icon: icon('create-new-dat'),
+    class: 'ml2 b--transparent header-action header-action-no-border',
+    onclick: oncreate
   })
 
-  var loginButton = button({
-    text: 'Log In',
-    cls: 'ml2 header-action log-in-button'
-  })
+  var loginButton = button('Log In', { class: 'ml2 header-action log-in-button' })
 
   var menuButton = button({
     icon: 'menu',

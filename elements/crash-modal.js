@@ -52,11 +52,9 @@ function createWidget () {
             possible.
           </p>
           <p>
-            ${button({
-              text: 'Exit Application',
-              style: 'filled-green',
-              cls: 'fr ml3',
-              click: onexit
+            ${button.green('Exit Application', {
+              class: 'fr ml3',
+              onclick: onexit
             })}
           </p>
         </section>
@@ -67,17 +65,13 @@ function createWidget () {
             be reversed.
           </p>
           <p>
-            ${button({
-              text: 'Clear Database & exit',
-              style: 'filled-red',
-              cls: 'fr ml3',
-              click: clearDatabase
+            ${button.red('Clear Database & exit', {
+              class: 'fr ml3',
+              onclick: clearDatabase
             })}
-            ${button({
-              text: 'Delete All Data & exit',
-              style: 'filled-red',
-              cls: 'fr ml3',
-              click: deleteData
+            ${button.red('Delete All Data & exit', {
+              class: 'fr ml3',
+              onclick: deleteData
             })}
           </p>
         </section>

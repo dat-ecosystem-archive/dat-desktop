@@ -3,8 +3,8 @@ const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
-const button = require('./button')
-const icon = require('./icon')
+const button = require('./newButton')
+const icon = require('./newIcon')
 
 const prefix = css`
   :host {
@@ -46,18 +46,14 @@ function createWidget () {
   function render (cb) {
     assert.equal(typeof cb, 'function', 'elements/confirm-modal: cb should be a function')
 
-    var deleteButton = button({
-      text: 'Yes, Remove Dat',
-      style: 'filled-green',
-      cls: 'fr ml3',
-      click: ondelete
+    var deleteButton = button.green('Yes, Remove Dat', {
+      class: 'fr ml3',
+      onclick: ondelete
     })
 
-    var exitButton = button({
-      text: 'No, Cancel',
-      style: 'plain',
-      cls: 'fr',
-      click: onexit
+    var exitButton = button('No, Cancel', {
+      class: 'fr',
+      onclick: onexit
     })
 
     return html`
@@ -78,7 +74,7 @@ function createWidget () {
           onclick=${onexit}
           class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
           aria-label="Close Modal">
-          ${icon({id: 'cross'})}
+          ${icon('cross')}
         </button>
       </section>
     `
