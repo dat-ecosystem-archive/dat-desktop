@@ -4,10 +4,10 @@ const html = require('choo/html')
 const css = require('sheetify')
 
 const Header = require('../elements/header')
-const button = require('../elements/button')
+const button = require('../elements/newButton')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
-const icon = require('../elements/icon')
+const icon = require('../elements/newIcon')
 
 const skeleton = css`
   :host {
@@ -39,15 +39,6 @@ const skeleton = css`
       top: 6rem;
       right: 8.5rem;
       color: red;
-    }
-    .icon-create-new-dat,
-    .icon-link {
-      width: 2rem;
-      height: 2rem;
-      fill: currentColor;
-    }
-    .icon-link {
-      margin-bottom: -.75rem;
     }
   }
 `
@@ -129,7 +120,7 @@ function mainView (state, prev, send) {
 }
 
 function WelcomeScreen (methods) {
-  const onExit = methods.onexit
+  const onexit = methods.onexit
   const onLoad = methods.onload
 
   return html`
@@ -138,12 +129,7 @@ function WelcomeScreen (methods) {
       <p class="mv4">
         Share data on the distributed web.
       </p>
-      ${button({
-        text: 'Get Started',
-        style: 'filled-green',
-        cls: '',
-        click: onExit
-      })}
+      ${button.green('Get Started', { onclick: onexit })}
     </main>
   `
 }
@@ -155,10 +141,7 @@ function EmptyState () {
       <div class="tutorial">
         <img src="./public/img/dotted-lines.svg" alt="" class="dotted-lines">
         <div class="link">
-          ${icon({
-            id: 'link',
-            cls: 'color-blue-disabled'
-          })}
+          ${icon('link', { class: 'color-blue-disabled' })}
           <h3 class="f4 ttu mt0 mb0 color-blue-disabled">Import Dat</h3>
           <p class="f7 color-neutral-40">
             Download an existing dataset
@@ -167,10 +150,7 @@ function EmptyState () {
           </p>
         </div>
         <div class="tr create-new-dat">
-          ${icon({
-            id: 'create-new-dat',
-            cls: 'color-green-disabled'
-          })}
+          ${icon('create-new-dat', { class: 'color-green-disabled' })}
           <h3 class="f4 ttu mt0 mb0 color-green-disabled">Create New Dat</h3>
           <p class="f7 color-neutral-40">
             … or select one of your local
