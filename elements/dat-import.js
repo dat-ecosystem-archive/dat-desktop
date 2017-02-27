@@ -3,7 +3,7 @@
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
-const icon = require('./icon')
+const icon = require('./newIcon')
 
 module.exports = datImportElement
 
@@ -64,11 +64,6 @@ function datImportElement (props) {
 
   assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
 
-  const linkIcon = icon({
-    id: 'link',
-    cls: 'absolute top-0 bottom-0 left-0'
-  })
-
   return html`
     <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
       <input name="dat-import"
@@ -76,7 +71,7 @@ function datImportElement (props) {
         placeholder="Import dat"
         onkeydown=${onKeyDown}
         class="input-reset">
-      ${linkIcon}
+      ${icon('link', { class: 'absolute top-0 bottom-0 left-0' })}
     </label>
   `
 
