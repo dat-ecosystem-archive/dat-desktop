@@ -4,10 +4,10 @@ const html = require('choo/html')
 const css = require('sheetify')
 
 const Header = require('../elements/header')
-const button = require('../elements/newButton')
+const button = require('../elements/button')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
-const icon = require('../elements/newIcon')
+const icon = require('../elements/icon')
 
 const skeleton = css`
   :host {

@@ -2,7 +2,7 @@ const Modal = require('base-elements/modal')
 const html = require('choo/html')
 const css = require('sheetify')
 
-const button = require('./newButton')
+const button = require('./button')
 
 const prefix = css`
   :host {

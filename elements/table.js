@@ -4,9 +4,9 @@ const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
-const button = require('./newButton')
+const button = require('./button')
 const status = require('./status')
-const icon = require('./newIcon')
+const icon = require('./icon')
 
 const table = css`
   :host {

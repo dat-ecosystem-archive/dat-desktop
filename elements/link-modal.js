@@ -3,7 +3,7 @@ const Modal = require('base-elements/modal')
 const morph = require('nanomorph')
 const html = require('choo/html')
 const css = require('sheetify')
-const icon = require('./newIcon')
+const icon = require('./icon')
 
 const prefix = css`
   :host {

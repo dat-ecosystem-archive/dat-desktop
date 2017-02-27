@@ -4,9 +4,9 @@ const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
-const button = require('./newButton')
+const button = require('./button')
 const datImport = require('./dat-import')
-const icon = require('./newIcon')
+const icon = require('./icon')
 
 module.exports = headerElement
 

@@ -3,8 +3,8 @@ const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
-const button = require('./newButton')
-const icon = require('./newIcon')
+const button = require('./button')
+const icon = require('./icon')
 
 const prefix = css`
   :host {
