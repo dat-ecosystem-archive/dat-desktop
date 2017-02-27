@@ -186,7 +186,7 @@ function row (dat, send) {
   })
 
   var deleteButton = button.icon('Remove Dat', {
-    icon: icon('my-icon'),
+    icon: icon('delete'),
     class: 'row-action',
     onclick: function (e) {
       // TODO: we're relying on DOM ordering here. Fix this in choo by moving
