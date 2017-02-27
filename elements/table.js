@@ -44,7 +44,7 @@ const table = css`
       background-color: var(--color-neutral--04);
     }
     .cell-1 {
-      width: 5rem;
+      width: 4rem;
     }
     .cell-2 {
       width: 17rem;
@@ -94,15 +94,24 @@ const table = css`
       vertical-align: middle;
       width: 1.1em;
       max-height: 1.6em;
+      svg {
+        border: 1px solid red;
+      }
+      svg polygon {
+        fill: inherit;
+      }
     }
     .network-peers-many {
-      color: var(--color-green);
+      --polygon-1-color: var(--color-green);
+      --polygon-2-color: var(--color-green);
+      --polygon-3-color: var(--color-green);
     }
     .network-peers-1 {
-      color: var(--color-yellow);
+      --polygon-1-color: var(--color-yellow);
+      --polygon-2-color: var(--color-yellow);
     }
     .network-peers-0 {
-      color: var(--color-red);
+      --polygon-1-color: var(--color-red);
     }
   }
 `
@@ -159,9 +168,9 @@ function row (dat, send) {
         : 'loading'
 
   const hexContent = {
-    loading: icon({id: 'hexagon-down', cls: 'color-blue'}),
-    paused: icon({id: 'hexagon-pause', cls: 'color-neutral-30'}),
-    complete: icon({id: 'hexagon-up', cls: 'color-green'})
+    loading: icon({id: 'hexagon-down', cls: 'color-blue hover-color-blue-hover'}),
+    paused: icon({id: 'hexagon-x', cls: 'color-neutral-30 hover-color-neutral-40'}),
+    complete: icon({id: 'hexagon-up', cls: 'color-green hover-color-green-hover'})
   }[stats.state]
 
   var finderButton = button({
