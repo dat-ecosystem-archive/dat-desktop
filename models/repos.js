@@ -121,8 +121,8 @@ function createModel () {
   // open the dat archive in the native filesystem explorer
   function openDirectory (state, data, send, done) {
     assert.ok(data.path, 'repos-model.openDirectory: data.path should exist')
-    shell.openItem(data.path)
-    done()
+    var pathname = 'file://' + path.resolve(data.path)
+    shell.openExternal(pathname, done)
   }
 
   // choose a directory and convert it to a dat archive
