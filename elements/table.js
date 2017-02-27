@@ -176,20 +176,20 @@ function row (dat, send) {
   var finderButton = button.icon('Open in Finder', {
     icon: icon('open-in-finder'),
     class: 'row-action',
-    click: () => send('repos:open', dat)
+    onclick: () => send('repos:open', dat)
   })
 
   var linkButton = button.icon('Share Dat', {
     icon: icon('link'),
     class: 'row-action',
-    click: () => send('repos:share', dat)
+    onclick: () => send('repos:share', dat)
   })
 
   var deleteButton = button.icon('Remove Dat', {
     icon: icon('delete'),
     class: 'row-action',
     onclick: function (e) {
-      // TODO: we're relying on DOM ordering here. Fix this in choo by moving
+      // FIXME: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
       var target = e.target
       while (target.parentNode) {

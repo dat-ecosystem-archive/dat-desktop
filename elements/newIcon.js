@@ -11,7 +11,6 @@ var prefix = css`
 module.exports = iconElement
 
 function iconElement (iconName, opts) {
-  console.log(iconName)
   opts = opts || {}
 
   assert.equal(typeof iconName, 'string', 'elements/icon: iconName should be type string')
