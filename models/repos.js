@@ -16,6 +16,8 @@ const LinkModal = require('../elements/link-modal')
 const ConsoleStream = require('console-stream')
 const Worker = require('dat-worker')
 
+function noop () {}
+
 module.exports = createModel
 
 function createModel () {
@@ -82,6 +84,9 @@ function createModel () {
         manager = createManager(multidat, function (err, dats) {
           if (err) return done(err)
           send('repos:update', dats, next)
+        })
+        app.on('before-quit', function () {
+          manager.closeAll()
         })
       },
       function (_, next) {
@@ -190,7 +195,8 @@ function createManager (multidat, onupdate) {
 
   return {
     create: create,
-    close: close
+    close: close,
+    closeAll: closeAll
   }
 
   function create (dir, opts, cb) {
@@ -226,6 +232,12 @@ function createManager (multidat, onupdate) {
     })
   }
 
+  function closeAll () {
+    multidat.list().forEach(function (dat) {
+      multidat.close(dat.key, noop)
+    })
+  }
+
   function update () {
     var dats = multidat.list().slice()
     onupdate(null, dats)
@@ -243,7 +255,6 @@ function createManager (multidat, onupdate) {
 
     dat.on('update', update)
 
-    app.on('before-quit', () => dat.close())
     window.addEventListener('beforeunload', () => dat.close())
     process.on('uncaughtException', () => dat.close())
   }
