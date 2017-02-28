@@ -168,10 +168,30 @@ function row (dat, send) {
         ? 'paused'
         : 'loading'
 
+  const togglePause = () => send('repos:toggle-pause', dat)
+
   const hexContent = {
-    loading: icon('hexagon-down', {class: 'color-blue hover-color-blue-hover'}),
-    paused: icon('hexagon-x', {class: 'color-neutral-30 hover-color-neutral-40'}),
-    complete: icon('hexagon-up', {class: 'color-green hover-color-green-hover'})
+    loading: button({
+      text: '',
+      style: 'icon-only',
+      icon: 'hexagon-down',
+      cls: 'color-blue hover-color-blue-hover',
+      click: togglePause
+    }),
+    paused: button({
+      text: '',
+      style: 'icon-only',
+      icon: 'hexagon-x',
+      cls: 'color-neutral-30 hover-color-neutral-40',
+      click: togglePause
+    }),
+    complete: button({
+      text: '',
+      style: 'icon-only',
+      icon: 'hexagon-up',
+      cls: 'color-green hover-color-green-hover',
+      click: togglePause
+    })
   }[stats.state]
 
   var finderButton = button.icon('Open in Finder', {
