@@ -95,7 +95,7 @@ module.exports = function (dat, stats, send) {
     : (dat.network.connected) ? html`<span><span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}</span>`
     : 'waiting for peers…'
   function speed (n) {
-    return `${n || 0}kB/s`
+    return `${Math.round((n || 0) / 1024)}kB/s`
   }
 
   return html`
