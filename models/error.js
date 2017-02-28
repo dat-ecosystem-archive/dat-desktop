@@ -1,8 +1,7 @@
-const version = require('../package.json').version
 const ipc = require('electron').ipcRenderer
 const xhr = require('xhr')
-const CrashModal = require('../elements/crash-modal')
-const ErrorModal = require('../elements/error-modal')
+const version = require('../package.json').version
+const Modal = require('../elements/modal')
 
 module.exports = model
 
@@ -24,7 +23,7 @@ function model () {
 
 function display (state, error, send, done) {
   const message = error.message || error
-  const modal = ErrorModal()(message)
+  const modal = Modal.error()(message)
   document.body.appendChild(modal)
 }
 
@@ -49,7 +48,7 @@ function onUncaughtException (send, done) {
       if (err) console.error(err)
     })
 
-    const modal = CrashModal()(() => {
+    const modal = Modal.crash()(() => {
       send('error:quit', done)
     })
     document.body.appendChild(modal)
