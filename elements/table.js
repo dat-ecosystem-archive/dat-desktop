@@ -90,6 +90,7 @@ const table = css`
       }
     }
     .icon-network {
+      display: inline-block;
       color: var(--color-neutral-20);
       vertical-align: middle;
       width: 1.1em;
