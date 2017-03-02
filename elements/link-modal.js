@@ -95,6 +95,7 @@ const input = css`
       top: 2rem;
     }
     .icon-check {
+      display: inline-block;
       width: var(--icon-height);
       height: .875rem;
       vertical-align: -.15rem;
@@ -151,13 +152,13 @@ function createModal () {
         </h3>
         <label for="dat-link" class="relative mt4 mb4 ${input}">
           <p class="f7 mt0 mb0 tr absolute confirmation ${confirmClass}">
-            ${icon({id: 'check'})}
+            ${icon('check')}
             Link copied to clipboard
           </p>
           <input name="dat-link" type="text" value=${link} class="relative dib pa0 dat-input-input">
-          ${icon({id: 'link'})}
+          ${icon('link')}
           <button class="absolute pointer dat-input-button" title="Copy to Clipboard" aria-label="Copy to Clipboard" onclick=${onclick}>
-            ${icon({id: 'clipboard'})}
+            ${icon('clipboard')}
           </button>
         </label>
         <p class="f7 color-neutral-70">
@@ -167,7 +168,7 @@ function createModal () {
           onclick=${onexit}
           class="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
           aria-label="Close Modal">
-          ${icon({id: 'cross'})}
+          ${icon('cross')}
         </button>
       </section>
     `

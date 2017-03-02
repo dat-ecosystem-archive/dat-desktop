@@ -4,8 +4,8 @@ const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
-const status = require('./status')
 const button = require('./button')
+const status = require('./status')
 const icon = require('./icon')
 
 const table = css`
@@ -90,6 +90,7 @@ const table = css`
       }
     }
     .icon-network {
+      display: inline-block;
       color: var(--color-neutral-20);
       vertical-align: middle;
       width: 1.1em;
@@ -168,34 +169,28 @@ function row (dat, send) {
         : 'loading'
 
   const hexContent = {
-    loading: icon({id: 'hexagon-down', cls: 'color-blue hover-color-blue-hover'}),
-    paused: icon({id: 'hexagon-x', cls: 'color-neutral-30 hover-color-neutral-40'}),
-    complete: icon({id: 'hexagon-up', cls: 'color-green hover-color-green-hover'})
+    loading: icon('hexagon-down', {class: 'color-blue hover-color-blue-hover'}),
+    paused: icon('hexagon-x', {class: 'color-neutral-30 hover-color-neutral-40'}),
+    complete: icon('hexagon-up', {class: 'color-green hover-color-green-hover'})
   }[stats.state]
 
-  var finderButton = button({
-    text: 'Open in Finder',
-    style: 'icon-only',
-    icon: 'open-in-finder',
-    cls: 'row-action',
-    click: () => send('repos:open', dat)
+  var finderButton = button.icon('Open in Finder', {
+    icon: icon('open-in-finder'),
+    class: 'row-action',
+    onclick: () => send('repos:open', dat)
   })
 
-  var linkButton = button({
-    text: 'Copy Dat Link',
-    style: 'icon-only',
-    icon: 'link',
-    cls: 'row-action',
-    click: () => send('repos:share', dat)
+  var linkButton = button.icon('Share Dat', {
+    icon: icon('link'),
+    class: 'row-action',
+    onclick: () => send('repos:share', dat)
   })
 
-  var deleteButton = button({
-    text: 'Remove Dat',
-    style: 'icon-only',
-    icon: 'delete',
-    cls: 'row-action',
-    click: function (e) {
-      // TODO: we're relying on DOM ordering here. Fix this in choo by moving
+  var deleteButton = button.icon('Remove Dat', {
+    icon: icon('delete'),
+    class: 'row-action',
+    onclick: function (e) {
+      // FIXME: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
       var target = e.target
       while (target.parentNode) {
@@ -208,9 +203,8 @@ function row (dat, send) {
     }
   })
 
-  var networkIcon = icon({
-    id: 'network',
-    cls: (peers > 1)
+  var networkIcon = icon('network', {
+    class: (peers > 1)
       ? 'network-peers-many'
       : (peers > 0)
         ? 'network-peers-1'

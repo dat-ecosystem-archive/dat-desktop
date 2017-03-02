@@ -34,8 +34,7 @@
     "tachyons": "^4.5.4",
     "toiletdb": "^1.2.0",
     "xhr": "^2.3.3",
-    "xtend": "^4.0.1",
-    "yo-css": "^1.1.0"
+    "xtend": "^4.0.1"
   },
   "scripts": {
     "bundle": "./scripts/build bundle",
