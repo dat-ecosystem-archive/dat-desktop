@@ -7,8 +7,6 @@ const css = require('sheetify')
 var prefix = css`
   :host {
     display: block;
-    width: var(--icon-height);
-    height: var(--icon-height);
     fill: currentColor;
   }
 `
