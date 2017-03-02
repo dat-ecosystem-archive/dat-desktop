@@ -23,42 +23,42 @@ const baseStyles = css`
 `
 
 var greenStyles = css`
-  .filled-green {
+  :host {
     padding: .5rem .75rem;
     font-size: .75rem;
     background-color: var(--color-green);
     color: var(--color-neutral-04);
   }
-  .filled-green:hover,
-  .filled-green:focus {
+  :host:hover,
+  :host:focus {
     background-color: var(--color-green-hover);
     color: var(--color-white);
   }
 `
 
 var redStyles = css`
-  .filled-red {
+  :host {
     padding: .5rem .75rem;
     font-size: .75rem;
     background-color: var(--color-red);
     color: var(--color-neutral-04);
   }
-  .filled-red:hover,
-  .filled-red:focus {
+  :host:hover,
+  :host:focus {
     background-color: var(--color-red-hover);
     color: var(--color-white);
   }
 `
 
 var plainStyles = css`
-  .plain {
+  :host {
     padding: .5rem .75rem;
     font-size: .75rem;
     background-color: transparent;
     color: var(--color-neutral-40);
   }
-  .plain:hover,
-  .plain:focus {
+  :host:hover,
+  :host:focus {
     color: var(--color-neutral-70);
   }
 `

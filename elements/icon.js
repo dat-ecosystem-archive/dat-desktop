@@ -5,7 +5,12 @@ const assert = require('assert')
 const css = require('sheetify')
 
 var prefix = css`
-  :host { fill: currentColor }
+  :host {
+    display: block;
+    width: var(--icon-height);
+    height: var(--icon-height);
+    fill: currentColor;
+  }
 `
 
 module.exports = iconElement
