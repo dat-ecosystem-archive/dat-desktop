@@ -95,6 +95,7 @@ const input = css`
       top: 2rem;
     }
     .icon-check {
+      display: inline-block;
       width: var(--icon-height);
       height: .875rem;
       vertical-align: -.15rem;
