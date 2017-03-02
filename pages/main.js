@@ -1,11 +1,11 @@
 'use strict'
 
+const datIcons = require('dat-icons')
 const html = require('choo/html')
 const css = require('sheetify')
 
 const Header = require('../elements/header')
 const button = require('../elements/button')
-const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const icon = require('../elements/icon')
 
@@ -89,7 +89,7 @@ function mainView (state, prev, send) {
     document.title = 'Dat Desktop | Welcome'
     return html`
       <div>
-        ${sprite()}
+        ${datIcons()}
         ${WelcomeScreen({
           onexit: () => {
             window.removeEventListener('keydown', captureKeyEvent)
@@ -106,7 +106,7 @@ function mainView (state, prev, send) {
   if (!dats.length) {
     return html`
       <div>
-        ${sprite()}
+        ${datIcons()}
         ${header}
         ${EmptyState()}
       </div>
@@ -115,7 +115,7 @@ function mainView (state, prev, send) {
 
   return html`
     <div>
-      ${sprite()}
+      ${datIcons()}
       ${header}
       ${Table(dats, send)}
     </div>

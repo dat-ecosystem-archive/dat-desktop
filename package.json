@@ -15,7 +15,7 @@
     "dat-colors": "^3.3.0",
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
-    "dat-icons": "^1.12.0",
+    "dat-icons": "^2.0.0",
     "dat-worker": "^5.10.1",
     "electron-auto-updater": "^0.9.2",
     "electron-default-menu": "^1.0.0",
