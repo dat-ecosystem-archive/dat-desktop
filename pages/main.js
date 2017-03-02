@@ -34,11 +34,22 @@ const skeleton = css`
     .create-new-dat {
       top: 14.5rem;
       right: 4rem;
+      svg {
+        display: inline-block;
+        width: 2rem;
+        height: 2rem;
+      }
     }
     .link {
       top: 6rem;
       right: 8.5rem;
       color: red;
+      svg {
+        display: inline-block;
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: -.75rem;
+      }
     }
   }
 `
