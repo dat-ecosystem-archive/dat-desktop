@@ -203,82 +203,91 @@ function createModel () {
       dbPaused.write(key, true, done)
     }
   }
-}
 
-// creates a wrapper for all dats. Handles stats, and updates choo's internal
-// state whenever a mutation happens
-function createManager (multidat, onupdate) {
-  assert.ok(multidat, 'models/repos: multidat should exist')
-  assert.ok(onupdate, 'models/repos: onupdate should exist')
+  // creates a wrapper for all dats. Handles stats, and updates choo's internal
+  // state whenever a mutation happens
+  function createManager (multidat, onupdate) {
+    assert.ok(multidat, 'models/repos: multidat should exist')
+    assert.ok(onupdate, 'models/repos: onupdate should exist')
 
-  // add stats to all recreated dats
-  var dats = multidat.list()
-  dats.forEach(initDat)
-  onupdate(null, dats)
+    // add stats to all recreated dats
+    var dats = multidat.list()
+    dats.forEach(initDat)
+    onupdate(null, dats)
 
-  return {
-    create: create,
-    close: close,
-    closeAll: closeAll
-  }
-
-  function create (dir, opts, cb) {
-    if (!cb) {
-      cb = opts
-      opts = {}
+    return {
+      create: create,
+      close: close,
+      closeAll: closeAll
     }
 
-    assert.equal(typeof dir, 'string', 'models/repos: dat-manager: dir should be a string')
-    assert.equal(typeof opts, 'object', 'models/repos: dat-manager: opts should be a object')
-    assert.equal(typeof cb, 'function', 'models/repos: dat-manager: cb should be a function')
+    function create (dir, opts, cb) {
+      if (!cb) {
+        cb = opts
+        opts = {}
+      }
 
-    opts = Object.assign(opts, {
-      watch: true,
-      resume: true,
-      ignoreHidden: true,
-      compareFileContent: true
-    })
+      assert.equal(typeof dir, 'string', 'models/repos: dat-manager: dir should be a string')
+      assert.equal(typeof opts, 'object', 'models/repos: dat-manager: opts should be a object')
+      assert.equal(typeof cb, 'function', 'models/repos: dat-manager: cb should be a function')
 
-    multidat.create(dir, opts, function (err, dat) {
-      if (err) return cb(err)
-      initDat(dat)
-      update()
-      cb(null, dat)
-    })
-  }
+      opts = Object.assign(opts, {
+        watch: true,
+        resume: true,
+        ignoreHidden: true,
+        compareFileContent: true
+      })
 
-  function close (key, cb) {
-    multidat.close(key, function (err) {
-      if (err) return cb(err)
-      update()
-      cb()
-    })
-  }
+      multidat.create(dir, opts, function (err, dat) {
+        if (err) return cb(err)
+        initDat(dat)
+        update()
+        cb(null, dat)
+      })
+    }
 
-  function closeAll () {
-    multidat.list().forEach(function (dat) {
-      multidat.close(dat.key, noop)
-    })
-  }
+    function close (key, cb) {
+      multidat.close(key, function (err) {
+        if (err) return cb(err)
+        update()
+        cb()
+      })
+    }
 
-  function update () {
-    var dats = multidat.list().slice()
-    onupdate(null, dats)
-  }
+    function closeAll () {
+      multidat.list().forEach(function (dat) {
+        multidat.close(dat.key, noop)
+      })
+    }
 
-  function initDat (dat) {
-    dat.metadata = {}
+    function update () {
+      var dats = multidat.list().slice()
+      onupdate(null, dats)
+    }
 
-    multidat.readManifest(dat, function (_, manifest) {
-      if (!manifest) return
-      dat.metadata.title = manifest.title
-      dat.metadata.author = manifest.author
-      update()
-    })
+    function initDat (dat) {
+      const key = encoding.toStr(dat.key)
+      dbPaused.read((err, paused) => {
+        if (err) throw err
+        if (!paused[key]) {
+          dat.joinNetwork()
+        }
+      })
 
-    dat.on('update', update)
+      dat.metadata = {}
 
-    window.addEventListener('beforeunload', () => dat.close())
-    process.on('uncaughtException', () => dat.close())
+      multidat.readManifest(dat, function (_, manifest) {
+        if (!manifest) return
+        dat.metadata.title = manifest.title
+        dat.metadata.author = manifest.author
+        update()
+      })
+
+      dat.on('update', update)
+
+      window.addEventListener('beforeunload', () => dat.close())
+      process.on('uncaughtException', () => dat.close())
+    }
   }
 }
+
