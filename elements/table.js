@@ -11,9 +11,6 @@ const icon = require('./icon')
 const table = css`
   :host {
     width: 100%;
-    tr:odd:hover td {
-      background: red;
-    }
     th,
     td {
       padding-right: .75rem;
@@ -68,9 +65,6 @@ const table = css`
     .row-action {
       height: 1.5rem;
       display: inline-block;
-      border: 0;
-      background: transparent;
-      text-align: center;
       color: var(--color-neutral-20);
       svg {
         vertical-align: middle;
@@ -92,9 +86,8 @@ const table = css`
     .icon-network {
       display: inline-block;
       color: var(--color-neutral-20);
-      vertical-align: middle;
-      width: 1.1em;
-      max-height: 1.6em;
+      vertical-align: sub;
+      width: 1em;
       svg {
         border: 1px solid red;
       }
@@ -128,7 +121,7 @@ function tableElement (dats, send) {
             <th class="cell-1"></th>
             <th class="tl cell-2">Link</th>
             <th class="tl cell-3">Status</th>
-            <th class="tl cell-4">Size</th>
+            <th class="tr cell-4">Size</th>
             <th class="tl cell-5">Peers</th>
             <th class="cell-6"></th>
           </tr>
@@ -172,17 +165,17 @@ function row (dat, send) {
 
   const hexContent = {
     loading: button.icon('loading', {
-      icon: icon('hexagon-down'),
+      icon: icon('hexagon-down', {class: 'w2'}),
       class: 'color-blue hover-color-blue-hover',
       onclick: togglePause
     }),
     paused: button.icon('paused', {
-      icon: icon('hexagon-x'),
+      icon: icon('hexagon-x', {class: 'w2'}),
       class: 'color-neutral-30 hover-color-neutral-40',
       onclick: togglePause
     }),
     complete: button.icon('complete', {
-      icon: icon('hexagon-up'),
+      icon: icon('hexagon-up', {class: 'w2'}),
       class: 'color-green hover-color-green-hover',
       onclick: togglePause
     })
@@ -228,7 +221,7 @@ function row (dat, send) {
   return html`
     <tr id=${key}>
       <td class="cell-1">
-        <div class="w2 pa1 center">
+        <div class="w2 center">
           ${hexContent}
         </div>
       </td>
@@ -251,7 +244,7 @@ function row (dat, send) {
       <td class="tr cell-4">
         ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
       </td>
-      <td class="tr cell-5">
+      <td class="cell-5">
         ${networkIcon}
         ${peers}
       </td>
