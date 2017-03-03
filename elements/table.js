@@ -162,35 +162,27 @@ function row (dat, send) {
   // should be safe to be removed
   stats.progress = Math.min(stats.progress, 100)
 
-  stats.state = (dat.owner)
-    ? 'complete'
-    : (stats.progress === 100)
+  stats.state = (dat.network)
+    ? (dat.owner || stats.progress === 100)
       ? 'complete'
-      : (peers === 0)
-        ? 'paused'
-        : 'loading'
+      : 'loading'
+    : 'paused'
 
   const togglePause = () => send('repos:togglePause', dat)
 
   const hexContent = {
-    loading: button({
-      text: '',
-      style: 'icon-only',
-      icon: 'hexagon-down',
+    loading: button.icon('loading', {
+      icon: icon('hexagon-down'),
       cls: 'color-blue hover-color-blue-hover',
       click: togglePause
     }),
-    paused: button({
-      text: '',
-      style: 'icon-only',
-      icon: 'hexagon-x',
+    paused: button.icon('paused', {
+      icon: icon('hexagon-x'),
       cls: 'color-neutral-30 hover-color-neutral-40',
       click: togglePause
     }),
-    complete: button({
-      text: '',
-      style: 'icon-only',
-      icon: 'hexagon-up',
+    complete: button.icon('complete', {
+      icon: icon('hexagon-up'),
       cls: 'color-green hover-color-green-hover',
       click: togglePause
     })
