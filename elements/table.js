@@ -145,7 +145,9 @@ function tableElement (dats, send) {
 
 function row (dat, send) {
   const stats = dat.stats && dat.stats.get()
-  var peers = dat.network.connected
+  var peers = (dat.network)
+    ? dat.network.connected
+    : 'N/A'
   var key = encoding.encode(dat.key)
   var title = dat.metadata.title || '#' + key
 

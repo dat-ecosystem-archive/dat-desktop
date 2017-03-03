@@ -90,9 +90,10 @@ module.exports = function (dat, stats, send) {
       ? 'line-paused'
       : 'line-complete'
   var netStats = dat.stats.network
+  var connected = dat.network && dat.network.connected
   var progressText = (stats.progress === 100)
-    ? `Complete. ↑ ${speed(dat.network.uploadSpeed)}`
-    : (dat.network.connected) ? html`<span><span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}</span>`
+    ? `Complete. ↑ ${speed(netStats.uploadSpeed)}`
+    : (connected) ? html`<span><span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}</span>`
     : 'waiting for peers…'
   function speed (n) {
     return `${Math.round((n || 0) / 1024)}kB/s`
