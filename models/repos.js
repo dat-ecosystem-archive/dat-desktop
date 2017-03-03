@@ -22,6 +22,7 @@ module.exports = createModel
 
 function createModel () {
   let manager = null
+  let dbPaused = null
 
   const argv = minimist(remoteProcess.argv.slice(2))
   const downloadsDir = (argv.data)
@@ -50,14 +51,16 @@ function createModel () {
       open: openDirectory,
       share: shareDat,
       clone: cloneDat,
-      shareState: shareState
+      shareState: shareState,
+      togglePause: togglePause
     }
   }
 
   // boot multidat, create the ~/Downloads/dat directory
   function startMultidat (send, done) {
     const dbLocation = path.join(process.env.HOME, '.dat-desktop')
-    const dbFile = path.join(dbLocation, 'dats.json')
+    const dbMultidriveFile = path.join(dbLocation, 'dats.json')
+    const dbPausedFile = path.join(dbLocation, 'paused.json')
 
     const tasks = [
       function (next) {
@@ -67,8 +70,9 @@ function createModel () {
         mkdirp(downloadsDir, next)
       },
       function (_, next) {
-        const db = toilet(dbFile)
-        Multidat(db, {
+        const dbMultidrive = toilet(dbMultidriveFile)
+        dbPaused = toilet(dbPausedFile)
+        Multidat(dbMultidrive, {
           dat: Worker,
           stdout: ConsoleStream(),
           stderr: ConsoleStream()
@@ -179,6 +183,25 @@ function createModel () {
         manager.create(dir, opts, done)
       })
     })
+  }
+
+  function togglePause (state, data, send, done) {
+    const dat = data
+    const key = encoding.toStr(dat.key)
+
+    dbPaused.read((err, paused) => {
+      if (err) return done(err)
+      if (paused[key]) resume()
+      else pause()
+    })
+
+    function resume () {
+      dbPaused.write(key, false, done)
+    }
+
+    function pause () {
+      dbPaused.write(key, true, done)
+    }
   }
 }
 
