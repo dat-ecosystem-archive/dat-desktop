@@ -196,10 +196,12 @@ function createModel () {
     })
 
     function resume () {
+      dat.joinNetwork()
       dbPaused.write(key, false, done)
     }
 
     function pause () {
+      dat.leaveNetwork()
       dbPaused.write(key, true, done)
     }
   }
