@@ -170,7 +170,7 @@ function row (dat, send) {
         ? 'paused'
         : 'loading'
 
-  const togglePause = () => send('repos:toggle-pause', dat)
+  const togglePause = () => send('repos:togglePause', dat)
 
   const hexContent = {
     loading: button({
