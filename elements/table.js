@@ -173,18 +173,18 @@ function row (dat, send) {
   const hexContent = {
     loading: button.icon('loading', {
       icon: icon('hexagon-down'),
-      cls: 'color-blue hover-color-blue-hover',
-      click: togglePause
+      class: 'color-blue hover-color-blue-hover',
+      onclick: togglePause
     }),
     paused: button.icon('paused', {
       icon: icon('hexagon-x'),
-      cls: 'color-neutral-30 hover-color-neutral-40',
-      click: togglePause
+      class: 'color-neutral-30 hover-color-neutral-40',
+      onclick: togglePause
     }),
     complete: button.icon('complete', {
       icon: icon('hexagon-up'),
-      cls: 'color-green hover-color-green-hover',
-      click: togglePause
+      class: 'color-green hover-color-green-hover',
+      onclick: togglePause
     })
   }[stats.state]
 
