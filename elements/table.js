@@ -177,7 +177,7 @@ function row (dat, send) {
       onclick: togglePause
     }),
     paused: button.icon('paused', {
-      icon: icon('hexagon-x', {class: 'w2'}),
+      icon: icon('hexagon-resume', {class: 'w2'}),
       class: 'color-neutral-30 hover-color-neutral-40',
       onclick: togglePause
     }),
