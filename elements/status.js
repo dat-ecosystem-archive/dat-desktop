@@ -86,15 +86,28 @@ module.exports = function (dat, stats, send) {
   }
   var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
-    : (stats.state === 'paused')
+    : (stats.state === 'paused' || stats.state === 'stale')
       ? 'line-paused'
       : 'line-complete'
   var netStats = dat.stats.network
-  var connected = dat.network && dat.network.connected
-  var progressText = (stats.progress === 100)
-    ? `Complete. ↑ ${speed(netStats.uploadSpeed)}`
-    : (connected) ? html`<span><span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}</span>`
-    : 'waiting for peers…'
+
+  var progressText
+  switch (stats.state) {
+    case 'complete':
+      progressText = `Complete. ↑ ${speed(netStats.uploadSpeed)}`
+      break
+    case 'loading':
+      progressText = html`
+        <span>
+          <span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}
+        </span>`
+      break
+    case 'stale':
+      progressText = 'waiting for peers…'
+      break
+    case 'paused':
+      progressText = 'Paused.'
+  }
   function speed (n) {
     return `${Math.round((n || 0) / 1024)}kB/s`
   }
