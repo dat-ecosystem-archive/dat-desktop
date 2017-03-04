@@ -158,7 +158,9 @@ function row (dat, send) {
   stats.state = (dat.network)
     ? (dat.owner || stats.progress === 100)
       ? 'complete'
-      : 'loading'
+      : (dat.network.peers)
+        ? 'loading'
+        : 'stale'
     : 'paused'
 
   const togglePause = () => send('repos:togglePause', dat)
@@ -167,6 +169,11 @@ function row (dat, send) {
     loading: button.icon('loading', {
       icon: icon('hexagon-down', {class: 'w2'}),
       class: 'color-blue hover-color-blue-hover',
+      onclick: togglePause
+    }),
+    stale: button.icon('stale', {
+      icon: icon('hexagon-x', {class: 'w2'}),
+      class: 'color-neutral-30 hover-color-neutral-40',
       onclick: togglePause
     }),
     paused: button.icon('paused', {
