@@ -150,7 +150,10 @@ function createModel () {
   function removeDat (state, data, send, done) {
     const key = data.key
     const modal = ConfirmModal()(function () {
-      manager.close(key, done)
+      dbPaused.write(key, false, function (err) => {
+        if (err) return done(err)
+        manager.close(key, done)
+      })
     })
     document.body.appendChild(modal)
   }
