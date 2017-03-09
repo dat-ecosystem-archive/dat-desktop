@@ -9,6 +9,8 @@ const baseStyles = css`
   :host {
     text-transform: uppercase;
     letter-spacing: .025em;
+    cursor: pointer;
+    background-color: transparent;
     .btn-inner-wrapper {
       display: flex;
       flex-wrap: nowrap;
@@ -101,7 +103,7 @@ function buttonElement (innerText, opts) {
   }
 
   var buttonProps = xtend(defaultProps, opts)
-  buttonProps.class = 'pointer ' + baseStyles + ' ' + buttonProps.class
+  buttonProps.class = baseStyles + ' ' + buttonProps.class
 
   return html`
     <button ${buttonProps}>
@@ -119,8 +121,8 @@ function iconButton (innerText, opts) {
 
   var icon = opts.icon
   opts.class = (opts.class)
-    ? plainStyles + ' ' + opts.class
-    : plainStyles
+    ? opts.class
+    : ''
 
   var innerHTML = html`
     <div class="btn-inner-wrapper">
@@ -134,7 +136,8 @@ function iconButton (innerText, opts) {
   }
 
   var buttonProps = xtend(defaultProps, opts)
-  buttonProps.class = 'pointer ' + baseStyles + ' ' + buttonProps.class
+  buttonProps.class = baseStyles + ' ' + buttonProps.class
+  buttonProps.icon = null
 
   return html`
     <button ${buttonProps}>
