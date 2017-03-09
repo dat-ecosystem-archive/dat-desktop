@@ -158,7 +158,7 @@ function row (dat, send) {
   stats.state = (dat.network)
     ? (dat.owner || stats.progress === 100)
       ? 'complete'
-      : (dat.network.peers)
+      : (peers)
         ? 'loading'
         : 'stale'
     : 'paused'
