@@ -273,6 +273,24 @@ function createModel () {
 
     function update () {
       var dats = multidat.list().slice()
+      dats.forEach(function (dat) {
+        var stats = dat.stats && dat.stats.get()
+        dat.progress = (!stats)
+          ? 0
+          : (stats.blocksTotal)
+            ? Math.min(1, stats.blocksProgress / stats.blocksTotal)
+            : 0
+      })
+
+      var incomplete = dats.filter(function (dat) {
+        return dat.progress < 1
+      })
+      var progress = incomplete.reduce(function (acc, dat) {
+        return acc + dat.progress
+      }, 0) / incomplete.length
+      if (progress === 1) progress = -1 // deactivate
+
+      ipc.send('progress', progress)
       onupdate(null, dats)
     }
 

@@ -83,6 +83,7 @@ module.exports = function (dat, stats, send) {
   if (dat.owner && dat.importer) {
     return html`<div>Watching for updates…</div>`
   }
+  var progress = Math.floor(dat.progress * 100)
   var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
     : (stats.state === 'paused' || stats.state === 'stale')
@@ -115,10 +116,10 @@ module.exports = function (dat, stats, send) {
     <div>
       <div class="${progressbar}">
         <div class="counter">
-          ${stats.progress}%
+          ${progress}%
         </div>
         <div class="bar">
-          <div class="line ${progressbarLine}" style="width: ${stats.progress}%">
+          <div class="line ${progressbarLine}" style="width: ${progress}%">
           </div>
         </div>
       </div>
