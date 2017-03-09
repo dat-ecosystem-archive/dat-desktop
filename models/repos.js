@@ -244,12 +244,13 @@ function createModel () {
       })
 
       multidat.create(dir, opts, function (err, dat, duplicate) {
-        if (err) return cb(err)
+        duplicate = duplicate || (err && /temporarily unavailable/.test(err.message))
         if (duplicate) {
           err = new Error('Dat already exists')
           err.warn = true
           return cb(err)
         }
+        if (err) return cb(err)
         initDat(dat)
         update()
         cb(null, dat)
