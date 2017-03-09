@@ -126,6 +126,7 @@ const input = css`
 module.exports.confirm = confirmModal
 module.exports.crash = crashModal
 module.exports.error = errorModal
+module.exports.warn = warningModal
 module.exports.link = linkModal
 
 function confirmModal () {
@@ -257,6 +258,31 @@ function errorModal () {
       <div class="relative flex flex-column justify-center ${prefix}">
         <section class="pa4">
           <h3 class="f4">Oops, something went wrong</h3>
+          <p class="mt3 mb4 f7 color-neutral-70">
+            ${message}
+          </p>
+          <p>
+            ${exitButton}
+          </p>
+        </section>
+      </div>
+    `
+  }
+}
+
+function warningModal () {
+  return Modal({ render: render })
+
+  function render (message, onexit) {
+    var exitButton = button.green('Ok', {
+      class: 'fr ml3',
+      onclick: onexit
+    })
+
+    return html`
+      <div class="relative flex flex-column justify-center ${prefix}">
+        <section class="pa4">
+          <h3 class="f4">Warning</h3>
           <p class="mt3 mb4 f7 color-neutral-70">
             ${message}
           </p>
