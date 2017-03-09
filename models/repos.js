@@ -1,20 +1,20 @@
 const remoteProcess = require('electron').remote.process
 const dialog = require('electron').remote.dialog
+const ConsoleStream = require('console-stream')
 const ipc = require('electron').ipcRenderer
 const waterfall = require('run-waterfall')
 const app = require('electron').remote.app
 const encoding = require('dat-encoding')
+const shell = require('electron').shell
 const Multidat = require('multidat')
 const minimist = require('minimist')
+const Worker = require('dat-worker')
 const toilet = require('toiletdb')
 const assert = require('assert')
 const mkdirp = require('mkdirp')
-const shell = require('electron').shell
 const path = require('path')
-const ConfirmModal = require('../elements/confirm-modal')
-const LinkModal = require('../elements/link-modal')
-const ConsoleStream = require('console-stream')
-const Worker = require('dat-worker')
+
+const Modal = require('../elements/modal')
 
 function noop () {}
 
@@ -149,7 +149,7 @@ function createModel () {
 
   function removeDat (state, data, send, done) {
     const key = data.key
-    const modal = ConfirmModal()(function () {
+    const modal = Modal.confirm()(function () {
       dbPaused.write(key, false, function (err) {
         if (err) return done(err)
         manager.close(key, done)
@@ -162,7 +162,7 @@ function createModel () {
   function shareDat (state, data, send, done) {
     assert.ok(data.key, 'repos-model.shareDat: data.key should exist')
     const encodedKey = encoding.encode(data.key)
-    const modal = LinkModal()(encodedKey)
+    const modal = Modal.link()(encodedKey)
     document.body.appendChild(modal)
   }
 
