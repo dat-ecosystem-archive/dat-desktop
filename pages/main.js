@@ -34,11 +34,22 @@ const skeleton = css`
     .create-new-dat {
       top: 14.5rem;
       right: 4rem;
+      svg {
+        display: inline-block;
+        width: 2rem;
+        height: 2rem;
+      }
     }
     .link {
       top: 6rem;
       right: 8.5rem;
       color: red;
+      svg {
+        display: inline-block;
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: -.75rem;
+      }
     }
   }
 `
@@ -142,7 +153,9 @@ function EmptyState () {
         <img src="./public/img/dotted-lines.svg" alt="" class="dotted-lines">
         <div class="link">
           ${icon('link', { class: 'color-blue-disabled' })}
-          <h3 class="f4 ttu mt0 mb0 color-blue-disabled">Import Dat</h3>
+          <h3 class="f4 ttu mt0 mb0 color-blue-disabled">
+            Import Dat
+          </h3>
           <p class="f7 color-neutral-40">
             Download an existing dataset
             <br>

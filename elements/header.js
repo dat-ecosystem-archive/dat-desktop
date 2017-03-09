@@ -86,10 +86,9 @@ function headerElement (props) {
 
   var loginButton = button('Log In', { class: 'ml2 header-action log-in-button' })
 
-  var menuButton = button({
-    icon: 'menu',
-    text: '',
-    cls: 'ml2 header-action header-action-no-border menu-trigger'
+  var menuButton = button.icon('Open Menu', {
+    icon: icon('menu'),
+    class: 'ml2 header-action header-action-no-border menu-trigger'
   })
 
   return html`

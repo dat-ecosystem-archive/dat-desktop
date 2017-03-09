@@ -9,6 +9,8 @@ const baseStyles = css`
   :host {
     text-transform: uppercase;
     letter-spacing: .025em;
+    cursor: pointer;
+    background-color: transparent;
     .btn-inner-wrapper {
       display: flex;
       flex-wrap: nowrap;
@@ -23,42 +25,42 @@ const baseStyles = css`
 `
 
 var greenStyles = css`
-  .filled-green {
+  :host {
     padding: .5rem .75rem;
     font-size: .75rem;
     background-color: var(--color-green);
     color: var(--color-neutral-04);
   }
-  .filled-green:hover,
-  .filled-green:focus {
+  :host:hover,
+  :host:focus {
     background-color: var(--color-green-hover);
     color: var(--color-white);
   }
 `
 
 var redStyles = css`
-  .filled-red {
+  :host {
     padding: .5rem .75rem;
     font-size: .75rem;
     background-color: var(--color-red);
     color: var(--color-neutral-04);
   }
-  .filled-red:hover,
-  .filled-red:focus {
+  :host:hover,
+  :host:focus {
     background-color: var(--color-red-hover);
     color: var(--color-white);
   }
 `
 
 var plainStyles = css`
-  .plain {
+  :host {
     padding: .5rem .75rem;
     font-size: .75rem;
     background-color: transparent;
     color: var(--color-neutral-40);
   }
-  .plain:hover,
-  .plain:focus {
+  :host:hover,
+  :host:focus {
     color: var(--color-neutral-70);
   }
 `
@@ -101,7 +103,7 @@ function buttonElement (innerText, opts) {
   }
 
   var buttonProps = xtend(defaultProps, opts)
-  buttonProps.class = 'pointer ' + baseStyles + ' ' + buttonProps.class
+  buttonProps.class = baseStyles + ' ' + buttonProps.class
 
   return html`
     <button ${buttonProps}>
@@ -119,8 +121,8 @@ function iconButton (innerText, opts) {
 
   var icon = opts.icon
   opts.class = (opts.class)
-    ? plainStyles + ' ' + opts.class
-    : plainStyles
+    ? opts.class
+    : ''
 
   var innerHTML = html`
     <div class="btn-inner-wrapper">
@@ -134,7 +136,8 @@ function iconButton (innerText, opts) {
   }
 
   var buttonProps = xtend(defaultProps, opts)
-  buttonProps.class = 'pointer ' + baseStyles + ' ' + buttonProps.class
+  buttonProps.class = baseStyles + ' ' + buttonProps.class
+  buttonProps.icon = null
 
   return html`
     <button ${buttonProps}>
