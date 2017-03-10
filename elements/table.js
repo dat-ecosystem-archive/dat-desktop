@@ -154,6 +154,7 @@ function row (dat, send) {
   // where blocks downloaded exceeds total block. Once that's fixed this
   // should be safe to be removed
   stats.progress = Math.min(stats.progress, 100)
+  stats.size = (dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'
 
   stats.state = (dat.network)
     ? (dat.owner || stats.progress === 100)
@@ -202,7 +203,7 @@ function row (dat, send) {
 
   var deleteButton = button.icon('Remove Dat', {
     icon: icon('delete'),
-    class: 'row-action',
+    class: 'delete row-action',
     onclick: function (e) {
       // FIXME: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
@@ -238,8 +239,8 @@ function row (dat, send) {
             ${title}
           </h2>
           <p class="f7 color-neutral-60 truncate">
-            <span class="">${dat.metadata.author || 'Anonymous'} • </span>
-            <span>
+            <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
+            <span class="title">
               ${dat.owner ? 'Read & Write' : 'Read-only'}
             </span>
           </p>
@@ -248,12 +249,12 @@ function row (dat, send) {
       <td class="cell-3">
         ${status(dat, stats, send)}
       </td>
-      <td class="tr cell-4">
-        ${(dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'}
+      <td class="tr cell-4 size">
+        ${stats.size}
       </td>
       <td class="cell-5">
         ${networkIcon}
-        ${peers}
+        <span class="network">${peers}</span>
       </td>
       <td class="cell-6">
         <div class="flex justify-end">

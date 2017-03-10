@@ -18,6 +18,12 @@ const Modal = require('../elements/modal')
 
 function noop () {}
 
+if (process.env.RUNNING_IN_SPECTRON) {
+  dialog.showOpenDialog = (opts, cb) => {
+    return [path.join(__dirname, '..', 'tests', 'fixtures')]
+  }
+}
+
 module.exports = createModel
 
 function createModel () {
@@ -58,7 +64,7 @@ function createModel () {
 
   // boot multidat, create the ~/Downloads/dat directory
   function startMultidat (send, done) {
-    const dbLocation = path.join(process.env.HOME, '.dat-desktop')
+    const dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
     const dbMultidriveFile = path.join(dbLocation, 'dats.json')
     const dbPausedFile = path.join(dbLocation, 'paused.json')
 
@@ -295,4 +301,3 @@ function createModel () {
     }
   }
 }
-

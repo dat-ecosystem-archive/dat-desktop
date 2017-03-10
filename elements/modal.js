@@ -144,7 +144,7 @@ function confirmModal () {
     assert.equal(typeof cb, 'function', 'elements/confirm-modal: cb should be a function')
 
     var deleteButton = button.green('Yes, Remove Dat', {
-      class: 'fr ml3',
+      class: 'fr ml3 confirm-button',
       onclick: ondelete
     })
 

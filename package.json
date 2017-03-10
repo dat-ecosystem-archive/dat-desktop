@@ -28,7 +28,6 @@
     "multidat": "^3.0.0",
     "nanomorph": "^2.1.3",
     "prettier-bytes": "^1.0.3",
-    "rimraf": "^2.5.4",
     "run-waterfall": "^1.1.3",
     "sheetify": "^6.0.0",
     "tachyons": "^4.5.4",
@@ -45,12 +44,14 @@
     "clean": "rm -rf node_modules/",
     "build-background": "./scripts/build background",
     "start": "NODE_ENV=development electron .",
-    "test": "standard && npm run deps",
+    "test": "standard && npm run deps && npm run test:integration",
+    "test:integration": "node tests",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
   },
   "devDependencies": {
+    "rimraf": "^2.5.4",
     "browserify": "^13.3.0",
     "bulkify": "^1.4.2",
     "concat-stream": "^1.6.0",
@@ -60,7 +61,9 @@
     "envify": "^4.0.0",
     "nodemon": "^1.9.2",
     "sheetify-nested": "^1.0.2",
+    "spectron": "^3.5.0",
     "standard": "^7.1.2",
+    "tape": "^4.6.3",
     "through2": "^2.0.3",
     "watchify": "^3.7.0"
   },

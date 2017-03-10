@@ -5,6 +5,7 @@ const Env = require('envobj')
 const path = require('path')
 const doctor = require('dat-doctor')
 const { Writable } = require('stream')
+
 const autoUpdater = require('./lib/auto-updater')
 const colors = require('dat-colors')
 
@@ -59,7 +60,8 @@ function onReady () {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     if (env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
-    } else {
+    }
+    if (env.NODE_ENV === 'production') {
       autoUpdater({ log })
     }
   })
@@ -70,7 +72,7 @@ function onReady () {
 }
 
 app.on('ready', () => {
-  if (env.NODE_ENV === 'development') {
+  if (env.NODE_ENV !== 'production') {
     const browserify = require('./lib/browserify')
     const b = browserify({ watch: true })
     b.once('bundle', onReady)
