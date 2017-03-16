@@ -6,7 +6,8 @@ const progressbar = css`
     --progress-height: .5rem;
     --bar-height: var(--progress-height);
     --counter-width: 2.5rem;
-
+    --tile-width: 28px;
+    --stripe-width: 5px;
     min-width: 8rem;
     overflow: hidden;
     padding-top: .4rem;
@@ -25,16 +26,6 @@ const progressbar = css`
       border-radius: 2px;
     }
     .line-loading {
-      --tile-width: 28px;
-      --stripe-width: 5px;
-      @keyframes move-bg {
-        0% {
-          background-position: var(--tile-width) 0;
-        }
-        100% {
-          background-position: 0 0;
-        }
-      };
       overflow: hidden;
       position: relative;
       height: var(--bar-height);
@@ -68,6 +59,14 @@ const progressbar = css`
       margin-top: -.4rem;
       text-align: right;
       font-size: .875rem;
+    }
+  }
+  @keyframes move-bg {
+    0% {
+      background-position: 28px 0;
+    }
+    100% {
+      background-position: 0 0;
     }
   }
 `
