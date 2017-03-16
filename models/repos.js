@@ -267,7 +267,7 @@ function createModel () {
 
     function closeAll () {
       multidat.list().forEach(function (dat) {
-        multidat.close(dat.key, noop)
+        dat.close(noop)
       })
     }
 
