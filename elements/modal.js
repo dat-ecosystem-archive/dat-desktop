@@ -245,9 +245,13 @@ function crashModal () {
 }
 
 function errorModal () {
-  return Modal({ render: render })
+  return Modal({
+    render: render,
+    onexit: onexit,
+    class: 'modal'
+  })
 
-  function render (message, onexit) {
+  function render (message) {
     var exitButton = button.green('Ok', {
       class: 'fr ml3',
       onclick: onexit
@@ -266,6 +270,45 @@ function errorModal () {
         </section>
       </div>
     `
+  }
+
+  function onexit () {
+    const el = document.querySelector('.modal')
+    if (el) el.parentNode.removeChild(el)
+  }
+}
+
+function warningModal () {
+  return Modal({
+    render: render,
+    onexit: onexit,
+    class: 'modal'
+  })
+
+  function render (message) {
+    var exitButton = button.green('Ok', {
+      class: 'fr ml3',
+      onclick: onexit
+    })
+
+    return html`
+      <div class="relative flex flex-column justify-center ${prefix}">
+        <section class="pa4">
+          <h3 class="f4">Warning</h3>
+          <p class="mt3 mb4 f7 color-neutral-70">
+            ${message}
+          </p>
+          <p>
+            ${exitButton}
+          </p>
+        </section>
+      </div>
+    `
+  }
+
+  function onexit () {
+    const el = document.querySelector('.modal')
+    if (el) el.parentNode.removeChild(el)
   }
 }
 
