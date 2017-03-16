@@ -246,9 +246,13 @@ function crashModal () {
 }
 
 function errorModal () {
-  return Modal({ render: render })
+  return Modal({
+    render: render,
+    onexit: onexit,
+    class: 'modal'
+  })
 
-  function render (message, onexit) {
+  function render (message) {
     var exitButton = button.green('Ok', {
       class: 'fr ml3',
       onclick: onexit
@@ -268,12 +272,21 @@ function errorModal () {
       </div>
     `
   }
+
+  function onexit () {
+    const el = document.querySelector('.modal')
+    if (el) el.parentNode.removeChild(el)
+  }
 }
 
 function warningModal () {
-  return Modal({ render: render })
+  return Modal({
+    render: render,
+    onexit: onexit,
+    class: 'modal'
+  })
 
-  function render (message, onexit) {
+  function render (message) {
     var exitButton = button.green('Ok', {
       class: 'fr ml3',
       onclick: onexit
@@ -292,6 +305,11 @@ function warningModal () {
         </section>
       </div>
     `
+  }
+
+  function onexit () {
+    const el = document.querySelector('.modal')
+    if (el) el.parentNode.removeChild(el)
   }
 }
 
