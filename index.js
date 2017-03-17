@@ -53,6 +53,7 @@ function onReady () {
   const log = str => mainWindow.webContents.send('log', str)
 
   ipcMain.on('quit', () => app.quit()) // TODO: ping backend with error
+  ipcMain.on('progress', (ev, progress) => mainWindow.setProgressBar(progress))
   emitter.on('open-file', (file) => mainWindow.webContents.send('file', file))
   emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
 

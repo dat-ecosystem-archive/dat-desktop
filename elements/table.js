@@ -144,20 +144,9 @@ function row (dat, send) {
   var key = encoding.encode(dat.key)
   var title = dat.metadata.title || '#' + key
 
-  stats.progress = (!stats)
-    ? 0
-    : (stats.blocksTotal)
-      ? Math.round((stats.blocksProgress / stats.blocksTotal) * 100)
-      : 0
-
-  // place an upper bound of 100% on progress. We've encountered situations
-  // where blocks downloaded exceeds total block. Once that's fixed this
-  // should be safe to be removed
-  stats.progress = Math.min(stats.progress, 100)
   stats.size = (dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'
-
   stats.state = (dat.network)
-    ? (dat.owner || stats.progress === 100)
+    ? (dat.owner || dat.progress === 1)
       ? 'complete'
       : (peers)
         ? 'loading'
