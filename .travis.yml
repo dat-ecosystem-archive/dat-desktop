@@ -4,6 +4,7 @@ node_js:
   - 7
 os:
   - osx
+  - linux
 addons:
   apt:
     packages:
@@ -11,8 +12,9 @@ addons:
       - graphicsmagick
       - xz-utils
       - xvfb
+env:
+  - DISPLAY=":99.0"
 install:
-  - export DISPLAY=':99.0'
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - npm install
 after_success:
