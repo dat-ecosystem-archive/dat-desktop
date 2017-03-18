@@ -201,11 +201,8 @@ function createModel () {
     const dat = data
     const key = encoding.toStr(dat.key)
 
-    dbHistory.read((err, historical) => {
-      if (err) return done(err)
-      if (data.action) add()
-      else remove()
-    })
+    if (data.action) add()
+    else remove()
 
     function add () {
       send('archiver:add', {key: key}, function () {
