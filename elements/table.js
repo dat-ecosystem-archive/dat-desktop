@@ -206,7 +206,6 @@ function row (dat, send) {
   }
 
   var historyButton = function () {
-    console.log(dat.historical)
     if (dat.historical === undefined) return html`` // loading
     return html`
       <input type="checkbox" checked="${dat.historical}" onclick=${toggleHistory}/>
