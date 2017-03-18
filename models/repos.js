@@ -218,9 +218,10 @@ function createModel () {
     const dat = data
     const key = encoding.toStr(dat.key)
 
-    dbMeta.read((err, dat) => {
+    dbMeta.read((err, dats) => {
       if (err) return done(err)
-      if (dat.paused[key]) resume()
+      var meta = dats[key]
+      if (!meta.paused) resume()
       else pause()
     })
 
@@ -298,12 +299,11 @@ function createModel () {
 
     function initDat (dat) {
       const key = encoding.toStr(dat.key)
-      dbMeta.read((err, dat) => {
+      dbMeta.read((err, dats) => {
         if (err) throw err
-        if (!dat.paused[key]) {
-          dat.joinNetwork()
-        }
-        if (dat.historical[key]) dat.historical = true
+        var meta = dats[key]
+        if (!meta || !meta.paused) dat.joinNetwork()
+        if (meta && meta.historical === true) dat.historical = true
         else dat.historical = false
       })
 
