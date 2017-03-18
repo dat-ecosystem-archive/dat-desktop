@@ -29,6 +29,7 @@ module.exports = createModel
 function createModel () {
   let manager = null
   let dbPaused = null
+  let dbHistory = null
 
   const argv = minimist(remoteProcess.argv.slice(2))
   const downloadsDir = (argv.data)
@@ -58,7 +59,8 @@ function createModel () {
       share: shareDat,
       clone: cloneDat,
       shareState: shareState,
-      togglePause: togglePause
+      togglePause: togglePause,
+      toggleHistory: toggleHistory
     }
   }
 
@@ -67,6 +69,7 @@ function createModel () {
     const dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
     const dbMultidriveFile = path.join(dbLocation, 'dats.json')
     const dbPausedFile = path.join(dbLocation, 'paused.json')
+    const dbHistoryFile = path.join(dbLocation, 'history.json')
 
     const tasks = [
       function (next) {
@@ -78,6 +81,7 @@ function createModel () {
       function (_, next) {
         const dbMultidrive = toilet(dbMultidriveFile)
         dbPaused = toilet(dbPausedFile)
+        dbHistory = toilet(dbHistoryFile)
         Multidat(dbMultidrive, {
           dat: Worker,
           stdout: ConsoleStream(),
@@ -193,6 +197,28 @@ function createModel () {
       })
     })
   }
+  function toggleHistory (state, data, send, done) {
+    const dat = data
+    const key = encoding.toStr(dat.key)
+
+    dbHistory.read((err, historical) => {
+      if (err) return done(err)
+      if (data.action) add()
+      else remove()
+    })
+
+    function add () {
+      send('archiver:add', {key: key}, function () {
+        dbHistory.write(key, true, done)
+      })
+    }
+
+    function remove () {
+      send('archiver:remove', {key: key}, function () {
+        dbHistory.write(key, false, done)
+      })
+    }
+  }
 
   function togglePause (state, data, send, done) {
     const dat = data
@@ -283,6 +309,11 @@ function createModel () {
         if (!paused[key]) {
           dat.joinNetwork()
         }
+      })
+      dbHistory.read((err, historical) => {
+        if (err) throw err
+        if (historical[key]) dat.historical = true
+        else dat.historical = false
       })
 
       dat.metadata = {}
