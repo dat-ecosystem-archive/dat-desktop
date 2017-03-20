@@ -6,7 +6,7 @@ const css = require('sheetify')
 
 const button = require('./button')
 const datImport = require('./dat-import')
-const icon = require('./icon')
+const icon = require('dat-elements/icon')
 
 module.exports = headerElement
 
