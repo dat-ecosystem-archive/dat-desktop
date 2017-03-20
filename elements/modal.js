@@ -126,6 +126,7 @@ const input = css`
 module.exports.confirm = confirmModal
 module.exports.crash = crashModal
 module.exports.error = errorModal
+module.exports.warn = warningModal
 module.exports.link = linkModal
 
 function confirmModal () {
