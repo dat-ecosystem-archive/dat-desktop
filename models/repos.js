@@ -139,8 +139,7 @@ function createModel () {
   // open the dat archive in the native filesystem explorer
   function openDirectory (state, data, send, done) {
     assert.ok(data.path, 'repos-model.openDirectory: data.path should exist')
-    var pathname = 'file://' + path.resolve(data.path)
-    shell.openExternal(pathname, done)
+    openDatFolder(data.path, done)
   }
 
   // choose a directory and convert it to a dat archive
@@ -281,12 +280,22 @@ function createModel () {
     function update () {
       var dats = multidat.list().slice()
       dats.forEach(function (dat) {
+        var prevProgress = dat.progress
         var stats = dat.stats && dat.stats.get()
         dat.progress = (!stats)
           ? 0
           : (stats.blocksTotal)
             ? Math.min(1, stats.blocksProgress / stats.blocksTotal)
             : 0
+        var unfinishedBefore = prevProgress < 1 && prevProgress > 0
+        if (dat.progress === 1 && unfinishedBefore) {
+          var notification = new Notification('Download finished', {
+            body: dat.metadata.title || dat.key.toString('hex')
+          })
+          notification.onclick = function () {
+            openDatFolder(dat, noop)
+          }
+        }
       })
 
       var incomplete = dats.filter(function (dat) {
@@ -324,4 +333,9 @@ function createModel () {
       dat.on('update', update)
     }
   }
+}
+
+function openDatFolder (dat, cb) {
+  var pathname = 'file://' + path.resolve(dat.path)
+  shell.openExternal(pathname, cb)
 }
