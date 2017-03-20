@@ -3,7 +3,7 @@
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
-const icon = require('./icon')
+const icon = require('dat-elements/icon')
 
 module.exports = datImportElement
 

@@ -6,7 +6,7 @@ const css = require('sheetify')
 
 const button = require('./button')
 const status = require('./status')
-const icon = require('./icon')
+const icon = require('dat-elements/icon')
 
 const table = css`
   :host {

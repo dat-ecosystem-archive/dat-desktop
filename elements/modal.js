@@ -13,7 +13,7 @@ const path = require('path')
 const fs = require('fs')
 
 const button = require('./button')
-const icon = require('./icon')
+const icon = require('dat-elements/icon')
 
 const prefix = css`
   :host {
