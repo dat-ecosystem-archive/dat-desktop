@@ -283,7 +283,7 @@ function createModel () {
       })
 
       var incomplete = dats.filter(function (dat) {
-        return dat.progress < 1
+        return dat.network && dat.progress < 1
       })
       var progress = incomplete.reduce(function (acc, dat) {
         return acc + dat.progress
