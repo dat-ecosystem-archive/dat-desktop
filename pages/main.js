@@ -72,15 +72,15 @@ module.exports = mainView
 
 // render the main view
 // (obj, obj, fn) -> html
-function mainView (state, prev, send) {
+function mainView (state, emit) {
   const showWelcomeScreen = state.mainView.welcome
   const dats = state.repos.values
   const isReady = state.repos.ready
 
   const header = Header({
     isReady: isReady,
-    oncreate: () => send('repos:create'),
-    onimport: (link) => send('repos:clone', link)
+    oncreate: () => emit('create repo'),
+    onimport: (link) => emit('clone repo', link)
   })
 
   document.title = 'Dat Desktop'
@@ -93,7 +93,7 @@ function mainView (state, prev, send) {
         ${WelcomeScreen({
           onexit: () => {
             window.removeEventListener('keydown', captureKeyEvent)
-            send('mainView:toggleWelcomeScreen', { toggle: false })
+            emit('hide welcome screen')
           },
           onload: () => {
             window.addEventListener('keydown', captureKeyEvent)
@@ -117,7 +117,7 @@ function mainView (state, prev, send) {
     <div>
       ${sprite()}
       ${header}
-      ${Table(dats, send)}
+      ${Table(dats, emit)}
     </div>
   `
 

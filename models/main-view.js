@@ -1,31 +1,20 @@
-var assert = require('assert')
+var xtend = Object.assign
 
-module.exports = createModel
+module.exports = mainViewModel
 
-function createModel (cb) {
-  return {
-    namespace: 'mainView',
-    effects: {
-      loadWelcomeScreenPerhaps: loadWelcomeScreenPerhaps
-    },
-    state: {
-      welcome: true
-    },
-    reducers: {
-      toggleWelcomeScreen: toggleWelcomeScreen
-    }
-  }
-}
+function mainViewModel (state, bus) {
+  state.mainView = xtend({
+    welcome: false
+  }, state.mainView)
 
-function loadWelcomeScreenPerhaps (state, action, send, done) {
-  send('repos:shareState', function (err, reposState) {
-    if (err) return done(err)
-    if (reposState.values.length) return done()
-    send('mainView:toggleWelcomeScreen', { toggle: true }, done)
+  bus.on('repos loaded', function () {
+    if (state.repos.values.length) return
+    state.mainView.welcome = true
+    bus.emit('render')
   })
-}
 
-function toggleWelcomeScreen (state, data, action) {
-  assert.equal(typeof data.toggle, 'boolean', 'models/main-view: toggle should be a boolean')
-  return { welcome: data.toggle }
+  bus.on('hide welcome screen', function () {
+    state.mainView.welcome = false
+    bus.emit('render')
+  })
 }

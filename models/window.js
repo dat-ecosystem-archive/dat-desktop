@@ -1,30 +1,24 @@
 const explain = require('explain-error')
 const fs = require('fs')
 
-module.exports = createModel
+module.exports = windowModel
 
-function createModel () {
-  return {
-    namespace: 'window',
-    subscriptions: {
-      'window-file-drop': dropFile
-    }
-  }
-}
-
-function dropFile (send, done) {
-  window.ondragover = (e) => e.preventDefault()
-  window.ondrop = (e) => {
+function windowModel (state, bus) {
+  window.ondragover = function (e) {
     e.preventDefault()
-    const dirname = e.dataTransfer &&
+  }
+  window.ondrop = function (e) {
+    e.preventDefault()
+    var dirname = e.dataTransfer &&
       e.dataTransfer.files &&
       e.dataTransfer.files[0] &&
       e.dataTransfer.files[0].path
     if (!dirname) return
     fs.stat(dirname, (err, stat) => {
-      if (err) return done(explain(err, 'models/window: fs.stat error on dirname'))
+      if (err) return bus.emit('error', explain(err, 'models/window: fs.stat error on dirname'))
       if (!stat.isDirectory()) return
-      send('repos:create', dirname, done)
+      bus.emit('repos:create', dirname)
     })
   }
 }
+

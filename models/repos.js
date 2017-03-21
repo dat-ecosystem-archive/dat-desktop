@@ -12,6 +12,7 @@ const Worker = require('dat-worker')
 const toilet = require('toiletdb')
 const assert = require('assert')
 const mkdirp = require('mkdirp')
+const xtend = require('xtend')
 const path = require('path')
 
 const Modal = require('../elements/modal')
@@ -24,196 +25,160 @@ if (process.env.RUNNING_IN_SPECTRON) {
   }
 }
 
-module.exports = createModel
+var argv = minimist(remoteProcess.argv.slice(2))
+var downloadsDir = (argv.data)
+  ? argv.data
+  : path.join(app.getPath('downloads'), '/dat')
 
-function createModel () {
-  let manager = null
-  let dbPaused = null
+module.exports = reposModel
 
-  const argv = minimist(remoteProcess.argv.slice(2))
-  const downloadsDir = (argv.data)
-    ? argv.data
-    : path.join(app.getPath('downloads'), '/dat')
+function reposModel (state, bus) {
+  state.repos = xtend({
+    downloadsDir: downloadsDir,
+    removalKey: null,
+    ready: false,
+    values: []
+  }, state.repos)
 
-  return {
-    namespace: 'repos',
-    state: {
-      downloadsDir: downloadsDir,
-      removalKey: null,
-      ready: false,
-      values: []
-    },
-    subscriptions: {
-      start: startMultidat,
-      onIpc: handleIpc
-    },
-    reducers: {
-      ready: multidatReady,
-      update: updateDats
-    },
-    effects: {
-      create: createDat,
-      remove: removeDat,
-      open: openDirectory,
-      share: shareDat,
-      clone: cloneDat,
-      shareState: shareState,
-      togglePause: togglePause
-    }
+  var manager = null
+  var dbPaused = null
+
+  function onerror (err) {
+    if (err) bus.emit('error', err)
   }
 
   // boot multidat, create the ~/Downloads/dat directory
-  function startMultidat (send, done) {
-    const dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
-    const dbMultidriveFile = path.join(dbLocation, 'dats.json')
-    const dbPausedFile = path.join(dbLocation, 'paused.json')
+  var dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
+  var dbMultidriveFile = path.join(dbLocation, 'dats.json')
+  var dbPausedFile = path.join(dbLocation, 'paused.json')
 
-    const tasks = [
-      function (next) {
-        mkdirp(dbLocation, next)
-      },
-      function (_, next) {
-        mkdirp(downloadsDir, next)
-      },
-      function (_, next) {
-        const dbMultidrive = toilet(dbMultidriveFile)
-        dbPaused = toilet(dbPausedFile)
-        Multidat(dbMultidrive, {
-          dat: Worker,
-          stdout: ConsoleStream(),
-          stderr: ConsoleStream()
-        }, next)
-      },
-      function (multidat, next) {
-        send('repos:ready', function (err) {
-          if (err) return next(err)
-          next(null, multidat)
-        })
-      },
-      function (multidat, next) {
-        manager = createManager(multidat, function (err, dats) {
-          if (err) return done(err)
-          send('repos:update', dats, next)
-        })
-        app.on('before-quit', function () {
-          manager.closeAll()
-        })
-      },
-      function (_, next) {
-        // show the welcome screen if you start without any dats
-        send('mainView:loadWelcomeScreenPerhaps', done)
-      }
-    ]
+  var tasks = [
+    function (next) {
+      mkdirp(dbLocation, next)
+    },
+    function (_, next) {
+      mkdirp(downloadsDir, next)
+    },
+    function (_, next) {
+      var dbMultidrive = toilet(dbMultidriveFile)
+      dbPaused = toilet(dbPausedFile)
+      Multidat(dbMultidrive, {
+        dat: Worker,
+        stdout: ConsoleStream(),
+        stderr: ConsoleStream()
+      }, next)
+    },
+    function (multidat, done) {
+      manager = createManager(multidat, function (err, dats) {
+        state.repos.values = dats
+        bus.emit('render')
+      })
+      app.on('before-quit', function () {
+        manager.closeAll()
+      })
+      bus.emit('repos loaded')
+      done()
+    }
+  ]
 
-    waterfall(tasks, done)
-  }
-
-  // share state with external model
-  function shareState (state, data, send, done) {
-    done(null, state)
-  }
-
-  // signal multidat is ready to accept values
-  function multidatReady (state, data) {
-    return { ready: true }
-  }
-
-  // update the values with then new values from the manager
-  function updateDats (state, data) {
-    return { values: data }
-  }
-
-  // handle IPC events from the server
-  function handleIpc (send, done) {
-    ipc.on('link', (event, url) => {
-      const key = encoding.decode(url)
-      send('repos:clone', key, done)
-    })
-    ipc.on('log', (ev, str) => console.log(str))
-    ipc.send('ready')
-  }
+  waterfall(tasks, onerror)
 
   // open the dat archive in the native filesystem explorer
-  function openDirectory (state, data, send, done) {
-    assert.ok(data.path, 'repos-model.openDirectory: data.path should exist')
-    var pathname = 'file://' + path.resolve(data.path)
-    shell.openExternal(pathname, done)
-  }
+  bus.on('open directory', function (path) {
+    var pathname = 'file://' + path.resolve(path)
+    shell.openExternal(pathname, onerror)
+  })
 
   // choose a directory and convert it to a dat archive
-  function createDat (state, data, send, done) {
-    var pathname = data
+  bus.on('create dat', function (pathname) {
     if (!pathname) {
       var files = dialog.showOpenDialog({
         properties: ['openDirectory']
       })
-      if (!files || !files.length) return done()
+      if (!files || !files.length) return
       pathname = files[0]
     }
-    manager.create(pathname, done)
-  }
+    manager.create(pathname, onerror)
+  })
 
-  function removeDat (state, data, send, done) {
-    const key = data.key
+  bus.on('remove dat', function (key) {
     const modal = Modal.confirm()(function () {
       dbPaused.write(key, false, function (err) {
-        if (err) return done(err)
-        manager.close(key, done)
+        if (err) return onerror(err)
+        manager.close(key, onerror)
       })
     })
     document.body.appendChild(modal)
+  })
+
+  bus.on('clone repo', function (key) {
+    cloneRepo(key)
+  })
+  ipc.on('link', function (event, url) {
+    cloneRepo(url)
+  })
+
+  function cloneRepo (_key) {
+    try {
+      var key = encoding.toStr(_key)
+    } catch (e) {
+      return onerror(new Error("The value you entered doesn't appear to be a valid Dat link"))
+    }
+
+    mkdirp(state.repos.downloadsDir, function (err) {
+      if (err) return onerror(err)
+      var dir = path.join(state.repos.downloadsDir, key)
+
+      mkdirp(dir, function (err) {
+        if (err) return onerror(err)
+
+        var opts = { key: key }
+        manager.create(dir, opts, onerror)
+      })
+    })
   }
 
   // copy a dat share link to clipboard and open a modal
-  function shareDat (state, data, send, done) {
-    assert.ok(data.key, 'repos-model.shareDat: data.key should exist')
-    const encodedKey = encoding.encode(data.key)
+  bus.on('share dat', function (dat) {
+    assert.ok(dat.key, 'repos-model.shareDat: data.key should exist')
+    const encodedKey = encoding.toStr(dat.key)
     const modal = Modal.link()(encodedKey)
     document.body.appendChild(modal)
-  }
+  })
 
-  function cloneDat (state, data, send, done) {
-    assert.ok(Buffer.isBuffer(data) || typeof data === 'string', 'repos-model.cloneDat: data should be a buffer or a string')
-
-    try {
-      var key = encoding.decode(data).toString('hex')
-    } catch (e) {
-      return done(new Error("The value you entered doesn't appear to be a valid Dat link"))
-    }
-
-    mkdirp(state.downloadsDir, function (err) {
-      if (err) return done(err)
-      var dir = path.join(state.downloadsDir, key)
-
-      mkdirp(dir, function (err) {
-        if (err) return done(err)
-
-        var opts = { key: key }
-        manager.create(dir, opts, done)
-      })
-    })
-  }
-
-  function togglePause (state, data, send, done) {
-    const dat = data
+  bus.on('toggle pause', function (dat) {
     const key = encoding.toStr(dat.key)
 
     dbPaused.read((err, paused) => {
-      if (err) return done(err)
+      if (err) return onerror(err)
       if (paused[key]) resume()
       else pause()
     })
 
     function resume () {
       dat.joinNetwork()
-      dbPaused.write(key, false, done)
+      dbPaused.write(key, false, onerror)
     }
 
     function pause () {
       dat.leaveNetwork()
-      dbPaused.write(key, true, done)
+      dbPaused.write(key, true, onerror)
     }
-  }
+  })
+
+  bus.on('remove dat', function (dat) {
+    const modal = Modal.confirm()(function () {
+      dbPaused.write(dat.key, false, function (err) {
+        if (err) return onerror(err)
+        manager.close(dat.key, onerror)
+      })
+    })
+    document.body.appendChild(modal)
+  })
+
+  // handle IPC events from the server
+  ipc.on('log', (ev, str) => console.log(str))
+  ipc.send('ready')
 
   // creates a wrapper for all dats. Handles stats, and updates choo's internal
   // state whenever a mutation happens
