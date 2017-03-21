@@ -95,9 +95,14 @@ function createModel () {
           if (err) return done(err)
           send('repos:update', dats, next)
         })
-        app.on('before-quit', function () {
-          manager.closeAll()
-        })
+        window.addEventListener('beforeunload', onBeforeUnload)
+        function onBeforeUnload (ev) {
+          ev.returnValue = false
+          window.removeEventListener('beforeunload', onBeforeUnload)
+          manager.closeAll(function () {
+            app.quit()
+          })
+        }
       },
       function (_, next) {
         // show the welcome screen if you start without any dats
@@ -265,10 +270,14 @@ function createModel () {
       })
     }
 
-    function closeAll () {
-      multidat.list().forEach(function (dat) {
-        dat.close(noop)
+    function closeAll (cb) {
+      var tasks = multidat.list().map(function (dat, i) {
+        return function () {
+          var done = arguments[arguments.length - 1]
+          dat.close(done)
+        }
       })
+      waterfall(tasks, cb)
     }
 
     function update () {
@@ -313,9 +322,6 @@ function createModel () {
       })
 
       dat.on('update', update)
-
-      window.addEventListener('beforeunload', () => dat.close())
-      process.on('uncaughtException', () => dat.close())
     }
   }
 }
