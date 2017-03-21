@@ -16,8 +16,6 @@ const path = require('path')
 
 const Modal = require('../elements/modal')
 
-function noop () {}
-
 if (process.env.RUNNING_IN_SPECTRON) {
   dialog.showOpenDialog = (opts, cb) => {
     return [path.join(__dirname, '..', 'tests', 'fixtures')]
