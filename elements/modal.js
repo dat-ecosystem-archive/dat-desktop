@@ -18,6 +18,7 @@ const icon = require('./icon')
 const prefix = css`
   :host {
     min-width: 25rem;
+    max-width: 32rem;
     padding: 2rem 2.5rem 2rem;
     background-color: var(--color-white);
     box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
@@ -108,6 +109,7 @@ const input = css`
       width: var(--icon-height);
       height: .875rem;
       vertical-align: -.15rem;
+      display: inline-block;
     }
     .confirmation {
       right: 0;
@@ -189,22 +191,22 @@ function crashModal () {
 
   function render (onOk, onExit) {
     return html`
-      <div class="relative flex flex-column justify-center ${prefix}">
-        <section class="pa4">
+      <div class="relative flex flex-column justify-center pa0 ${prefix}">
+        <section>
           <h3 class="f4">Unexpected issue</h3>
           <p class="mt3 mb4 f7 color-neutral-70">
             There was an unexpected fatal issue. The app will now close. We
             have received a bug report and will work to fix this as soon as
             possible.
           </p>
-          <p>
+          <p class="pb4 cf">
             ${button.green('Exit Application', {
               class: 'fr ml3',
               onclick: onexit
             })}
           </p>
         </section>
-        <section class="pa4" style="background-color: var(--color-yellow-disabled)">
+        <section class="pa4 bg-yellow-disabled">
           <p class="mt3 mb4 f7 color-neutral-70">
             <strong>Danger Zone:</strong> If this error keeps occurring you can
             try to clear the database or delete all data. These actions cannot
