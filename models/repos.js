@@ -116,17 +116,9 @@ function reposModel (state, bus) {
       return onerror(new Error("The value you entered doesn't appear to be a valid Dat link"))
     }
 
-    mkdirp(state.repos.downloadsDir, function (err) {
-      if (err) return onerror(err)
-      var dir = path.join(state.repos.downloadsDir, key)
-
-      mkdirp(dir, function (err) {
-        if (err) return onerror(err)
-
-        var opts = { key: key }
-        manager.create(dir, opts, onerror)
-      })
-    })
+    var dir = path.join(state.repos.downloadsDir, key)
+    var opts = { key: key }
+    manager.create(dir, opts, onerror)
   }
 
   // copy a dat share link to clipboard and open a modal
