@@ -146,7 +146,10 @@ function confirmModal () {
 
     var deleteButton = button.green('Yes, Remove Dat', {
       class: 'fr ml3 confirm-button',
-      onclick: ondelete
+      onclick: ondelete,
+      onload: function () {
+        deleteButton.focus()
+      }
     })
 
     var exitButton = button('No, Cancel', {
@@ -255,7 +258,10 @@ function errorModal () {
   function render (message) {
     var exitButton = button.green('Ok', {
       class: 'fr ml3',
-      onclick: onexit
+      onclick: onexit,
+      onload: function () {
+        exitButton.focus()
+      }
     })
 
     return html`
@@ -289,7 +295,10 @@ function warningModal () {
   function render (message) {
     var exitButton = button.green('Ok', {
       class: 'fr ml3',
-      onclick: onexit
+      onclick: onexit,
+      onload: function () {
+        exitButton.focus()
+      }
     })
 
     return html`
