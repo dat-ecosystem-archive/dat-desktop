@@ -10,14 +10,11 @@ const Multidat = require('multidat')
 const minimist = require('minimist')
 const Worker = require('dat-worker')
 const toilet = require('toiletdb')
-const assert = require('assert')
 const mkdirp = require('mkdirp')
 const xtend = require('xtend')
 const path = require('path')
 
 const Modal = require('../elements/modal')
-
-function noop () {}
 
 if (process.env.RUNNING_IN_SPECTRON) {
   dialog.showOpenDialog = (opts, cb) => {
@@ -69,7 +66,10 @@ function reposModel (state, bus) {
       }, next)
     },
     function (multidat, done) {
-      manager = createManager(multidat, function (err, dats) {
+      manager = createManager({
+        multidat,
+        dbPaused
+      }, function (err, dats) {
         if (err) return bus.emit('error', err)
         state.repos.values = dats
         state.repos.ready = true
@@ -175,107 +175,4 @@ function reposModel (state, bus) {
   ipc.on('log', (ev, str) => console.log(str))
   ipc.send('ready')
 
-  // creates a wrapper for all dats. Handles stats, and updates choo's internal
-  // state whenever a mutation happens
-  function createManager (multidat, onupdate) {
-    assert.ok(multidat, 'models/repos: multidat should exist')
-    assert.ok(onupdate, 'models/repos: onupdate should exist')
-
-    // add stats to all recreated dats
-    var dats = multidat.list()
-    dats.forEach(initDat)
-    onupdate(null, dats)
-
-    return {
-      create: create,
-      close: close,
-      closeAll: closeAll
-    }
-
-    function create (dir, opts, cb) {
-      if (!cb) {
-        cb = opts
-        opts = {}
-      }
-
-      assert.equal(typeof dir, 'string', 'models/repos: dat-manager: dir should be a string')
-      assert.equal(typeof opts, 'object', 'models/repos: dat-manager: opts should be a object')
-      assert.equal(typeof cb, 'function', 'models/repos: dat-manager: cb should be a function')
-
-      opts = Object.assign(opts, {
-        watch: true,
-        resume: true,
-        ignoreHidden: true,
-        compareFileContent: true
-      })
-
-      multidat.create(dir, opts, function (err, dat) {
-        if (err) return cb(err)
-        initDat(dat)
-        update()
-        cb(null, dat)
-      })
-    }
-
-    function close (key, cb) {
-      multidat.close(key, function (err) {
-        if (err) return cb(err)
-        update()
-        cb()
-      })
-    }
-
-    function closeAll () {
-      multidat.list().forEach(function (dat) {
-        dat.close(noop)
-      })
-    }
-
-    function update () {
-      var dats = multidat.list().slice()
-      dats.forEach(function (dat) {
-        var stats = dat.stats && dat.stats.get()
-        dat.progress = (!stats)
-          ? 0
-          : (stats.blocksTotal)
-            ? Math.min(1, stats.blocksProgress / stats.blocksTotal)
-            : 0
-      })
-
-      var incomplete = dats.filter(function (dat) {
-        return dat.network && dat.progress < 1
-      })
-      var progress = incomplete.reduce(function (acc, dat) {
-        return acc + dat.progress
-      }, 0) / incomplete.length
-      if (progress === 1) progress = -1 // deactivate
-
-      ipc.send('progress', progress)
-      onupdate(null, dats)
-    }
-
-    function initDat (dat) {
-      const key = encoding.toStr(dat.key)
-      dbPaused.read((err, paused) => {
-        if (err) throw err
-        if (!paused[key]) {
-          dat.joinNetwork()
-        }
-      })
-
-      dat.metadata = {}
-
-      multidat.readManifest(dat, function (_, manifest) {
-        if (!manifest) return
-        dat.metadata.title = manifest.title
-        dat.metadata.author = manifest.author
-        update()
-      })
-
-      dat.on('update', update)
-
-      window.addEventListener('beforeunload', () => dat.close())
-      process.on('uncaughtException', () => dat.close())
-    }
-  }
 }
