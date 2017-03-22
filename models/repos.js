@@ -314,8 +314,8 @@ function createModel () {
 
       dat.metadata = {}
 
-      multidat.readManifest(dat, function (_, manifest) {
-        if (!manifest) return
+      const updates = multidat.readManifest(dat)
+      updates.on('manifest', function (manifest) {
         dat.metadata.title = manifest.title
         dat.metadata.author = manifest.author
         update()
