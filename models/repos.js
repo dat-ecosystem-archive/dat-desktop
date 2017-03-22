@@ -103,14 +103,14 @@ function reposModel (state, bus) {
     manager.create(pathname, onerror)
   })
 
-  bus.on('clone repo', function (key) {
-    cloneRepo(key)
+  bus.on('clone dat', function (key) {
+    cloneDat(key)
   })
   ipc.on('link', function (event, url) {
-    cloneRepo(url)
+    cloneDat(url)
   })
 
-  function cloneRepo (_key) {
+  function cloneDat (_key) {
     try {
       var key = encoding.toStr(_key)
     } catch (e) {

@@ -19,8 +19,8 @@ function mainView (state, emit) {
 
   const header = Header({
     isReady: isReady,
-    oncreate: () => emit('create repo'),
-    onimport: (link) => emit('clone repo', link)
+    oncreate: () => emit('create dat'),
+    onimport: (link) => emit('clone dat', link)
   })
 
   document.title = 'Dat Desktop'
