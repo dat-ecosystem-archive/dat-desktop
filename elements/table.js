@@ -153,7 +153,7 @@ function row (dat, emit) {
         : 'stale'
     : 'paused'
 
-  const togglePause = () => emit('repos:togglePause', dat)
+  const togglePause = () => emit('toggle pause', dat)
 
   const hexContent = {
     loading: button.icon('loading', {
@@ -181,13 +181,13 @@ function row (dat, emit) {
   var finderButton = button.icon('Open in Finder', {
     icon: icon('open-in-finder'),
     class: 'row-action',
-    onclick: () => emit('repos:open', dat)
+    onclick: () => emit('open dat', dat)
   })
 
   var linkButton = button.icon('Share Dat', {
     icon: icon('link'),
     class: 'row-action',
-    onclick: () => emit('repos:share', dat)
+    onclick: () => emit('share dat', dat)
   })
 
   var deleteButton = button.icon('Remove Dat', {

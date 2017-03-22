@@ -87,8 +87,8 @@ function reposModel (state, bus) {
   waterfall(tasks, onerror)
 
   // open the dat archive in the native filesystem explorer
-  bus.on('open directory', function (path) {
-    var pathname = 'file://' + path.resolve(path)
+  bus.on('open dat', function (dat) {
+    var pathname = 'file://' + path.resolve(dat.path)
     shell.openExternal(pathname, onerror)
   })
 
