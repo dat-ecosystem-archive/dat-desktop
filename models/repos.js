@@ -143,19 +143,9 @@ function reposModel (state, bus) {
 
     dbPaused.read((err, paused) => {
       if (err) return onerror(err)
-      if (paused[key]) resume()
-      else pause()
+      if (paused[key]) manager.resume(dat, onerror)
+      else manager.pause(dat, onerror)
     })
-
-    function resume () {
-      dat.joinNetwork()
-      dbPaused.write(key, false, onerror)
-    }
-
-    function pause () {
-      dat.leaveNetwork()
-      dbPaused.write(key, true, onerror)
-    }
   })
 
   bus.on('remove dat', function (dat) {
