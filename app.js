@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(require('./models/welcome'))
-app.use(require('./models/window'))
+app.use(require('./models/drag-drop'))
 app.use(require('./models/repos'))
 app.use(require('./models/error'))
 

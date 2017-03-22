@@ -1,9 +1,9 @@
 const explain = require('explain-error')
 const fs = require('fs')
 
-module.exports = windowModel
+module.exports = dragDropModel
 
-function windowModel (state, bus) {
+function dragDropModel (state, bus) {
   window.ondragover = function (e) {
     e.preventDefault()
   }
