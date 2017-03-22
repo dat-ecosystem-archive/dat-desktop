@@ -72,6 +72,7 @@ function reposModel (state, bus) {
       manager = createManager(multidat, function (err, dats) {
         if (err) return bus.emit('error', err)
         state.repos.values = dats
+        state.repos.ready = true
         bus.emit('render')
       })
       app.on('before-quit', function () {
