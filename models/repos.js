@@ -11,10 +11,12 @@ const minimist = require('minimist')
 const Worker = require('dat-worker')
 const toilet = require('toiletdb')
 const mkdirp = require('mkdirp')
+const assert = require('assert')
 const xtend = require('xtend')
 const path = require('path')
 
 const Modal = require('../elements/modal')
+const createManager = require('../lib/dat-manager')
 
 if (process.env.RUNNING_IN_SPECTRON) {
   dialog.showOpenDialog = (opts, cb) => {
@@ -57,7 +59,6 @@ function reposModel (state, bus) {
     },
     function (_, next) {
       var dbMultidrive = toilet(dbMultidriveFile)
-      var dbPaused = toilet(dbPausedFile)
       Multidat(dbMultidrive, {
         dat: Worker,
         stdout: ConsoleStream(),
@@ -65,6 +66,7 @@ function reposModel (state, bus) {
       }, next)
     },
     function (multidat, done) {
+      var dbPaused = toilet(dbPausedFile)
       manager = createManager({
         multidat,
         dbPaused
@@ -146,5 +148,4 @@ function reposModel (state, bus) {
   // handle IPC events from the server
   ipc.on('log', (ev, str) => console.log(str))
   ipc.send('ready')
-
 }
