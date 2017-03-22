@@ -17,7 +17,7 @@ function windowModel (state, bus) {
     fs.stat(dirname, (err, stat) => {
       if (err) return bus.emit('error', explain(err, 'models/window: fs.stat error on dirname'))
       if (!stat.isDirectory()) return
-      bus.emit('repos:create', dirname)
+      bus.emit('create dat', dirname)
     })
   }
 }
