@@ -15,6 +15,7 @@ const mkdirp = require('mkdirp')
 const path = require('path')
 
 const Modal = require('../elements/modal')
+const noop = function () {}
 
 if (process.env.RUNNING_IN_SPECTRON) {
   dialog.showOpenDialog = (opts, cb) => {
@@ -289,7 +290,7 @@ function createModel () {
             : 0
         var unfinishedBefore = prevProgress < 1 && prevProgress > 0
         if (dat.progress === 1 && unfinishedBefore) {
-          var notification = new Notification('Download finished', {
+          var notification = new window.Notification('Download finished', {
             body: dat.metadata.title || dat.key.toString('hex')
           })
           notification.onclick = function () {
