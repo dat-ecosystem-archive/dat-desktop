@@ -11,11 +11,11 @@ css('./public/css/colors.css')
 
 const app = choo()
 
-/*app.use(persist({
+app.use(persist({
   filter: function (state) {
-    return xtend(state, { repos: null })
+    return xtend({}, state, { repos: {} })
   }
-}))*/
+}))
 
 if (process.env.NODE_ENV === 'development') {
   app.use(log())
