@@ -38,7 +38,6 @@ function reposModel (state, bus) {
   }, state.repos)
 
   var manager = null
-  var dbPaused = null
 
   function onerror (err) {
     if (err) bus.emit('error', err)
@@ -58,7 +57,7 @@ function reposModel (state, bus) {
     },
     function (_, next) {
       var dbMultidrive = toilet(dbMultidriveFile)
-      dbPaused = toilet(dbPausedFile)
+      var dbPaused = toilet(dbPausedFile)
       Multidat(dbMultidrive, {
         dat: Worker,
         stdout: ConsoleStream(),
@@ -144,12 +143,9 @@ function reposModel (state, bus) {
 
   bus.on('remove dat', function (dat) {
     const modal = Modal.confirm()(function () {
-      dbPaused.write(dat.key, false, function (err) {
+      manager.close(dat.key, function (err) {
         if (err) return onerror(err)
-        manager.close(dat.key, function (err) {
-          if (err) return onerror(err)
-          bus.emit('render')
-        })
+        bus.emit('render')
       })
     })
     document.body.appendChild(modal)
