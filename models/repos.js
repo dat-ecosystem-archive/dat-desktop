@@ -102,16 +102,6 @@ function reposModel (state, bus) {
     manager.create(pathname, onerror)
   })
 
-  bus.on('remove dat', function (key) {
-    const modal = Modal.confirm()(function () {
-      dbPaused.write(key, false, function (err) {
-        if (err) return onerror(err)
-        manager.close(key, onerror)
-      })
-    })
-    document.body.appendChild(modal)
-  })
-
   bus.on('clone repo', function (key) {
     cloneRepo(key)
   })
@@ -171,7 +161,10 @@ function reposModel (state, bus) {
     const modal = Modal.confirm()(function () {
       dbPaused.write(dat.key, false, function (err) {
         if (err) return onerror(err)
-        manager.close(dat.key, onerror)
+        manager.close(dat.key, function (err) {
+          if (err) return onerror(err)
+          bus.emit('render')
+        })
       })
     })
     document.body.appendChild(modal)

@@ -203,7 +203,7 @@ function row (dat, emit) {
         target = target.parentNode
       }
       assert.equal(typeof id, 'string', 'elements/table.deleteButton: id should be type string')
-      emit('repos:remove', { key: id })
+      emit('remove dat', { key: id })
     }
   })
 
