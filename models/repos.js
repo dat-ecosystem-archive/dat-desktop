@@ -139,13 +139,7 @@ function reposModel (state, bus) {
   })
 
   bus.on('toggle pause', function (dat) {
-    const key = encoding.toStr(dat.key)
-
-    dbPaused.read((err, paused) => {
-      if (err) return onerror(err)
-      if (paused[key]) manager.resume(dat, onerror)
-      else manager.pause(dat, onerror)
-    })
+    manager.togglePause(dat, onerror)
   })
 
   bus.on('remove dat', function (dat) {
