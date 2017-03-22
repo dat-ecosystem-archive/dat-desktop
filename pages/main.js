@@ -8,6 +8,7 @@ const button = require('../elements/button')
 const sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const icon = require('../elements/icon')
+const Welcome = require('../elements/welcome')
 
 const skeleton = css`
   :host {
@@ -90,7 +91,7 @@ function mainView (state, emit) {
     return html`
       <div>
         ${sprite()}
-        ${WelcomeScreen({
+        ${Welcome({
           onexit: () => {
             window.removeEventListener('keydown', captureKeyEvent)
             emit('hide welcome screen')
@@ -128,21 +129,6 @@ function mainView (state, emit) {
       emit('hide welcome screen')
     }
   }
-}
-
-function WelcomeScreen (methods) {
-  const onexit = methods.onexit
-  const onLoad = methods.onload
-
-  return html`
-    <main class="${welcome}" onload=${onLoad}>
-      <img src="./public/img/logo-dat-desktop.svg" alt="" class="">
-      <p class="mv4">
-        Share data on the distributed web.
-      </p>
-      ${button.green('Get Started', { onclick: onexit })}
-    </main>
-  `
 }
 
 function EmptyState () {
