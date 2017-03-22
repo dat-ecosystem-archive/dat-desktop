@@ -4,6 +4,8 @@ const css = require('sheetify')
 const choo = require('choo')
 const xtend = Object.assign
 
+require('./lib/monkeypatch')
+
 css('dat-colors')
 css('tachyons')
 css('./public/css/base.css')

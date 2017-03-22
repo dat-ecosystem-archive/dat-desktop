@@ -18,12 +18,6 @@ const path = require('path')
 const Modal = require('../elements/modal')
 const createManager = require('../lib/dat-manager')
 
-if (process.env.RUNNING_IN_SPECTRON) {
-  dialog.showOpenDialog = (opts, cb) => {
-    return [path.join(__dirname, '..', 'tests', 'fixtures')]
-  }
-}
-
 var argv = minimist(remoteProcess.argv.slice(2))
 var downloadsDir = (argv.data)
   ? argv.data
