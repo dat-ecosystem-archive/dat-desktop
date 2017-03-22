@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(log())
 }
 
-app.use(require('./models/main-view'))
+app.use(require('./models/welcome'))
 app.use(require('./models/window'))
 app.use(require('./models/repos'))
 app.use(require('./models/error'))

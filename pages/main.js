@@ -73,7 +73,7 @@ module.exports = mainView
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
-  const showWelcomeScreen = state.mainView.welcome
+  const showWelcomeScreen = state.welcome.show
   const dats = state.repos.values
   const isReady = state.repos.ready
 
@@ -125,7 +125,7 @@ function mainView (state, emit) {
     const key = e.code
     if (key === 'Enter' || key === 'Space') {
       window.removeEventListener('keydown', captureKeyEvent)
-      emit('mainView:toggleWelcomeScreen', { toggle: false })
+      emit('hide welcome screen')
     }
   }
 }

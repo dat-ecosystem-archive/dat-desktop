@@ -1,20 +1,20 @@
 var xtend = Object.assign
 
-module.exports = mainViewModel
+module.exports = welcomeModel
 
-function mainViewModel (state, bus) {
-  state.mainView = xtend({
-    welcome: false
-  }, state.mainView)
+function welcomeModel (state, bus) {
+  state.welcome = xtend({
+    show: false
+  }, state.welcome)
 
   bus.on('repos loaded', function () {
     if (state.repos.values.length) return
-    state.mainView.welcome = true
+    state.welcome.show = true
     bus.emit('render')
   })
 
   bus.on('hide welcome screen', function () {
-    state.mainView.welcome = false
+    state.welcome.show = false
     bus.emit('render')
   })
 }
