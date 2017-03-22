@@ -125,7 +125,7 @@ function mainView (state, emit) {
     const key = e.code
     if (key === 'Enter' || key === 'Space') {
       window.removeEventListener('keydown', captureKeyEvent)
-      send('mainView:toggleWelcomeScreen', { toggle: false })
+      emit('mainView:toggleWelcomeScreen', { toggle: false })
     }
   }
 }
