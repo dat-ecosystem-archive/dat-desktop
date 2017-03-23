@@ -76,7 +76,7 @@ app.on('ready', () => {
   if (env.NODE_ENV !== 'production') {
     const browserify = require('./lib/browserify')
     const b = browserify({ watch: true })
-    b.once('bundle', onReady)
+    b.once('written', onReady)
   } else {
     onReady()
   }
