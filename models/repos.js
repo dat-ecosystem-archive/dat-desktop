@@ -26,7 +26,7 @@ module.exports = createModel
 
 function createModel () {
   let manager = null
-  let dbPaused = null
+  let dbMeta = null
 
   const argv = minimist(remoteProcess.argv.slice(2))
   const downloadsDir = (argv.data)
@@ -56,7 +56,8 @@ function createModel () {
       share: shareDat,
       clone: cloneDat,
       shareState: shareState,
-      togglePause: togglePause
+      togglePause: togglePause,
+      toggleHistory: toggleHistory
     }
   }
 
@@ -64,7 +65,7 @@ function createModel () {
   function startMultidat (send, done) {
     const dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
     const dbMultidriveFile = path.join(dbLocation, 'dats.json')
-    const dbPausedFile = path.join(dbLocation, 'paused.json')
+    const dbMetaFile = path.join(dbLocation, 'meta.json')
 
     const tasks = [
       function (next) {
@@ -75,7 +76,7 @@ function createModel () {
       },
       function (_, next) {
         const dbMultidrive = toilet(dbMultidriveFile)
-        dbPaused = toilet(dbPausedFile)
+        dbMeta = toilet(dbMetaFile)
         Multidat(dbMultidrive, {
           dat: Worker,
           stdout: ConsoleStream(),
@@ -159,7 +160,7 @@ function createModel () {
   function removeDat (state, data, send, done) {
     const key = data.key
     const modal = Modal.confirm()(function () {
-      dbPaused.write(key, false, function (err) {
+      dbMeta.update(key, {paused: false}, function (err) {
         if (err) return done(err)
         manager.close(key, done)
       })
@@ -196,25 +197,45 @@ function createModel () {
       })
     })
   }
+  function toggleHistory (state, data, send, done) {
+    const dat = data
+    const key = encoding.toStr(dat.key)
+
+    if (data.action) add()
+    else remove()
+
+    function add () {
+      send('archiver:add', {key: key}, function () {
+        dbMeta.update(key, {historical: true}, done)
+      })
+    }
+
+    function remove () {
+      send('archiver:remove', {key: key}, function () {
+        dbMeta.update(key, {historical: false}, done)
+      })
+    }
+  }
 
   function togglePause (state, data, send, done) {
     const dat = data
     const key = encoding.toStr(dat.key)
 
-    dbPaused.read((err, paused) => {
+    dbMeta.read((err, dats) => {
       if (err) return done(err)
-      if (paused[key]) resume()
+      var meta = dats[key]
+      if (!meta.paused) resume()
       else pause()
     })
 
     function resume () {
       dat.joinNetwork()
-      dbPaused.write(key, false, done)
+      dbMeta.update(key, {paused: false}, done)
     }
 
     function pause () {
       dat.leaveNetwork()
-      dbPaused.write(key, true, done)
+      dbMeta.update(key, {paused: false}, done)
     }
   }
 
@@ -305,11 +326,12 @@ function createModel () {
 
     function initDat (dat) {
       const key = encoding.toStr(dat.key)
-      dbPaused.read((err, paused) => {
+      dbMeta.read((err, dats) => {
         if (err) throw err
-        if (!paused[key]) {
-          dat.joinNetwork()
-        }
+        var meta = dats[key]
+        if (!meta || !meta.paused) dat.joinNetwork()
+        if (meta && meta.historical === true) dat.historical = true
+        else dat.historical = false
       })
 
       dat.metadata = {}

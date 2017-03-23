@@ -123,7 +123,8 @@ function tableElement (dats, send) {
             <th class="tl cell-3">Status</th>
             <th class="tr cell-4">Size</th>
             <th class="tl cell-5">Peers</th>
-            <th class="cell-6"></th>
+            <th class="tr cell-6">History</th>
+            <th class="cell-7"></th>
           </tr>
         </thead>
         <tbody>
@@ -178,6 +179,28 @@ function row (dat, send) {
     })
   }[stats.state]
 
+  function getId (target) {
+    let id = null
+    while (target.parentNode) {
+      id = target.getAttribute('id')
+      if (id) break
+      target = target.parentNode
+    }
+    return id
+  }
+
+  function toggleHistory (e) {
+    var id = getId(e.target)
+    send('repos:toggleHistory', {key: id, action: e.target.checked})
+  }
+
+  var historyButton = function () {
+    if (dat.historical === undefined) return html`` // loading
+    return html`
+      <input type="checkbox" checked="${dat.historical}" onclick=${toggleHistory}/>
+    `
+  }
+
   var finderButton = button.icon('Open in Finder', {
     icon: icon('open-in-finder'),
     class: 'row-action',
@@ -197,11 +220,7 @@ function row (dat, send) {
       // FIXME: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
       var target = e.target
-      while (target.parentNode) {
-        var id = target.getAttribute('id')
-        if (id) break
-        target = target.parentNode
-      }
+      var id = getId(target)
       assert.equal(typeof id, 'string', 'elements/table.deleteButton: id should be type string')
       send('repos:remove', { key: id })
     }
@@ -250,6 +269,7 @@ function row (dat, send) {
           ${finderButton}
           ${linkButton}
           ${deleteButton}
+          ${historyButton()}
         </div>
       </td>
     </tr>
