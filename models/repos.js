@@ -252,7 +252,13 @@ function createModel () {
         compareFileContent: true
       })
 
-      multidat.create(dir, opts, function (err, dat) {
+      multidat.create(dir, opts, function (err, dat, duplicate) {
+        duplicate = duplicate || (err && /temporarily unavailable/.test(err.message))
+        if (duplicate) {
+          err = new Error('Dat already exists')
+          err.warn = true
+          return cb(err)
+        }
         if (err) return cb(err)
         initDat(dat)
         update()
