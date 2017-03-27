@@ -1,56 +1,34 @@
 const persist = require('choo-persist')
-const mount = require('choo/mount')
 const log = require('choo-log')
 const css = require('sheetify')
-const xtend = require('xtend')
 const choo = require('choo')
+const xtend = Object.assign
 
-const params = require('./lib/param-router')
+require('./lib/monkeypatch')
 
 css('dat-colors')
 css('tachyons')
 css('./public/css/base.css')
 css('./public/css/colors.css')
 
-const opts = {
-  filter: (state) => {
-    state = xtend(state)
-    delete state.repos
-    return state
+const app = choo()
+
+app.use(persist({
+  filter: function (state) {
+    return xtend({}, state, { repos: {} })
   }
+}))
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(log())
 }
 
-persist(opts, (p) => {
-  const app = choo()
-  app.use(onError('error:display'))
-  app.use(p)
+app.use(require('./models/welcome'))
+app.use(require('./models/drag-drop'))
+app.use(require('./models/repos'))
+app.use(require('./models/error'))
 
-  if (process.env.NODE_ENV === 'development') {
-    app.use(log())
-  }
+app.route('/', require('./pages/main'))
 
-  app.model(require('./models/main-view')())
-  app.model(require('./models/window')())
-  app.model(require('./models/repos')())
-  app.model(require('./models/error')())
+app.mount('body div')
 
-  app.router([
-    ['/', params({
-      default: require('./pages/main')
-    })]
-  ])
-
-  mount('body div', app.start())
-})
-
-function onError (action) {
-  return {
-    onError: function (err, state, createSend) {
-      var send = createSend('handleError')
-      send(action, err.message, function (err) {
-        // if we hit this point the error handler has failed and we should crash
-        if (err) throw err
-      })
-    }
-  }
-}

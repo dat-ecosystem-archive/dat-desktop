@@ -3,31 +3,15 @@ const xhr = require('xhr')
 const version = require('../package.json').version
 const Modal = require('../elements/modal')
 
-module.exports = model
+module.exports = errorModel
 
-function model () {
-  return {
-    namespace: 'error',
-    state: {
-      message: null
-    },
-    subscriptions: {
-      onUncaughtException: onUncaughtException
-    },
-    effects: {
-      display: display,
-      quit: quit
-    }
-  }
-}
+function errorModel (state, bus) {
+  bus.on('error', function (err) {
+    const message = err.message || err
+    const modal = Modal.error()(message)
+    document.body.appendChild(modal)
+  })
 
-function display (state, error, send, done) {
-  const message = error.message || error
-  const modal = Modal.error()(message)
-  document.body.appendChild(modal)
-}
-
-function onUncaughtException (send, done) {
   process.on('uncaughtException', function (err) {
     if (err._thrown) return
 
@@ -48,8 +32,8 @@ function onUncaughtException (send, done) {
       if (err) console.error(err)
     })
 
-    const modal = Modal.crash()(() => {
-      send('error:quit', done)
+    const modal = Modal.crash()(function () {
+      ipc.sendSync('quit')
     })
     document.body.appendChild(modal)
 
@@ -58,6 +42,3 @@ function onUncaughtException (send, done) {
   })
 }
 
-function quit (state, data, send, done) {
-  ipc.sendSync('quit')
-}

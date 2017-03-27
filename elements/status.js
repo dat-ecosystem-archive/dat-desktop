@@ -79,7 +79,7 @@ const progressSubline = css`
   }
 `
 
-module.exports = function (dat, stats, send) {
+module.exports = function (dat, stats) {
   if (dat.owner && dat.importer) {
     return html`<div>Watching for updates…</div>`
   }

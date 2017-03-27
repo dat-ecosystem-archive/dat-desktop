@@ -112,7 +112,7 @@ const table = css`
 
 module.exports = tableElement
 
-function tableElement (dats, send) {
+function tableElement (dats, emit) {
   return html`
     <main>
       <table class="w-100 collapse ${table}">
@@ -128,7 +128,7 @@ function tableElement (dats, send) {
         </thead>
         <tbody>
           ${dats.map(function (dat) {
-            return row(dat, send)
+            return row(dat, emit)
           })}
         </tbody>
       </table>
@@ -136,7 +136,7 @@ function tableElement (dats, send) {
   `
 }
 
-function row (dat, send) {
+function row (dat, emit) {
   const stats = dat.stats && dat.stats.get()
   var peers = (dat.network)
     ? dat.network.connected
@@ -153,7 +153,7 @@ function row (dat, send) {
         : 'stale'
     : 'paused'
 
-  const togglePause = () => send('repos:togglePause', dat)
+  const togglePause = () => emit('toggle pause', dat)
 
   const hexContent = {
     loading: button.icon('loading', {
@@ -181,13 +181,13 @@ function row (dat, send) {
   var finderButton = button.icon('Open in Finder', {
     icon: icon('open-in-finder'),
     class: 'row-action',
-    onclick: () => send('repos:open', dat)
+    onclick: () => emit('open dat', dat)
   })
 
   var linkButton = button.icon('Share Dat', {
     icon: icon('link'),
     class: 'row-action',
-    onclick: () => send('repos:share', dat)
+    onclick: () => emit('share dat', dat)
   })
 
   var deleteButton = button.icon('Remove Dat', {
@@ -203,7 +203,7 @@ function row (dat, send) {
         target = target.parentNode
       }
       assert.equal(typeof id, 'string', 'elements/table.deleteButton: id should be type string')
-      send('repos:remove', { key: id })
+      emit('remove dat', { key: id })
     }
   })
 
@@ -236,7 +236,7 @@ function row (dat, send) {
         </div>
       </td>
       <td class="cell-3">
-        ${status(dat, stats, send)}
+        ${status(dat, stats)}
       </td>
       <td class="tr cell-4 size">
         ${stats.size}
