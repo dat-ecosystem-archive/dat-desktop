@@ -70,9 +70,14 @@ function reposModel (state, bus) {
         state.repos.ready = true
         bus.emit('render')
       })
-      app.on('before-quit', function () {
-        manager.closeAll()
-      })
+      window.addEventListener('beforeunload', onBeforeUnload)
+      function onBeforeUnload (ev) {
+        ev.returnValue = false
+        window.removeEventListener('beforeunload', onBeforeUnload)
+        manager.closeAll(function () {
+          app.quit()
+        })
+      }
       bus.emit('repos loaded')
       done()
     }
