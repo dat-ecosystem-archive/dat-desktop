@@ -78,7 +78,7 @@ function reposModel (state, bus) {
           app.quit()
         })
       }
-      bus.emit('repos loaded')
+      bus.emit('dats:loaded')
       done()
     }
   ]
@@ -86,13 +86,13 @@ function reposModel (state, bus) {
   waterfall(tasks, onerror)
 
   // open the dat archive in the native filesystem explorer
-  bus.on('open dat', function (dat) {
+  bus.on('dats:open', function (dat) {
     var pathname = 'file://' + path.resolve(dat.path)
     shell.openExternal(pathname, onerror)
   })
 
   // choose a directory and convert it to a dat archive
-  bus.on('create dat', function (pathname) {
+  bus.on('dats:create', function (pathname) {
     if (!pathname) {
       var files = dialog.showOpenDialog({
         properties: ['openDirectory']
@@ -103,7 +103,7 @@ function reposModel (state, bus) {
     manager.create(pathname, onerror)
   })
 
-  bus.on('clone dat', function (key) {
+  bus.on('dats:clone', function (key) {
     cloneDat(key)
   })
   ipc.on('link', function (event, url) {
@@ -123,18 +123,18 @@ function reposModel (state, bus) {
   }
 
   // copy a dat share link to clipboard and open a modal
-  bus.on('share dat', function (dat) {
+  bus.on('dats:share', function (dat) {
     assert.ok(dat.key, 'repos-model.shareDat: data.key should exist')
     const encodedKey = encoding.toStr(dat.key)
     const modal = Modal.link()(encodedKey)
     document.body.appendChild(modal)
   })
 
-  bus.on('toggle pause', function (dat) {
+  bus.on('dats:toggle-pause', function (dat) {
     manager.togglePause(dat, onerror)
   })
 
-  bus.on('remove dat', function (dat) {
+  bus.on('dats:remove', function (dat) {
     const modal = Modal.confirm()(function () {
       manager.close(dat.key, function (err) {
         if (err) return onerror(err)

@@ -153,7 +153,7 @@ function row (dat, emit) {
         : 'stale'
     : 'paused'
 
-  const togglePause = () => emit('toggle pause', dat)
+  const togglePause = () => emit('dats:toggle-pause', dat)
 
   const hexContent = {
     loading: button.icon('loading', {
@@ -181,13 +181,13 @@ function row (dat, emit) {
   var finderButton = button.icon('Open in Finder', {
     icon: icon('open-in-finder'),
     class: 'row-action',
-    onclick: () => emit('open dat', dat)
+    onclick: () => emit('dats:open', dat)
   })
 
   var linkButton = button.icon('Share Dat', {
     icon: icon('link'),
     class: 'row-action',
-    onclick: () => emit('share dat', dat)
+    onclick: () => emit('dats:share', dat)
   })
 
   var deleteButton = button.icon('Remove Dat', {
@@ -203,7 +203,7 @@ function row (dat, emit) {
         target = target.parentNode
       }
       assert.equal(typeof id, 'string', 'elements/table.deleteButton: id should be type string')
-      emit('remove dat', { key: id })
+      emit('dats:remove', { key: id })
     }
   })
 
