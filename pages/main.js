@@ -19,8 +19,8 @@ function mainView (state, emit) {
 
   const header = Header({
     isReady: isReady,
-    oncreate: () => emit('create dat'),
-    onimport: (link) => emit('clone dat', link)
+    oncreate: () => emit('dats:create'),
+    onimport: (link) => emit('dats:clone', link)
   })
 
   document.title = 'Dat Desktop'
@@ -33,7 +33,7 @@ function mainView (state, emit) {
         ${Welcome({
           onexit: () => {
             window.removeEventListener('keydown', captureKeyEvent)
-            emit('hide welcome screen')
+            emit('welcome:hide')
           },
           onload: () => {
             window.addEventListener('keydown', captureKeyEvent)
@@ -65,7 +65,7 @@ function mainView (state, emit) {
     const key = e.code
     if (key === 'Enter' || key === 'Space') {
       window.removeEventListener('keydown', captureKeyEvent)
-      emit('hide welcome screen')
+      emit('welcome:hide')
     }
   }
 }

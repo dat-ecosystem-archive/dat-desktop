@@ -7,13 +7,13 @@ function welcomeModel (state, bus) {
     show: false
   }, state.welcome)
 
-  bus.on('repos loaded', function () {
+  bus.on('dats:loaded', function () {
     if (state.repos.values.length) return
     state.welcome.show = true
     bus.emit('render')
   })
 
-  bus.on('hide welcome screen', function () {
+  bus.on('welcome:hide', function () {
     state.welcome.show = false
     bus.emit('render')
   })
