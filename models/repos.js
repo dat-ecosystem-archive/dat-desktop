@@ -29,6 +29,7 @@ function reposModel (state, bus) {
   state.repos = xtend({
     downloadsDir: downloadsDir,
     removalKey: null,
+    editKey: null,
     ready: false,
     values: []
   }, state.repos)
@@ -75,7 +76,7 @@ function reposModel (state, bus) {
         ev.returnValue = false
         window.removeEventListener('beforeunload', onBeforeUnload)
         manager.closeAll(function () {
-          app.quit()
+          // app.quit()
         })
       }
       bus.emit('dats:loaded')
@@ -142,6 +143,27 @@ function reposModel (state, bus) {
       })
     })
     document.body.appendChild(modal)
+  })
+
+  bus.on('dats:edit-start', function (key) {
+    assert.equal(typeof key, 'string', 'dats:edit-start: key should be type string')
+    var dat = state.repos.values.find(function (dat) {
+      return dat.key.toString('hex') === key
+    })
+    assert.ok(dat, 'dats:edit-start: no dat found with key ' + key)
+    dat.metadata.editing = true
+    bus.emit('render')
+  })
+
+  bus.on('dats:edit-save', function (data) {
+    assert.equal(typeof data, 'object', 'dats:edit-save: data should be type object')
+    var dat = state.repos.values.find(function (dat) {
+      return dat.key.toString('hex') === data.key
+    })
+    assert.ok(dat, 'dats:edit-save: no dat found with key ' + data.key)
+    dat.metadata.editing = false
+    dat.metadata.title = data.title
+    bus.emit('render')
   })
 
   // handle IPC events from the server

@@ -163,7 +163,6 @@ function row (dat, emit) {
   var stats = dat.stats && dat.stats.get()
   var peers = dat.network ? dat.network.connected : 'N/A'
   var key = encoding.encode(dat.key)
-  var title = dat.metadata.title || '#' + key
 
   stats.size = dat.archive.content ? bytes(dat.archive.content.bytes) : 'N/A'
   stats.state = dat.network
@@ -251,9 +250,7 @@ function row (dat, emit) {
       </td>
       <td class="cell-2">
         <div class="cell-truncate">
-          <h2 class="f6 normal truncate">
-            ${title}
-          </h2>
+          ${titleField(dat, emit)}
           <p class="f7 color-neutral-60 truncate">
             <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
             <span class="title">
@@ -281,4 +278,32 @@ function row (dat, emit) {
       </td>
     </tr>
   `
+}
+
+// Editable title field
+function titleField (dat, emit) {
+  var key = dat.key.toString('hex')
+  var title = dat.metadata.title || '#' + key
+  var clx = dat.metadata.editing ? 'f6 normal' : 'f6 normal truncate'
+
+  return html`
+    <h2 contenteditable="true" class=${clx}
+      onclick=${handleEdit}
+      onkeydown=${handleKeydown}>
+      ${title}
+    </h2>
+  `
+
+  function handleEdit (e) {
+    emit('dats:edit-start', key)
+  }
+
+  function handleKeydown (e) {
+    var newTitle = e.target.innerText
+    if (e.code === 'Enter' || e.code === 'Escape') {
+      e.preventDefault()
+      e.target.blur()
+      emit('dats:edit-save', { key: key, title: newTitle })
+    }
+  }
 }
