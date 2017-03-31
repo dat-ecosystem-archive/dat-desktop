@@ -1,14 +1,14 @@
-const encoding = require('dat-encoding')
-const bytes = require('prettier-bytes')
-const html = require('choo/html')
-const assert = require('assert')
-const css = require('sheetify')
+var encoding = require('dat-encoding')
+var bytes = require('prettier-bytes')
+var html = require('choo/html')
+var assert = require('assert')
+var css = require('sheetify')
 
-const button = require('./button')
-const status = require('./status')
-const icon = require('./icon')
+var button = require('./button')
+var status = require('./status')
+var icon = require('./icon')
 
-const table = css`
+var tableStyles = css`
   :host {
     width: 100%;
     th,
@@ -40,6 +40,11 @@ const table = css`
     tr:hover td {
       background-color: var(--color-neutral--04);
     }
+  }
+`
+
+var cellStyles = css`
+  :host {
     .cell-1 {
       width: 4rem;
     }
@@ -62,6 +67,11 @@ const table = css`
     .cell-truncate {
       width: 26vw;
     }
+  }
+`
+
+var iconStyles = css`
+  :host {
     .row-action {
       height: 1.5rem;
       display: inline-block;
@@ -95,6 +105,19 @@ const table = css`
         fill: inherit;
       }
     }
+  }
+`
+
+var networkStyles = css`
+  :host {
+    svg {
+      height: 1.5rem;
+      display: inline-block;
+      color: var(--color-neutral-20);
+      vertical-align: middle;
+      width: 1.1em;
+      max-height: 1.6em;
+    }
     .network-peers-many {
       --polygon-1-color: var(--color-green);
       --polygon-2-color: var(--color-green);
@@ -115,7 +138,7 @@ module.exports = tableElement
 function tableElement (dats, emit) {
   return html`
     <main>
-      <table class="w-100 collapse ${table}">
+      <table class="w-100 collapse ${tableStyles}">
         <thead>
           <tr>
             <th class="cell-1"></th>
@@ -137,25 +160,25 @@ function tableElement (dats, emit) {
 }
 
 function row (dat, emit) {
-  const stats = dat.stats && dat.stats.get()
-  var peers = (dat.network)
-    ? dat.network.connected
-    : 'N/A'
+  var stats = dat.stats && dat.stats.get()
+  var peers = dat.network ? dat.network.connected : 'N/A'
   var key = encoding.encode(dat.key)
   var title = dat.metadata.title || '#' + key
 
-  stats.size = (dat.archive.content) ? bytes(dat.archive.content.bytes) : 'N/A'
-  stats.state = (dat.network)
-    ? (dat.owner || dat.progress === 1)
+  stats.size = dat.archive.content ? bytes(dat.archive.content.bytes) : 'N/A'
+  stats.state = dat.network
+    ? dat.owner || dat.progress === 1
       ? 'complete'
-      : (peers)
+      : peers
         ? 'loading'
         : 'stale'
     : 'paused'
 
-  const togglePause = () => emit('dats:toggle-pause', dat)
+  function togglePause () {
+    emit('dats:toggle-pause', dat)
+  }
 
-  const hexContent = {
+  var hexContent = {
     loading: button.icon('loading', {
       icon: icon('hexagon-down', {class: 'w2'}),
       class: 'color-blue hover-color-blue-hover',
@@ -181,18 +204,22 @@ function row (dat, emit) {
   var finderButton = button.icon('Open in Finder', {
     icon: icon('open-in-finder'),
     class: 'row-action',
-    onclick: () => emit('dats:open', dat)
+    onclick: function () {
+      emit('dats:open', dat)
+    }
   })
 
   var linkButton = button.icon('Share Dat', {
     icon: icon('link'),
     class: 'row-action',
-    onclick: () => emit('dats:share', dat)
+    onclick: function () {
+      emit('dats:share', dat)
+    }
   })
 
   var deleteButton = button.icon('Remove Dat', {
     icon: icon('delete'),
-    class: 'delete row-action',
+    class: 'row-action',
     onclick: function (e) {
       // FIXME: we're relying on DOM ordering here. Fix this in choo by moving
       // to nanomorph; e.g. events are still copied over when reordering
@@ -208,15 +235,15 @@ function row (dat, emit) {
   })
 
   var networkIcon = icon('network', {
-    class: (peers > 1)
+    class: peers > 1
       ? 'network-peers-many'
-      : (peers > 0)
+      : peers > 0
         ? 'network-peers-1'
         : 'network-peers-0'
   })
 
   return html`
-    <tr id=${key}>
+    <tr id=${key} class=${cellStyles}>
       <td class="cell-1">
         <div class="w2 center">
           ${hexContent}
@@ -241,12 +268,12 @@ function row (dat, emit) {
       <td class="tr cell-4 size">
         ${stats.size}
       </td>
-      <td class="cell-5">
+      <td class="cell-5 ${networkStyles}">
         ${networkIcon}
         <span class="network">${peers}</span>
       </td>
       <td class="cell-6">
-        <div class="flex justify-end">
+        <div class="flex justify-end ${iconStyles}">
           ${finderButton}
           ${linkButton}
           ${deleteButton}
