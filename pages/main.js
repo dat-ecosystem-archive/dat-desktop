@@ -57,7 +57,7 @@ function mainView (state, emit) {
     <div>
       ${sprite()}
       ${header}
-      ${Table(dats, emit)}
+      ${Table(state, emit)}
     </div>
   `
 

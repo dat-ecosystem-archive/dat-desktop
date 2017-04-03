@@ -147,22 +147,17 @@ function reposModel (state, bus) {
 
   bus.on('dats:edit-start', function (key) {
     assert.equal(typeof key, 'string', 'dats:edit-start: key should be type string')
-    var dat = state.repos.values.find(function (dat) {
-      return dat.key.toString('hex') === key
-    })
-    assert.ok(dat, 'dats:edit-start: no dat found with key ' + key)
-    dat.metadata.editing = true
+    state.repos.editKey = key
     bus.emit('render')
   })
 
   bus.on('dats:edit-save', function (data) {
     assert.equal(typeof data, 'object', 'dats:edit-save: data should be type object')
-    var dat = state.repos.values.find(function (dat) {
-      return dat.key.toString('hex') === data.key
-    })
-    assert.ok(dat, 'dats:edit-save: no dat found with key ' + data.key)
-    dat.metadata.editing = false
-    dat.metadata.title = data.title
+    // var dat = state.repos.values.find(function (dat) {
+    //   return dat.key.toString('hex') === data.key
+    // })
+    // assert.ok(dat, 'dats:edit-save: no dat found with key ' + data.key)
+    state.repos.editKey = null
     bus.emit('render')
   })
 

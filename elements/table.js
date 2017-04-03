@@ -135,7 +135,8 @@ var networkStyles = css`
 
 module.exports = tableElement
 
-function tableElement (dats, emit) {
+function tableElement (state, emit) {
+  var dats = state.repos.values
   return html`
     <main>
       <table class="w-100 collapse ${tableStyles}">
@@ -151,7 +152,7 @@ function tableElement (dats, emit) {
         </thead>
         <tbody>
           ${dats.map(function (dat) {
-            return row(dat, emit)
+            return row(dat, state, emit)
           })}
         </tbody>
       </table>
@@ -159,7 +160,7 @@ function tableElement (dats, emit) {
   `
 }
 
-function row (dat, emit) {
+function row (dat, state, emit) {
   var stats = dat.stats && dat.stats.get()
   var peers = dat.network ? dat.network.connected : 'N/A'
   var key = encoding.encode(dat.key)
@@ -250,7 +251,7 @@ function row (dat, emit) {
       </td>
       <td class="cell-2">
         <div class="cell-truncate">
-          ${titleField(dat, emit)}
+          ${titleField(dat, state, emit)}
           <p class="f7 color-neutral-60 truncate">
             <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
             <span class="title">
@@ -281,18 +282,31 @@ function row (dat, emit) {
 }
 
 // Editable title field
-function titleField (dat, emit) {
+function titleField (dat, state, emit) {
   var key = dat.key.toString('hex')
   var title = dat.metadata.title || '#' + key
-  var clx = dat.metadata.editing ? 'f6 normal' : 'f6 normal truncate'
+  var editTarget = state.repos.editKey
+  var isEditing = editTarget === key
 
-  return html`
-    <h2 contenteditable="true" class=${clx}
-      onclick=${handleEdit}
-      onkeydown=${handleKeydown}>
-      ${title}
-    </h2>
-  `
+  if (!isEditing) {
+    return html`
+      <h2 class="f6 normal truncate"
+        onclick=${handleEdit}>
+        ${title}
+      </h2>
+    `
+  } else {
+    return html`
+      <div>
+        <input class="f6 normal"
+          autofocus
+          value=${title}
+          onclick=${handleEdit}
+          onkeydown=${handleKeydown} />
+        <button>Save</button>
+      </div>
+    `
+  }
 
   function handleEdit (e) {
     emit('dats:edit-start', key)
