@@ -1,4 +1,5 @@
 var cache = require('cache-element')
+var nanolog = require('nanologger')
 var html = require('choo/html')
 var css = require('sheetify')
 
@@ -60,11 +61,14 @@ function tableElement (state, emit) {
 
 function TableRows () {
   var elements = {}
+  var log = nanolog('table-rows')
+  log.debug('initialized')
 
   return function (dats, state, emit) {
+    log.debug('render', elements)
     var usedKeys = []
     var renderedElements = dats.map(function (dat) {
-      var key = dat.key
+      var key = dat.key.toString('hex')
       var el = elements[key]
       usedKeys.push(key)
       if (el) {
@@ -77,9 +81,7 @@ function TableRows () {
     })
 
     Object.keys(elements).forEach(function (key) {
-      if (usedKeys.indexOf(key) === -1) {
-        elements[key] = null
-      }
+      if (usedKeys.indexOf(key) === -1) elements[key] = null
     })
 
     return renderedElements

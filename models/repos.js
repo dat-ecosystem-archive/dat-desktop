@@ -29,7 +29,6 @@ function reposModel (state, bus) {
   state.repos = xtend({
     downloadsDir: downloadsDir,
     removalKey: null,
-    editKey: null,
     ready: false,
     values: []
   }, state.repos)
@@ -145,19 +144,13 @@ function reposModel (state, bus) {
     document.body.appendChild(modal)
   })
 
-  bus.on('dats:edit-start', function (key) {
-    assert.equal(typeof key, 'string', 'dats:edit-start: key should be type string')
-    state.repos.editKey = key
-    bus.emit('render')
-  })
-
+  // TODO: turn this into change metadata
   bus.on('dats:edit-save', function (data) {
     assert.equal(typeof data, 'object', 'dats:edit-save: data should be type object')
     // var dat = state.repos.values.find(function (dat) {
     //   return dat.key.toString('hex') === data.key
     // })
     // assert.ok(dat, 'dats:edit-save: no dat found with key ' + data.key)
-    state.repos.editKey = null
     bus.emit('render')
   })
 

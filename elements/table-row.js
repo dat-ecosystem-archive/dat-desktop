@@ -1,7 +1,10 @@
 var microcomponent = require('microcomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
+var nanomorph = require('nanomorph')
+var nanotask = require('nanotask')
 var html = require('choo/html')
+var assert = require('assert')
 var css = require('sheetify')
 
 var button = require('./button')
@@ -155,9 +158,9 @@ function Row () {
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
-            ${finderButton.render()}
-            ${linkButton.render()}
-            ${deleteButton.render()}
+            ${finderButton.render(dat, emit)}
+            ${linkButton.render(dat, emit)}
+            ${deleteButton.render(dat, emit)}
           </div>
         </td>
       </tr>
@@ -166,7 +169,7 @@ function Row () {
 }
 
 function FinderButton () {
-  var component = microcomponent()
+  var component = microcomponent('finder-button')
   component.on('render', render)
   component.on('update', update)
   return component
@@ -187,7 +190,7 @@ function FinderButton () {
 }
 
 function LinkButton () {
-  var component = microcomponent()
+  var component = microcomponent('link-button')
   component.on('render', render)
   component.on('update', update)
   return component
@@ -208,7 +211,7 @@ function LinkButton () {
 }
 
 function DeleteButton () {
-  var component = microcomponent()
+  var component = microcomponent('delete-button')
   component.on('render', render)
   component.on('update', update)
   return component
@@ -230,7 +233,7 @@ function DeleteButton () {
 
 function NetworkIcon () {
   var peerCount = 0
-  var component = microcomponent()
+  var component = microcomponent('network-icon')
   component.on('render', render)
   component.on('update', update)
   return component
@@ -255,7 +258,7 @@ function NetworkIcon () {
 // create a new hexcontent icon
 function HexContent () {
   var state = null
-  var component = microcomponent()
+  var component = microcomponent('hex-content')
   component.on('render', render)
   component.on('update', update)
   component.on('unload', unload)
@@ -303,53 +306,129 @@ function HexContent () {
 
 // Editable title field
 function TitleField () {
-  var isEditing = false
+  var emit = null
+  var state = {
+    isEditing: false,
+    editTarget: null,
+    editValue: '',
+    title: null,
+    key: null
+  }
 
-  var component = microcomponent()
+  var task = nanotask()
+
+  var component = microcomponent('table-row')
   component.on('render', render)
+  component.on('render:active', renderActive)
+  component.on('render:inactive', renderInactive)
+  component.on('update', update)
+  component.on('unload', unload)
   return component
 
-  function render (dat, state, emit) {
-    var key = dat.key.toString('hex')
-    var title = dat.metadata.title || '#' + key
-    var editTarget = state.repos.editKey
-    isEditing = editTarget === key
+  function unload () {
+    emit = null
+    state = {
+      isEditing: false,
+      editTarget: null,
+      editValue: null,
+      title: null,
+      key: null
+    }
+  }
 
-    if (!isEditing) {
-      return html`
-        <h2 class="f6 normal truncate"
-          onclick=${handleEdit}>
-          ${title}
+  function update () {
+    var res = true
+    return res
+  }
+
+  function render (dat, newState, newEmit) {
+    assert.ok(dat, 'TitleField: expected dat to exist')
+    assert.ok(newState, 'TitleField: expected newState to exist')
+    assert.ok(newEmit, 'TitleField: expected newEmit to exist')
+
+    emit = newEmit || emit
+    state.key = dat.key.toString('hex')
+    state.title = dat.metadata.title || '#' + state.key
+
+    if (!this._element) this._element = html`<section></section>`
+    if (state.isEditing) component.emit('render:active')
+    else component.emit('render:inactive')
+
+    return this._element
+  }
+
+  function renderInactive () {
+    state.isEditing = false
+    state.editValue = ''
+    nanomorph(this._element, html`
+      <section>
+        <h2 class="f6 normal truncate" onclick=${onclick}>
+          ${state.title}
         </h2>
-      `
-    } else {
-      return html`
-        <div>
-          <input class="f6 normal"
-            autofocus
-            value=${title}
-            onkeydown=${handleKeydown} />
-          <button onclick=${handleSave}>
-            Save
-          </button>
-        </div>
-      `
+      </section>
+    `)
+    function onclick () {
+      component.emit('render:active')
     }
+  }
 
-    function handleEdit (e) {
-      emit('dats:edit-start', key)
-    }
+  function renderActive () {
+    state.isEditing = true
+    var self = this
+    nanomorph(this._element, html`
+      <section>
+        <input class="f6 normal"
+          value=${state.editValue} onkeyup=${handleKeyUp} />
+        ${renderButton()}
+      </section>
+    `)
 
-    function handleKeydown (e) {
-      var newTitle = e.target.innerText
-      if (e.code === 'Enter' || e.code === 'Escape') {
+    this._element.querySelector('input').focus()
+
+    function handleKeyUp (e) {
+      var oldValue = state.editValue
+      var newValue = e.target.value
+      state.editValue = e.target.value
+
+      if (e.code === 'Escape') {
         e.preventDefault()
-        e.target.blur()
-        emit('dats:edit-save', { key: key, title: newTitle })
+        task(function () {
+          component.emit('render:inactive')
+        })
+      } else if (e.code === 'Enter') {
+        e.preventDefault()
+        handleSave()
+      } else {
+        if (state.isEditing) {
+          if ((!oldValue || !newValue) && oldValue !== newValue) {
+            nanomorph(self._element.querySelector('button'), renderButton())
+          }
+        }
+      }
+    }
+
+    function renderButton () {
+      if (state.editValue === '') {
+        return html`
+          <button class="f6 white ttu bg-light-gray">
+            save
+          </button>
+        `
+      } else {
+        return html`
+          <button class="f6 white ttu bg-green" onclick=${handleSave}>
+            save
+          </button>
+        `
       }
     }
 
     function handleSave () {
+      task(function () {
+        var metadata = { title: state.editValue }
+        emit('dats:update-metadata', { key: state.key, metadata: metadata })
+        component.emit('render:inactive')
+      })
     }
   }
 }
