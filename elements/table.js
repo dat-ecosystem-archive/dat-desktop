@@ -2,7 +2,7 @@ var cache = require('cache-element')
 var html = require('choo/html')
 var css = require('sheetify')
 
-var row = require('./table-row')
+var TableRow = require('./table-row')
 
 var tableStyles = css`
   :host {
@@ -40,6 +40,7 @@ var tableStyles = css`
 `
 
 var tableHead = TableHead()
+var tableRows = TableRows()
 
 module.exports = tableElement
 
@@ -50,26 +51,54 @@ function tableElement (state, emit) {
       <table class="w-100 collapse ${tableStyles}">
         ${tableHead.render()}
         <tbody>
-          ${dats.map(function (dat) {
-            return row(dat, state, emit)
-          })}
+          ${tableRows(dats, state, emit)}
         </tbody>
       </table>
     </main>
   `
 }
 
+function TableRows () {
+  var elements = {}
+
+  return function (dats, state, emit) {
+    var usedKeys = []
+    var renderedElements = dats.map(function (dat) {
+      var key = dat.key
+      var el = elements[key]
+      usedKeys.push(key)
+      if (el) {
+        return el(dat, state, emit)
+      } else {
+        var newRow = TableRow()
+        elements[key] = newRow
+        return newRow(dat, state, emit)
+      }
+    })
+
+    Object.keys(elements).forEach(function (key) {
+      if (usedKeys.indexOf(key) === -1) {
+        elements[key] = null
+      }
+    })
+
+    return renderedElements
+  }
+}
+
 function TableHead () {
-  return cache(html`
-    <thead>
-      <tr>
-        <th class="cell-1"></th>
-        <th class="tl cell-2">Link</th>
-        <th class="tl cell-3">Status</th>
-        <th class="tr cell-4">Size</th>
-        <th class="tl cell-5">Peers</th>
-        <th class="cell-6"></th>
-      </tr>
-    </thead>
-  `)
+  return cache(function () {
+    return html`
+      <thead>
+        <tr>
+          <th class="cell-1"></th>
+          <th class="tl cell-2">Link</th>
+          <th class="tl cell-3">Status</th>
+          <th class="tr cell-4">Size</th>
+          <th class="tl cell-5">Peers</th>
+          <th class="cell-6"></th>
+        </tr>
+      </thead>
+    `
+  })
 }

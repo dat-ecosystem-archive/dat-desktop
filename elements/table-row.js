@@ -2,14 +2,11 @@ var microcomponent = require('microcomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
 var html = require('choo/html')
-var assert = require('assert')
 var css = require('sheetify')
 
 var button = require('./button')
 var status = require('./status')
 var icon = require('./icon')
-
-module.exports = row
 
 var cellStyles = css`
   :host {
@@ -101,9 +98,70 @@ var networkStyles = css`
   }
 `
 
+module.exports = Row
+
 function Row () {
   var hexContent = HexContent()
-  return function () {
+  var finderButton = FinderButton()
+  var linkButton = LinkButton()
+  var deleteButton = DeleteButton()
+  var titleField = TitleField()
+  var networkIcon = NetworkIcon()
+
+  return function (dat, state, emit) {
+    var stats = dat.stats && dat.stats.get()
+    var peers = dat.network ? dat.network.connected : 'N/A'
+    var key = encoding.encode(dat.key)
+
+    stats.size = dat.archive.content
+      ? bytes(dat.archive.content.bytes)
+      : 'N/A'
+
+    stats.state = !dat.network
+      ? 'paused'
+      : dat.owner || dat.progress === 1
+        ? 'complete'
+        : peers
+          ? 'loading'
+          : 'stale'
+
+    return html`
+      <tr id=${key} class=${cellStyles}>
+        <td class="cell-1">
+          <div class="w2 center">
+            ${hexContent.render(dat, stats, emit)}
+          </div>
+        </td>
+        <td class="cell-2">
+          <div class="cell-truncate">
+            ${titleField.render(dat, state, emit)}
+            <p class="f7 color-neutral-60 truncate">
+              <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
+              <span class="title">
+                ${dat.owner ? 'Read & Write' : 'Read-only'}
+              </span>
+            </p>
+          </div>
+        </td>
+        <td class="cell-3">
+          ${status(dat, stats)}
+        </td>
+        <td class="tr cell-4 size">
+          ${stats.size}
+        </td>
+        <td class="cell-5 ${networkStyles}">
+          ${networkIcon.render(dat, emit)}
+          <span class="network">${peers}</span>
+        </td>
+        <td class="cell-6">
+          <div class="flex justify-end ${iconStyles}">
+            ${finderButton.render()}
+            ${linkButton.render()}
+            ${deleteButton.render()}
+          </div>
+        </td>
+      </tr>
+    `
   }
 }
 
@@ -178,153 +236,34 @@ function NetworkIcon () {
   return component
 
   function render (dat, emit) {
-    var iconClass = peers === 0
-      ?  'network-peers-0'
-      : peers === 1
+    peerCount = dat.network ? dat.network.connected : 'N/A'
+    var iconClass = peerCount === 0
+      ? 'network-peers-0'
+      : peerCount === 1
         ? 'network-peers-1'
         : 'network-peers-many'
 
     return icon('network', { class: iconClass })
   }
 
-  function update () {
-    return false
-  }
-}
-
-function Row () {
-
-  var component = microcomponent()
-  component.on('render', render)
-  component.on('update', update)
-  component.on('load', load)
-  component.on('unload', unload)
-  return component
-
-  function render (dat, state, emit) {
-    var stats = dat.stats && dat.stats.get()
-    var peers = dat.network ? dat.network.connected : 'N/A'
-    var key = encoding.encode(dat.key)
-
-    stats.size = dat.archive.content ? bytes(dat.archive.content.bytes) : 'N/A'
-    stats.state = dat.network
-      ? dat.owner || dat.progress === 1
-        ? 'complete'
-        : peers
-          ? 'loading'
-          : 'stale'
-      : 'paused'
-
-    var hexContent = HexContent[stats.state]
-
-  }
-
-  function update () {
-  }
-
-  function load () {
-  }
-
-  function unload () {
-  }
-}
-
-function row (dat, state, emit) {
-  return html`
-    <tr id=${key} class=${cellStyles}>
-      <td class="cell-1">
-        <div class="w2 center">
-          ${hexContent}
-        </div>
-      </td>
-      <td class="cell-2">
-        <div class="cell-truncate">
-          ${titleField(dat, state, emit)}
-          <p class="f7 color-neutral-60 truncate">
-            <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
-            <span class="title">
-              ${dat.owner ? 'Read & Write' : 'Read-only'}
-            </span>
-          </p>
-        </div>
-      </td>
-      <td class="cell-3">
-        ${status(dat, stats)}
-      </td>
-      <td class="tr cell-4 size">
-        ${stats.size}
-      </td>
-      <td class="cell-5 ${networkStyles}">
-        ${networkIcon}
-        <span class="network">${peers}</span>
-      </td>
-      <td class="cell-6">
-        <div class="flex justify-end ${iconStyles}">
-          ${finderButton}
-          ${linkButton}
-          ${deleteButton}
-        </div>
-      </td>
-    </tr>
-  `
-}
-
-// Editable title field
-function titleField (dat, state, emit) {
-  var key = dat.key.toString('hex')
-  var title = dat.metadata.title || '#' + key
-  var editTarget = state.repos.editKey
-  var isEditing = editTarget === key
-
-  if (!isEditing) {
-    return html`
-      <h2 class="f6 normal truncate"
-        onclick=${handleEdit}>
-        ${title}
-      </h2>
-    `
-  } else {
-    return html`
-      <div>
-        <input class="f6 normal"
-          autofocus
-          value=${title}
-          onkeydown=${handleKeydown} />
-        <button onclick=${handleSave}>
-          Save
-        </button>
-      </div>
-    `
-  }
-
-  function handleEdit (e) {
-    emit('dats:edit-start', key)
-  }
-
-  function handleKeydown (e) {
-    var newTitle = e.target.innerText
-    if (e.code === 'Enter' || e.code === 'Escape') {
-      e.preventDefault()
-      e.target.blur()
-      emit('dats:edit-save', { key: key, title: newTitle })
-    }
-  }
-
-  function handleSave () {
+  function update (dat, emit) {
+    var newPeerCount = dat.network ? dat.network.connected : 'N/A'
+    return peerCount !== newPeerCount
   }
 }
 
 // create a new hexcontent icon
 function HexContent () {
   var state = null
-  var hextContent = microcomponent()
-  hexContent.on('render', render)
-  hexContent.on('update', update)
-  hexContent.on('unload', unload)
-  return hexContent
+  var component = microcomponent()
+  component.on('render', render)
+  component.on('update', update)
+  component.on('unload', unload)
+  return component
 
   function render (dat, stats, emit) {
     state = stats.state
+
     return {
       loading: button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
@@ -345,8 +284,8 @@ function HexContent () {
         icon: icon('hexagon-up', {class: 'w2'}),
         class: 'color-green hover-color-green-hover',
         onclick: togglePause
-      })[dat]
-    }
+      })
+    }[state]
 
     function togglePause () {
       emit('dats:toggle-pause', dat)
@@ -359,5 +298,58 @@ function HexContent () {
 
   function unload () {
     state = null
+  }
+}
+
+// Editable title field
+function TitleField () {
+  var isEditing = false
+
+  var component = microcomponent()
+  component.on('render', render)
+  return component
+
+  function render (dat, state, emit) {
+    var key = dat.key.toString('hex')
+    var title = dat.metadata.title || '#' + key
+    var editTarget = state.repos.editKey
+    isEditing = editTarget === key
+
+    if (!isEditing) {
+      return html`
+        <h2 class="f6 normal truncate"
+          onclick=${handleEdit}>
+          ${title}
+        </h2>
+      `
+    } else {
+      return html`
+        <div>
+          <input class="f6 normal"
+            autofocus
+            value=${title}
+            onkeydown=${handleKeydown} />
+          <button onclick=${handleSave}>
+            Save
+          </button>
+        </div>
+      `
+    }
+
+    function handleEdit (e) {
+      emit('dats:edit-start', key)
+    }
+
+    function handleKeydown (e) {
+      var newTitle = e.target.innerText
+      if (e.code === 'Enter' || e.code === 'Escape') {
+        e.preventDefault()
+        e.target.blur()
+        emit('dats:edit-save', { key: key, title: newTitle })
+      }
+    }
+
+    function handleSave () {
+    }
   }
 }
