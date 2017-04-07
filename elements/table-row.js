@@ -1,12 +1,10 @@
 var microcomponent = require('microcomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
-var nanomorph = require('nanomorph')
-var nanotask = require('nanotask')
 var html = require('choo/html')
-var assert = require('assert')
 var css = require('sheetify')
 
+var TitleField = require('./table-title-field')
 var button = require('./button')
 var status = require('./status')
 var icon = require('./icon')
@@ -178,7 +176,9 @@ function FinderButton () {
     return button.icon('Open in Finder', {
       icon: icon('open-in-finder'),
       class: 'row-action',
-      onclick: function () {
+      onclick: function (e) {
+        e.preventDefault()
+        e.stopPropagation()
         emit('dats:open', dat)
       }
     })
@@ -199,7 +199,9 @@ function LinkButton () {
     return button.icon('Share Dat', {
       icon: icon('link'),
       class: 'row-action',
-      onclick: function () {
+      onclick: function (e) {
+        e.preventDefault()
+        e.stopPropagation()
         emit('dats:share', dat)
       }
     })
@@ -220,7 +222,9 @@ function DeleteButton () {
     return button.icon('Remove Dat', {
       icon: icon('delete'),
       class: 'row-action',
-      onclick: function () {
+      onclick: function (e) {
+        e.preventDefault()
+        e.stopPropagation()
         emit('dats:remove', { key: dat.key })
       }
     })
@@ -290,7 +294,9 @@ function HexContent () {
       })
     }[state]
 
-    function togglePause () {
+    function togglePause (e) {
+      e.preventDefault()
+      e.stopPropagation()
       emit('dats:toggle-pause', dat)
     }
   }
@@ -301,134 +307,5 @@ function HexContent () {
 
   function unload () {
     state = null
-  }
-}
-
-// Editable title field
-function TitleField () {
-  var emit = null
-  var state = {
-    isEditing: false,
-    editTarget: null,
-    editValue: '',
-    title: null,
-    key: null
-  }
-
-  var task = nanotask()
-
-  var component = microcomponent('table-row')
-  component.on('render', render)
-  component.on('render:active', renderActive)
-  component.on('render:inactive', renderInactive)
-  component.on('update', update)
-  component.on('unload', unload)
-  return component
-
-  function unload () {
-    emit = null
-    state = {
-      isEditing: false,
-      editTarget: null,
-      editValue: null,
-      title: null,
-      key: null
-    }
-  }
-
-  function update () {
-    var res = true
-    return res
-  }
-
-  function render (dat, newState, newEmit) {
-    assert.ok(dat, 'TitleField: expected dat to exist')
-    assert.ok(newState, 'TitleField: expected newState to exist')
-    assert.ok(newEmit, 'TitleField: expected newEmit to exist')
-
-    emit = newEmit || emit
-    state.key = dat.key.toString('hex')
-    state.title = dat.metadata.title || '#' + state.key
-
-    if (!this._element) this._element = html`<section></section>`
-    if (state.isEditing) component.emit('render:active')
-    else component.emit('render:inactive')
-
-    return this._element
-  }
-
-  function renderInactive () {
-    state.isEditing = false
-    state.editValue = ''
-    nanomorph(this._element, html`
-      <section>
-        <h2 class="f6 normal truncate" onclick=${onclick}>
-          ${state.title}
-        </h2>
-      </section>
-    `)
-    function onclick () {
-      component.emit('render:active')
-    }
-  }
-
-  function renderActive () {
-    state.isEditing = true
-    var self = this
-    nanomorph(this._element, html`
-      <section>
-        <input class="f6 normal"
-          value=${state.editValue} onkeyup=${handleKeyUp} />
-        ${renderButton()}
-      </section>
-    `)
-
-    this._element.querySelector('input').focus()
-
-    function handleKeyUp (e) {
-      var oldValue = state.editValue
-      var newValue = e.target.value
-      state.editValue = e.target.value
-
-      if (e.code === 'Escape') {
-        e.preventDefault()
-        task(function () {
-          component.emit('render:inactive')
-        })
-      } else if (e.code === 'Enter') {
-        e.preventDefault()
-        handleSave()
-      } else {
-        if (state.isEditing) {
-          if ((!oldValue || !newValue) && oldValue !== newValue) {
-            nanomorph(self._element.querySelector('button'), renderButton())
-          }
-        }
-      }
-    }
-
-    function renderButton () {
-      if (state.editValue === '') {
-        return html`
-          <button class="f6 white ttu bg-light-gray">
-            save
-          </button>
-        `
-      } else {
-        return html`
-          <button class="f6 white ttu bg-green" onclick=${handleSave}>
-            save
-          </button>
-        `
-      }
-    }
-
-    function handleSave () {
-      task(function () {
-        var metadata = { title: state.editValue }
-        emit('dats:update-metadata', { key: state.key, metadata: metadata })
-        component.emit('render:inactive')
-      })
-    }
   }
 }
