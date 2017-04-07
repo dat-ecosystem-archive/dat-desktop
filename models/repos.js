@@ -144,14 +144,11 @@ function reposModel (state, bus) {
     document.body.appendChild(modal)
   })
 
-  // TODO: turn this into change metadata
-  bus.on('dats:edit-save', function (data) {
-    assert.equal(typeof data, 'object', 'dats:edit-save: data should be type object')
-    // var dat = state.repos.values.find(function (dat) {
-    //   return dat.key.toString('hex') === data.key
-    // })
-    // assert.ok(dat, 'dats:edit-save: no dat found with key ' + data.key)
-    bus.emit('render')
+  bus.on('dats:update-metadata', function (data) {
+    assert.equal(typeof data, 'object', 'dats:update-metadata: data should be type object')
+    assert.equal(typeof data.key, 'string', 'dats:update-metadata: data.key should be type string')
+    assert.equal(typeof data.metadata, 'object', 'dats:update-metadata: data.metadata should be type object')
+    console.warn('to be implemented')
   })
 
   // handle IPC events from the server
