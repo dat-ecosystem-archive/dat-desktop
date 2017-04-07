@@ -5,6 +5,14 @@ var assert = require('assert')
 
 module.exports = TitleField
 
+// Creates an input field with an explicit save button.
+// There's 2 modes: active and inactive.
+// Inactive becomes active by clicking on the input field.
+// Active becomes inactive by:
+// - clicking anywhere outside the field
+// - pressing escape
+// - pressing enter (saving)
+// - clicking the save button (saving)
 function TitleField () {
   var emit = null
   var state = {
@@ -65,6 +73,7 @@ function TitleField () {
         </h2>
       </section>
     `)
+
     function onclick (e) {
       e.stopPropagation()
       e.preventDefault()
@@ -73,7 +82,10 @@ function TitleField () {
   }
 
   function renderActive () {
-    state.isEditing = true
+    if (!state.isEditing) {
+      state.isEditing = true
+      attachListener()
+    }
     var self = this
     nanomorph(this._element, html`
       <section>
@@ -93,7 +105,7 @@ function TitleField () {
 
       if (e.code === 'Escape') {
         e.preventDefault()
-        component.emit('render:inactive')
+        deactivate()
       } else if (e.code === 'Enter') {
         e.preventDefault()
         handleSave()
@@ -123,7 +135,25 @@ function TitleField () {
       e.preventDefault()
       var metadata = { title: state.editValue }
       emit('dats:update-metadata', { key: state.key, metadata: metadata })
+      deactivate()
+    }
+
+    function deactivate () {
+      document.body.removeEventListener('click', clickedOutside)
       component.emit('render:inactive')
+    }
+
+    function attachListener () {
+      document.body.addEventListener('click', clickedOutside)
+    }
+
+    function clickedOutside (e) {
+      var source = e.target
+      while (source.parentNode) {
+        if (source === self._element) return
+        source = source.parentNode
+      }
+      deactivate()
     }
   }
 }
