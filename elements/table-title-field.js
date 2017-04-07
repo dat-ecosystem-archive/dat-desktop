@@ -7,6 +7,7 @@ module.exports = TitleField
 
 // Creates an input field with an explicit save button.
 // There's 2 modes: active and inactive.
+// Only dats that you're the owner of can have an active input field.
 // Inactive becomes active by clicking on the input field.
 // Active becomes inactive by:
 // - clicking anywhere outside the field
@@ -37,6 +38,7 @@ function TitleField () {
       isEditing: false,
       editTarget: null,
       editValue: null,
+      isOwner: false,
       title: null,
       key: null
     }
@@ -52,7 +54,9 @@ function TitleField () {
     assert.ok(newState, 'TitleField: expected newState to exist')
     assert.ok(newEmit, 'TitleField: expected newEmit to exist')
 
+    state.isOwner = dat.isOwner || state.isOwner
     emit = newEmit || emit
+
     state.key = dat.key.toString('hex')
     state.title = dat.metadata.title || '#' + state.key
 
@@ -107,6 +111,7 @@ function TitleField () {
         e.preventDefault()
         deactivate()
       } else if (e.code === 'Enter') {
+        if (!newValue) return
         e.preventDefault()
         handleSave()
       } else if ((!oldValue || !newValue) && oldValue !== newValue) {
@@ -131,10 +136,11 @@ function TitleField () {
     }
 
     function handleSave (e) {
-      e.stopPropagation()
-      e.preventDefault()
-      var metadata = { title: state.editValue }
-      emit('dats:update-metadata', { key: state.key, metadata: metadata })
+      if (e) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
+      emit('dats:update-title', { key: state.key, title: state.editValue })
       deactivate()
     }
 

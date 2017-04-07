@@ -17,6 +17,7 @@ const path = require('path')
 
 const Modal = require('../elements/modal')
 const createManager = require('../lib/dat-manager')
+var datJson = require('../lib/dat-json')
 
 var argv = minimist(remoteProcess.argv.slice(2))
 var downloadsDir = (argv.data)
@@ -144,11 +145,23 @@ function reposModel (state, bus) {
     document.body.appendChild(modal)
   })
 
-  bus.on('dats:update-metadata', function (data) {
-    assert.equal(typeof data, 'object', 'dats:update-metadata: data should be type object')
-    assert.equal(typeof data.key, 'string', 'dats:update-metadata: data.key should be type string')
-    assert.equal(typeof data.metadata, 'object', 'dats:update-metadata: data.metadata should be type object')
-    console.warn('to be implemented')
+  bus.on('dats:update-title', function (data) {
+    assert.equal(typeof data, 'object', 'dats:update-title: data should be type object')
+    assert.equal(typeof data.key, 'string', 'dats:update-title: data.key should be type string')
+    assert.equal(typeof data.title, 'string', 'dats:update-title: data.title should be type string')
+
+    var newTitle = data.title
+    var key = data.key
+    var dat = state.repos.values.find(function (dat) {
+      return dat.key.toString('hex') === key
+    })
+    assert.ok(dat, 'dats:update-title: no dat found for key ' + key)
+
+    var values = Object.assign({}, dat.metadata, { title: newTitle })
+    var edit = datJson(dat)
+    edit.write(values, function (err) {
+      if (err) return onerror(err)
+    })
   })
 
   // handle IPC events from the server
