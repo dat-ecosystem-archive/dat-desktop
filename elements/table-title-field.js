@@ -1,7 +1,6 @@
 var microcomponent = require('microcomponent')
 var nanomorph = require('nanomorph')
 var html = require('choo/html')
-var assert = require('assert')
 
 module.exports = TitleField
 
@@ -26,8 +25,8 @@ function TitleField () {
 
   var component = microcomponent('table-row')
   component.on('render', render)
-  component.on('render:inactive', renderInactive)
   component.on('render:active', renderActive)
+  component.on('render:inactive', renderInactive)
   component.on('update', update)
   component.on('unload', unload)
   return component
@@ -49,39 +48,34 @@ function TitleField () {
     return res
   }
 
-  function render (dat, newState, newEmit) {
-    assert.ok(dat, 'TitleField: expected dat to exist')
-    assert.ok(newState, 'TitleField: expected newState to exist')
-    assert.ok(newEmit, 'TitleField: expected newEmit to exist')
+  function render (newDat, newState, newEmit) {
+    if (newEmit) emit = newEmit
+    if (newDat) {
+      state.isOwner = newDat.isOwner
+      state.key = newDat.key.toString('hex')
+      state.title = newDat.metadata.title || '#' + state.key
+    }
 
-    state.isOwner = dat.isOwner || state.isOwner
-    emit = newEmit || emit
-
-    state.key = dat.key.toString('hex')
-    state.title = dat.metadata.title || '#' + state.key
-
-    if (!this._element) this._element = html`<section></section>`
-    if (state.isEditing) component.emit('render:active')
-    else component.emit('render:inactive')
-
-    return this._element
+    if (state.isEditing) return component.emit('render:active')
+    else return component.emit('render:inactive')
   }
 
   function renderInactive () {
-    state.isEditing = false
     state.editValue = ''
-    nanomorph(this._element, html`
+
+    return html`
       <section>
         <h2 class="f6 normal truncate" onclick=${onclick}>
           ${state.title}
         </h2>
       </section>
-    `)
+    `
 
     function onclick (e) {
       e.stopPropagation()
       e.preventDefault()
-      component.emit('render:active')
+      state.isEditing = true
+      component.emit('render')
     }
   }
 
@@ -90,16 +84,19 @@ function TitleField () {
       state.isEditing = true
       attachListener()
     }
+
+    setTimeout(function () {
+      self._element.querySelector('input').focus()
+    }, 0)
+
     var self = this
-    nanomorph(this._element, html`
+    return html`
       <section>
         <input class="f6 normal"
           value=${state.editValue} onkeyup=${handleKeypress} />
         ${renderButton()}
       </section>
-    `)
-
-    self._element.querySelector('input').focus()
+    `
 
     function handleKeypress (e) {
       var oldValue = state.editValue
@@ -128,7 +125,7 @@ function TitleField () {
         `
       } else {
         return html`
-          <button class="f6 white ttu bg-green" onclick=${handleSave}>
+          <button class="f6 white ttu bg-color-green" onclick=${handleSave}>
             save
           </button>
         `
@@ -146,7 +143,8 @@ function TitleField () {
 
     function deactivate () {
       document.body.removeEventListener('click', clickedOutside)
-      component.emit('render:inactive')
+      state.isEditing = false
+      component.emit('render')
     }
 
     function attachListener () {

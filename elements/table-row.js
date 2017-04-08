@@ -1,7 +1,6 @@
 var microcomponent = require('microcomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
-var nanomorph = require('nanomorph')
 var html = require('choo/html')
 var css = require('sheetify')
 
@@ -267,7 +266,6 @@ function HexContent () {
   var dat = null
 
   var component = microcomponent('hex-content')
-  component.on('render:icon', renderIcon)
   component.on('render', render)
   component.on('update', update)
   component.on('unload', unload)
@@ -278,36 +276,26 @@ function HexContent () {
     emit = newEmit
     dat = newDat
 
-    if (!this._element) {
-      component.emit('render:icon', state)
-      return this._icon
-    } else {
-      component.emit('render:icon', state)
-      nanomorph(this._element, this._icon)
-    }
-  }
-
-  function renderIcon (state) {
     if (state === 'loading') {
-      this._icon = button.icon('loading', {
+      return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
         class: 'color-blue hover-color-blue-hover',
         onclick: togglePause
       })
     } else if (state === 'stale') {
-      this._icon = button.icon('stale', {
+      return button.icon('stale', {
         icon: icon('hexagon-x', {class: 'w2'}),
         class: 'color-neutral-30 hover-color-neutral-40',
         onclick: togglePause
       })
     } else if (state === 'paused') {
-      this._icon = button.icon('paused', {
+      return button.icon('paused', {
         icon: icon('hexagon-resume', {class: 'w2'}),
         class: 'color-neutral-30 hover-color-neutral-40',
         onclick: togglePause
       })
     } else if (state === 'complete') {
-      this._icon = button.icon('complete', {
+      return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
         class: 'color-green hover-color-green-hover',
         onclick: togglePause
