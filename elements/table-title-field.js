@@ -14,14 +14,8 @@ module.exports = TitleField
 // - pressing enter (saving)
 // - clicking the save button (saving)
 function TitleField () {
+  var state = resetState()
   var emit = null
-  var state = {
-    isEditing: false,
-    editTarget: null,
-    editValue: '',
-    title: null,
-    key: null
-  }
 
   var component = microcomponent('table-row')
   component.on('render', render)
@@ -33,14 +27,7 @@ function TitleField () {
 
   function unload () {
     emit = null
-    state = {
-      isEditing: false,
-      editTarget: null,
-      editValue: null,
-      isOwner: false,
-      title: null,
-      key: null
-    }
+    state = resetState()
   }
 
   function update () {
@@ -48,12 +35,22 @@ function TitleField () {
     return res
   }
 
-  function render (newDat, newState, newEmit) {
+  function resetState () {
+    return {
+      isEditing: false,
+      editTarget: null,
+      editValue: '',
+      title: null,
+      key: null
+    }
+  }
+
+  function render (dat, newState, newEmit) {
     if (newEmit) emit = newEmit
-    if (newDat) {
-      state.isOwner = newDat.isOwner
-      state.key = newDat.key.toString('hex')
-      state.title = newDat.metadata.title || '#' + state.key
+    if (dat) {
+      state.isOwner = dat.isOwner
+      state.key = dat.key.toString('hex')
+      state.title = dat.metadata.title || '#' + state.key
     }
 
     if (state.isEditing) return component.emit('render:active')
