@@ -30,9 +30,10 @@ function TitleField () {
     state = resetState()
   }
 
-  function update () {
-    var res = true
-    return res
+  function update (dat, newState, newEmit) {
+    return dat.isOwner !== state.isOwner ||
+      dat.key.toString('hex') !== state.key ||
+      state.title !== dat.metadata.title || '#' + state.key
   }
 
   function resetState () {
