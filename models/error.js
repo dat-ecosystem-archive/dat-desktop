@@ -41,4 +41,3 @@ function errorModel (state, bus) {
     throw err
   })
 }
-
