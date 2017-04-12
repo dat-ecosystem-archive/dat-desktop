@@ -379,7 +379,7 @@ function linkModal () {
       isCopied = true
       clipboard.writeText(link)
       var _el = render()
-      morph(_el, el)
+      morph(el, _el)
     }
   }
 }
