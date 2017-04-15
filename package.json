@@ -10,6 +10,7 @@
     "base-elements": "^2.2.1",
     "cache-element": "^3.0.0",
     "choo": "^5.1.0",
+    "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
     "choo-persist": "^3.0.0",
     "console-stream": "juliangruber/console-stream#fix/console",
@@ -57,7 +58,6 @@
   },
   "devDependencies": {
     "browserify": "^13.3.0",
-    "choo-expose": "^1.0.0",
     "concat-stream": "^1.6.0",
     "dependency-check": "^2.6.0",
     "electron": "1.4.14",
