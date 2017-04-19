@@ -110,6 +110,8 @@ function Row () {
   var networkIcon = NetworkIcon()
 
   return function (dat, state, emit) {
+    if (dat instanceof Error) return errorRow(dat)
+
     var stats = dat.stats && dat.stats.get()
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
@@ -318,4 +320,26 @@ function HexContent () {
     emit = null
     dat = null
   }
+}
+
+function errorRow (err) {
+  return html`
+    <tr>
+      <td class="cell-1">
+        <div class="w2 center">
+          Error initializing dat in ${err.dir}
+        </div>
+      </td>
+      <td class="cell-2">
+      </td>
+      <td class="cell-3">
+      </td>
+      <td class="tr cell-4 size">
+      </td>
+      <td class="cell-5">
+      </td>
+      <td class="cell-6">
+      </td>
+    </tr>
+  `
 }
