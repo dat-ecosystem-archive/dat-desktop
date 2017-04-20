@@ -149,7 +149,7 @@ function Row () {
           ${status(dat, stats)}
         </td>
         <td class="tr cell-4 size">
-          ${stats.size}
+          ${stats && stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render(dat, emit)}
