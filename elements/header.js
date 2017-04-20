@@ -10,7 +10,7 @@ const icon = require('./icon')
 
 module.exports = headerElement
 
-const header = css `
+const header = css`
   :host {
     height: 2.5rem;
     padding: .25rem .75rem;
