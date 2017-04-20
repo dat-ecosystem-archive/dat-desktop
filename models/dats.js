@@ -8,7 +8,6 @@ const encoding = require('dat-encoding')
 const shell = require('electron').shell
 const Multidat = require('multidat')
 const minimist = require('minimist')
-const Worker = require('dat-worker')
 const toilet = require('toiletdb')
 const mkdirp = require('mkdirp')
 const assert = require('assert')
@@ -54,11 +53,7 @@ function datsModel (state, bus) {
     },
     function (_, next) {
       var dbMultidrive = toilet(dbMultidriveFile)
-      Multidat(dbMultidrive, {
-        dat: Worker,
-        stdout: ConsoleStream(),
-        stderr: ConsoleStream()
-      }, next)
+      Multidat(dbMultidrive, next)
     },
     function (multidat, done) {
       var dbPaused = toilet(dbPausedFile)
