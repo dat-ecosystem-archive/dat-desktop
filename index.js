@@ -9,7 +9,7 @@ const Writable = require('stream').Writable
 const autoUpdater = require('./lib/auto-updater')
 const colors = require('dat-colors')
 
-const delegateEvents = require('./lib/delegate-electron-events')
+const delegateEvents = require('delegate-electron-events')
 
 const windowStyles = {
   width: 800,
