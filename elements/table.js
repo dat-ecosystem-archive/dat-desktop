@@ -46,7 +46,7 @@ var tableRows = TableRows()
 module.exports = tableElement
 
 function tableElement (state, emit) {
-  var dats = state.repos.values
+  var dats = state.dats.values
   return html`
     <main>
       <table class="w-100 collapse ${tableStyles}">
