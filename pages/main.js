@@ -14,8 +14,8 @@ module.exports = mainView
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
   const showWelcomeScreen = state.welcome.show
-  const dats = state.repos.values
-  const isReady = state.repos.ready
+  const dats = state.dats.values
+  const isReady = state.dats.ready
 
   const header = Header({
     isReady: isReady,

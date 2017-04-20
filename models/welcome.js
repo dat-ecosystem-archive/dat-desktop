@@ -10,7 +10,7 @@ function welcomeModel (state, bus) {
   // FIXME: wait for DOMContentLoaded
   // requires some sort of global load event first
   bus.on('dats:loaded', function () {
-    if (state.repos.values.length) return
+    if (state.dats.values.length) return
     state.welcome.show = true
     bus.emit('render')
   })

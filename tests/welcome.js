@@ -18,7 +18,7 @@ tape('models/welcome: should initialize with a default state', function (t) {
 
 tape('should show welcome screen if there are no dats', function (t) {
   var state = {
-    repos: {
+    dats: {
       values: []
     },
     welcome: {

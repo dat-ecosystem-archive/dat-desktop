@@ -24,15 +24,15 @@ var downloadsDir = (argv.data)
   ? argv.data
   : path.join(app.getPath('downloads'), '/dat')
 
-module.exports = reposModel
+module.exports = datsModel
 
-function reposModel (state, bus) {
-  state.repos = xtend({
+function datsModel (state, bus) {
+  state.dats = xtend({
     downloadsDir: downloadsDir,
     removalKey: null,
     ready: false,
     values: []
-  }, state.repos)
+  }, state.dats)
 
   var manager = null
 
@@ -67,8 +67,8 @@ function reposModel (state, bus) {
         dbPaused
       }, function (err, dats) {
         if (err) return bus.emit('error', err)
-        state.repos.values = dats
-        state.repos.ready = true
+        state.dats.values = dats
+        state.dats.ready = true
         bus.emit('render')
       })
       window.addEventListener('beforeunload', onBeforeUnload)
@@ -118,14 +118,14 @@ function reposModel (state, bus) {
       return onerror(new Error("The value you entered doesn't appear to be a valid Dat link"))
     }
 
-    var dir = path.join(state.repos.downloadsDir, key)
+    var dir = path.join(state.dats.downloadsDir, key)
     var opts = { key: key }
     manager.create(dir, opts, onerror)
   }
 
   // copy a dat share link to clipboard and open a modal
   bus.on('dats:share', function (dat) {
-    assert.ok(dat.key, 'repos-model.shareDat: data.key should exist')
+    assert.ok(dat.key, 'dats-model.shareDat: data.key should exist')
     const encodedKey = encoding.toStr(dat.key)
     const modal = Modal.link()(encodedKey)
     document.body.appendChild(modal)
@@ -152,7 +152,7 @@ function reposModel (state, bus) {
 
     var newTitle = data.title
     var key = data.key
-    var dat = state.repos.values.find(function (dat) {
+    var dat = state.dats.values.find(function (dat) {
       return dat.key.toString('hex') === key
     })
     assert.ok(dat, 'dats:update-title: no dat found for key ' + key)
