@@ -53,7 +53,7 @@ function datsModel (state, bus) {
     },
     function (_, next) {
       var dbMultidrive = toilet(dbMultidriveFile)
-      Multidat(dbMultidrive, { dat: Dat }, next)
+      Multidat(dbMultidrive, next)
     },
     function (multidat, done) {
       var dbPaused = toilet(dbPausedFile)
