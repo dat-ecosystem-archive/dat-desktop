@@ -116,17 +116,18 @@ function Row () {
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
 
-    stats.size = dat.archive.content
-      ? bytes(dat.archive.content.bytes)
-      : 'N/A'
-
-    stats.state = !dat.network
-      ? 'paused'
-      : dat.owner || dat.progress === 1
-        ? 'complete'
-        : peers
-          ? 'loading'
-          : 'stale'
+    if (stats) {
+      stats.size = dat.archive.content
+        ? bytes(dat.archive.content.bytes)
+        : 'N/A'
+      stats.state = !dat.network
+        ? 'paused'
+        : dat.owner || dat.progress === 1
+          ? 'complete'
+          : peers
+            ? 'loading'
+            : 'stale'
+    }
 
     return html`
       <tr id=${key} class=${cellStyles}>
@@ -150,7 +151,7 @@ function Row () {
           ${status(dat, stats)}
         </td>
         <td class="tr cell-4 size">
-          ${stats.size}
+          ${stats && stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render(dat, emit)}
@@ -274,7 +275,7 @@ function HexContent () {
   return component
 
   function render (newDat, stats, newEmit) {
-    state = stats.state
+    state = stats && stats.state
     emit = newEmit
     dat = newDat
 
@@ -282,12 +283,6 @@ function HexContent () {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
         class: 'color-blue hover-color-blue-hover',
-        onclick: togglePause
-      })
-    } else if (state === 'stale') {
-      return button.icon('stale', {
-        icon: icon('hexagon-x', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
         onclick: togglePause
       })
     } else if (state === 'paused') {
@@ -300,6 +295,12 @@ function HexContent () {
       return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
         class: 'color-green hover-color-green-hover',
+        onclick: togglePause
+      })
+    } else {
+      return button.icon('stale', {
+        icon: icon('hexagon-x', {class: 'w2'}),
+        class: 'color-neutral-30 hover-color-neutral-40',
         onclick: togglePause
       })
     }
