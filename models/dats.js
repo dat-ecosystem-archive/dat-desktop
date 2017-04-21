@@ -118,8 +118,15 @@ function datsModel (state, bus) {
       return onerror(new Error("The value you entered doesn't appear to be a valid Dat link"))
     }
 
-    var dir = path.join(state.dats.downloadsDir, key)
+    var dirs = dialog.showOpenDialog({
+      properties: ['openDirectory'],
+      defaultPath: state.dats.downloadsDir
+    })
+    if (!dirs || !dirs.length) return
+    var dirname = dirs[0]
+
     var opts = { key: key }
+    var dir = path.join(dirname, key)
     manager.create(dir, opts, onerror)
   }
 
