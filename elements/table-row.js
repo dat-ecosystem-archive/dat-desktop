@@ -115,16 +115,14 @@ function Row () {
     let stats
     try {
       stats = dat.stats || dat.trackStats()
-      console.log('got stats')
     } catch (_) {
-      console.log('no got stats')
     }
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
 
     if (stats) {
       stats.size = dat.archive.content
-        ? bytes(dat.archive.content.bytes)
+        ? bytes(dat.archive.content.byteLength)
         : 'N/A'
       stats.state = !dat.network
         ? 'paused'
