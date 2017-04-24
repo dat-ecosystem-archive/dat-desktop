@@ -1,6 +1,5 @@
 const remoteProcess = require('electron').remote.process
 const dialog = require('electron').remote.dialog
-const ConsoleStream = require('console-stream')
 const ipc = require('electron').ipcRenderer
 const waterfall = require('run-waterfall')
 const app = require('electron').remote.app
@@ -11,6 +10,7 @@ const minimist = require('minimist')
 const toilet = require('toiletdb')
 const mkdirp = require('mkdirp')
 const assert = require('assert')
+const Dat = require('dat-node')
 const xtend = require('xtend')
 const path = require('path')
 
@@ -53,7 +53,7 @@ function datsModel (state, bus) {
     },
     function (_, next) {
       var dbMultidrive = toilet(dbMultidriveFile)
-      Multidat(dbMultidrive, next)
+      Multidat(dbMultidrive, { dat: Dat }, next)
     },
     function (multidat, done) {
       var dbPaused = toilet(dbPausedFile)

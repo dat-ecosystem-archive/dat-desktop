@@ -112,7 +112,13 @@ function Row () {
   return function (dat, state, emit) {
     if (dat instanceof Error) return errorRow(dat)
 
-    var stats = dat.stats && dat.stats.get()
+    let stats
+    try {
+      stats = dat.stats || dat.trackStats()
+      console.log('got stats')
+    } catch (_) {
+      console.log('no got stats')
+    }
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
 
