@@ -1,13 +1,3 @@
-/**
- * Use awesome syntax of `node-sass-magic-importer` to import scss modules
- * See import `dat-design` rule below for example.
- * If there's no file path specified after module name, it resolves to the file
- * defined by the imported package.json's `style` property
- *
- * More magic importer features:
- * https://github.com/maoberlehner/node-sass-magic-importer
- */
-@import url(/Users/anon/src/datproject/dat-desktop/node_modules/tachyons/css/tachyons.css);
 body {
   min-width: 480px;
   line-height: 1.5; }
