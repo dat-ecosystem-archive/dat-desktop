@@ -1,0 +1,292 @@
+/**
+ * Use awesome syntax of `node-sass-magic-importer` to import scss modules
+ * See import `dat-design` rule below for example.
+ * If there's no file path specified after module name, it resolves to the file
+ * defined by the imported package.json's `style` property
+ *
+ * More magic importer features:
+ * https://github.com/maoberlehner/node-sass-magic-importer
+ */
+@import url(/Users/anon/src/datproject/dat-desktop/node_modules/tachyons/css/tachyons.css);
+body {
+  min-width: 480px;
+  line-height: 1.5; }
+
+body, input, textarea, select, button {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif; }
+
+html {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  cursor: default; }
+
+img {
+  -webkit-user-drag: none; }
+
+.is-selectable {
+  -webkit-user-select: auto;
+  cursor: auto; }
+
+.f7 {
+  font-size: .75rem; }
+
+.btn-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center; }
+
+.dat-header {
+  height: 2.5rem;
+  padding: .25rem .75rem;
+  background-color: #293648;
+  color: #FFFFFF;
+  -webkit-app-region: drag; }
+
+.menu-trigger {
+  display: none !important;
+  height: 2rem; }
+  .menu-trigger .icon-menu {
+    fill: #D3D7DB; }
+  .menu-trigger:hover .icon-menu, .menu-trigger:focus .icon-menu {
+    fill: #FFFFFF; }
+
+.header-action {
+  height: 2rem;
+  display: inline-block;
+  border: 1px solid #C3C9CD;
+  background: transparent;
+  color: #C3C9CD;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: .025em; }
+  .header-action svg {
+    width: 1.1em;
+    max-height: 1.6em;
+    fill: currentColor;
+    vertical-align: middle; }
+  .header-action:hover, .header-action:focus {
+    outline: none;
+    color: #FFFFFF;
+    border-color: #FFFFFF; }
+  .header-action .btn-text {
+    font-size: .75rem; }
+
+.header-action-no-border {
+  border-color: transparent; }
+  .header-action-no-border:hover, .header-action-no-border:focus {
+    border-color: transparent; }
+
+.dat-import {
+  position: relative;
+  display: inline-block;
+  padding: 0;
+  border: 0; }
+  .dat-import svg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: .4rem;
+    padding-left: .5rem;
+    pointer-events: none;
+    display: block;
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: #C3C9CD; }
+
+.dat-import-input {
+  height: 2rem;
+  width: 6.75rem;
+  padding-right: .5rem;
+  padding-left: 2rem;
+  font-size: .75rem;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: #C3C9CD;
+  opacity: 1;
+  text-transform: uppercase;
+  letter-spacing: .025em;
+  transition-property: width;
+  transition-duration: .15s;
+  transition-timing-function: ease-in; }
+  .dat-import-input::-webkit-input-placeholder {
+    color: #C3C9CD;
+    opacity: 1; }
+  .dat-import-input:hover::-webkit-input-placeholder {
+    color: #FFFFFF; }
+  .dat-import-input:hover + svg {
+    fill: #FFFFFF; }
+  .dat-import-input:focus, .dat-import-input:active {
+    width: 14rem;
+    outline: none;
+    background-color: #FFFFFF;
+    color: #293648; }
+    .dat-import-input:focus::-webkit-input-placeholder, .dat-import-input:active::-webkit-input-placeholder {
+      color: #C3C9CD; }
+    .dat-import-input:focus + svg, .dat-import-input:active + svg {
+      fill: #919BA4; }
+
+.progress {
+  min-width: 8rem;
+  overflow: hidden;
+  padding-top: .85rem;
+  padding-bottom: .5rem; }
+
+.progress__bar {
+  height: 0.5rem;
+  width: calc(100% - 2.5rem);
+  float: left;
+  overflow: hidden;
+  background-color: #D3D7DB;
+  border-radius: 2px; }
+
+.progress__line {
+  width: 0%;
+  height: 0.5rem;
+  background-color: #2980B9;
+  border-radius: 2px; }
+
+.progress__line--loading {
+  overflow: hidden;
+  position: relative;
+  height: 0.5rem; }
+
+@keyframes move-bg {
+  0% {
+    background-position: 28px 0; }
+  100% {
+    background-position: 0 0; } }
+  .progress__line--loading:before {
+    content: '';
+    width: 100%;
+    height: 0.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(255, 255, 255, 0.1) 5px, rgba(255, 255, 255, 0.1) 10px);
+    background-size: 28px 0.5rem;
+    animation: move-bg .75s linear infinite; }
+
+.progress__line--complete {
+  background-color: #35B44F; }
+
+.progress__line--paused {
+  background-color: #7C8792; }
+
+.progress__counter {
+  float: right;
+  min-width: 2.5rem;
+  margin-top: -.4rem;
+  text-align: right;
+  font-size: .875rem; }
+
+.table {
+  width: 100%; }
+
+th, td {
+  padding-right: .75rem;
+  padding-left: .75rem;
+  font-size: .875rem; }
+
+.table-header th {
+  height: 4rem;
+  font-size: .8125rem;
+  font-weight: normal;
+  color: #7C8792; }
+  .table-header th:first-child {
+    width: 3rem;
+    padding: 0; }
+  .table-header th:last-child {
+    width: 8.25rem; }
+  .table-header th:not(:first-child) {
+    border-bottom: 1px solid #D3D7DB; }
+
+.table-item td {
+  height: 4rem;
+  vertical-align: middle;
+  padding-top: 1rem; }
+
+.table-item:hover td {
+  background-color: #F6F7F8; }
+
+.cell-1 {
+  width: 5rem; }
+
+.cell-2 {
+  width: 17rem; }
+
+.cell-3 {
+  width: 15rem; }
+
+.cell-4 {
+  width: 5.5rem; }
+
+.cell-5 {
+  width: 6rem; }
+
+.cell-6 {
+  width: 10.25rem; }
+
+.cell-truncate {
+  width: 26vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.dat-hexagon {
+  position: relative;
+  width: 20px;
+  height: 11.55px;
+  margin: 5.77px auto;
+  text-align: center;
+  background-color: #24943A;
+  color: #FFFFFF;
+  line-height: .8; }
+  .dat-hexagon:before, .dat-hexagon:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent; }
+  .dat-hexagon:before {
+    bottom: 100%;
+    border-bottom: 5.77px solid #24943A; }
+  .dat-hexagon:after {
+    top: 100%;
+    width: 0;
+    border-top: 5.77px solid #24943A; }
+
+.row-action {
+  height: 2rem;
+  display: inline-block;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .025em;
+  color: #D3D7DB; }
+  .row-action svg {
+    fill: currentColor;
+    vertical-align: middle;
+    width: 1.1em;
+    max-height: 1.6em; }
+  .row-action:hover, .row-action:focus {
+    outline: none;
+    color: #919BA4; }
+  .row-action:first-child {
+    padding-left: 0; }
+  .row-action:last-child {
+    padding-right: 0; }
+
+.network-svg {
+  fill: #D3D7DB;
+  vertical-align: middle;
+  width: 1.1em;
+  max-height: 1.6em; }
