@@ -25,7 +25,7 @@ function WelcomeScreen (methods) {
 
   return html`
     <main class="${welcome}" onload=${onLoad}>
-      <img src="./public/img/logo-dat-desktop.svg" alt="" class="">
+      <img src="./assets/logo-dat-desktop.svg" alt="" class="">
       <p class="mv4">
         Share data on the distributed web.
       </p>

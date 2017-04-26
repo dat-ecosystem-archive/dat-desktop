@@ -32,7 +32,7 @@ bundle () {
 
 postinstall () {
   printf '[scripts/build] installing app deps \n'
-  [ `uname` == 'Darwin' ] && build_background
+  [ "$(uname)" == 'Darwin' ] && build_background
   rebuild || exit 1
   bundle
 }

@@ -53,9 +53,9 @@ const skeleton = css`
 function EmptyState () {
   return html`
     <main class="${skeleton}">
-      <img src="./public/img/table-skeleton.svg" alt="" class="skeleton">
+      <img src="./assets/table-skeleton.svg" alt="" class="skeleton">
       <div class="tutorial">
-        <img src="./public/img/dotted-lines.svg" alt="" class="dotted-lines">
+        <img src="./assets/dotted-lines.svg" alt="" class="dotted-lines">
         <div class="link">
           ${icon('link', { class: 'color-blue-disabled' })}
           <h3 class="f4 ttu mt0 mb0 color-blue-disabled">
