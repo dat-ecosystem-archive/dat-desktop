@@ -10,7 +10,6 @@ require('./lib/monkeypatch')
 css('dat-colors')
 css('tachyons')
 css('./assets/base.css')
-css('./assets/colors.css')
 
 const app = choo()
 
