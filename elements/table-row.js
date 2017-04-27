@@ -126,7 +126,7 @@ function Row () {
         : 'N/A'
       stats.state = !dat.network
         ? 'paused'
-        : dat.owner || dat.progress === 1
+        : dat.writable || dat.progress === 1
           ? 'complete'
           : peers
             ? 'loading'
@@ -146,7 +146,7 @@ function Row () {
             <p class="f7 color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
-                ${dat.owner ? 'Read & Write' : 'Read-only'}
+                ${dat.writable ? 'Read & Write' : 'Read-only'}
               </span>
             </p>
           </div>
