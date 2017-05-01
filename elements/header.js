@@ -64,6 +64,8 @@ const header = css`
 `
 
 function headerElement (props) {
+  assert.equal(typeof props, 'object', 'elements/header: props should be type object')
+
   var isReady = props.isReady
   var onimport = props.onimport
   var oncreate = props.oncreate
