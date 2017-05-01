@@ -1,23 +1,24 @@
 'use strict'
 
-const html = require('choo/html')
-const assert = require('assert')
-const css = require('sheetify')
-const xtend = require('xtend')
+var html = require('choo/html')
+var assert = require('assert')
+var css = require('sheetify')
+var xtend = require('xtend')
 
-const baseStyles = css`
+var baseStyles = css`
   :host {
     text-transform: uppercase;
     letter-spacing: .025em;
     cursor: pointer;
     background-color: transparent;
-    .btn-inner-wrapper {
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-    }
+  }
+
+  :host .btn-inner-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
   .icon-only {
     .btn-text { display: none }
@@ -31,8 +32,8 @@ var greenStyles = css`
     background-color: var(--color-green);
     color: var(--color-neutral-04);
   }
-  :host:hover,
-  :host:focus {
+  :host :hover,
+  :host :focus {
     background-color: var(--color-green-hover);
     color: var(--color-white);
   }
@@ -45,8 +46,8 @@ var redStyles = css`
     background-color: var(--color-red);
     color: var(--color-neutral-04);
   }
-  :host:hover,
-  :host:focus {
+  :host :hover,
+  :host :focus {
     background-color: var(--color-red-hover);
     color: var(--color-white);
   }
@@ -74,10 +75,13 @@ module.exports = plainButton
 // - Text only
 // - Text and icon
 function buttonElement (innerText, opts) {
-  if (!opts) {
+  if (typeof innerText === 'object') {
     opts = innerText
     innerText = ''
   }
+
+  assert.equal(typeof innerText, 'string', 'elements/button: innerText should be type string')
+  assert.equal(typeof opts, 'object', 'elements/button: opts should be type object')
 
   var icon = opts.icon
   var innerHTML = null
@@ -105,11 +109,14 @@ function buttonElement (innerText, opts) {
   var buttonProps = xtend(defaultProps, opts)
   buttonProps.class = baseStyles + ' ' + buttonProps.class
 
-  return html`
-    <button ${buttonProps}>
+  var el = html`
+    <button>
       ${innerHTML}
     </button>
   `
+
+  copyProps(el, buttonProps)
+  return el
 }
 
 // - Icon only
@@ -139,18 +146,23 @@ function iconButton (innerText, opts) {
   buttonProps.class = baseStyles + ' ' + buttonProps.class
   buttonProps.icon = null
 
-  return html`
-    <button ${buttonProps}>
+  var el = html`
+    <button>
       ${innerHTML}
     </button>
   `
+  copyProps(el, buttonProps)
+  return el
 }
 
 function greenButton (innerText, opts) {
-  if (!opts) {
+  if (typeof innerText === 'object') {
     opts = innerText
     innerText = ''
   }
+
+  assert.equal(typeof innerText, 'string', 'elements/button: innerText should be type string')
+  assert.equal(typeof opts, 'object', 'elements/button: opts should be type object')
 
   opts = opts || {}
   opts.class = (opts.class) ? greenStyles + ' ' + opts.class : greenStyles
@@ -158,10 +170,13 @@ function greenButton (innerText, opts) {
 }
 
 function redButton (innerText, opts) {
-  if (!opts) {
+  if (typeof innerText === 'object') {
     opts = innerText
     innerText = ''
   }
+
+  assert.equal(typeof innerText, 'string', 'elements/button: innerText should be type string')
+  assert.equal(typeof opts, 'object', 'elements/button: opts should be type object')
 
   opts = opts || {}
   opts.class = (opts.class) ? redStyles + ' ' + opts.class : redStyles
@@ -169,7 +184,7 @@ function redButton (innerText, opts) {
 }
 
 function plainButton (innerText, opts) {
-  if (!opts) {
+  if (typeof innerText === 'object') {
     opts = innerText
     innerText = ''
   }
@@ -177,4 +192,10 @@ function plainButton (innerText, opts) {
   opts = opts || {}
   opts.class = (opts.class) ? plainStyles + ' ' + opts.class : plainStyles
   return buttonElement(innerText, opts)
+}
+
+function copyProps (el, props) {
+  Object.keys(props).forEach(function (key) {
+    el.setAttribute(key, props[key])
+  })
 }
