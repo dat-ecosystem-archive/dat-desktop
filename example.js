@@ -76,21 +76,33 @@ p.component('header')
     })
   })
 
-var Icon = p.component('icon')
-Icon.add('default', function () {
-  var icons = []
-  for (var i = 0, len = s.childNodes.length; i < len; i++) {
-    var node = s.childNodes[i]
-    var id = node.getAttribute('id').replace(/^daticon-/, '')
-    icons.push(icon(id, { class: iconStyle }))
-  }
+p.component('icon')
+  .add('default', function () {
+    var icons = []
+    for (var i = 0, len = s.childNodes.length; i < len; i++) {
+      var node = s.childNodes[i]
+      var id = node.getAttribute('id').replace(/^daticon-/, '')
+      icons.push(icon(id, { class: iconStyle }))
+    }
 
-  return html`
-    <div class="flex">
-      ${icons}
-    </div>
-  `
-})
+    return html`
+      <div class="flex">
+        ${icons}
+      </div>
+    `
+  })
+
+p.component('modal')
+  .add('confirm', function () {
+  })
+  .add('crash', function () {
+  })
+  .add('error', function () {
+  })
+  .add('warn', function () {
+  })
+  .add('link', function () {
+  })
 
 var tree = p.start()
 document.body.appendChild(s)
