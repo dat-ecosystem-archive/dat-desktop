@@ -51,6 +51,7 @@
     "clean": "rm -rf node_modules/",
     "build-background": "./scripts/build background",
     "preview": "bankai start -c [ --use sheetify-nested ] --uglify false example",
+    "preview:build": "bankai build -c [ --use sheetify-nested ] --uglify false example",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit",
     "test:integration": "node tests",
