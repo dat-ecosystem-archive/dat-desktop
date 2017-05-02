@@ -105,8 +105,7 @@ function createApp () {
 }
 
 // Starts the app, waits for it to load, returns a promise
-function waitForLoad (app, t, opts) {
-  if (!opts) opts = {}
+function waitForLoad (app, t) {
   return app.start().then(function () {
     return app.client.waitUntilWindowLoaded()
   }).then(function () {
