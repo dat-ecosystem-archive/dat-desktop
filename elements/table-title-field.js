@@ -31,7 +31,7 @@ function TitleField () {
   }
 
   function update (dat, newState, newEmit) {
-    return dat.isOwner !== state.isOwner ||
+    return dat.owner !== state.owner ||
       dat.key.toString('hex') !== state.key ||
       state.title !== dat.metadata.title || '#' + state.key
   }
@@ -49,12 +49,12 @@ function TitleField () {
   function render (dat, newState, newEmit) {
     if (newEmit) emit = newEmit
     if (dat) {
-      state.isOwner = dat.isOwner
+      state.owner = dat.owner
       state.key = dat.key.toString('hex')
       state.title = dat.metadata.title || '#' + state.key
     }
 
-    if (state.isEditing) return component.emit('render:active')
+    if (state.isEditing && state.owner) return component.emit('render:active')
     else return component.emit('render:inactive')
   }
 
