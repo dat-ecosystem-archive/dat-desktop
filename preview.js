@@ -112,6 +112,7 @@ p.component('modal')
 p.component('table-row')
   .add('error', function () {
     var dat = new Error('oh no, example error!')
+    dat.dir = '/Cool/path/to/a/dat'
     var state = {}
     var emit = function () {}
     var row = tableRow()

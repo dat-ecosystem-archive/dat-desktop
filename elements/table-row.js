@@ -328,20 +328,25 @@ function HexContent () {
 }
 
 function errorRow (err) {
+  var errorHexIcon = icon('hexagon-down', {
+    class: 'w2 color-red'
+  })
   return html`
     <tr>
       <td class="cell-1">
         <div class="w2 center">
-          Error initializing dat in ${err.dir}
+          ${errorHexIcon}
         </div>
       </td>
-      <td class="cell-2">
-      </td>
-      <td class="cell-3">
-      </td>
-      <td class="tr cell-4 size">
-      </td>
-      <td class="cell-5">
+      <td class="cell-2" colspan="4">
+        <div class="cell-truncate color-red">
+          <h2 class="f6 normal">
+            Error
+          </h2>
+          <p class="f7">
+            Error initializing dat in ${err.dir}
+          </p>
+        </div>
       </td>
       <td class="cell-6">
       </td>
