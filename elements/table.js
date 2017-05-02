@@ -1,6 +1,7 @@
 var cache = require('cache-element')
 var nanolog = require('nanologger')
 var html = require('choo/html')
+var assert = require('assert')
 var css = require('sheetify')
 
 var TableRow = require('./table-row')
@@ -46,7 +47,11 @@ var tableRows = TableRows()
 module.exports = tableElement
 
 function tableElement (state, emit) {
+  assert.equal(typeof state, 'object', 'elements/table: state should be type object')
+  assert.equal(typeof emit, 'function', 'elements/table: emit should be type function')
+
   var dats = state.dats.values
+
   return html`
     <main>
       <table class="w-100 collapse ${tableStyles}">

@@ -1,3 +1,7 @@
+// This file allows us to inspect all our components and all the states they
+// can be in, inside of a single view. When you build a new component, add it
+// here too. Run with "npm run preview"
+
 var previewify = require('previewify')
 var html = require('choo/html')
 var css = require('sheetify')
@@ -19,6 +23,7 @@ var button = require('./elements/button')
 var header = require('./elements/header')
 var sprite = require('./elements/sprite')
 var empty = require('./elements/empty')
+// var table = require('./elements/table')
 var icon = require('./elements/icon')
 
 css('dat-colors')
@@ -102,6 +107,11 @@ p.component('modal')
   .add('warn', function () {
   })
   .add('link', function () {
+  })
+
+p.component('table')
+  .add('default', function () {
+    // return table()
   })
 
 var tree = p.start()

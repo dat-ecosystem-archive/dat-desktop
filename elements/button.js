@@ -121,10 +121,10 @@ function buttonElement (innerText, opts) {
 
 // - Icon only
 function iconButton (innerText, opts) {
-  assert.equal(typeof innerText, 'string', 'elements/button: innerText should by type string')
-  assert.ok(innerText.length, 'elements/button: innerText should have a length >= 0')
-  assert.equal(typeof opts, 'object', 'elements/button: opts should by type object')
-  assert.ok(opts.icon, 'elements/button: opts.icon should exist')
+  assert.equal(typeof innerText, 'string', 'elements/button.icon: innerText should by type string')
+  assert.ok(innerText.length, 'elements/button.icon: innerText should have a length >= 0')
+  assert.equal(typeof opts, 'object', 'elements/button.icon: opts should by type object')
+  assert.ok(opts.icon, 'elements/button.icon: opts.icon should exist')
 
   var icon = opts.icon
   opts.class = (opts.class)
@@ -161,10 +161,11 @@ function greenButton (innerText, opts) {
     innerText = ''
   }
 
-  assert.equal(typeof innerText, 'string', 'elements/button: innerText should be type string')
-  assert.equal(typeof opts, 'object', 'elements/button: opts should be type object')
-
   opts = opts || {}
+
+  assert.equal(typeof innerText, 'string', 'elements/button.green: innerText should be type string')
+  assert.equal(typeof opts, 'object', 'elements/button.green: opts should be type object')
+
   opts.class = (opts.class) ? greenStyles + ' ' + opts.class : greenStyles
   return buttonElement(innerText, opts)
 }
@@ -175,10 +176,11 @@ function redButton (innerText, opts) {
     innerText = ''
   }
 
-  assert.equal(typeof innerText, 'string', 'elements/button: innerText should be type string')
-  assert.equal(typeof opts, 'object', 'elements/button: opts should be type object')
-
   opts = opts || {}
+
+  assert.equal(typeof innerText, 'string', 'elements/button.red: innerText should be type string')
+  assert.equal(typeof opts, 'object', 'elements/button.red: opts should be type object')
+
   opts.class = (opts.class) ? redStyles + ' ' + opts.class : redStyles
   return buttonElement(innerText, opts)
 }
@@ -190,6 +192,10 @@ function plainButton (innerText, opts) {
   }
 
   opts = opts || {}
+
+  assert.equal(typeof innerText, 'string', 'elements/button: innerText should be type string')
+  assert.equal(typeof opts, 'object', 'elements/button: opts should be type object')
+
   opts.class = (opts.class) ? plainStyles + ' ' + opts.class : plainStyles
   return buttonElement(innerText, opts)
 }
