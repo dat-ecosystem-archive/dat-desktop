@@ -68,7 +68,9 @@ function TableRows () {
     log.debug('render', elements)
     var usedKeys = []
     var renderedElements = dats.map(function (dat) {
-      var key = dat.key.toString('hex')
+      var key = dat instanceof Error
+        ? dat.stack
+        : dat.key.toString('hex')
       var el = elements[key]
       usedKeys.push(key)
       if (el) {
