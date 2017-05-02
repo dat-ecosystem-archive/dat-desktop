@@ -50,7 +50,7 @@
     "clean": "rm -rf node_modules/",
     "build-background": "./scripts/build background",
     "start": "NODE_ENV=development electron .",
-    "test": "standard && npm run deps && npm run test:unit",
+    "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
     "test:unit": "node tests/welcome.js",
     "postinstall": "./scripts/build postinstall",
