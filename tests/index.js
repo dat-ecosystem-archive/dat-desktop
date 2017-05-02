@@ -40,6 +40,7 @@ tap('onboarding', function (t) {
       .then(() => app.browserWindow.getTitle())
       .then((title) => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
       .then(() => app.client.click('button'))
+      .then(() => wait())
       .then(() => app.browserWindow.getTitle())
       .then((title) => t.equal(title, 'Dat Desktop', 'correct title'))
       .then(() => app.stop())
