@@ -76,7 +76,7 @@ function datsModel (state, bus) {
         ev.returnValue = false
         window.removeEventListener('beforeunload', onBeforeUnload)
         manager.closeAll(function () {
-          // app.quit()
+          app.quit()
         })
       }
       bus.emit('dats:loaded')
