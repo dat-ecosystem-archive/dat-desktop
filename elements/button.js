@@ -32,8 +32,8 @@ var greenStyles = css`
     background-color: var(--color-green);
     color: var(--color-neutral-04);
   }
-  :host :hover,
-  :host :focus {
+  :host:hover,
+  :host:focus {
     background-color: var(--color-green-hover);
     color: var(--color-white);
   }
