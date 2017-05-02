@@ -19,11 +19,11 @@ var iconStyle = css`
 `
 
 var datImport = require('./elements/dat-import')
+var tableRow = require('./elements/table-row')
 var button = require('./elements/button')
 var header = require('./elements/header')
 var sprite = require('./elements/sprite')
 var empty = require('./elements/empty')
-// var table = require('./elements/table')
 var icon = require('./elements/icon')
 
 css('dat-colors')
@@ -109,9 +109,13 @@ p.component('modal')
   .add('link', function () {
   })
 
-p.component('table')
-  .add('default', function () {
-    // return table()
+p.component('table-row')
+  .add('error', function () {
+    var dat = new Error('oh no, example error!')
+    var state = {}
+    var emit = function () {}
+    var row = tableRow()
+    return row(dat, state, emit)
   })
 
 var tree = p.start()

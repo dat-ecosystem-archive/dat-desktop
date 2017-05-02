@@ -2,6 +2,7 @@ var microcomponent = require('microcomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
 var html = require('choo/html')
+var assert = require('assert')
 var css = require('sheetify')
 
 var TitleField = require('./table-title-field')
@@ -111,6 +112,10 @@ function Row () {
 
   return function (dat, state, emit) {
     if (dat instanceof Error) return errorRow(dat)
+
+    assert.equal(typeof dat, 'object', 'elements/table-row dat should be type object')
+    assert.equal(typeof state, 'object', 'elements/table-row state should be type object')
+    assert.equal(typeof emit, 'function', 'elements/table-row emit should be type function')
 
     var stats = dat.stats && dat.stats.get()
     var peers = dat.network ? dat.network.connected : 'N/A'
