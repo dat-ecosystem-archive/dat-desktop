@@ -223,7 +223,7 @@ function DeleteButton () {
   function render (dat, emit) {
     return button.icon('Remove Dat', {
       icon: icon('delete'),
-      class: 'row-action',
+      class: 'row-action delete',
       onclick: function (e) {
         e.preventDefault()
         e.stopPropagation()
