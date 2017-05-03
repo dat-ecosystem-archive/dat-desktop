@@ -1,17 +1,17 @@
 var spectron = require('spectron')
 var path = require('path')
-var tape = require('tape')
-var rimraf = require('rimraf')
+var tap = require('tap').test
+var del = require('del')
 
 var TEST_DATA = path.join(__dirname, 'test_data')
 var TEST_DATA_DB = path.join(TEST_DATA, 'multidat.json')
 
-tape('init', function (t) {
+tap('init', function (t) {
   t.test('should be able to boot up the app', function (t) {
     var app = createApp()
-    waitForLoad(app)
+    return waitForLoad(app)
       .then(() => app.browserWindow.isVisible())
-      .then((val) => t.equal(val, true))
+      .then((val) => t.ok(val, 'isVisible'))
       .then(() => app.client.getWindowCount())
       .then((val) => t.equal(val, 1, 'getWindowCount'))
       .then(() => app.browserWindow.isMinimized())
@@ -26,19 +26,23 @@ tape('init', function (t) {
       .then((val) => t.notEqual(val.width, 0, 'getBounds'))
       .then(() => app.browserWindow.getBounds())
       .then((val) => t.notEqual(val.height, 0, 'getBounds'))
-      .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
+      .then(() => endTest(app))
   })
+  t.end()
 })
 
-tape('onboarding', function (t) {
+tap('onboarding', function (t) {
   t.test('welcome screen should show every time you open the app as long as you have no dats', function (t) {
     var app = createApp()
-    waitForLoad(app)
+    return waitForLoad(app)
       .then(() => app.browserWindow.isVisible())
-      .then((isVisible) => t.equal(isVisible, true))
-      .then(() => app.client.click('button'))
+      .then((isVisible) => t.ok(isVisible, 'isVisible'))
       .then(() => app.browserWindow.getTitle())
-      .then((title) => t.ok(title, 'Dat Desktop | Welcome'))
+      .then((title) => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
+      .then(() => app.client.click('button'))
+      .then(() => wait())
+      .then(() => app.browserWindow.getTitle())
+      .then((title) => t.equal(title, 'Dat Desktop', 'correct title'))
       .then(() => app.stop())
       .then(() => Promise.resolve(app = createApp()))
       .then(() => waitForLoad(app))
@@ -51,24 +55,25 @@ tape('onboarding', function (t) {
         t.ok(val.indexOf('create new dat') > -1, 'has create new dat text')
         t.ok(val.indexOf('import dat') > -1, 'has import dat text')
       })
-      .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
+      .then(() => endTest(app))
   })
+  t.end()
 })
 
-tape('working with dats', function (t) {
+tap('working with dats', function (t) {
   t.test('click "create new dat" and share a local folder, you should see a new item in the list')
   t.test('click the link icon and it should copy the dat link to your clipboard')
   var app = createApp()
-  waitForLoad(app)
+  return waitForLoad(app)
     .then(() => app.browserWindow.isVisible())
-    .then((isVisible) => t.equal(isVisible, true))
+    .then((isVisible) => t.ok(isVisible, 'isVisible'))
     .then(() => app.client.click('button'))
     .then(() => wait(4000))
     .then(() => app.client.click('button')) // create new
     .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
-      t.ok(text.match(/52 B/), 'contains correct size')
+      t.ok(text.match(/126 B/), 'contains correct size')
     })
     .then(() => app.client.getText('.network'))
     .then((text) => t.ok(text.match(/0/), 'contains network size'))
@@ -80,7 +85,7 @@ tape('working with dats', function (t) {
     .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
-      t.ok(text.match(/52 B/), 'contains correct size')
+      t.ok(text.match(/126 B/), 'contains correct size')
     })
     .then(() => wait())
     .then(() => app.client.element('button.delete').click())
@@ -88,7 +93,7 @@ tape('working with dats', function (t) {
     .then(() => wait())
     .then(() => app.client.getText('.tutorial'))
     .then((text) => t.ok(text.toLowerCase().match(/create new dat/), 'now the dat is gone and welcome screen is back'))
-    .then(() => endTest(app, t), (err) => endTest(app, t, err || 'error'))
+    .then(() => endTest(app))
 })
 
 // Create a new app instance
@@ -101,8 +106,7 @@ function createApp () {
 }
 
 // Starts the app, waits for it to load, returns a promise
-function waitForLoad (app, t, opts) {
-  if (!opts) opts = {}
+function waitForLoad (app, t) {
   return app.start().then(function () {
     return app.client.waitUntilWindowLoaded()
   }).then(function () {
@@ -122,12 +126,8 @@ function wait (ms) {
 }
 
 // Quit the app, end the test, either in success (!err) or failure (err)
-function endTest (app, t, err) {
-  return rimraf(TEST_DATA, () => {
-    rimraf(path.join(__dirname, 'fixtures', '.dat'), () => {
-      app.stop().then(function () {
-        t.end(err)
-      })
-    })
-  })
+function endTest (app) {
+  var paths = [TEST_DATA, path.join(__dirname, 'fixtures', '.dat')]
+  return del(paths)
+    .then(() => app.stop())
 }
