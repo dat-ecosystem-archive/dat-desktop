@@ -332,7 +332,10 @@ function errorRow (err) {
     <tr>
       <td class="cell-1">
         <div class="w2 center">
-          Error initializing dat in ${err.dir}
+          Error initializing dat in ${err.dir}<br /><br />
+          <p>
+            ${err.message}
+          </p>
         </div>
       </td>
       <td class="cell-2">
