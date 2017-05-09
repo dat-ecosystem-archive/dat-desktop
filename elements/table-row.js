@@ -339,7 +339,7 @@ function errorRow (err) {
             Error
           </h2>
           <p class="f7">
-            Error initializing dat in ${err.dir}
+            Could not share ${err.dir}
           </p>
         </div>
       </td>
