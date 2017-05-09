@@ -78,7 +78,7 @@ function headerElement (props) {
 
   var importButton = datImport({ onsubmit: onimport })
 
-  var createButton = button('Create New Dat', {
+  var createButton = button('Share Folder', {
     id: 'create-new-dat',
     icon: icon('create-new-dat'),
     class: 'ml2 b--transparent header-action header-action-no-border',

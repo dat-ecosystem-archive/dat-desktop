@@ -68,7 +68,7 @@ function datImportElement (props) {
     <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
       <input name="dat-import"
         type="text"
-        placeholder="Import dat"
+        placeholder="Download"
         onkeydown=${onKeyDown}
         class="input-reset">
       ${icon('link', { class: 'absolute top-0 bottom-0 left-0' })}
