@@ -3,6 +3,7 @@ var nanomorph = require('nanomorph')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
+var button = require('./button')
 
 var overlay = css`
   :host {
@@ -108,7 +109,7 @@ function TitleField () {
 
     return html`
       <div class="${editableField}">
-        <h2 class="f6 normal truncate" onclick=${onclick}>
+        <h2 class="f6 normal truncate pr3" onclick=${onclick}>
           ${state.title || state.placeholderTitle}
           ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
         </h2>
@@ -136,7 +137,7 @@ function TitleField () {
       <div>
         <div class="${overlay}"></div>
         <div class="${editableField} shadow-1 flex justify-between">
-          <input class="bn f6 normal"
+          <input class="bn f6 normal w-100"
             value=${state.editValue} onkeyup=${handleKeypress} />
           ${renderButton()}
         </div>
@@ -163,15 +164,11 @@ function TitleField () {
     function renderButton () {
       if (state.editValue === state.title) {
         return html`
-          <button class="f6 white ttu bg-light-gray" onload=${attachListener}>
-            Save
-          </button>
+          ${button('Save', { onload: attachListener })}
         `
       } else {
         return html`
-          <button class="f6 white ttu bg-color-green" onload=${attachListener} onclick=${handleSave}>
-            Save
-          </button>
+          ${button.green('Save', { onclick: handleSave, onload: attachListener })}
         `
       }
     }
