@@ -33,4 +33,3 @@ function WelcomeScreen (methods) {
     </main>
   `
 }
-
