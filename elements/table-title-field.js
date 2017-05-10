@@ -110,16 +110,15 @@ function TitleField () {
         e.preventDefault()
         deactivate()
       } else if (e.code === 'Enter') {
-        if (!newValue) return
         e.preventDefault()
         handleSave()
-      } else if ((!oldValue || !newValue) && oldValue !== newValue) {
+      } else if (oldValue !== newValue) {
         nanomorph(self._element.querySelector('button'), renderButton())
       }
     }
 
     function renderButton () {
-      if (state.editValue === '') {
+      if (state.editValue === state.title) {
         return html`
           <button class="f6 white ttu bg-light-gray">
             save
