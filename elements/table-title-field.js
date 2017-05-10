@@ -51,7 +51,8 @@ function TitleField () {
     if (dat) {
       state.writable = dat.writable
       state.key = dat.key.toString('hex')
-      state.title = dat.metadata.title || '#' + state.key
+      state.title = dat.metadata.title || ''
+      state.placeholderTitle = '#' + state.key
     }
 
     if (state.isEditing && state.writable) return component.emit('render:active')
@@ -64,7 +65,7 @@ function TitleField () {
     return html`
       <section>
         <h2 class="f6 normal truncate" onclick=${onclick}>
-          ${state.title}
+          ${state.title || state.placeholderTitle}
         </h2>
       </section>
     `
@@ -73,6 +74,7 @@ function TitleField () {
       e.stopPropagation()
       e.preventDefault()
       state.isEditing = true
+      state.editValue = state.title
       component.emit('render')
     }
   }
@@ -84,7 +86,9 @@ function TitleField () {
     }
 
     setTimeout(function () {
-      self._element.querySelector('input').focus()
+      var input = self._element.querySelector('input')
+      input.focus()
+      input.select()
     }, 0)
 
     var self = this
@@ -106,16 +110,15 @@ function TitleField () {
         e.preventDefault()
         deactivate()
       } else if (e.code === 'Enter') {
-        if (!newValue) return
         e.preventDefault()
         handleSave()
-      } else if ((!oldValue || !newValue) && oldValue !== newValue) {
+      } else if (oldValue !== newValue) {
         nanomorph(self._element.querySelector('button'), renderButton())
       }
     }
 
     function renderButton () {
-      if (state.editValue === '') {
+      if (state.editValue === state.title) {
         return html`
           <button class="f6 white ttu bg-light-gray">
             save
