@@ -4,41 +4,25 @@ var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
 
-var overlay = css`
-  :host {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,0,.2);
-  }
-`
-
 var editableField = css`
   :host {
+    height: 1.25rem;
     position: relative;
-    margin-bottom: -.25rem;
-    margin-left: -.25rem;
-    padding: .25rem;
-    background-color: #FFF;
-    h2 {
-      position: relative;
-    }
     input {
-      background-color: #FFF;
+      width: 100%;
+      position: absolute;
+      right: 0;
+    }
+    button {
+      position: absolute;
+      right: 0;
     }
     .indicator {
       position: absolute;
       display: none;
-      top: .25rem;
       right: 0;
-      width: .75rem;
     }
     &:hover, &:focus {
-      h2 {
-        color: var(--color-blue);
-      }
       .indicator {
         display: block;
       }
@@ -110,7 +94,7 @@ function TitleField () {
       <div class="${editableField}">
         <h2 class="f6 normal truncate" onclick=${onclick}>
           ${state.title || state.placeholderTitle}
-          ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
+          ${icon('edit-dat', { class: 'w1 h1 absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
         </h2>
       </div>
     `
@@ -133,13 +117,10 @@ function TitleField () {
 
     var self = this
     return html`
-      <div>
-        <div class="${overlay}"></div>
-        <div class="${editableField} shadow-1 flex justify-between">
-          <input class="bn f6 normal"
-            value=${state.editValue} onkeyup=${handleKeypress} />
-          ${renderButton()}
-        </div>
+      <div class="${editableField}">
+        <input class="f6 normal"
+          value=${state.editValue} onkeyup=${handleKeypress} />
+        ${renderButton()}
       </div>
     `
 
