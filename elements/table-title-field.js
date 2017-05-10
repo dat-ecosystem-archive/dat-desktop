@@ -6,7 +6,7 @@ module.exports = TitleField
 
 // Creates an input field with an explicit save button.
 // There's 2 modes: active and inactive.
-// Only dats that you're the owner of can have an active input field.
+// Only dats that you can write to can have an active input field.
 // Inactive becomes active by clicking on the input field.
 // Active becomes inactive by:
 // - clicking anywhere outside the field
@@ -31,7 +31,7 @@ function TitleField () {
   }
 
   function update (dat, newState, newEmit) {
-    return dat.owner !== state.owner ||
+    return dat.writable !== state.writable ||
       dat.key.toString('hex') !== state.key ||
       state.title !== dat.metadata.title || '#' + state.key
   }
@@ -49,12 +49,12 @@ function TitleField () {
   function render (dat, newState, newEmit) {
     if (newEmit) emit = newEmit
     if (dat) {
-      state.owner = dat.owner
+      state.writable = dat.writable
       state.key = dat.key.toString('hex')
       state.title = dat.metadata.title || '#' + state.key
     }
 
-    if (state.isEditing && state.owner) return component.emit('render:active')
+    if (state.isEditing && state.writable) return component.emit('render:active')
     else return component.emit('render:inactive')
   }
 
