@@ -66,14 +66,6 @@ function datsModel (state, bus) {
         state.dats.ready = true
         bus.emit('render')
       })
-      window.addEventListener('beforeunload', onBeforeUnload)
-      function onBeforeUnload (ev) {
-        ev.returnValue = false
-        window.removeEventListener('beforeunload', onBeforeUnload)
-        manager.closeAll(function () {
-          app.quit()
-        })
-      }
       bus.emit('dats:loaded')
       done()
     }
