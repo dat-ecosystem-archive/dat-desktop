@@ -80,9 +80,6 @@ const progressSubline = css`
 `
 
 module.exports = function (dat, stats) {
-  if (dat.owner && dat.importer) {
-    return html`<div>Watching for updates…</div>`
-  }
   var progress = Math.floor((dat.progress || 0) * 100)
   var progressbarLine = (!stats || stats.state === 'loading')
     ? 'line-loading'
