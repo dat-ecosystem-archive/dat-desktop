@@ -6,3 +6,4 @@ build/background.tiff
 bundle.js
 .dat
 tags
+yarn.lock
