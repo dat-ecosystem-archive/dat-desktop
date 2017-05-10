@@ -80,11 +80,6 @@ function TitleField () {
   }
 
   function renderActive () {
-    if (!state.isEditing) {
-      state.isEditing = true
-      attachListener()
-    }
-
     setTimeout(function () {
       var input = self._element.querySelector('input')
       input.focus()
@@ -120,13 +115,13 @@ function TitleField () {
     function renderButton () {
       if (state.editValue === state.title) {
         return html`
-          <button class="f6 white ttu bg-light-gray">
+          <button class="f6 white ttu bg-light-gray" onload=${attachListener}>
             save
           </button>
         `
       } else {
         return html`
-          <button class="f6 white ttu bg-color-green" onclick=${handleSave}>
+          <button class="f6 white ttu bg-color-green" onload=${attachListener} onclick=${handleSave}>
             save
           </button>
         `
