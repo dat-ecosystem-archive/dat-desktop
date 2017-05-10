@@ -1,6 +1,34 @@
 var microcomponent = require('microcomponent')
 var nanomorph = require('nanomorph')
 var html = require('choo/html')
+var css = require('sheetify')
+var icon = require('./icon')
+
+var editableField = css`
+  :host {
+    height: 1.25rem;
+    position: relative;
+    input {
+      width: 100%;
+      position: absolute;
+      right: 0;
+    }
+    button {
+      position: absolute;
+      right: 0;
+    }
+    .indicator {
+      position: absolute;
+      display: none;
+      right: 0;
+    }
+    &:hover, &:focus {
+      .indicator {
+        display: block;
+      }
+    }
+  }
+`
 
 module.exports = TitleField
 
@@ -63,11 +91,12 @@ function TitleField () {
     state.editValue = ''
 
     return html`
-      <section>
+      <div class="${editableField}">
         <h2 class="f6 normal truncate" onclick=${onclick}>
           ${state.title || state.placeholderTitle}
+          ${icon('edit-dat', { class: 'w1 h1 absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
         </h2>
-      </section>
+      </div>
     `
 
     function onclick (e) {
@@ -88,11 +117,11 @@ function TitleField () {
 
     var self = this
     return html`
-      <section>
+      <div class="${editableField}">
         <input class="f6 normal"
           value=${state.editValue} onkeyup=${handleKeypress} />
         ${renderButton()}
-      </section>
+      </div>
     `
 
     function handleKeypress (e) {
@@ -116,13 +145,13 @@ function TitleField () {
       if (state.editValue === state.title) {
         return html`
           <button class="f6 white ttu bg-light-gray" onload=${attachListener}>
-            save
+            Save
           </button>
         `
       } else {
         return html`
           <button class="f6 white ttu bg-color-green" onload=${attachListener} onclick=${handleSave}>
-            save
+            Save
           </button>
         `
       }
