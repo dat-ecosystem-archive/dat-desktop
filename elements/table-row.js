@@ -149,7 +149,7 @@ function Row () {
           ${status(dat, stats)}
         </td>
         <td class="tr cell-4 size">
-          ${stats && stats.size}
+          ${stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render(dat, emit)}
@@ -326,10 +326,7 @@ function errorRow (err) {
     <tr>
       <td class="cell-1">
         <div class="w2 center">
-          Error initializing dat in ${err.dir}<br /><br />
-          <p>
-            ${err.message}
-          </p>
+          Error initializing dat in ${err.dir}
         </div>
       </td>
       <td class="cell-2">

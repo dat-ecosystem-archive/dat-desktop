@@ -81,15 +81,15 @@ const progressSubline = css`
 
 module.exports = function (dat, stats) {
   var progress = Math.floor((dat.progress || 0) * 100)
-  var progressbarLine = (!stats || stats.state === 'loading')
+  var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
     : (stats.state === 'paused' || stats.state === 'stale')
       ? 'line-paused'
       : 'line-complete'
-  var netStats = dat.stats && dat.stats.network
+  var netStats = dat.stats.network
 
   var progressText
-  switch (stats && stats.state) {
+  switch (stats.state) {
     case 'complete':
       progressText = `Complete. ↑ ${speed(netStats.uploadSpeed)}`
       break
