@@ -112,26 +112,20 @@ function Row () {
   return function (dat, state, emit) {
     if (dat instanceof Error) return errorRow(dat)
 
-    let stats
-    try {
-      stats = dat.stats || dat.trackStats()
-    } catch (_) {
-    }
+    var stats = dat.stats
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
 
-    if (stats) {
-      stats.size = dat.archive.content
-        ? bytes(dat.archive.content.byteLength)
-        : 'N/A'
-      stats.state = !dat.network
-        ? 'paused'
-        : dat.writable || dat.progress === 1
-          ? 'complete'
-          : peers
-            ? 'loading'
-            : 'stale'
-    }
+    stats.size = dat.archive.content
+      ? bytes(dat.archive.content.byteLength)
+      : 'N/A'
+    stats.state = !dat.network
+      ? 'paused'
+      : dat.writable || dat.progress === 1
+        ? 'complete'
+        : peers
+          ? 'loading'
+          : 'stale'
 
     return html`
       <tr id=${key} class=${cellStyles}>
@@ -155,7 +149,7 @@ function Row () {
           ${status(dat, stats)}
         </td>
         <td class="tr cell-4 size">
-          ${stats && stats.size}
+          ${stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render(dat, emit)}
@@ -332,10 +326,7 @@ function errorRow (err) {
     <tr>
       <td class="cell-1">
         <div class="w2 center">
-          Error initializing dat in ${err.dir}<br /><br />
-          <p>
-            ${err.message}
-          </p>
+          Error initializing dat in ${err.dir}
         </div>
       </td>
       <td class="cell-2">
