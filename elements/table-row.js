@@ -112,17 +112,16 @@ function Row () {
   return function (dat, state, emit) {
     if (dat instanceof Error) return errorRow(dat)
 
-    var stats = dat.stats && dat.stats.get()
+    var stats = dat.stats
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
 
     stats.size = dat.archive.content
-      ? bytes(dat.archive.content.bytes)
+      ? bytes(dat.archive.content.byteLength)
       : 'N/A'
-
     stats.state = !dat.network
       ? 'paused'
-      : dat.owner || dat.progress === 1
+      : dat.writable || dat.progress === 1
         ? 'complete'
         : peers
           ? 'loading'
@@ -141,7 +140,7 @@ function Row () {
             <p class="f7 color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
-                ${dat.owner ? 'Read & Write' : 'Read-only'}
+                ${dat.writable ? 'Read & Write' : 'Read-only'}
               </span>
             </p>
           </div>
@@ -274,7 +273,7 @@ function HexContent () {
   return component
 
   function render (newDat, stats, newEmit) {
-    state = stats.state
+    state = stats && stats.state
     emit = newEmit
     dat = newDat
 
@@ -282,12 +281,6 @@ function HexContent () {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
         class: 'color-blue hover-color-blue-hover',
-        onclick: togglePause
-      })
-    } else if (state === 'stale') {
-      return button.icon('stale', {
-        icon: icon('hexagon-x', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
         onclick: togglePause
       })
     } else if (state === 'paused') {
@@ -300,6 +293,12 @@ function HexContent () {
       return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
         class: 'color-green hover-color-green-hover',
+        onclick: togglePause
+      })
+    } else {
+      return button.icon('stale', {
+        icon: icon('hexagon-x', {class: 'w2'}),
+        class: 'color-neutral-30 hover-color-neutral-40',
         onclick: togglePause
       })
     }

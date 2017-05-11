@@ -80,9 +80,6 @@ const progressSubline = css`
 `
 
 module.exports = function (dat, stats) {
-  if (dat.owner && dat.importer) {
-    return html`<div>Watching for updates…</div>`
-  }
   var progress = Math.floor((dat.progress || 0) * 100)
   var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
@@ -105,7 +102,7 @@ module.exports = function (dat, stats) {
     case 'stale':
       progressText = 'waiting for peers…'
       break
-    case 'paused':
+    default:
       progressText = 'Paused.'
   }
   function speed (n) {

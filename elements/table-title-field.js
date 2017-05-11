@@ -6,7 +6,7 @@ module.exports = TitleField
 
 // Creates an input field with an explicit save button.
 // There's 2 modes: active and inactive.
-// Only dats that you're the owner of can have an active input field.
+// Only dats that you can write to can have an active input field.
 // Inactive becomes active by clicking on the input field.
 // Active becomes inactive by:
 // - clicking anywhere outside the field
@@ -31,7 +31,7 @@ function TitleField () {
   }
 
   function update (dat, newState, newEmit) {
-    return dat.owner !== state.owner ||
+    return dat.writable !== state.writable ||
       dat.key.toString('hex') !== state.key ||
       state.title !== dat.metadata.title || '#' + state.key
   }
@@ -49,12 +49,13 @@ function TitleField () {
   function render (dat, newState, newEmit) {
     if (newEmit) emit = newEmit
     if (dat) {
-      state.owner = dat.owner
+      state.writable = dat.writable
       state.key = dat.key.toString('hex')
-      state.title = dat.metadata.title || '#' + state.key
+      state.title = dat.metadata.title || ''
+      state.placeholderTitle = '#' + state.key
     }
 
-    if (state.isEditing && state.owner) return component.emit('render:active')
+    if (state.isEditing && state.writable) return component.emit('render:active')
     else return component.emit('render:inactive')
   }
 
@@ -64,7 +65,7 @@ function TitleField () {
     return html`
       <section>
         <h2 class="f6 normal truncate" onclick=${onclick}>
-          ${state.title}
+          ${state.title || state.placeholderTitle}
         </h2>
       </section>
     `
@@ -73,18 +74,16 @@ function TitleField () {
       e.stopPropagation()
       e.preventDefault()
       state.isEditing = true
+      state.editValue = state.title
       component.emit('render')
     }
   }
 
   function renderActive () {
-    if (!state.isEditing) {
-      state.isEditing = true
-      attachListener()
-    }
-
     setTimeout(function () {
-      self._element.querySelector('input').focus()
+      var input = self._element.querySelector('input')
+      input.focus()
+      input.select()
     }, 0)
 
     var self = this
@@ -106,24 +105,23 @@ function TitleField () {
         e.preventDefault()
         deactivate()
       } else if (e.code === 'Enter') {
-        if (!newValue) return
         e.preventDefault()
         handleSave()
-      } else if ((!oldValue || !newValue) && oldValue !== newValue) {
+      } else if (oldValue !== newValue) {
         nanomorph(self._element.querySelector('button'), renderButton())
       }
     }
 
     function renderButton () {
-      if (state.editValue === '') {
+      if (state.editValue === state.title) {
         return html`
-          <button class="f6 white ttu bg-light-gray">
+          <button class="f6 white ttu bg-light-gray" onload=${attachListener}>
             save
           </button>
         `
       } else {
         return html`
-          <button class="f6 white ttu bg-color-green" onclick=${handleSave}>
+          <button class="f6 white ttu bg-color-green" onload=${attachListener} onclick=${handleSave}>
             save
           </button>
         `
