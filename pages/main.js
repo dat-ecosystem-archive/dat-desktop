@@ -10,18 +10,19 @@ const Empty = require('../elements/empty')
 
 module.exports = mainView
 
+const header = Header()
+
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
   const showWelcomeScreen = state.welcome.show
   const dats = state.dats.values
   const isReady = state.dats.ready
-
-  const header = Header({
+  const headerProps = {
     isReady: isReady,
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:clone', link)
-  })
+  }
 
   document.title = 'Dat Desktop'
 
@@ -47,7 +48,7 @@ function mainView (state, emit) {
     return html`
       <div>
         ${sprite()}
-        ${header}
+        ${header.render(headerProps)}
         ${Empty()}
       </div>
     `
@@ -56,7 +57,7 @@ function mainView (state, emit) {
   return html`
     <div>
       ${sprite()}
-      ${header}
+      ${header.render(headerProps)}
       ${Table(state, emit)}
     </div>
   `
