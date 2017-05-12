@@ -3,7 +3,7 @@
 const html = require('choo/html')
 
 const Header = require('../elements/header')
-const sprite = require('../elements/sprite')
+const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const Welcome = require('../elements/welcome')
 const Empty = require('../elements/empty')
@@ -11,6 +11,7 @@ const Empty = require('../elements/empty')
 module.exports = mainView
 
 const header = Header()
+const sprite = Sprite()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -30,7 +31,7 @@ function mainView (state, emit) {
     document.title = 'Dat Desktop | Welcome'
     return html`
       <div>
-        ${sprite()}
+        ${sprite.render()}
         ${Welcome({
           onexit: () => {
             window.removeEventListener('keydown', captureKeyEvent)
@@ -47,7 +48,7 @@ function mainView (state, emit) {
   if (!dats.length) {
     return html`
       <div>
-        ${sprite()}
+        ${sprite.render()}
         ${header.render(headerProps)}
         ${Empty()}
       </div>
@@ -56,7 +57,7 @@ function mainView (state, emit) {
 
   return html`
     <div>
-      ${sprite()}
+      ${sprite.render()}
       ${header.render(headerProps)}
       ${Table(state, emit)}
     </div>
