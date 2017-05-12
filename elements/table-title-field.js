@@ -19,9 +19,6 @@ var overlay = css`
 var editableField = css`
   :host {
     position: relative;
-    margin-bottom: -.25rem;
-    margin-left: -.25rem;
-    padding: .25rem;
     background-color: #FFF;
     h2 {
       position: relative;
@@ -136,7 +133,7 @@ function TitleField () {
     return html`
       <div>
         <div class="${overlay}"></div>
-        <div class="${editableField} shadow-1 flex justify-between">
+        <div class="${editableField} nt1 nb1 nl1 pl1 shadow-1 flex justify-between">
           <input class="bn f6 normal w-100"
             value=${state.editValue} onkeyup=${handleKeypress} />
           ${renderButton()}
