@@ -194,12 +194,7 @@ function TitleField () {
 
     function clickedOutside (e) {
       var source = e.target
-      while (source.parentNode) {
-        if (source.className === overlay) break
-        if (source === self._element) return
-        source = source.parentNode
-      }
-      deactivate()
+      if (source.className === overlay) deactivate()
     }
   }
 }
