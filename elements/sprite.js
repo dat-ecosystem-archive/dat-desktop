@@ -1,5 +1,5 @@
 const microcomponent = require('microcomponent')
-const datIcons = require('dat-icons')
+const datIcons = require('dat-icons/raw')
 
 module.exports = svgSprite
 

@@ -1,6 +1,44 @@
 var microcomponent = require('microcomponent')
 var nanomorph = require('nanomorph')
 var html = require('choo/html')
+var css = require('sheetify')
+var icon = require('./icon')
+var button = require('./button')
+
+var overlay = css`
+  :host {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.2);
+  }
+`
+
+var editableField = css`
+  :host {
+    position: relative;
+    h2 {
+      position: relative;
+    }
+    .indicator {
+      position: absolute;
+      display: none;
+      top: .25rem;
+      right: 0;
+      width: .75rem;
+    }
+    &:hover, &:focus {
+      h2 {
+        color: var(--color-blue);
+      }
+      .indicator {
+        display: block;
+      }
+    }
+  }
+`
 
 module.exports = TitleField
 
@@ -63,11 +101,12 @@ function TitleField () {
     state.editValue = ''
 
     return html`
-      <section>
-        <h2 class="f6 normal truncate" onclick=${onclick}>
+      <div class="${editableField}">
+        <h2 class="f6 normal truncate pr3" onclick=${onclick}>
           ${state.title || state.placeholderTitle}
+          ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
         </h2>
-      </section>
+      </div>
     `
 
     function onclick (e) {
@@ -88,11 +127,14 @@ function TitleField () {
 
     var self = this
     return html`
-      <section>
-        <input class="f6 normal"
-          value=${state.editValue} onkeyup=${handleKeypress} />
-        ${renderButton()}
-      </section>
+      <div>
+        <div class="${overlay}"></div>
+        <div class="${editableField} bg-white nt1 nb1 nl1 pl1 shadow-1 flex justify-between">
+          <input class="bn f6 normal w-100"
+            value=${state.editValue} onkeyup=${handleKeypress} />
+          ${renderButton()}
+        </div>
+      </div>
     `
 
     function handleKeypress (e) {
@@ -115,15 +157,11 @@ function TitleField () {
     function renderButton () {
       if (state.editValue === state.title) {
         return html`
-          <button class="f6 white ttu bg-light-gray" onload=${attachListener}>
-            save
-          </button>
+          ${button('Save', { onload: attachListener })}
         `
       } else {
         return html`
-          <button class="f6 white ttu bg-color-green" onload=${attachListener} onclick=${handleSave}>
-            save
-          </button>
+          ${button.green('Save', { onclick: handleSave, onload: attachListener })}
         `
       }
     }
@@ -149,11 +187,7 @@ function TitleField () {
 
     function clickedOutside (e) {
       var source = e.target
-      while (source.parentNode) {
-        if (source === self._element) return
-        source = source.parentNode
-      }
-      deactivate()
+      if (source.className === overlay) deactivate()
     }
   }
 }
