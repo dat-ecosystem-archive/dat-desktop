@@ -1,3 +1,4 @@
+const bytes = require('prettier-bytes')
 const html = require('choo/html')
 const css = require('sheetify')
 
@@ -106,7 +107,7 @@ module.exports = function (dat, stats) {
       progressText = 'Paused.'
   }
   function speed (n) {
-    return `${Math.round((n || 0) / 1024)}kB/s`
+    return `${bytes(n || 0)}/s`
   }
 
   return html`
