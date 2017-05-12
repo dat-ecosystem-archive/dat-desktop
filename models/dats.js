@@ -155,6 +155,7 @@ function datsModel (state, bus) {
     var edit = datJson(dat)
     edit.write(values, function (err) {
       if (err) return onerror(err)
+      bus.emit('render')
     })
   })
 
