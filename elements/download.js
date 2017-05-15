@@ -52,6 +52,6 @@ module.exports = function () {
   }
 
   function update (props) {
-    true
+    return true
   }
 }
