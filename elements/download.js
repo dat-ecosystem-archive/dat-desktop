@@ -41,12 +41,11 @@ module.exports = function () {
                 <li>Peers: ${peers}</li>
               </ul>
             `
-          : 'Fetching metadata...'}
-        ${err
-          ? html`
-              <p>There was an error: ${err.message}</p>
-            `
-          : ''}
+          : err
+            ? html`
+                <p>There was an error: ${err.message}</p>
+              `
+            : 'Fetching metadata...'}
         <button onclick=${oncancel}>Cancel</button>
       </main>
     `
