@@ -34,7 +34,11 @@ function mainView (state, emit) {
     return html`
       <div>
         ${sprite.render()}
-        ${download.render()}
+        ${header.render(headerProps)}
+        ${download.render({
+          link: state.download.link,
+          oncancel: () => emit('download:cancel')
+        })}
       </div>
     `
   }

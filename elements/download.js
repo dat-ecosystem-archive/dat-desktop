@@ -9,8 +9,13 @@ module.exports = function () {
   component.on('update', update)
   return component
 
-  function render () {
-    return html`<div></div>`
+  function render (props) {
+    return html`
+      <main>
+        <h1>Downloading ${props.link}</h1>
+        <button onclick=${props.oncancel}>Cancel</button>
+      </main>
+    `
   }
 
   function update () {
