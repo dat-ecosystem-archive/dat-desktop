@@ -1,22 +1,22 @@
 var xtend = Object.assign
 
-module.exports = welcomeModel
+module.exports = introModel
 
-function welcomeModel (state, bus) {
-  state.welcome = xtend({
+function introModel (state, bus) {
+  state.intro = xtend({
     show: false
-  }, state.welcome)
+  }, state.intro)
 
   // FIXME: wait for DOMContentLoaded
   // requires some sort of global load event first
   bus.on('dats:loaded', function () {
     if (state.dats.values.length) return
-    state.welcome.show = true
+    state.intro.show = true
     bus.emit('render')
   })
 
-  bus.on('welcome:hide', function () {
-    state.welcome.show = false
+  bus.on('intro:hide', function () {
+    state.intro.show = false
     bus.emit('render')
   })
 }

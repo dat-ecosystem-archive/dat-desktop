@@ -5,18 +5,19 @@ const html = require('choo/html')
 const Header = require('../elements/header')
 const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
-const Welcome = require('../elements/welcome')
+const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
 
 module.exports = mainView
 
 const header = Header()
 const sprite = Sprite()
+const intro = Intro()
 
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
-  const showWelcomeScreen = state.welcome.show
+  const showIntroScreen = state.intro.show
   const dats = state.dats.values
   const isReady = state.dats.ready
   const headerProps = {
@@ -27,18 +28,14 @@ function mainView (state, emit) {
 
   document.title = 'Dat Desktop'
 
-  if (showWelcomeScreen) {
+  if (showIntroScreen) {
     document.title = 'Dat Desktop | Welcome'
     return html`
       <div>
         ${sprite.render()}
-        ${Welcome({
+        ${intro.render({
           onexit: () => {
-            window.removeEventListener('keydown', captureKeyEvent)
-            emit('welcome:hide')
-          },
-          onload: () => {
-            window.addEventListener('keydown', captureKeyEvent)
+            emit('intro:hide')
           }
         })}
       </div>
@@ -62,12 +59,4 @@ function mainView (state, emit) {
       ${Table(state, emit)}
     </div>
   `
-
-  function captureKeyEvent (e) {
-    const key = e.code
-    if (key === 'Enter' || key === 'Space') {
-      window.removeEventListener('keydown', captureKeyEvent)
-      emit('welcome:hide')
-    }
-  }
 }
