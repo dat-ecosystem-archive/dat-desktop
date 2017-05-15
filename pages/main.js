@@ -7,25 +7,37 @@ const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const Welcome = require('../elements/welcome')
 const Empty = require('../elements/empty')
+const Download = require('../elements/download')
 
 module.exports = mainView
 
 const header = Header()
 const sprite = Sprite()
+const download = Download()
 
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
   const showWelcomeScreen = state.welcome.show
+  const showDownloadScreen = state.download.show
   const dats = state.dats.values
   const isReady = state.dats.ready
   const headerProps = {
     isReady: isReady,
     oncreate: () => emit('dats:create'),
-    onimport: (link) => emit('dats:clone', link)
+    onimport: (link) => emit('dats:download', link)
   }
 
   document.title = 'Dat Desktop'
+
+  if (showDownloadScreen) {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${download.render()}
+      </div>
+    `
+  }
 
   if (showWelcomeScreen) {
     document.title = 'Dat Desktop | Welcome'
