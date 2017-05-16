@@ -15,8 +15,41 @@ const intro = css`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
     -webkit-app-region: drag;
+  }
+`
+const content = css`
+  :host {
+    flex: 1;
+    width: 100vw;
+    padding: 3rem 2rem;
+  }
+`
+
+const footer = css`
+  :host {
+    width: 100vw;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+`
+
+const dots = css`
+  :host {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .dot {
+      width: .5rem;
+      height: .5rem;
+      margin: .25rem;
+      border-radius: 50%;
+      background-color: var(--color-black);
+    }
+    .active {
+      background-color: var(--color-blue);
+    }
   }
 `
 
@@ -38,42 +71,114 @@ function IntroScreen () {
       case 0:
         return html`
           <main class="${intro}">
-            <img src="./assets/logo-dat-desktop.svg" alt="" class="">
+            <img src="./assets/logo-dat-desktop.svg" alt="Dat Desktop Logo" class="db mb4">
             ${button.green('Get Started', { onclick: next })}
           </main>
         `
       case 1:
         return html`
-          <main>
-            ${button.green('Next', { onclick: next })}
-            ${button.green('Skip Intro', { onclick: onexit })}
+          <main class="${intro}">
+            <div class="${content}">
+              <p class="measure-narrow f4">
+                Hey there! This is a Dat.
+              </p>
+            </div>
+            <div class="${footer}">
+              ${button('Skip Intro', { onclick: onexit })}
+              <div class="${dots}"">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+              ${button.green('Next', { onclick: next })}
+            </div>
           </main>
         `
       case 2:
         return html`
-          <main>
-            ${button.green('Next', { onclick: next })}
-            ${button.green('Skip Intro', { onclick: onexit })}
+          <main class="${intro}">
+            <div class="${content}">
+              <p class="measure-narrow f4">
+                Think of it as a folder – with some magic.
+              </p>
+            </div>
+            <div class="${footer}">
+              ${button('Skip Intro', { onclick: onexit })}
+              <div class="${dots}"">
+                <div class="dot"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+              ${button.green('Next', { onclick: next })}
+            </div>
           </main>
         `
       case 3:
         return html`
-          <main>
-            ${button.green('Next', { onclick: next })}
-            ${button.green('Skip Intro', { onclick: onexit })}
+          <main class="${intro}">
+            <div class="${content}">
+              <p class="measure-narrow f4">
+                You can turn any folder on your computer into a Dat.
+              </p>
+            </div>
+            <div class="${footer}">
+              ${button('Skip Intro', { onclick: onexit })}
+              <div class="${dots}"">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+              ${button.green('Next', { onclick: next })}
+            </div>
           </main>
         `
       case 4:
         return html`
-          <main>
-            ${button.green('Next', { onclick: next })}
-            ${button.green('Skip Intro', { onclick: onexit })}
+          <main class="${intro}">
+            <div class="${content}">
+              <p class="measure-narrow f4">
+                Dats can be easily shared.
+                Just copy the unique dat link and securely share it.
+              </p>
+            </div>
+            <div class="${footer}">
+              ${button('Skip Intro', { onclick: onexit })}
+              <div class="${dots}"">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+              </div>
+              ${button.green('Next', { onclick: next })}
+            </div>
           </main>
         `
       case 5:
         return html`
-          <main>
-            ${button.green('Done', { onclick: onexit })}
+          <main class="${intro}">
+            <div class="${content}">
+              <p class="measure-narrow f4">
+                You can also import existing Dats.
+                Check out datproject.org to explore open datasets.
+              </p>
+            </div>
+            <div class="${footer}">
+              <div class="${dots}"">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
+              </div>
+              ${button.green('Done', { onclick: onexit })}
+            </div>
           </main>
         `
     }
