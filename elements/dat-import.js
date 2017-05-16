@@ -66,8 +66,8 @@ function DatImportElement () {
   component.on('update', update)
   return component
 
-  function render (props) {
-    const onsubmit = props.onsubmit
+  function render () {
+    const onsubmit = this.props.onsubmit
 
     assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
 
