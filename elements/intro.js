@@ -140,8 +140,6 @@ function IntroScreen () {
         </div>
       </main>
     `
-
-    throw new Error(`Unknown screen: ${component._state.screen}`)
   }
 
   function update (state) {
