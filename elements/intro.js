@@ -184,7 +184,7 @@ function IntroScreen () {
   }
 
   function update (state) {
-    return state.onexit !== this._state.onexit
-      || state.screen !== this._state.screen
+    return state.onexit !== this._state.onexit ||
+      state.screen !== this._state.screen
   }
 }
