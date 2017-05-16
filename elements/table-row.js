@@ -101,7 +101,7 @@ var networkStyles = css`
 
 module.exports = Row
 
-function Row () {
+function Row ({ highlight }) {
   var hexContent = HexContent()
   var finderButton = FinderButton()
   var linkButton = LinkButton()
@@ -115,6 +115,8 @@ function Row () {
     var stats = dat.stats
     var peers = dat.network ? dat.network.connected : 'N/A'
     var key = encoding.encode(dat.key)
+    var styles = cellStyles
+    if (highlight) styles += ' fade-highlight'
 
     stats.size = dat.archive.content
       ? bytes(dat.archive.content.byteLength)
@@ -128,7 +130,7 @@ function Row () {
           : 'stale'
 
     return html`
-      <tr id=${key} class=${cellStyles}>
+      <tr id=${key} class=${styles}>
         <td class="cell-1">
           <div class="w2 center">
             ${hexContent.render(dat, stats, emit)}

@@ -100,14 +100,22 @@ function TitleField () {
   function renderInactive () {
     state.editValue = ''
 
-    return html`
-      <div class="${editableField}">
-        <h2 class="f6 normal truncate pr3" onclick=${onclick}>
-          ${state.title || state.placeholderTitle}
-          ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
-        </h2>
-      </div>
-    `
+    return state.writable
+      ? html`
+          <div class=${editableField}>
+            <h2 class="f6 normal truncate pr3" onclick=${onclick}>
+              ${state.title || state.placeholderTitle}
+              ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
+            </h2>
+          </div>
+        `
+      : html`
+          <div>
+            <h2 class="f6 normal truncate pr3">
+              ${state.placeholderTitle}
+            </h2>
+          </div>
+        `
 
     function onclick (e) {
       e.stopPropagation()
