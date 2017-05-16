@@ -62,6 +62,7 @@ function tableElement (state, emit) {
 function TableRows () {
   var elements = {}
   var log = nanolog('table-rows')
+  var initialLoad = true
   log.debug('initialized')
 
   return function (dats, state, emit) {
@@ -76,7 +77,8 @@ function TableRows () {
       if (el) {
         return el(dat, state, emit)
       } else {
-        var newRow = TableRow()
+        var highlight = !initialLoad
+        var newRow = TableRow({ highlight })
         elements[key] = newRow
         return newRow(dat, state, emit)
       }
@@ -86,6 +88,7 @@ function TableRows () {
       if (usedKeys.indexOf(key) === -1) elements[key] = null
     })
 
+    initialLoad = false
     return renderedElements
   }
 }
