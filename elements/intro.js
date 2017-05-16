@@ -78,8 +78,9 @@ function IntroScreen () {
       case 1:
         return html`
           <main class="${intro}">
+            <img src="./assets/intro-2.svg" alt="" class="absolute">
             <div class="${content}">
-              <p class="measure-narrow f4">
+              <p class="mw5 f4">
                 Hey there! This is a Dat.
               </p>
             </div>
@@ -99,8 +100,9 @@ function IntroScreen () {
       case 2:
         return html`
           <main class="${intro}">
+            <img src="./assets/intro-3.svg" alt="" class="absolute">
             <div class="${content}">
-              <p class="measure-narrow f4">
+              <p class="mw5 f4">
                 Think of it as a folder – with some magic.
               </p>
             </div>
@@ -120,8 +122,9 @@ function IntroScreen () {
       case 3:
         return html`
           <main class="${intro}">
+            <img src="./assets/intro-4.svg" alt="" class="absolute">
             <div class="${content}">
-              <p class="measure-narrow f4">
+              <p class="mw5 f4">
                 You can turn any folder on your computer into a Dat.
               </p>
             </div>
@@ -141,8 +144,9 @@ function IntroScreen () {
       case 4:
         return html`
           <main class="${intro}">
+            <img src="./assets/intro-5.svg" alt="" class="absolute">
             <div class="${content}">
-              <p class="measure-narrow f4">
+              <p class="mw5 f4">
                 Dats can be easily shared.
                 Just copy the unique dat link and securely share it.
               </p>
@@ -163,8 +167,9 @@ function IntroScreen () {
       case 5:
         return html`
           <main class="${intro}">
+            <img src="./assets/intro-6.svg" alt="" class="absolute">
             <div class="${content}">
-              <p class="measure-narrow f4">
+              <p class="mw5 f4">
                 You can also import existing Dats.
                 Check out datproject.org to explore open datasets.
               </p>
