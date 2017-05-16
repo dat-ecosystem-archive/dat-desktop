@@ -1,6 +1,7 @@
 'use strict'
 
 var microcomponent = require('microcomponent')
+var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
 var html = require('choo/html')
 
@@ -12,6 +13,7 @@ module.exports = function () {
 
   function render () {
     var { link, oncancel, err, dat } = this.props
+    var location = this.state.location || `${process.env.HOME}/Downloads`
 
     if (dat) {
       var title = dat.metadata
@@ -24,6 +26,15 @@ module.exports = function () {
         ? bytes(dat.archive.content.byteLength)
         : 'N/A'
       var peers = dat.network.connected
+    }
+
+    function changeLocation () {
+      var files = dialog.showOpenDialog({
+        properties: ['openDirectory']
+      })
+      if (!files || !files.length) return
+      component.state.location = files[0]
+      component.render(component.props)
     }
 
     return html`
@@ -43,6 +54,10 @@ module.exports = function () {
                 <p>There was an error: ${err.message}</p>
               `
             : 'Fetching metadata...'}
+        <p>
+          Download to <pre>${location}</pre>
+          <button onclick=${changeLocation}>Change</button>
+        </p>
         <button onclick=${oncancel}>Cancel</button>
       </main>
     `
