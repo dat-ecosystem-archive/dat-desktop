@@ -8,6 +8,7 @@ module.exports = IntroScreen
 
 const intro = css`
   :host {
+    position: relative;
     height: 100vh;
     background-color: var(--color-neutral);
     color: var(--color-white);
@@ -20,6 +21,7 @@ const intro = css`
 `
 const content = css`
   :host {
+    position: relative;
     flex: 1;
     width: 100vw;
     padding: 3rem 2rem;
@@ -28,10 +30,14 @@ const content = css`
 
 const footer = css`
   :host {
+    position: relative;
     width: 100vw;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
+    button {
+      min-width: 5rem;
+    }
   }
 `
 
@@ -71,8 +77,12 @@ function IntroScreen () {
       case 0:
         return html`
           <main class="${intro}">
-            <img src="./assets/logo-dat-desktop.svg" alt="Dat Desktop Logo" class="db mb4">
-            ${button.green('Get Started', { onclick: next })}
+            <img src="./assets/intro-1.svg" alt="Dat Desktop Logo" class="absolute">
+            <div class="${content}">
+            </div>
+            <div class="${footer}">
+              ${button.green('Get Started', { onclick: next })}
+            </div>
           </main>
         `
       case 1:
@@ -171,10 +181,11 @@ function IntroScreen () {
             <div class="${content}">
               <p class="mw5 f4">
                 You can also import existing Dats.
-                Check out datproject.org to explore open datasets.
+                Check out <a href="https://datproject.org/" class="color-green-disabled hover-color-green">datproject.org</a> to explore open datasets.
               </p>
             </div>
             <div class="${footer}">
+              ${button('Skip Intro', { onclick: onexit })}
               <div class="${dots}"">
                 <div class="dot"></div>
                 <div class="dot"></div>
