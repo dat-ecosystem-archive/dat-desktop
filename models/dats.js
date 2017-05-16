@@ -91,29 +91,25 @@ function datsModel (state, bus) {
     manager.create(pathname, onerror)
   })
 
-  bus.on('dats:clone', function (key) {
-    cloneDat(key)
+  bus.on('dats:clone', function ({ key, location }) {
+    cloneDat({ key, location })
   })
   ipc.on('link', function (event, url) {
-    cloneDat(url)
+    cloneDat({
+      key: url,
+      location: downloadsDir
+    })
   })
 
-  function cloneDat (_key) {
+  function cloneDat ({ key: _key, location }) {
     try {
       var key = encoding.toStr(_key)
     } catch (e) {
       return onerror(new Error("The value you entered doesn't appear to be a valid Dat link"))
     }
 
-    var dirs = dialog.showOpenDialog({
-      properties: ['openDirectory'],
-      defaultPath: state.dats.downloadsDir
-    })
-    if (!dirs || !dirs.length) return
-    var dirname = dirs[0]
-
-    var opts = { key: key }
-    var dir = path.join(dirname, key)
+    var opts = { key }
+    var dir = path.join(location, key)
     manager.create(dir, opts, onerror)
   }
 

@@ -12,13 +12,13 @@ module.exports = function () {
   return component
 
   function render () {
-    var { link, oncancel, err, dat } = this.props
+    var { key, oncancel, err, dat, ondownload } = this.props
     var location = this.state.location || `${process.env.HOME}/Downloads`
 
     if (dat) {
       var title = dat.metadata
         ? dat.metadata.title
-        : link
+        : key
       var author = dat.metadata
         ? dat.metadata.author
         : 'Anonymous'
@@ -28,9 +28,10 @@ module.exports = function () {
       var peers = dat.network.connected
     }
 
-    function changeLocation () {
+    function onChangeLocation () {
       var files = dialog.showOpenDialog({
-        properties: ['openDirectory']
+        properties: ['openDirectory'],
+        defaultPath: location
       })
       if (!files || !files.length) return
       component.state.location = files[0]
@@ -39,7 +40,7 @@ module.exports = function () {
 
     return html`
       <main>
-        <h1>Downloading ${link}</h1>
+        <h1>Downloading ${key}</h1>
         ${dat
           ? html`
               <ul>
@@ -56,8 +57,9 @@ module.exports = function () {
             : 'Fetching metadata...'}
         <p>
           Download to <pre>${location}</pre>
-          <button onclick=${changeLocation}>Change</button>
+          <button onclick=${onChangeLocation}>Change</button>
         </p>
+        <button onclick=${() => ondownload({ key, location })}>Download</button>
         <button onclick=${oncancel}>Cancel</button>
       </main>
     `

@@ -36,7 +36,11 @@ function mainView (state, emit) {
         ${sprite.render()}
         ${header.render(headerProps)}
         ${download.render(Object.assign({}, state.download, {
-          oncancel: () => emit('download:cancel')
+          oncancel: () => emit('download:hide'),
+          ondownload: ({ key, location }) => {
+            emit('dats:clone', { key, location })
+            emit('download:hide')
+          }
         }))}
       </div>
     `

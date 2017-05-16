@@ -11,17 +11,20 @@ function downloadModel (state, bus) {
     show: false
   })
 
-  bus.on('dats:download', function (link) {
+  bus.on('dats:download', function (key) {
     state.download.show = true
-    state.download.link = link
+    state.download.key = key
     update()
 
     var dir = `${tmpdir()}/${Date.now()}`
     Dat(dir, {
-      key: link,
+      key,
       sparse: true
     }, function (err, dat) {
-      if (err) return state.download.err = err
+      if (err) {
+        state.download.err = err
+        return
+      }
       state.download.dat = dat
 
       dat.joinNetwork()
@@ -50,11 +53,11 @@ function downloadModel (state, bus) {
     })
   })
 
-  bus.on('download:cancel', function (link) {
+  bus.on('download:hide', function () {
     state.download.dat.close()
     state.download.dat = null
     state.download.show = false
-    state.download.link = null
+    state.download.key = null
     bus.emit('render')
   })
 }
