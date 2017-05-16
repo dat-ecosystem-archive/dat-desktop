@@ -13,7 +13,7 @@
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
     "choo-persist": "^3.0.0",
-    "dat-colors": "^3.3.0",
+    "dat-colors": "^3.5.0",
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
     "dat-icons": "^2.2.0",
