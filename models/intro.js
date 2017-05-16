@@ -1,3 +1,4 @@
+var shell = require('electron').shell
 var xtend = Object.assign
 
 module.exports = introModel
@@ -18,5 +19,9 @@ function introModel (state, bus) {
   bus.on('intro:hide', function () {
     state.intro.show = false
     bus.emit('render')
+  })
+
+  bus.on('intro:open-homepage', function () {
+    shell.openExternal('https://datproject.org/')
   })
 }

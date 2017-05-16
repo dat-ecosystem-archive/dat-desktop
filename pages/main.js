@@ -36,6 +36,9 @@ function mainView (state, emit) {
         ${intro.render({
           onexit: () => {
             emit('intro:hide')
+          },
+          onOpenHomepage: () => {
+            emit('intro:open-homepage')
           }
         })}
       </div>

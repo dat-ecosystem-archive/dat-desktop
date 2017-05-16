@@ -82,7 +82,13 @@ function IntroScreen () {
   }
 
   function render (state) {
+    function openHomepage (ev) {
+      ev.preventDefault()
+      onOpenHomepage()
+    }
+
     const onexit = this._state.onexit = state.onexit
+    const onOpenHomepage = this._state.onOpenHomepage = state.onOpenHomepage
     const screen = this._state.screen = state.screen || 0
 
     return html`
@@ -114,7 +120,7 @@ function IntroScreen () {
             5: html`
                 <p class="mw5 f4">
                   You can also import existing Dats.
-                  Check out <a href="https://datproject.org/" class="color-green-disabled hover-color-green">datproject.org</a> to explore open datasets.
+                  Check out <a href="https://datproject.org/" class="color-green-disabled hover-color-green" onclick=${openHomepage}>datproject.org</a> to explore open datasets.
                 </p>
               `
           }[screen]}
