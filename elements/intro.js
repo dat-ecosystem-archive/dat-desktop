@@ -41,7 +41,7 @@ const footer = css`
   }
 `
 
-const dots = css`
+const dotsStyles = css`
   :host {
     display: flex;
     justify-content: space-between;
@@ -59,6 +59,18 @@ const dots = css`
   }
 `
 
+function dots (screen) {
+  return html`
+    <div class="${dotsStyles}"">
+      ${Array(5).fill(null).map(function (_, i) {
+        var className = 'dot'
+        if (i === screen - 1) className += ' active'
+        return html `<div class=${className}></div>`
+      })}
+    </div>
+  `
+}
+
 function IntroScreen () {
   var component = microcomponent('intro')
   component.on('render', render)
@@ -73,7 +85,7 @@ function IntroScreen () {
     const onexit = this._state.onexit = state.onexit
     const screen = this._state.screen = state.screen || 0
 
-    switch (component._state.screen) {
+    switch (screen) {
       case 0:
         return html`
           <main class="${intro}">
@@ -96,13 +108,7 @@ function IntroScreen () {
             </div>
             <div class="${footer}">
               ${button('Skip Intro', { onclick: onexit })}
-              <div class="${dots}"">
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-              </div>
+              ${dots(screen)}
               ${button.green('Next', { onclick: next })}
             </div>
           </main>
@@ -118,13 +124,7 @@ function IntroScreen () {
             </div>
             <div class="${footer}">
               ${button('Skip Intro', { onclick: onexit })}
-              <div class="${dots}"">
-                <div class="dot"></div>
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-              </div>
+              ${dots(screen)}
               ${button.green('Next', { onclick: next })}
             </div>
           </main>
@@ -140,13 +140,7 @@ function IntroScreen () {
             </div>
             <div class="${footer}">
               ${button('Skip Intro', { onclick: onexit })}
-              <div class="${dots}"">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-              </div>
+              ${dots(screen)}
               ${button.green('Next', { onclick: next })}
             </div>
           </main>
@@ -163,13 +157,7 @@ function IntroScreen () {
             </div>
             <div class="${footer}">
               ${button('Skip Intro', { onclick: onexit })}
-              <div class="${dots}"">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot active"></div>
-                <div class="dot"></div>
-              </div>
+              ${dots(screen)}
               ${button.green('Next', { onclick: next })}
             </div>
           </main>
@@ -186,13 +174,7 @@ function IntroScreen () {
             </div>
             <div class="${footer}">
               ${button('Skip Intro', { onclick: onexit })}
-              <div class="${dots}"">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot active"></div>
-              </div>
+              ${dots(screen)}
               ${button.green('Done', { onclick: onexit })}
             </div>
           </main>
