@@ -10,11 +10,8 @@ module.exports = function () {
   component.on('update', update)
   return component
 
-  function render (props) {
-    var link = props.link
-    var oncancel = props.oncancel
-    var err = props.err
-    var dat = props.dat
+  function render () {
+    var { link, oncancel, err, dat } = this.props
 
     if (dat) {
       var title = dat.metadata
