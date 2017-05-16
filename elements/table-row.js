@@ -133,12 +133,12 @@ function Row ({ highlight }) {
       <tr id=${key} class=${styles}>
         <td class="cell-1">
           <div class="w2 center">
-            ${hexContent.render(dat, stats, emit)}
+            ${hexContent.render({ dat, stats, emit })}
           </div>
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            ${titleField.render(dat, state, emit)}
+            ${titleField.render({ dat, state, emit })}
             <p class="f7 color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
@@ -154,14 +154,14 @@ function Row ({ highlight }) {
           ${stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
-          ${networkIcon.render(dat, emit)}
+          ${networkIcon.render({ dat, emit })}
           <span class="network">${peers}</span>
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
-            ${finderButton.render(dat, emit)}
-            ${linkButton.render(dat, emit)}
-            ${deleteButton.render(dat, emit)}
+            ${finderButton.render({ dat, emit })}
+            ${linkButton.render({ dat, emit })}
+            ${deleteButton.render({ dat, emit })}
           </div>
         </td>
       </tr>
@@ -175,7 +175,8 @@ function FinderButton () {
   component.on('update', update)
   return component
 
-  function render (dat, emit) {
+  function render () {
+    var { dat, emit } = this.props
     return button.icon('Open in Finder', {
       icon: icon('open-in-finder'),
       class: 'row-action',
@@ -198,7 +199,8 @@ function LinkButton () {
   component.on('update', update)
   return component
 
-  function render (dat, emit) {
+  function render () {
+    var { dat, emit } = this.props
     return button.icon('Share Dat', {
       icon: icon('link'),
       class: 'row-action',
@@ -221,7 +223,8 @@ function DeleteButton () {
   component.on('update', update)
   return component
 
-  function render (dat, emit) {
+  function render () {
+    var { dat, emit } = this.props
     return button.icon('Remove Dat', {
       icon: icon('delete'),
       class: 'row-action delete',
@@ -239,14 +242,20 @@ function DeleteButton () {
 }
 
 function NetworkIcon () {
-  var peerCount = 0
-  var component = microcomponent('network-icon')
+  var component = microcomponent('network-icon', {
+    state: {
+      peerCount: 0
+    }
+  })
   component.on('render', render)
   component.on('update', update)
   return component
 
-  function render (dat, emit) {
-    peerCount = dat.network ? dat.network.connected : 'N/A'
+  function render () {
+    var { dat } = this.props
+    var peerCount = this.state.peerCount = dat.network
+      ? dat.network.connected
+      : 'N/A'
     var iconClass = peerCount === 0
       ? 'network-peers-0'
       : peerCount === 1
@@ -256,28 +265,22 @@ function NetworkIcon () {
     return icon('network', { class: iconClass })
   }
 
-  function update (dat, emit) {
+  function update ({ dat, emit }) {
     var newPeerCount = dat.network ? dat.network.connected : 'N/A'
-    return peerCount !== newPeerCount
+    return this.state.peerCount !== newPeerCount
   }
 }
 
 // create a new hexcontent icon
 function HexContent () {
-  var state = null
-  var emit = null
-  var dat = null
-
   var component = microcomponent('hex-content')
   component.on('render', render)
   component.on('update', update)
-  component.on('unload', unload)
   return component
 
-  function render (newDat, stats, newEmit) {
-    state = stats && stats.state
-    emit = newEmit
-    dat = newDat
+  function render () {
+    var state = this.state.state = this.props.stats.state
+    var { emit, dat } = this.props
 
     if (state === 'loading') {
       return button.icon('loading', {
@@ -312,14 +315,8 @@ function HexContent () {
     }
   }
 
-  function update (dat, stats, emit) {
-    return stats.state !== state
-  }
-
-  function unload () {
-    state = null
-    emit = null
-    dat = null
+  function update ({ dat, stats, emit }) {
+    return stats.state !== this.state.state
   }
 }
 
