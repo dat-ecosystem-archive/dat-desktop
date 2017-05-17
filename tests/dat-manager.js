@@ -93,7 +93,7 @@ tape('dat-manager', function (t) {
       setup(function (err, { multidat, dbPaused }) {
         t.error(err)
         function onupdate (err, dats) {
-          if (!dats.length) return
+          if (!dats.length || t.ended) return
           t.error(err)
           var dat = dats[0]
           if (!dat) return
