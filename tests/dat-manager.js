@@ -41,7 +41,7 @@ tape('dat-manager', function (t) {
             t.equal(dats.length, 1)
             t.end()
           }
-          var managerB = Manager({ multidat, dbPaused }, onupdate)
+          Manager({ multidat, dbPaused }, onupdate)
         })
       })
     })
@@ -70,11 +70,14 @@ tape('dat-manager', function (t) {
           t.error(err)
           var dat = dats[0]
           if (dat && dat.network && dat.metadata && dat.metadata.title && dat.stats && typeof dat.progress === 'number') {
+            t.equal(dat.metadata.title, basename)
+            t.equal(dat.metadata.author, 'Anonymous')
             t.end()
           }
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
-        var dir = `/tmp/${Math.random()}`
+        var basename = String(Math.random())
+        var dir = `/tmp/${basename}`
         manager.create(dir, function (err, dat) {
           t.error(err)
           t.ok(dat)
