@@ -1,7 +1,6 @@
 var tape = require('tape')
 var Multidat = require('multidat')
 var toilet = require('toiletdb/inmemory')
-var fs = require('fs')
 
 var Manager = require('../lib/dat-manager')
 
@@ -24,7 +23,7 @@ tape('dat-manager', function (t) {
         t.throws(Manager.bind(null, { multidat }))
         t.throws(Manager.bind(null, { multidat, dbPaused }))
         t.throws(Manager.bind(null, { multidat }, onupdate))
-        manager = Manager({ multidat, dbPaused }, onupdate)
+        var manager = Manager({ multidat, dbPaused }, onupdate)
         t.ok(manager)
         t.end()
       })
@@ -66,15 +65,18 @@ tape('dat-manager', function (t) {
       })
     })
   })
-  
+
   t.test('.close(key, cb)', function (t) {
     t.test('close a dat', function (t) {
-      t.plan(4)
+      t.plan(5)
       setup(function (err, { multidat, dbPaused }) {
         t.error(err, 'setup')
         var closing = false
         function onupdate (err, dats) {
-          if (!t.ended && closing && dats.length === 0) t.ok(true, 'onupdate')
+          if (!t.ended && closing && dats.length === 0) {
+            t.error(err)
+            t.ok(true, 'onupdate')
+          }
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
         manager.create(`/tmp/${Math.random()}`, function (err, dat) {
