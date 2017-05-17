@@ -189,6 +189,6 @@ tape('dat-manager', function (t) {
 
   t.test('finish', function (t) {
     t.end()
-    process.exit()
+    process.exit(Number(!t._ok))
   })
 })
