@@ -109,7 +109,13 @@ function Row ({ highlight }) {
   var titleField = TitleField()
   var networkIcon = NetworkIcon()
 
-  return function (dat, state, emit) {
+  var component = microcomponent({ name: 'table-row' })
+  component.on('render', render)
+  component.on('update', update)
+  return component
+
+  function render () {
+    var { dat, state, emit } = this.props
     if (dat instanceof Error) return errorRow(dat)
 
     var stats = dat.stats
@@ -166,6 +172,10 @@ function Row ({ highlight }) {
         </td>
       </tr>
     `
+  }
+
+  function update (props) {
+    return true
   }
 }
 
