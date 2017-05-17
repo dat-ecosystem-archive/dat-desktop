@@ -2,51 +2,51 @@ var EventEmitter = require('events').EventEmitter
 var tape = require('tape')
 var spok = require('spok')
 
-var welcome = require('../models/welcome')
+var intro = require('../models/intro')
 
-tape('models/welcome: should initialize with a default state', function (t) {
+tape('models/intro: should initialize with a default state', function (t) {
   var state = {}
   var emitter = new EventEmitter()
-  welcome(state, emitter)
+  intro(state, emitter)
   spok(t, state, {
-    welcome: {
+    intro: {
       show: false
     }
   })
   t.end()
 })
 
-tape('should show welcome screen if there are no dats', function (t) {
+tape('should show intro screen if there are no dats', function (t) {
   var state = {
     dats: {
       values: []
     },
-    welcome: {
+    intro: {
       show: true
     }
   }
   var emitter = new EventEmitter()
-  welcome(state, emitter)
+  intro(state, emitter)
   emitter.emit('dats:loaded')
   spok(t, state, {
-    welcome: {
+    intro: {
       show: true
     }
   })
   t.end()
 })
 
-tape('should be able to hide the welcome screen', function (t) {
+tape('should be able to hide the intro screen', function (t) {
   var state = {
-    welcome: {
+    intro: {
       show: true
     }
   }
   var emitter = new EventEmitter()
-  welcome(state, emitter)
-  emitter.emit('welcome:hide')
+  intro(state, emitter)
+  emitter.emit('intro:hide')
   spok(t, state, {
-    welcome: {
+    intro: {
       show: false
     }
   })
