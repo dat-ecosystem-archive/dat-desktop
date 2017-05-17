@@ -52,7 +52,8 @@ module.exports = TitleField
 // - pressing enter (saving)
 // - clicking the save button (saving)
 function TitleField () {
-  var component = microcomponent('table-row', {
+  var component = microcomponent({
+    name: 'table-title-field',
     state: resetState()
   })
   component.on('render', render)

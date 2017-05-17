@@ -170,7 +170,7 @@ function Row ({ highlight }) {
 }
 
 function FinderButton () {
-  var component = microcomponent('finder-button')
+  var component = microcomponent({ name: 'finder-button' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -194,7 +194,7 @@ function FinderButton () {
 }
 
 function LinkButton () {
-  var component = microcomponent('link-button')
+  var component = microcomponent({ name: 'link-button' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -218,7 +218,7 @@ function LinkButton () {
 }
 
 function DeleteButton () {
-  var component = microcomponent('delete-button')
+  var component = microcomponent({ name: 'delete-button' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -242,7 +242,8 @@ function DeleteButton () {
 }
 
 function NetworkIcon () {
-  var component = microcomponent('network-icon', {
+  var component = microcomponent({
+    name: 'network-icon',
     state: {
       peerCount: 0
     }
@@ -273,7 +274,7 @@ function NetworkIcon () {
 
 // create a new hexcontent icon
 function HexContent () {
-  var component = microcomponent('hex-content')
+  var component = microcomponent({ name: 'hex-content' })
   component.on('render', render)
   component.on('update', update)
   return component

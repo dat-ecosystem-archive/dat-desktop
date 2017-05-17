@@ -4,7 +4,7 @@ const datIcons = require('dat-icons/raw')
 module.exports = svgSprite
 
 function svgSprite () {
-  const component = microcomponent('svg-sprite')
+  const component = microcomponent({ name: 'svg-sprite' })
   component.on('render', render)
   component.on('update', update)
   return component
