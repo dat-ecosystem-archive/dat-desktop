@@ -28,6 +28,23 @@ tape('dat-manager', function (t) {
         t.end()
       })
     })
+    t.test('load existing dats', function (t) {
+      setup(function (err, { multidat, dbPaused }) {
+        t.error(err)
+        function onupdate () {}
+        var managerA = Manager({ multidat, dbPaused }, onupdate)
+        managerA.create(`/tmp/${Math.random()}`, function (err) {
+          t.error(err)
+          function onupdate (err, dats) {
+            if (t.ended || dats.length !== 1) return
+            t.error(err)
+            t.equal(dats.length, 1)
+            t.end()
+          }
+          var managerB = Manager({ multidat, dbPaused }, onupdate)
+        })
+      })
+    })
   })
 
   t.test('.create(dir, opts, cb)', function (t) {
