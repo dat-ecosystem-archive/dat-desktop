@@ -51,7 +51,7 @@
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
-    "test:unit": "node tests/welcome.js",
+    "test:unit": "node tests/welcome.js && electron tests/dat-manager.js",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
