@@ -93,7 +93,7 @@ function IntroScreen () {
 
     return html`
       <main class="${intro} intro">
-        <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute">
+        <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute mw8">
         <div class="${content}">
           ${{
             1: html`
@@ -125,19 +125,17 @@ function IntroScreen () {
               `
           }[screen]}
         </div>
-        <div class="${footer}">
-          ${screen === 0
-            ? button.green('Get Started', { onclick: next })
-            : html`
-                <div>
-                  ${button('Skip Intro', { onclick: onexit })}
-                  ${dots(screen)}
-                  ${screen < 5
-                    ? button.green('Next', { onclick: next })
-                    : button.green('Done', { onclick: onexit })}
-                </div>
-              `}
-        </div>
+        ${screen === 0
+          ? button.green('Get Started', { onclick: next, class: 'mt2 mb5' })
+          : html`
+            <div class="${footer}">
+                ${button('Skip Intro', { onclick: onexit })}
+                ${dots(screen)}
+                ${screen < 5
+                  ? button.green('Next', { onclick: next })
+                  : button.green('Done', { onclick: onexit })}
+              </div>
+            `}
       </main>
     `
   }
