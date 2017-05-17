@@ -88,8 +88,29 @@ tape('dat-manager', function (t) {
     })
   })
 
-  t.test('.closeAll(cb)')
-  t.test('.pause(dat, cb)')
+  t.test('.pause(dat, cb)', function (t) {
+    t.test('pause a dat', function (t) {
+      setup(function (err, { multidat, dbPaused }) {
+        t.error(err)
+        function onupdate (err, dats) {
+          if (!dats.length) return
+          t.error(err)
+          var dat = dats[0]
+          if (!dat) return
+          t.notOk(dat.network)
+          t.end()
+        }
+        var manager = Manager({ multidat, dbPaused }, onupdate)
+        manager.create(`/tmp/${Math.random()}`, function (err, dat) {
+          t.error(err)
+          manager.pause(dat, function (err) {
+            t.error(err)
+          })
+        })
+      })
+    })
+  })
+
   t.test('.resume(dat, cb)')
   t.test('.togglePause(dat, cb)')
 
