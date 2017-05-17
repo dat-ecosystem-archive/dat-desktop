@@ -140,7 +140,52 @@ tape('dat-manager', function (t) {
     })
   })
 
-  t.test('.togglePause(dat, cb)')
+  t.test('.togglePause(dat, cb)', function (t) {
+    t.test('pause a dat', function (t) {
+      setup(function (err, { multidat, dbPaused }) {
+        t.error(err)
+        function onupdate (err, dats) {
+          if (!dats.length || t.ended) return
+          t.error(err)
+          var dat = dats[0]
+          if (!dat) return
+          t.notOk(dat.network)
+          t.end()
+        }
+        var manager = Manager({ multidat, dbPaused }, onupdate)
+        manager.create(`/tmp/${Math.random()}`, function (err, dat) {
+          t.error(err)
+          manager.togglePause(dat, function (err) {
+            t.error(err)
+          })
+        })
+      })
+    })
+    t.test('resume a dat', function (t) {
+      setup(function (err, { multidat, dbPaused }) {
+        t.error(err)
+        var resuming = false
+        function onupdate (err, dats) {
+          if (!dats.length || !resuming || t.ended) return
+          t.error(err)
+          var dat = dats[0]
+          t.ok(dat.network)
+          t.end()
+        }
+        var manager = Manager({ multidat, dbPaused }, onupdate)
+        manager.create(`/tmp/${Math.random()}`, function (err, dat) {
+          t.error(err)
+          manager.togglePause(dat, function (err) {
+            t.error(err)
+            resuming = true
+            manager.togglePause(dat, function (err) {
+              t.error(err)
+            })
+          })
+        })
+      })
+    })
+  })
 
   t.test('finish', function (t) {
     t.end()
