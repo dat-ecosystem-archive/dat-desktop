@@ -255,7 +255,7 @@ function NetworkIcon () {
     var { dat } = this.props
     var peerCount = this.state.peerCount = dat.network
       ? dat.network.connected
-      : 'N/A'
+      : 0
     var iconClass = peerCount === 0
       ? 'network-peers-0'
       : peerCount === 1
@@ -266,7 +266,7 @@ function NetworkIcon () {
   }
 
   function update ({ dat, emit }) {
-    var newPeerCount = dat.network ? dat.network.connected : 'N/A'
+    var newPeerCount = dat.network ? dat.network.connected : 0
     return this.state.peerCount !== newPeerCount
   }
 }
