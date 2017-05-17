@@ -8,7 +8,6 @@
   "author": "Dat Team",
   "dependencies": {
     "base-elements": "^2.2.1",
-    "cache-element": "^3.0.0",
     "choo": "^5.1.0",
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",

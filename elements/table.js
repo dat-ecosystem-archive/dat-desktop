@@ -1,4 +1,4 @@
-var cache = require('cache-element')
+var microcomponent = require('microcomponent')
 var nanolog = require('nanologger')
 var html = require('choo/html')
 var css = require('sheetify')
@@ -94,7 +94,11 @@ function TableRows () {
 }
 
 function TableHead () {
-  return cache(function () {
+  return microcomponent({
+    name: 'table-head',
+    pure: true
+  })
+  .on('render', function () {
     return html`
       <thead>
         <tr>
