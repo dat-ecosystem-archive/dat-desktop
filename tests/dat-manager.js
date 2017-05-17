@@ -43,13 +43,10 @@ tape('dat-manager', function (t) {
     })
     t.test('create a dat', function (t) {
       var dir = `/tmp/${Math.random()}`
-      fs.mkdir(dir, function (err) {
+      manager.create(dir, function (err, dat) {
         t.error(err)
-        manager.create(dir, function (err, dat) {
-          t.error(err)
-          t.ok(dat)
-          t.end()
-        })
+        t.ok(dat)
+        t.end()
       })
     })
   })
