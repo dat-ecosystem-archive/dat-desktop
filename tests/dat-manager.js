@@ -42,11 +42,18 @@ tape('dat-manager', function (t) {
       t.end()
     })
     t.test('create a dat', function (t) {
+      function onupdate (err, dats) {
+        t.error(err)
+        var dat = dats[0]
+        if (dat && dat.network && dat.metadata && dat.metadata.title && dat.stats && typeof dat.progress === 'number') {
+          t.end()
+        }
+      }
+      var manager = Manager({ multidat, dbPaused }, onupdate)
       var dir = `/tmp/${Math.random()}`
       manager.create(dir, function (err, dat) {
         t.error(err)
         t.ok(dat)
-        t.end()
       })
     })
   })
