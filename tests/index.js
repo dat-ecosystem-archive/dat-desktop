@@ -52,8 +52,8 @@ tap('onboarding', function (t) {
       .then(() => app.client.getText('.tutorial'))
       .then((val) => {
         val = val.toLowerCase()
-        t.ok(val.indexOf('create new dat') > -1, 'has create new dat text')
-        t.ok(val.indexOf('import dat') > -1, 'has import dat text')
+        t.ok(val.indexOf('share') > -1, 'has create new dat text')
+        t.ok(val.indexOf('download') > -1, 'has import dat text')
       })
       .then(() => endTest(app))
   })
@@ -73,7 +73,7 @@ tap('working with dats', function (t) {
     .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
-      t.ok(text.match(/126 B/), 'contains correct size')
+      t.ok(text.match(/(126|52) B/), 'contains correct size')
     })
     .then(() => app.client.getText('.network'))
     .then((text) => t.ok(text.match(/0/), 'contains network size'))
@@ -85,14 +85,14 @@ tap('working with dats', function (t) {
     .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
-      t.ok(text.match(/126 B/), 'contains correct size')
+      t.ok(text.match(/(126|52) B/), 'contains correct size')
     })
     .then(() => wait())
     .then(() => app.client.element('button.delete').click())
     .then(() => app.client.element('button.confirm-button').click())
     .then(() => wait())
     .then(() => app.client.getText('.tutorial'))
-    .then((text) => t.ok(text.toLowerCase().match(/create new dat/), 'now the dat is gone and welcome screen is back'))
+    .then((text) => t.ok(text.toLowerCase().match(/share/), 'now the dat is gone and welcome screen is back'))
     .then(() => endTest(app))
 })
 

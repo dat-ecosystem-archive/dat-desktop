@@ -1,6 +1,5 @@
 const remoteProcess = require('electron').remote.process
 const dialog = require('electron').remote.dialog
-const ConsoleStream = require('console-stream')
 const ipc = require('electron').ipcRenderer
 const waterfall = require('run-waterfall')
 const app = require('electron').remote.app
@@ -8,10 +7,10 @@ const encoding = require('dat-encoding')
 const shell = require('electron').shell
 const Multidat = require('multidat')
 const minimist = require('minimist')
-const Worker = require('dat-worker')
 const toilet = require('toiletdb')
 const mkdirp = require('mkdirp')
 const assert = require('assert')
+const Dat = require('dat-node')
 const xtend = require('xtend')
 const path = require('path')
 
@@ -54,11 +53,7 @@ function datsModel (state, bus) {
     },
     function (_, next) {
       var dbMultidrive = toilet(dbMultidriveFile)
-      Multidat(dbMultidrive, {
-        dat: Worker,
-        stdout: ConsoleStream(),
-        stderr: ConsoleStream()
-      }, next)
+      Multidat(dbMultidrive, { dat: Dat }, next)
     },
     function (multidat, done) {
       var dbPaused = toilet(dbPausedFile)
@@ -71,14 +66,6 @@ function datsModel (state, bus) {
         state.dats.ready = true
         bus.emit('render')
       })
-      window.addEventListener('beforeunload', onBeforeUnload)
-      function onBeforeUnload (ev) {
-        ev.returnValue = false
-        window.removeEventListener('beforeunload', onBeforeUnload)
-        manager.closeAll(function () {
-          app.quit()
-        })
-      }
       bus.emit('dats:loaded')
       done()
     }
@@ -168,6 +155,7 @@ function datsModel (state, bus) {
     var edit = datJson(dat)
     edit.write(values, function (err) {
       if (err) return onerror(err)
+      bus.emit('render')
     })
   })
 

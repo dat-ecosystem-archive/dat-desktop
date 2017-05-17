@@ -1,12 +1,50 @@
 var microcomponent = require('microcomponent')
 var nanomorph = require('nanomorph')
 var html = require('choo/html')
+var css = require('sheetify')
+var icon = require('./icon')
+var button = require('./button')
+
+var overlay = css`
+  :host {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.2);
+  }
+`
+
+var editableField = css`
+  :host {
+    position: relative;
+    h2 {
+      position: relative;
+    }
+    .indicator {
+      position: absolute;
+      display: none;
+      top: .25rem;
+      right: 0;
+      width: .75rem;
+    }
+    &:hover, &:focus {
+      h2 {
+        color: var(--color-blue);
+      }
+      .indicator {
+        display: block;
+      }
+    }
+  }
+`
 
 module.exports = TitleField
 
 // Creates an input field with an explicit save button.
 // There's 2 modes: active and inactive.
-// Only dats that you're the owner of can have an active input field.
+// Only dats that you can write to can have an active input field.
 // Inactive becomes active by clicking on the input field.
 // Active becomes inactive by:
 // - clicking anywhere outside the field
@@ -14,10 +52,9 @@ module.exports = TitleField
 // - pressing enter (saving)
 // - clicking the save button (saving)
 function TitleField () {
-  var state = resetState()
-  var emit = null
-
-  var component = microcomponent('table-row')
+  var component = microcomponent('table-row', {
+    state: resetState()
+  })
   component.on('render', render)
   component.on('render:active', renderActive)
   component.on('render:inactive', renderInactive)
@@ -26,14 +63,13 @@ function TitleField () {
   return component
 
   function unload () {
-    emit = null
-    state = resetState()
+    component.state = resetState()
   }
 
-  function update (dat, newState, newEmit) {
-    return dat.owner !== state.owner ||
-      dat.key.toString('hex') !== state.key ||
-      state.title !== dat.metadata.title || '#' + state.key
+  function update ({ dat }) {
+    return dat.writable !== this.state.writable ||
+      dat.key.toString('hex') !== this.state.key ||
+      this.state.title !== dat.metadata.title || '#' + this.state.key
   }
 
   function resetState () {
@@ -46,54 +82,69 @@ function TitleField () {
     }
   }
 
-  function render (dat, newState, newEmit) {
-    if (newEmit) emit = newEmit
+  function render () {
+    var dat = component.props.dat
+    var state = component.state
+
     if (dat) {
-      state.owner = dat.owner
+      state.writable = dat.writable
       state.key = dat.key.toString('hex')
-      state.title = dat.metadata.title || '#' + state.key
+      state.title = dat.metadata.title || ''
+      state.placeholderTitle = '#' + state.key
     }
 
-    if (state.isEditing && state.owner) return component.emit('render:active')
+    if (state.isEditing && state.writable) return component.emit('render:active')
     else return component.emit('render:inactive')
   }
 
   function renderInactive () {
+    var state = this.state
     state.editValue = ''
 
-    return html`
-      <section>
-        <h2 class="f6 normal truncate" onclick=${onclick}>
-          ${state.title}
-        </h2>
-      </section>
-    `
+    return state.writable
+      ? html`
+          <div class=${editableField}>
+            <h2 class="f6 normal truncate pr3" onclick=${onclick}>
+              ${state.title || state.placeholderTitle}
+              ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
+            </h2>
+          </div>
+        `
+      : html`
+          <div>
+            <h2 class="f6 normal truncate pr3">
+              ${state.placeholderTitle}
+            </h2>
+          </div>
+        `
 
     function onclick (e) {
       e.stopPropagation()
       e.preventDefault()
       state.isEditing = true
-      component.emit('render')
+      state.editValue = state.title
+      component.emit('render', Object.assign({}, component.props))
     }
   }
 
   function renderActive () {
-    if (!state.isEditing) {
-      state.isEditing = true
-      attachListener()
-    }
-
     setTimeout(function () {
-      self._element.querySelector('input').focus()
+      var input = self._element.querySelector('input')
+      input.focus()
+      input.select()
     }, 0)
 
     var self = this
+    var state = this.state
     return html`
-      <section>
-        <input class="f6 normal"
-          value=${state.editValue} onkeyup=${handleKeypress} />
-        ${renderButton()}
-      </section>
+      <div>
+        <div class="${overlay}"></div>
+        <div class="${editableField} bg-white nt1 nb1 nl1 pl1 shadow-1 flex justify-between">
+          <input class="bn f6 normal w-100"
+            value=${state.editValue} onkeyup=${handleKeypress} />
+          ${renderButton()}
+        </div>
+      </div>
     `
 
     function handleKeypress (e) {
@@ -106,26 +157,21 @@ function TitleField () {
         e.preventDefault()
         deactivate()
       } else if (e.code === 'Enter') {
-        if (!newValue) return
         e.preventDefault()
         handleSave()
-      } else if ((!oldValue || !newValue) && oldValue !== newValue) {
+      } else if (oldValue !== newValue) {
         nanomorph(self._element.querySelector('button'), renderButton())
       }
     }
 
     function renderButton () {
-      if (state.editValue === '') {
+      if (state.editValue === state.title) {
         return html`
-          <button class="f6 white ttu bg-light-gray">
-            save
-          </button>
+          ${button('Save', { onload: attachListener })}
         `
       } else {
         return html`
-          <button class="f6 white ttu bg-color-green" onclick=${handleSave}>
-            save
-          </button>
+          ${button.green('Save', { onclick: handleSave, onload: attachListener })}
         `
       }
     }
@@ -135,14 +181,14 @@ function TitleField () {
         e.stopPropagation()
         e.preventDefault()
       }
-      emit('dats:update-title', { key: state.key, title: state.editValue })
+      component.props.emit('dats:update-title', { key: self.state.key, title: self.state.editValue })
       deactivate()
     }
 
     function deactivate () {
       document.body.removeEventListener('click', clickedOutside)
       state.isEditing = false
-      component.emit('render')
+      component.emit('render', Object.assign({}, component.props))
     }
 
     function attachListener () {
@@ -151,11 +197,7 @@ function TitleField () {
 
     function clickedOutside (e) {
       var source = e.target
-      while (source.parentNode) {
-        if (source === self._element) return
-        source = source.parentNode
-      }
-      deactivate()
+      if (source.className === overlay) deactivate()
     }
   }
 }

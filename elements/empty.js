@@ -59,21 +59,21 @@ function EmptyState () {
         <div class="link">
           ${icon('link', { class: 'color-blue-disabled' })}
           <h3 class="f4 ttu mt0 mb0 color-blue-disabled">
-            Import Dat
+            Download A Dat
           </h3>
           <p class="f7 color-neutral-40">
-            Download an existing dataset
+            … and keep data up-to-date
             <br>
-            by entering its dat link…
+            by entering the link here.
           </p>
         </div>
         <div class="tr create-new-dat">
           ${icon('create-new-dat', { class: 'color-green-disabled' })}
-          <h3 class="f4 ttu mt0 mb0 color-green-disabled">Create New Dat</h3>
+          <h3 class="f4 ttu mt0 mb0 color-green-disabled">Share a Folder</h3>
           <p class="f7 color-neutral-40">
-            … or select one of your local
+            … and sync changes by sharing
             <br>
-            datasets and start sharing it.
+             the link with someone else.
           </p>
         </div>
       </div>

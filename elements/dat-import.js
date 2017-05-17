@@ -1,11 +1,12 @@
 'use strict'
 
+const microcomponent = require('microcomponent')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 const icon = require('./icon')
 
-module.exports = datImportElement
+module.exports = DatImportElement
 
 const prefix = css`
   :host {
@@ -59,26 +60,37 @@ const prefix = css`
   }
 `
 
-function datImportElement (props) {
-  const onsubmit = props.onsubmit
+function DatImportElement () {
+  var component = microcomponent('dat-import')
+  component.on('render', render)
+  component.on('update', update)
+  return component
 
-  assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
+  function render () {
+    const onsubmit = this.props.onsubmit
 
-  return html`
-    <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
-      <input name="dat-import"
-        type="text"
-        placeholder="Import dat"
-        onkeydown=${onKeyDown}
-        class="input-reset">
-      ${icon('link', { class: 'absolute top-0 bottom-0 left-0' })}
-    </label>
-  `
+    assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
 
-  function onKeyDown (e) {
-    const value = e.target.value
-    if (e.key !== 'Enter' || !value) return
-    e.target.value = ''
-    onsubmit(value)
+    return html`
+      <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
+        <input name="dat-import"
+          type="text"
+          placeholder="Download"
+          onkeydown=${onKeyDown}
+          class="input-reset">
+        ${icon('link', { class: 'absolute top-0 bottom-0 left-0' })}
+      </label>
+    `
+
+    function onKeyDown (e) {
+      const value = e.target.value
+      if (e.key !== 'Enter' || !value) return
+      e.target.value = ''
+      onsubmit(value)
+    }
+  }
+
+  function update () {
+    return false
   }
 }

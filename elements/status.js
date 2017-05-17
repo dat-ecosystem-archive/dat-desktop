@@ -1,3 +1,4 @@
+const bytes = require('prettier-bytes')
 const html = require('choo/html')
 const css = require('sheetify')
 
@@ -80,9 +81,6 @@ const progressSubline = css`
 `
 
 module.exports = function (dat, stats) {
-  if (dat.owner && dat.importer) {
-    return html`<div>Watching for updates…</div>`
-  }
   var progress = Math.floor((dat.progress || 0) * 100)
   var progressbarLine = (stats.state === 'loading')
     ? 'line-loading'
@@ -105,11 +103,11 @@ module.exports = function (dat, stats) {
     case 'stale':
       progressText = 'waiting for peers…'
       break
-    case 'paused':
+    default:
       progressText = 'Paused.'
   }
   function speed (n) {
-    return `${Math.round((n || 0) / 1024)}kB/s`
+    return `${bytes(n || 0)}/s`
   }
 
   return html`

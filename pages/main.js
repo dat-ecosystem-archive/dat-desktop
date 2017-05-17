@@ -3,12 +3,15 @@
 const html = require('choo/html')
 
 const Header = require('../elements/header')
-const sprite = require('../elements/sprite')
+const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const Welcome = require('../elements/welcome')
 const Empty = require('../elements/empty')
 
 module.exports = mainView
+
+const header = Header()
+const sprite = Sprite()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -16,12 +19,11 @@ function mainView (state, emit) {
   const showWelcomeScreen = state.welcome.show
   const dats = state.dats.values
   const isReady = state.dats.ready
-
-  const header = Header({
+  const headerProps = {
     isReady: isReady,
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:clone', link)
-  })
+  }
 
   document.title = 'Dat Desktop'
 
@@ -29,7 +31,7 @@ function mainView (state, emit) {
     document.title = 'Dat Desktop | Welcome'
     return html`
       <div>
-        ${sprite()}
+        ${sprite.render()}
         ${Welcome({
           onexit: () => {
             window.removeEventListener('keydown', captureKeyEvent)
@@ -46,8 +48,8 @@ function mainView (state, emit) {
   if (!dats.length) {
     return html`
       <div>
-        ${sprite()}
-        ${header}
+        ${sprite.render()}
+        ${header.render(headerProps)}
         ${Empty()}
       </div>
     `
@@ -55,8 +57,8 @@ function mainView (state, emit) {
 
   return html`
     <div>
-      ${sprite()}
-      ${header}
+      ${sprite.render()}
+      ${header.render(headerProps)}
       ${Table(state, emit)}
     </div>
   `

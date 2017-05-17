@@ -1,14 +1,15 @@
 'use strict'
 
+const microcomponent = require('microcomponent')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
 
 const button = require('./button')
-const datImport = require('./dat-import')
+const DatImport = require('./dat-import')
 const icon = require('./icon')
 
-module.exports = headerElement
+module.exports = HeaderElement
 
 const header = css`
   :host {
@@ -63,43 +64,53 @@ const header = css`
   }
 `
 
-function headerElement (props) {
-  var isReady = props.isReady
-  var onimport = props.onimport
-  var oncreate = props.oncreate
+function HeaderElement () {
+  var importButton = DatImport()
+  var component = microcomponent('header')
+  component.on('render', render)
+  component.on('update', update)
+  return component
 
-  assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
-  assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
-  assert.equal(typeof oncreate, 'function', 'elements/header: oncreate should be type function')
+  function render () {
+    var { isReady, onimport, oncreate } = this.props
 
-  if (!isReady) {
-    return html`<header class="${header}"></header>`
+    assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
+    assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
+    assert.equal(typeof oncreate, 'function', 'elements/header: oncreate should be type function')
+
+    if (!isReady) {
+      return html`<header class="${header}"></header>`
+    }
+
+    var createButton = button('Share Folder', {
+      id: 'create-new-dat',
+      icon: icon('create-new-dat'),
+      class: 'ml2 b--transparent header-action header-action-no-border',
+      onclick: oncreate
+    })
+
+    var loginButton = button('Log In', { class: 'ml2 header-action log-in-button' })
+
+    var menuButton = button.icon('Open Menu', {
+      icon: icon('menu'),
+      class: 'ml2 header-action header-action-no-border menu-trigger'
+    })
+
+    return html`
+      <header class="${header}">
+        <div class="fr">
+          ${importButton.render({
+            onsubmit: onimport
+          })}
+          ${createButton}
+          ${loginButton}
+          ${menuButton}
+        </div>
+      </header>
+    `
   }
 
-  var importButton = datImport({ onsubmit: onimport })
-
-  var createButton = button('Create New Dat', {
-    id: 'create-new-dat',
-    icon: icon('create-new-dat'),
-    class: 'ml2 b--transparent header-action header-action-no-border',
-    onclick: oncreate
-  })
-
-  var loginButton = button('Log In', { class: 'ml2 header-action log-in-button' })
-
-  var menuButton = button.icon('Open Menu', {
-    icon: icon('menu'),
-    class: 'ml2 header-action header-action-no-border menu-trigger'
-  })
-
-  return html`
-    <header class="${header}">
-      <div class="fr">
-        ${importButton}
-        ${createButton}
-        ${loginButton}
-        ${menuButton}
-      </div>
-    </header>
-  `
+  function update (props) {
+    return props.isReady !== this.props.isReady
+  }
 }
