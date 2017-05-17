@@ -92,7 +92,7 @@ function IntroScreen () {
     const screen = this._state.screen = state.screen || 0
 
     return html`
-      <main class="${intro}">
+      <main class="${intro} intro">
         <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute">
         <div class="${content}">
           ${{
