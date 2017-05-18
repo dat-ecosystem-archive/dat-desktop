@@ -13,11 +13,8 @@ module.exports = mainView
 
 const header = Header()
 const sprite = Sprite()
-<<<<<<< HEAD
 const download = Download()
-=======
 const intro = Intro()
->>>>>>> master
 
 // render the main view
 // (obj, obj, fn) -> html
