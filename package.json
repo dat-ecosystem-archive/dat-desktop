@@ -8,12 +8,11 @@
   "author": "Dat Team",
   "dependencies": {
     "base-elements": "^2.2.1",
-    "cache-element": "^3.0.0",
     "choo": "^5.1.0",
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
     "choo-persist": "^3.0.0",
-    "dat-colors": "^3.3.0",
+    "dat-colors": "^3.5.0",
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
     "dat-icons": "^2.2.0",
@@ -36,6 +35,7 @@
     "run-waterfall": "^1.1.3",
     "sheetify": "^6.0.0",
     "tachyons": "^4.7.2",
+    "throttleit": "^1.0.0",
     "toiletdb": "^1.2.0",
     "xhr": "^2.3.3",
     "xtend": "^4.0.1"
@@ -51,13 +51,14 @@
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
-    "test:unit": "node tests/welcome.js",
+    "test:unit": "node tests/intro.js && electron tests/dat-manager.js",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
   },
   "devDependencies": {
     "browserify": "^13.3.0",
+    "clipboardy": "^1.1.2",
     "concat-stream": "^1.6.0",
     "del": "^2.2.2",
     "dependency-check": "^2.6.0",
@@ -70,6 +71,7 @@
     "spok": "^0.7.0",
     "standard": "^7.1.2",
     "tap": "^10.3.2",
+    "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
     "through2": "^2.0.3",
     "watchify": "^3.7.0"

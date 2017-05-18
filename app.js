@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(expose())
 }
 
-app.use(require('./models/welcome'))
+app.use(require('./models/intro'))
 app.use(require('./models/download'))
 app.use(require('./models/drag-drop'))
 app.use(require('./models/dats'))

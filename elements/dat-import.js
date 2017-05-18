@@ -61,7 +61,7 @@ const prefix = css`
 `
 
 function DatImportElement () {
-  var component = microcomponent('dat-import')
+  var component = microcomponent({ name: 'dat-import' })
   component.on('render', render)
   component.on('update', update)
   return component

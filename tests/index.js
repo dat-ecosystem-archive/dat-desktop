@@ -1,3 +1,4 @@
+var clipboard = require('clipboardy')
 var spectron = require('spectron')
 var path = require('path')
 var tap = require('tap').test
@@ -32,7 +33,7 @@ tap('init', function (t) {
 })
 
 tap('onboarding', function (t) {
-  t.test('welcome screen should show every time you open the app as long as you have no dats', function (t) {
+  t.test('intro should show every time you open the app as long as you have no dats', function (t) {
     var app = createApp()
     return waitForLoad(app)
       .then(() => app.browserWindow.isVisible())
@@ -40,6 +41,8 @@ tap('onboarding', function (t) {
       .then(() => app.browserWindow.getTitle())
       .then((title) => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
       .then(() => app.client.click('button'))
+      .then(() => wait())
+      .then(() => app.client.click('button[title="Skip Intro"]'))
       .then(() => wait())
       .then(() => app.browserWindow.getTitle())
       .then((title) => t.equal(title, 'Dat Desktop', 'correct title'))
@@ -49,26 +52,21 @@ tap('onboarding', function (t) {
       .then(() => app.browserWindow.isVisible())
       .then(() => app.client.click('button'))
       .then(() => wait())
-      .then(() => app.client.getText('.tutorial'))
-      .then((val) => {
-        val = val.toLowerCase()
-        t.ok(val.indexOf('share') > -1, 'has create new dat text')
-        t.ok(val.indexOf('download') > -1, 'has import dat text')
-      })
+      .then(() => app.client.getText('.intro'))
       .then(() => endTest(app))
   })
   t.end()
 })
 
 tap('working with dats', function (t) {
-  t.test('click "create new dat" and share a local folder, you should see a new item in the list')
-  t.test('click the link icon and it should copy the dat link to your clipboard')
   var app = createApp()
   return waitForLoad(app)
     .then(() => app.browserWindow.isVisible())
     .then((isVisible) => t.ok(isVisible, 'isVisible'))
     .then(() => app.client.click('button'))
     .then(() => wait(4000))
+    .then(() => app.client.click('button[title="Skip Intro"]'))
+    .then(() => wait())
     .then(() => app.client.click('button')) // create new
     .then(() => wait())
     .then(() => app.client.getText('.size'))
@@ -77,6 +75,11 @@ tap('working with dats', function (t) {
     })
     .then(() => app.client.getText('.network'))
     .then((text) => t.ok(text.match(/0/), 'contains network size'))
+    .then(() => clipboard.write(''))
+    .then(() => app.client.click('button[title="Share Dat"]'))
+    .then(() => app.client.click('button[title="Copy to Clipboard"]'))
+    .then(() => clipboard.read())
+    .then(text => t.ok(text.match(/^dat:\/\/[0-9a-f]{32}/), 'link copied to clipboard'))
     .then(() => app.stop())
     .then(() => Promise.resolve(app = createApp()))
     .then(() => waitForLoad(app))

@@ -109,7 +109,13 @@ function Row ({ highlight }) {
   var titleField = TitleField()
   var networkIcon = NetworkIcon()
 
-  return function (dat, state, emit) {
+  var component = microcomponent({ name: 'table-row' })
+  component.on('render', render)
+  component.on('update', update)
+  return component
+
+  function render () {
+    var { dat, state, emit } = this.props
     if (dat instanceof Error) return errorRow(dat)
 
     var stats = dat.stats
@@ -167,10 +173,14 @@ function Row ({ highlight }) {
       </tr>
     `
   }
+
+  function update (props) {
+    return true
+  }
 }
 
 function FinderButton () {
-  var component = microcomponent('finder-button')
+  var component = microcomponent({ name: 'finder-button' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -194,7 +204,7 @@ function FinderButton () {
 }
 
 function LinkButton () {
-  var component = microcomponent('link-button')
+  var component = microcomponent({ name: 'link-button' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -218,7 +228,7 @@ function LinkButton () {
 }
 
 function DeleteButton () {
-  var component = microcomponent('delete-button')
+  var component = microcomponent({ name: 'delete-button' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -242,7 +252,8 @@ function DeleteButton () {
 }
 
 function NetworkIcon () {
-  var component = microcomponent('network-icon', {
+  var component = microcomponent({
+    name: 'network-icon',
     state: {
       peerCount: 0
     }
@@ -255,7 +266,7 @@ function NetworkIcon () {
     var { dat } = this.props
     var peerCount = this.state.peerCount = dat.network
       ? dat.network.connected
-      : 'N/A'
+      : 0
     var iconClass = peerCount === 0
       ? 'network-peers-0'
       : peerCount === 1
@@ -266,14 +277,14 @@ function NetworkIcon () {
   }
 
   function update ({ dat, emit }) {
-    var newPeerCount = dat.network ? dat.network.connected : 'N/A'
+    var newPeerCount = dat.network ? dat.network.connected : 0
     return this.state.peerCount !== newPeerCount
   }
 }
 
 // create a new hexcontent icon
 function HexContent () {
-  var component = microcomponent('hex-content')
+  var component = microcomponent({ name: 'hex-content' })
   component.on('render', render)
   component.on('update', update)
   return component

@@ -18,55 +18,25 @@ const header = css`
     background-color: var(--color-neutral);
     color: var(--color-white);
     -webkit-app-region: drag;
+  }
+`
 
-    .header-action {
-      height: 1.75rem;
-      display: inline-block;
-      border: 1px solid var(--color-neutral-30);
-      background: transparent;
-      color: var(--color-neutral-30);
-      text-align: center;
-      vertical-align: middle;
-      svg {
-        width: 1.1em;
-      }
-      &:hover,
-      &:focus {
-        outline: none;
-        color: var(--color-white);
-        border-color: var(--color-white);
-      }
-      .btn-text {
-        font-size: .75rem;
-      }
-    }
+const shareButtonIcon = css`
+  :host {
+    width: 1.2em;
+  }
+`
 
-    .header-action-no-border {
-      border-color: transparent;
-      &:hover,
-      &:focus {
-        border-color: transparent;
-      }
-    }
-
-    .menu-trigger {
-      height: 2rem;
-      color: var(--color-neutral--20);
-      &:hover,
-      &:focus {
-        color: var(--color-white);
-      }
-    }
-    .log-in-button,
-    .menu-trigger {
-      display: none !important;
-    }
+const menuButtonIcon = css`
+  :host {
+    width: 1.75em;
+    padding-top: .2rem;
   }
 `
 
 function HeaderElement () {
   var importButton = DatImport()
-  var component = microcomponent('header')
+  var component = microcomponent({ name: 'header' })
   component.on('render', render)
   component.on('update', update)
   return component
@@ -82,18 +52,20 @@ function HeaderElement () {
       return html`<header class="${header}"></header>`
     }
 
-    var createButton = button('Share Folder', {
+    var createButton = button.header('Share Folder', {
       id: 'create-new-dat',
-      icon: icon('create-new-dat'),
-      class: 'ml2 b--transparent header-action header-action-no-border',
+      icon: icon('create-new-dat', { class: shareButtonIcon }),
+      class: 'ml2 b--transparent v-mid color-neutral-30 hover-color-white',
       onclick: oncreate
     })
 
-    var loginButton = button('Log In', { class: 'ml2 header-action log-in-button' })
+    var loginButton = button.header('Log In', {
+      class: 'ml3 v-mid color-neutral-30 hover-color-white dn'
+    })
 
     var menuButton = button.icon('Open Menu', {
-      icon: icon('menu'),
-      class: 'ml2 header-action header-action-no-border menu-trigger'
+      icon: icon('menu', { class: menuButtonIcon }),
+      class: 'ml3 v-mid color-neutral-20 hover-color-white dn'
     })
 
     return html`

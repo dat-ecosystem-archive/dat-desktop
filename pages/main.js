@@ -5,7 +5,7 @@ const html = require('choo/html')
 const Header = require('../elements/header')
 const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
-const Welcome = require('../elements/welcome')
+const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
 const Download = require('../elements/download')
 
@@ -13,12 +13,16 @@ module.exports = mainView
 
 const header = Header()
 const sprite = Sprite()
+<<<<<<< HEAD
 const download = Download()
+=======
+const intro = Intro()
+>>>>>>> master
 
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
-  const showWelcomeScreen = state.welcome.show
+  const showIntroScreen = state.intro.show
   const showDownloadScreen = state.download.show
   const dats = state.dats.values
   const isReady = state.dats.ready
@@ -46,18 +50,17 @@ function mainView (state, emit) {
     `
   }
 
-  if (showWelcomeScreen) {
+  if (showIntroScreen) {
     document.title = 'Dat Desktop | Welcome'
     return html`
       <div>
         ${sprite.render()}
-        ${Welcome({
+        ${intro.render({
           onexit: () => {
-            window.removeEventListener('keydown', captureKeyEvent)
-            emit('welcome:hide')
+            emit('intro:hide')
           },
-          onload: () => {
-            window.addEventListener('keydown', captureKeyEvent)
+          onOpenHomepage: () => {
+            emit('intro:open-homepage')
           }
         })}
       </div>
@@ -81,12 +84,4 @@ function mainView (state, emit) {
       ${Table(state, emit)}
     </div>
   `
-
-  function captureKeyEvent (e) {
-    const key = e.code
-    if (key === 'Enter' || key === 'Space') {
-      window.removeEventListener('keydown', captureKeyEvent)
-      emit('welcome:hide')
-    }
-  }
 }

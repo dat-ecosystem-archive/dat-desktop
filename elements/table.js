@@ -1,4 +1,4 @@
-var cache = require('cache-element')
+var microcomponent = require('microcomponent')
 var nanolog = require('nanologger')
 var html = require('choo/html')
 var css = require('sheetify')
@@ -72,15 +72,15 @@ function TableRows () {
       var key = dat instanceof Error
         ? dat.stack
         : dat.key.toString('hex')
-      var el = elements[key]
+      var row = elements[key]
       usedKeys.push(key)
-      if (el) {
-        return el(dat, state, emit)
+      if (row) {
+        return row.render({ dat, state, emit })
       } else {
         var highlight = !initialLoad
         var newRow = TableRow({ highlight })
         elements[key] = newRow
-        return newRow(dat, state, emit)
+        return newRow.render({ dat, state, emit })
       }
     })
 
@@ -94,7 +94,11 @@ function TableRows () {
 }
 
 function TableHead () {
-  return cache(function () {
+  return microcomponent({
+    name: 'table-head',
+    pure: true
+  })
+  .on('render', function () {
     return html`
       <thead>
         <tr>
