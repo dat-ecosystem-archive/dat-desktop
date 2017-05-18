@@ -61,7 +61,6 @@ tap('onboarding', function (t) {
 })
 
 tap('working with dats', function (t) {
-  t.test('click "create new dat" and share a local folder, you should see a new item in the list')
   t.test('click the link icon and it should copy the dat link to your clipboard')
   var app = createApp()
   return waitForLoad(app)
