@@ -132,7 +132,7 @@ function IntroScreen () {
           }[screen]}
         </div>
         ${screen === 0
-          ? button.green('Get Started', { onclick: next, class: 'mt2 mb5' })
+          ? button.green('Get Started', { onclick: next, class: 'mt2 mb5 relative' })
           : html`
             <div class="${footer}">
                 ${button('Skip Intro', { onclick: onexit })}
