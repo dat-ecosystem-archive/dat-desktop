@@ -12,7 +12,7 @@
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
     "choo-persist": "^3.0.0",
-    "dat-colors": "^3.3.0",
+    "dat-colors": "^3.5.0",
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
     "dat-icons": "^2.2.0",
@@ -51,7 +51,7 @@
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
-    "test:unit": "node tests/welcome.js && electron tests/dat-manager.js",
+    "test:unit": "node tests/intro.js && electron tests/dat-manager.js",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"

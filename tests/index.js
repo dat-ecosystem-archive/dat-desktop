@@ -33,7 +33,7 @@ tap('init', function (t) {
 })
 
 tap('onboarding', function (t) {
-  t.test('welcome screen should show every time you open the app as long as you have no dats', function (t) {
+  t.test('intro should show every time you open the app as long as you have no dats', function (t) {
     var app = createApp()
     return waitForLoad(app)
       .then(() => app.browserWindow.isVisible())
@@ -41,6 +41,8 @@ tap('onboarding', function (t) {
       .then(() => app.browserWindow.getTitle())
       .then((title) => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
       .then(() => app.client.click('button'))
+      .then(() => wait())
+      .then(() => app.client.click('button[title="Skip Intro"]'))
       .then(() => wait())
       .then(() => app.browserWindow.getTitle())
       .then((title) => t.equal(title, 'Dat Desktop', 'correct title'))
@@ -50,12 +52,7 @@ tap('onboarding', function (t) {
       .then(() => app.browserWindow.isVisible())
       .then(() => app.client.click('button'))
       .then(() => wait())
-      .then(() => app.client.getText('.tutorial'))
-      .then((val) => {
-        val = val.toLowerCase()
-        t.ok(val.indexOf('share') > -1, 'has create new dat text')
-        t.ok(val.indexOf('download') > -1, 'has import dat text')
-      })
+      .then(() => app.client.getText('.intro'))
       .then(() => endTest(app))
   })
   t.end()
@@ -68,6 +65,8 @@ tap('working with dats', function (t) {
     .then((isVisible) => t.ok(isVisible, 'isVisible'))
     .then(() => app.client.click('button'))
     .then(() => wait(4000))
+    .then(() => app.client.click('button[title="Skip Intro"]'))
+    .then(() => wait())
     .then(() => app.client.click('button')) // create new
     .then(() => wait())
     .then(() => app.client.getText('.size'))
