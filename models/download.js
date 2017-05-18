@@ -48,9 +48,18 @@ function downloadModel (state, bus) {
 
       dat.archive.on('content', function () {
         update()
-        dat.archive.readdir('/', function (err, files) {
+        dat.archive.readdir('/', function (err, names) {
           if (err) return
-          dat.files = files
+          dat.files = []
+          names.forEach(function (name) {
+            var file = { name }
+            dat.files.push(file)
+            dat.archive.stat(`/${name}`, function (err, stat) {
+              if (err) return
+              file.stat = stat
+              update()
+            })
+          })
           update()
         })
       })

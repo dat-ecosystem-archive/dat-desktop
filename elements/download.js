@@ -88,9 +88,16 @@ module.exports = function () {
         ${dat.files
           ? html`
               <ul>
-                ${dat.files.map(file => html`
-                  <li>${file}</li>
-                `)}
+                ${dat.files.map(file => {
+                  var type = file.stat
+                    ? file.stat.isDirectory()
+                      ? 'directory'
+                      : 'file'
+                    : '?'
+                  return html`
+                    <li>/${file.name} (${type})</li>
+                  `
+                })}
               </ul>
             `
           : ''}
