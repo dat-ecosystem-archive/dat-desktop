@@ -52,6 +52,16 @@ var redStyles = css`
   }
 `
 
+var headerStyles = css`
+  :host {
+    color: var(--color-neutral-30);
+  }
+  :host:hover,
+  :host:focus {
+    color: var(--color-white);
+  }
+`
+
 var plainStyles = css`
   :host {
     padding: .5rem .75rem;
@@ -68,6 +78,7 @@ var plainStyles = css`
 plainButton.green = greenButton
 plainButton.icon = iconButton
 plainButton.red = redButton
+plainButton.header = headerButton
 module.exports = plainButton
 
 // States:
@@ -165,6 +176,17 @@ function redButton (innerText, opts) {
 
   opts = opts || {}
   opts.class = (opts.class) ? redStyles + ' ' + opts.class : redStyles
+  return buttonElement(innerText, opts)
+}
+
+function headerButton (innerText, opts) {
+  if (!opts) {
+    opts = innerText
+    innerText = ''
+  }
+
+  opts = opts || {}
+  opts.class = (opts.class) ? headerStyles + ' ' + opts.class : headerStyles
   return buttonElement(innerText, opts)
 }
 
