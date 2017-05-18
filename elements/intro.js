@@ -17,6 +17,7 @@ const intro = css`
     align-items: center;
     justify-content: center;
     -webkit-app-region: drag;
+    overflow: hidden;
   }
 `
 const content = css`
@@ -38,6 +39,12 @@ const footer = css`
     button {
       min-width: 5rem;
     }
+  }
+`
+const image = css`
+  :host {
+    max-width: 100vw;
+    max-height: 100vh;
   }
 `
 
@@ -98,8 +105,8 @@ function IntroScreen () {
     var screen = this.state.screen
 
     return html`
-      <main class="${intro} intro">
-        <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute mw8">
+      <main class="${intro}">
+        <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute ${image}">
         <div class="${content}">
           ${{
             1: html`
