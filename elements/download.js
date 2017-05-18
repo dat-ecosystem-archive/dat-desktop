@@ -94,8 +94,11 @@ module.exports = function () {
                       ? 'directory'
                       : 'file'
                     : '?'
+                  var size = file.stat && file.stat.isFile()
+                    ? ` (${bytes(file.stat.size)})`
+                    : ''
                   return html`
-                    <li>${file.path}</li>
+                    <li>${file.path} ${size}</li>
                   `
                 })}
               </ul>
