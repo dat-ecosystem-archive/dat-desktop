@@ -72,15 +72,15 @@ function TableRows () {
       var key = dat instanceof Error
         ? dat.stack
         : dat.key.toString('hex')
-      var el = elements[key]
+      var row = elements[key]
       usedKeys.push(key)
-      if (el) {
-        return el(dat, state, emit)
+      if (row) {
+        return row.render({ dat, state, emit })
       } else {
         var highlight = !initialLoad
         var newRow = TableRow({ highlight })
         elements[key] = newRow
-        return newRow(dat, state, emit)
+        return newRow.render({ dat, state, emit })
       }
     })
 
