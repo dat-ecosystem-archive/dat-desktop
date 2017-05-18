@@ -52,10 +52,10 @@ module.exports = TitleField
 // - pressing enter (saving)
 // - clicking the save button (saving)
 function TitleField () {
-  var state = resetState()
-  var emit = null
-
-  var component = microcomponent('table-row')
+  var component = microcomponent({
+    name: 'table-title-field',
+    state: resetState()
+  })
   component.on('render', render)
   component.on('render:active', renderActive)
   component.on('render:inactive', renderInactive)
@@ -64,14 +64,13 @@ function TitleField () {
   return component
 
   function unload () {
-    emit = null
-    state = resetState()
+    component.state = resetState()
   }
 
-  function update (dat, newState, newEmit) {
-    return dat.writable !== state.writable ||
-      dat.key.toString('hex') !== state.key ||
-      state.title !== dat.metadata.title || '#' + state.key
+  function update ({ dat }) {
+    return dat.writable !== this.state.writable ||
+      dat.key.toString('hex') !== this.state.key ||
+      this.state.title !== dat.metadata.title || '#' + this.state.key
   }
 
   function resetState () {
@@ -84,8 +83,10 @@ function TitleField () {
     }
   }
 
-  function render (dat, newState, newEmit) {
-    if (newEmit) emit = newEmit
+  function render () {
+    var dat = component.props.dat
+    var state = component.state
+
     if (dat) {
       state.writable = dat.writable
       state.key = dat.key.toString('hex')
@@ -98,23 +99,32 @@ function TitleField () {
   }
 
   function renderInactive () {
+    var state = this.state
     state.editValue = ''
 
-    return html`
-      <div class="${editableField}">
-        <h2 class="f6 normal truncate pr3" onclick=${onclick}>
-          ${state.title || state.placeholderTitle}
-          ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
-        </h2>
-      </div>
-    `
+    return state.writable
+      ? html`
+          <div class=${editableField}>
+            <h2 class="f6 normal truncate pr3" onclick=${onclick}>
+              ${state.title || state.placeholderTitle}
+              ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
+            </h2>
+          </div>
+        `
+      : html`
+          <div>
+            <h2 class="f6 normal truncate pr3">
+              ${state.placeholderTitle}
+            </h2>
+          </div>
+        `
 
     function onclick (e) {
       e.stopPropagation()
       e.preventDefault()
       state.isEditing = true
       state.editValue = state.title
-      component.emit('render')
+      component.emit('render', Object.assign({}, component.props))
     }
   }
 
@@ -126,6 +136,7 @@ function TitleField () {
     }, 0)
 
     var self = this
+    var state = this.state
     return html`
       <div>
         <div class="${overlay}"></div>
@@ -171,14 +182,14 @@ function TitleField () {
         e.stopPropagation()
         e.preventDefault()
       }
-      emit('dats:update-title', { key: state.key, title: state.editValue })
+      component.props.emit('dats:update-title', { key: self.state.key, title: self.state.editValue })
       deactivate()
     }
 
     function deactivate () {
       document.body.removeEventListener('click', clickedOutside)
       state.isEditing = false
-      component.emit('render')
+      component.emit('render', Object.assign({}, component.props))
     }
 
     function attachListener () {

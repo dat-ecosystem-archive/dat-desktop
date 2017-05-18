@@ -66,7 +66,12 @@ button {
   -webkit-app-region: drag;
 }
 
-/* additional font sizes to tachyons */
-.f7 {
-  font-size: .75rem;
+/* fading animation to highlight new dats */
+.fade-highlight {
+  animation: fade-highlight 2.25s ease-in-out;
+}
+@keyframes fade-highlight {
+  0% { background-color: rgba(42,202,75,.2); }
+  35% { background-color: rgba(42,202,75,.2); }
+  100% { background-color: rgba(42,202,75,0); }
 }

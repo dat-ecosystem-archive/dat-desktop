@@ -8,7 +8,6 @@
   "author": "Dat Team",
   "dependencies": {
     "base-elements": "^2.2.1",
-    "cache-element": "^3.0.0",
     "choo": "^5.1.0",
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
@@ -24,7 +23,7 @@
     "electron-window": "^0.8.1",
     "envobj": "^1.0.2",
     "explain-error": "^1.0.3",
-    "microcomponent": "^2.0.0",
+    "microcomponent": "^3.1.1",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "ms": "^0.7.2",
@@ -35,7 +34,8 @@
     "rimraf": "^2.5.4",
     "run-waterfall": "^1.1.3",
     "sheetify": "^6.0.0",
-    "tachyons": "^4.5.4",
+    "tachyons": "^4.7.2",
+    "throttleit": "^1.0.0",
     "toiletdb": "^1.2.0",
     "xhr": "^2.3.3",
     "xtend": "^4.0.1"
@@ -51,7 +51,7 @@
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
-    "test:unit": "node tests/intro.js",
+    "test:unit": "node tests/intro.js && electron tests/dat-manager.js",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
@@ -70,6 +70,7 @@
     "spok": "^0.7.0",
     "standard": "^7.1.2",
     "tap": "^10.3.2",
+    "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
     "through2": "^2.0.3",
     "watchify": "^3.7.0"

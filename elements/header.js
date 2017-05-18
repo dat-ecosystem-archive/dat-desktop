@@ -66,15 +66,13 @@ const header = css`
 
 function HeaderElement () {
   var importButton = DatImport()
-  var component = microcomponent('header')
+  var component = microcomponent({ name: 'header' })
   component.on('render', render)
   component.on('update', update)
   return component
 
-  function render (props) {
-    var isReady = component.isReady = props.isReady
-    var onimport = props.onimport
-    var oncreate = props.oncreate
+  function render () {
+    var { isReady, onimport, oncreate } = this.props
 
     assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
     assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
@@ -113,6 +111,6 @@ function HeaderElement () {
   }
 
   function update (props) {
-    return props.isReady !== component.isReady
+    return props.isReady !== this.props.isReady
   }
 }
