@@ -7,7 +7,7 @@ module.exports = downloadModel
 function downloadModel (state, bus) {
   var update = bus.emit.bind(bus, 'render')
 
-  state.download = xtend(state.download, {
+  state.download = xtend({}, state.download, {
     show: false
   })
 
