@@ -23,6 +23,9 @@ module.exports = function () {
       var author = dat.metadata
         ? dat.metadata.author
         : 'Anonymous'
+      var description = dat.metadata
+        ? dat.metadata.description
+        : ''
       var size = dat.archive.content
         ? bytes(dat.archive.content.byteLength)
         : 'N/A'
