@@ -46,9 +46,16 @@ function downloadModel (state, bus) {
         update()
       })
 
-      dat.archive.ready(update)
-      dat.archive.on('content', update)
+      dat.archive.on('content', function () {
+        update()
+        dat.archive.readdir('/', function (err, files) {
+          if (err) return
+          dat.files = files
+          update()
+        })
+      })
 
+      dat.archive.ready(update)
       update()
     })
   })

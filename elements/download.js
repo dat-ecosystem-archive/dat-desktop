@@ -85,6 +85,15 @@ module.exports = function () {
             onclick: oncancel
           })}
         </footer>
+        ${dat.files
+          ? html`
+              <ul>
+                ${dat.files.map(file => html`
+                  <li>${file}</li>
+                `)}
+              </ul>
+            `
+          : ''}
       </main>
     `
   }
