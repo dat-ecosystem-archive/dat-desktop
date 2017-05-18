@@ -1,6 +1,7 @@
 var tmpdir = require('os').tmpdir
 var Dat = require('dat-node')
 var xtend = Object.assign
+var join = require('path').join
 
 module.exports = downloadModel
 
@@ -48,20 +49,36 @@ function downloadModel (state, bus) {
 
       dat.archive.on('content', function () {
         update()
-        dat.archive.readdir('/', function (err, names) {
-          if (err) return
-          dat.files = []
-          names.forEach(function (name) {
-            var file = { name }
-            dat.files.push(file)
-            dat.archive.stat(`/${name}`, function (err, stat) {
-              if (err) return
-              file.stat = stat
-              update()
-            })
+        dat.files = []
+
+        function sort () {
+          dat.files.sort(function (a, b) {
+            return a.path.localeCompare(b.path)
           })
-          update()
-        })
+        }
+
+        function walk (dir) {
+          dat.archive.readdir(dir, function (err, names) {
+            if (err) return
+            names.forEach(function (name) {
+              var file = { path: join(dir, name) }
+              dat.files.push(file)
+              sort()
+              dat.archive.stat(file.path, function (err, stat) {
+                if (err) return
+                file.stat = stat
+                if (stat.isDirectory()) {
+                  file.path += '/'
+                  walk(file.path)
+                }
+                sort()
+                update()
+              })
+            })
+            update()
+          })
+        }
+        walk('/')
       })
 
       dat.archive.ready(update)

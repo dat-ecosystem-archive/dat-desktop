@@ -95,7 +95,7 @@ module.exports = function () {
                       : 'file'
                     : '?'
                   return html`
-                    <li>/${file.name} (${type})</li>
+                    <li>${file.path}</li>
                   `
                 })}
               </ul>
