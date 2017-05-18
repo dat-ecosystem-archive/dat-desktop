@@ -72,24 +72,30 @@ function dots (screen) {
 }
 
 function IntroScreen () {
-  var component = microcomponent('intro')
+  var component = microcomponent({
+    name: 'intro',
+    state: {
+      screen: 0
+    }
+  })
   component.on('render', render)
   component.on('update', update)
   return component
 
   function next () {
-    component.render(Object.assign({}, component._state, { screen: component._state.screen + 1 }))
+    component.state.screen++
+    component.state.nextScreen = true
+    component.render(component.props)
   }
 
-  function render (state) {
+  function render () {
     function openHomepage (ev) {
       ev.preventDefault()
       onOpenHomepage()
     }
 
-    const onexit = this._state.onexit = state.onexit
-    const onOpenHomepage = this._state.onOpenHomepage = state.onOpenHomepage
-    const screen = this._state.screen = state.screen || 0
+    var { onexit, onOpenHomepage } = this.props
+    var screen = this.state.screen
 
     return html`
       <main class="${intro} intro">
@@ -141,7 +147,10 @@ function IntroScreen () {
   }
 
   function update (state) {
-    return state.onexit !== this._state.onexit ||
-      state.screen !== this._state.screen
+    if (this.state.nextScreen) {
+      this.state.nextScreen = false
+      return true
+    }
+    return false
   }
 }
