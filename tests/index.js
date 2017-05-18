@@ -62,7 +62,6 @@ tap('onboarding', function (t) {
 })
 
 tap('working with dats', function (t) {
-  t.test('click "create new dat" and share a local folder, you should see a new item in the list')
   var app = createApp()
   return waitForLoad(app)
     .then(() => app.browserWindow.isVisible())
