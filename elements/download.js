@@ -4,6 +4,7 @@ var microcomponent = require('microcomponent')
 var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
 var html = require('choo/html')
+var button = require('./button')
 
 module.exports = function () {
   var component = microcomponent('download')
@@ -39,28 +40,48 @@ module.exports = function () {
     }
 
     return html`
-      <main>
-        <h1>Downloading ${key}</h1>
-        ${dat
-          ? html`
-              <ul>
-                <li>Title: ${title}</li>
-                <li>Author: ${author}</li>
-                <li>Size: ${size}</li>
-                <li>Peers: ${peers}</li>
-              </ul>
-            `
-          : err
+      <main class="flex flex-column bg-neutral-04">
+        <div class="flex-auto pa3 bg-neutral-04">
+          <h1 class="truncate mb3">Downloading ${key}</h1>
+          ${dat
             ? html`
-                <p>There was an error: ${err.message}</p>
+              <div>
+                <h2 class="f6 normal truncate pr3 w-90">
+                  ${title}
+                </h2>
+                <p class="f7 color-neutral-60 truncate">
+                  Author: ${author}<br>
+                  Size: ${size}<br>
+                  Peers: ${peers}<br>
+                </p>
+              </div>
               `
-            : 'Fetching metadata...'}
-        <p>
-          Download to <pre>${location}</pre>
-          <button onclick=${onChangeLocation}>Change</button>
-        </p>
-        <button onclick=${() => ondownload({ key, location })}>Download</button>
-        <button onclick=${oncancel}>Cancel</button>
+            : err
+              ? html`
+                  <p class="color-red">There was an error: ${err.message}</p>
+                `
+              : 'Fetching metadata …'}
+          <div>
+            <span class="f7">Download to:</span>
+            <div class="flex b1 items-center">
+              <pre class="f7 color-neutral-60">${location}</pre>
+              ${button('Change …', {
+                class: '',
+                onclick: onChangeLocation
+              })}
+            </div>
+          </div>
+        </div>
+        <footer class="pa3">
+          ${button.green('Start Download', {
+            class: 'fr',
+            onclick: () => ondownload({ key, location })
+          })}
+          ${button('Cancel', {
+            class: 'fl',
+            onclick: oncancel
+          })}
+        </footer>
       </main>
     `
   }
