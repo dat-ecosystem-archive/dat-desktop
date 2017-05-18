@@ -66,7 +66,7 @@ const header = css`
 
 function HeaderElement () {
   var importButton = DatImport()
-  var component = microcomponent('header')
+  var component = microcomponent({ name: 'header' })
   component.on('render', render)
   component.on('update', update)
   return component
