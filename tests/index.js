@@ -1,3 +1,4 @@
+var clipboard = require('clipboardy')
 var spectron = require('spectron')
 var path = require('path')
 var tap = require('tap').test
@@ -62,7 +63,6 @@ tap('onboarding', function (t) {
 
 tap('working with dats', function (t) {
   t.test('click "create new dat" and share a local folder, you should see a new item in the list')
-  t.test('click the link icon and it should copy the dat link to your clipboard')
   var app = createApp()
   return waitForLoad(app)
     .then(() => app.browserWindow.isVisible())
@@ -77,6 +77,11 @@ tap('working with dats', function (t) {
     })
     .then(() => app.client.getText('.network'))
     .then((text) => t.ok(text.match(/0/), 'contains network size'))
+    .then(() => clipboard.write(''))
+    .then(() => app.client.click('button[title="Share Dat"]'))
+    .then(() => app.client.click('button[title="Copy to Clipboard"]'))
+    .then(() => clipboard.read())
+    .then(text => t.ok(text.match(/^dat:\/\/[0-9a-f]{32}/), 'link copied to clipboard'))
     .then(() => app.stop())
     .then(() => Promise.resolve(app = createApp()))
     .then(() => waitForLoad(app))
