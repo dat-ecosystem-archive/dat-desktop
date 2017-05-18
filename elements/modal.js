@@ -155,7 +155,7 @@ function confirmModal () {
     })
 
     var exitButton = button('No, Cancel', {
-      class: 'fr',
+      class: 'fr cancel-button',
       onclick: onexit
     })
 
