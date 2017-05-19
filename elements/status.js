@@ -10,6 +10,7 @@ const progressbar = css`
     --tile-width: 28px;
     --stripe-width: 5px;
     min-width: 8rem;
+    max-width: 24rem;
     overflow: hidden;
     padding-top: .4rem;
     .bar {
@@ -59,7 +60,6 @@ const progressbar = css`
       min-width: var(--counter-width);
       margin-top: -.4rem;
       text-align: right;
-      font-size: .875rem;
     }
   }
   @keyframes move-bg {
@@ -113,7 +113,7 @@ module.exports = function (dat, stats) {
   return html`
     <div>
       <div class="${progressbar}">
-        <div class="counter">
+        <div class="f6 f5-l counter">
           ${progress}%
         </div>
         <div class="bar">
@@ -121,7 +121,7 @@ module.exports = function (dat, stats) {
           </div>
         </div>
       </div>
-      <p class="f7 color-neutral-60 truncate">
+      <p class="f7 f6-l color-neutral-60 truncate">
         <span class="${progressSubline}">
           ${progressText}
         </span>
