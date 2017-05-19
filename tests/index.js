@@ -52,7 +52,7 @@ tap('onboarding', function (t) {
       .then(() => app.browserWindow.isVisible())
       .then(() => app.client.click('button'))
       .then(() => wait())
-      .then(() => app.client.getText('.intro'))
+      .then(() => app.client.getText('button[title="Skip Intro"]'))
       .then(() => endTest(app))
   })
   t.end()
