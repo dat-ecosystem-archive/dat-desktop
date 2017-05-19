@@ -331,7 +331,6 @@ function HexContent () {
           this.render(this.props)
         }
       })
-      return el
     } else {
       return button.icon('stale', {
         icon: icon('hexagon-x', {class: 'w2'}),
@@ -348,8 +347,8 @@ function HexContent () {
   }
 
   function update ({ dat, stats, emit }) {
-    return stats.state !== this.state.state
-      || typeof this.state.setHover === 'boolean'
+    return stats.state !== this.state.state ||
+      typeof this.state.setHover === 'boolean'
   }
 }
 
