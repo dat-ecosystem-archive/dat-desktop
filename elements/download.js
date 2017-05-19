@@ -142,7 +142,25 @@ module.exports = function () {
                   </div>
                   <div class="flex-auto bg-white mb2 pa2 mw6">
                     <p class="tc f7 color-pink">
-                      [[[ list of files goes here ]]]
+                      ${dat && dat.files
+                        ? html`
+                            <ul>
+                              ${dat.files.map(file => {
+                                var type = file.stat
+                                  ? file.stat.isDirectory()
+                                    ? 'directory'
+                                    : 'file'
+                                  : '?'
+                                var size = file.stat && file.stat.isFile()
+                                  ? ` (${bytes(file.stat.size)})`
+                                  : ''
+                                return html`
+                                  <li>${file.path} ${size}</li>
+                                `
+                              })}
+                            </ul>
+                          `
+                        : ''}
                     </p>
                   </div>
                 </div>
@@ -161,25 +179,6 @@ module.exports = function () {
             })}
           </div>
         </footer>
-        ${dat.files
-          ? html`
-              <ul>
-                ${dat.files.map(file => {
-                  var type = file.stat
-                    ? file.stat.isDirectory()
-                      ? 'directory'
-                      : 'file'
-                    : '?'
-                  var size = file.stat && file.stat.isFile()
-                    ? ` (${bytes(file.stat.size)})`
-                    : ''
-                  return html`
-                    <li>${file.path} ${size}</li>
-                  `
-                })}
-              </ul>
-            `
-          : ''}
       </main>
     `
   }
