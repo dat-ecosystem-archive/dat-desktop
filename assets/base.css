@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'SourceSansPro';
+  src: url('assets/fonts/SourceSansPro-Regular.ttf')  format('truetype')
+}
+
+@font-face {
+  font-family: 'SourceCodePro';
+  src: url('assets/fonts/SourceCodePro-Regular.ttf')  format('truetype')
+}
+
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -28,10 +39,14 @@ main {
 }
 
 body, input, textarea, select, button {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
+  font-family: 'SourceSansPro', sans-serif;
   &:focus {
     outline: none;
   }
+}
+
+pre, code {
+  font-family: 'SourceCodePro', monospace;
 }
 
 input, textarea, select, button {
