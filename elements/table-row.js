@@ -293,7 +293,23 @@ function HexContent () {
     var state = this.state.state = this.props.stats.state
     var { emit, dat } = this.props
 
-    if (state === 'loading') {
+    if (typeof this.state.setHover === 'boolean') {
+      this.state.hover = this.state.setHover
+      this.state.setHover = null
+    }
+
+    if (this.state.hover) {
+      var el = button.icon('pause', {
+        icon: icon('hexagon-resume', {class: 'w2'}),
+        class: 'color-neutral-30 hover-color-neutral-40',
+        onclick: togglePause,
+        onmouseout: ev => {
+          this.state.setHover = false
+          this.render(this.props)
+        }
+      })
+      return el
+    } else if (state === 'loading') {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
         class: 'color-blue hover-color-blue-hover',
@@ -309,8 +325,13 @@ function HexContent () {
       return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
         class: 'color-green hover-color-green-hover',
-        onclick: togglePause
+        onclick: togglePause,
+        onmouseover: ev => {
+          this.state.setHover = true
+          this.render(this.props)
+        }
       })
+      return el
     } else {
       return button.icon('stale', {
         icon: icon('hexagon-x', {class: 'w2'}),
@@ -328,6 +349,7 @@ function HexContent () {
 
   function update ({ dat, stats, emit }) {
     return stats.state !== this.state.state
+      || typeof this.state.setHover === 'boolean'
   }
 }
 
