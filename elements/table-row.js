@@ -16,16 +16,18 @@ var cellStyles = css`
     }
     .cell-2 {
       width: 17rem;
+      max-width: 17rem;
     }
     .cell-3 {
       width: 15rem;
     }
     .cell-4 {
-      width: 5.5rem;
+      width: 4.5rem;
       white-space: nowrap;
     }
     .cell-5 {
-      width: 6rem;
+      width: 4.5rem;
+      white-space: nowrap;
     }
     .cell-6 {
       width: 10.25rem;
@@ -76,11 +78,12 @@ var iconStyles = css`
 
 var networkStyles = css`
   :host {
+    vertical-align: top;
     svg {
       height: 1.5rem;
       display: inline-block;
       color: var(--color-neutral-20);
-      vertical-align: middle;
+      vertical-align: top;
       width: 1.1em;
       max-height: 1.6em;
     }
@@ -145,7 +148,7 @@ function Row ({ highlight }) {
         <td class="cell-2">
           <div class="cell-truncate">
             ${titleField.render({ dat, state, emit })}
-            <p class="f7 color-neutral-60 truncate">
+            <p class="f7 f6-l color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
                 ${dat.writable ? 'Read & Write' : 'Read-only'}
@@ -156,12 +159,12 @@ function Row ({ highlight }) {
         <td class="cell-3">
           ${status(dat, stats)}
         </td>
-        <td class="tr cell-4 size">
+        <td class="f6 f5-l cell-4">
           ${stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render({ dat, emit })}
-          <span class="network">${peers}</span>
+          <span class="network v-top f6 f5-l">${peers}</span>
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
@@ -344,10 +347,10 @@ function errorRow (err) {
       </td>
       <td class="cell-2" colspan="4">
         <div class="cell-truncate color-red">
-          <h2 class="f6 normal">
+          <h2 class="f6 f5-l normal">
             Error
           </h2>
-          <p class="f7">
+          <p class="f7 f6-l">
             Could not share ${err.dir}
           </p>
         </div>
