@@ -114,7 +114,7 @@ function TitleField () {
       : html`
           <div>
             <h2 class="f6 normal truncate pr3">
-              ${state.placeholderTitle}
+              ${state.title || state.placeholderTitle}
             </h2>
           </div>
         `
