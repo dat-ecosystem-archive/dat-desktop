@@ -19,7 +19,7 @@
   </a>
 </div>
 
-![screenshot](screenshot.png)
+![screenshot](assets/screenshot.png)
 
 ## Table of Content
 - [Download](#download)
