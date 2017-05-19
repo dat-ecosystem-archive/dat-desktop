@@ -60,7 +60,7 @@ function datsModel (state, bus) {
       dbPaused = toilet(dbPausedFile)
       dbPaused.open(next)
     },
-    function(next) {
+    function (next) {
       Multidat(dbMultidrive, { dat: Dat }, next)
     },
     function (multidat, done) {
