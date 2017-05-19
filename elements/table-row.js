@@ -300,8 +300,8 @@ function HexContent () {
 
     if (this.state.hover) {
       var el = button.icon('pause', {
-        icon: icon('hexagon-resume', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
+        icon: icon('hexagon-pause', {class: 'w2'}),
+        class: 'color-neutral-40',
         onclick: togglePause,
         onmouseout: ev => {
           this.state.setHover = false
