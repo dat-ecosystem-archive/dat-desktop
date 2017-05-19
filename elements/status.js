@@ -10,6 +10,7 @@ const progressbar = css`
     --tile-width: 28px;
     --stripe-width: 5px;
     min-width: 8rem;
+    max-width: 24rem;
     overflow: hidden;
     padding-top: .4rem;
     .bar {
