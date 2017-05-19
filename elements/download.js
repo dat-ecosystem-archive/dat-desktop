@@ -21,6 +21,15 @@ var detailFooter = css`
   }
 `
 
+var fileList = css`
+  :host {
+    list-style: none;
+    li:odd {
+      background-color: var(--color-neutral-04);
+    }
+  }
+`
+
 module.exports = function () {
   var component = microcomponent('download')
   component.on('render', render)
@@ -81,7 +90,7 @@ module.exports = function () {
                   ${title}
                 </h2>
               </header>
-              <div class="flex-auto pv3 ph5 bg-neutral-04">
+              <div class="flex-auto pv3 ph5 bg-neutral-04 overflow-y-auto">
                 <div class="flex">
                   <div class="f7 w4 color-neutral-60">
                     Link:
@@ -118,7 +127,7 @@ module.exports = function () {
                   <div class="f7 w4 color-neutral-60">
                     Description:
                   </div>
-                  <div class="is-selectable f7 mb2 mw6 h4">
+                  <div class="is-selectable f7 mb2 mw6">
                     ${description}
                   </div>
                 </div>
@@ -140,28 +149,28 @@ module.exports = function () {
                   <div class="f7 w4 color-neutral-60">
                     Files:
                   </div>
-                  <div class="flex-auto bg-white mb2 pa2 mw6">
-                    <p class="tc f7 color-pink">
-                      ${dat && dat.files
-                        ? html`
-                            <ul>
-                              ${dat.files.map(file => {
-                                var type = file.stat
-                                  ? file.stat.isDirectory()
-                                    ? 'directory'
-                                    : 'file'
-                                  : '?'
-                                var size = file.stat && file.stat.isFile()
-                                  ? ` (${bytes(file.stat.size)})`
-                                  : ''
-                                return html`
-                                  <li>${file.path} ${size}</li>
-                                `
-                              })}
-                            </ul>
-                          `
-                        : ''}
-                    </p>
+                  <div class="flex-auto bg-white mb2 mw6">
+                    ${dat && dat.files
+                      ? html`
+                        <ul class="f7 ${fileList}">
+                          ${dat.files.map(file => {
+                            var type = file.stat
+                              ? file.stat.isDirectory()
+                                ? 'directory'
+                                : 'file'
+                              : '?'
+                            var size = file.stat && file.stat.isFile()
+                              ? ` (${bytes(file.stat.size)})`
+                              : ''
+                            return html`
+                              <li class="pa2">
+                                ${file.path} ${size}
+                              </li>
+                            `
+                          })}
+                        </ul>
+                        `
+                      : ''}
                   </div>
                 </div>
               </div>
