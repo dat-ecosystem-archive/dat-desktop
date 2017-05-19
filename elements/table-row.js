@@ -135,8 +135,12 @@ function Row ({ highlight }) {
           ? 'loading'
           : 'stale'
 
+    function onclick () {
+      emit('dats:inspect', dat)
+    }
+
     return html`
-      <tr id=${key} class=${styles}>
+      <tr id=${key} class=${styles} onclick=${onclick}>
         <td class="cell-1">
           <div class="w2 center">
             ${hexContent.render({ dat, stats, emit })}

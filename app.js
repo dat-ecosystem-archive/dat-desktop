@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(require('./models/intro'))
+app.use(require('./models/inspect'))
 app.use(require('./models/drag-drop'))
 app.use(require('./models/dats'))
 app.use(require('./models/error'))
