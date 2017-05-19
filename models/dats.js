@@ -43,6 +43,7 @@ function datsModel (state, bus) {
   var dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
   var dbMultidriveFile = path.join(dbLocation, 'dats.json')
   var dbPausedFile = path.join(dbLocation, 'paused.json')
+  var dbMultidrive, dbPaused
 
   var tasks = [
     function (next) {
@@ -52,11 +53,17 @@ function datsModel (state, bus) {
       mkdirp(downloadsDir, next)
     },
     function (_, next) {
-      var dbMultidrive = toilet(dbMultidriveFile)
+      dbMultidrive = toilet(dbMultidriveFile)
+      dbMultidrive.open(next)
+    },
+    function (next) {
+      dbPaused = toilet(dbPausedFile)
+      dbPaused.open(next)
+    },
+    function(next) {
       Multidat(dbMultidrive, { dat: Dat }, next)
     },
     function (multidat, done) {
-      var dbPaused = toilet(dbPausedFile)
       manager = createManager({
         multidat,
         dbPaused
