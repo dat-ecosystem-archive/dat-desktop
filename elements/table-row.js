@@ -49,7 +49,7 @@ var iconStyles = css`
       color: var(--color-neutral-20);
       svg {
         vertical-align: middle;
-        width: 1.1em;
+        width: 1.4em;
         max-height: 1.6em;
       }
       &:hover,
@@ -69,9 +69,6 @@ var iconStyles = css`
       color: var(--color-neutral-20);
       vertical-align: sub;
       width: 1em;
-      svg {
-        border: 1px solid red;
-      }
       svg polygon {
         fill: inherit;
       }
@@ -167,7 +164,7 @@ function Row ({ highlight }) {
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render({ dat, emit })}
-          <span class="network v-top f6 f5-l">${peers}</span>
+          <span class="network v-top f6 f5-l ml1">${peers}</span>
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
