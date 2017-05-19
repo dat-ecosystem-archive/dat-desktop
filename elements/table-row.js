@@ -162,7 +162,7 @@ function Row ({ highlight }) {
         <td class="cell-3">
           ${status(dat, stats)}
         </td>
-        <td class="f6 f5-l cell-4">
+        <td class="f6 f5-l cell-4 size">
           ${stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
