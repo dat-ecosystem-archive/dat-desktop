@@ -11,12 +11,14 @@ var button = require('./button')
 var detailHeader = css`
   :host {
     height: 4rem;
+    flex-shrink: 0;
     border-bottom: 1px solid var(--color-neutral-20);
   }
 `
 
 var detailFooter = css`
   :host {
+    flex-shrink: 0;
     border-top: 1px solid var(--color-neutral-20);
   }
 `
