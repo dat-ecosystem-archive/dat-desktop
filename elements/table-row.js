@@ -15,8 +15,11 @@ var cellStyles = css`
       width: 4rem;
     }
     .cell-2 {
-      width: 17rem;
-      max-width: 17rem;
+      width: 14rem;
+      max-width: 14rem;
+      @media (min-width: 1024px) {
+        max-width: 24rem;
+      }
     }
     .cell-3 {
       width: 15rem;
@@ -33,7 +36,7 @@ var cellStyles = css`
       width: 10.25rem;
     }
     .cell-truncate {
-      width: 26vw;
+      width: 100%;
     }
   }
 `
