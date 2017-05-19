@@ -23,8 +23,10 @@ var detailFooter = css`
 
 var fileList = css`
   :host {
-    list-style: none;
-    li:odd {
+    td {
+      padding: .25rem .5rem;
+    }
+    tr:odd td {
       background-color: var(--color-neutral-04);
     }
   }
@@ -90,7 +92,7 @@ module.exports = function () {
                   ${title}
                 </h2>
               </header>
-              <div class="flex-auto pv3 ph5 bg-neutral-04 overflow-y-auto">
+              <div class="flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto">
                 <div class="flex">
                   <div class="f7 w4 color-neutral-60">
                     Link:
@@ -152,7 +154,7 @@ module.exports = function () {
                   <div class="flex-auto bg-white mb2 mw6">
                     ${dat && dat.files
                       ? html`
-                        <ul class="f7 ${fileList}">
+                        <table class="f7 ${fileList}">
                           ${dat.files.map(file => {
                             var type = file.stat
                               ? file.stat.isDirectory()
@@ -163,12 +165,17 @@ module.exports = function () {
                               ? ` (${bytes(file.stat.size)})`
                               : ''
                             return html`
-                              <li class="pa2">
-                                ${file.path} ${size}
-                              </li>
+                              <tr>
+                                <td class="truncate mw5">
+                                  ${file.path}
+                                </td>
+                                <td>
+                                  ${size}
+                                </td>
+                              </tr>
                             `
                           })}
-                        </ul>
+                        </table>
                         `
                       : ''}
                   </div>
