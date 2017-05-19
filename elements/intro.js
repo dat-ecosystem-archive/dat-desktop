@@ -96,16 +96,31 @@ function IntroScreen () {
   }
 
   function render () {
+    var { onexit, onOpenHomepage } = this.props
+    var screen = this.state.screen
+
     function openHomepage (ev) {
       ev.preventDefault()
       onOpenHomepage()
     }
 
-    var { onexit, onOpenHomepage } = this.props
-    var screen = this.state.screen
+    function onload () {
+      console.log('onload')
+      window.addEventListener('keydown', onkeydown)
+    }
+
+    function onkeydown (ev) {
+      if (ev.code !== 'Escape') return
+      window.removeEventListener('keydown', onkeydown)
+      onexit()
+    }
+
+    function onunload () {
+      window.removeEventListener('keydown', onkeydown)
+    }
 
     return html`
-      <main class="${intro}">
+      <main class="${intro}" onload="${onload}" onunload="${onunload}">
         <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute ${image}">
         <div class="${content}">
           ${{
