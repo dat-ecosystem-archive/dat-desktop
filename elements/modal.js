@@ -33,9 +33,11 @@ const prefix = css`
   }
   :host .icon-cross {
     vertical-align: middle;
-    width: 1.1em;
+    width: 1.6em;
     max-height: 1.6em;
     transition: color .025s ease-out;
+    margin-right: auto;
+    margin-left: auto;
   }
 `
 
