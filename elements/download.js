@@ -11,13 +11,40 @@ var button = require('./button')
 var detailHeader = css`
   :host {
     height: 4rem;
+    flex-shrink: 0;
     border-bottom: 1px solid var(--color-neutral-20);
   }
 `
 
 var detailFooter = css`
   :host {
+    flex-shrink: 0;
     border-top: 1px solid var(--color-neutral-20);
+  }
+`
+
+var label = css`
+  :host {
+    font-size: .75rem;
+    min-width: 8rem;
+    color: var(--color-neutral-60);
+  }
+`
+
+var fileList = css`
+  :host {
+    td {
+      padding: .25rem .5rem;
+    }
+    tr:odd td {
+      background-color: var(--color-neutral-04);
+    }
+  }
+`
+
+var fileListContainer = css`
+  :host {
+    min-height: 5rem;
   }
 `
 
@@ -39,7 +66,7 @@ module.exports = function () {
     var author = dat
       ? dat.metadata
         ? dat.metadata.author
-        : 'Anonymous'
+        : 'N/A'
       : '…'
     var description = dat
       ? dat.metadata
@@ -81,69 +108,97 @@ module.exports = function () {
                   ${title}
                 </h2>
               </header>
-              <div class="flex-auto pv3 ph5 bg-neutral-04">
+              <div class="flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto">
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Link:
                   </div>
-                  <div class="is-selectable f7 mb2 mw6 truncate">
+                  <div class="is-selectable f7 f6-l mb2 mw6 truncate">
                     ${key}
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Size:
                   </div>
-                  <div class="is-selectable f7 mb2 mw6">
+                  <div class="is-selectable f7 f6-l mb2 mw6">
                     ${size}
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Peers:
                   </div>
-                  <div class="is-selectable f7 mb2 mw6">
+                  <div class="is-selectable f7 f6-l mb2 mw6">
                     ${peers}
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Author:
                   </div>
-                  <div class="is-selectable f7 mb2 mw6">
+                  <div class="is-selectable f7 f6-l mb2 mw6">
                     ${author}
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Description:
                   </div>
-                  <div class="is-selectable f7 mb2 mw6 h4">
+                  <div class="is-selectable f7 f6-l mb2 mw6">
                     ${description}
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Download to:
                   </div>
                   <div class="flex flex-auto items-center justify-between bg-white mb2 mw6">
-                    <pre class="flex-auto color-neutral-60 ph2 is-selectable f7">
+                    <pre class="flex-auto ph2 is-selectable truncate f7 f6-l">
                       ${location}
                     </pre>
-                    ${button('Change …', {
+                    ${button('Change…', {
                       class: '',
                       onclick: onChangeLocation
                     })}
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="f7 w4 color-neutral-60">
+                  <div class="${label}">
                     Files:
                   </div>
-                  <div class="flex-auto bg-white mb2 pa2 mw6">
-                    <p class="tc f7 color-pink">
-                      [[[ list of files goes here ]]]
-                    </p>
+                  <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
+                    ${dat && dat.files
+                      ? html`
+                        <table class="w-100 f7 f6-l ${fileList}">
+                          ${dat.files.map(file => {
+                            var type = file.stat
+                              ? file.stat.isDirectory()
+                                ? 'directory'
+                                : 'file'
+                              : '?'
+                            var size = file.stat && file.stat.isFile()
+                              ? ` ${bytes(file.stat.size)}`
+                              : ''
+                            return html`
+                              <tr>
+                                <td class="truncate mw5">
+                                  ${file.path}
+                                </td>
+                                <td>
+                                  ${size}
+                                </td>
+                              </tr>
+                            `
+                          })}
+                        </table>
+                        `
+                      : html`
+                        <div class="f7 f6-l pa2">
+                          N/A
+                        </div>
+                      `
+                    }
                   </div>
                 </div>
               </div>

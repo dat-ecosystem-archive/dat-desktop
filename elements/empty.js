@@ -26,24 +26,21 @@ const skeleton = css`
     .link {
       position: absolute;
       width: 15rem;
-    }
-    .create-new-dat {
-      top: 14.5rem;
-      right: 4rem;
+      color: var(--color-neutral-30);
       svg {
         display: inline-block;
         width: 2rem;
         height: 2rem;
       }
     }
+    .create-new-dat {
+      top: 14.5rem;
+      right: 4rem;
+    }
     .link {
       top: 6rem;
       right: 8.5rem;
-      color: red;
       svg {
-        display: inline-block;
-        width: 2rem;
-        height: 2rem;
         margin-bottom: -.75rem;
       }
     }
@@ -57,20 +54,20 @@ function EmptyState () {
       <div class="tutorial">
         <img src="./assets/dotted-lines.svg" alt="" class="dotted-lines">
         <div class="link">
-          ${icon('link', { class: 'color-blue-disabled' })}
-          <h3 class="f4 ttu mt0 mb0 color-blue-disabled">
+          ${icon('link')}
+          <h3 class="f4 ttu mt0 mb0">
             Download A Dat
           </h3>
-          <p class="f7 color-neutral-40">
+          <p class="f7">
             … and keep data up-to-date
             <br>
             by entering the link here.
           </p>
         </div>
         <div class="tr create-new-dat">
-          ${icon('create-new-dat', { class: 'color-green-disabled' })}
-          <h3 class="f4 ttu mt0 mb0 color-green-disabled">Share a Folder</h3>
-          <p class="f7 color-neutral-40">
+          ${icon('create-new-dat')}
+          <h3 class="f4 ttu mt0 mb0">Share a Folder</h3>
+          <p class="f7">
             … and sync changes by sharing
             <br>
              the link with someone else.
