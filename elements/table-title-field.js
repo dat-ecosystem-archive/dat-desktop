@@ -105,7 +105,7 @@ function TitleField () {
     return state.writable
       ? html`
           <div class=${editableField}>
-            <h2 class="f6 normal truncate pr3" onclick=${onclick}>
+            <h2 class="f6 f5-l normal truncate pr3" onclick=${onclick}>
               ${state.title || state.placeholderTitle}
               ${icon('edit', { class: 'absolute top-0 bottom-0 right-0 color-neutral-30 indicator' })}
             </h2>
@@ -113,7 +113,7 @@ function TitleField () {
         `
       : html`
           <div>
-            <h2 class="f6 normal truncate pr3">
+            <h2 class="f6 f5-l normal truncate pr3">
               ${state.title || state.placeholderTitle}
             </h2>
           </div>
