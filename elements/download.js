@@ -172,11 +172,6 @@ module.exports = function () {
                       ? html`
                         <table class="w-100 f7 f6-l ${fileList}">
                           ${dat.files.map(file => {
-                            var type = file.stat
-                              ? file.stat.isDirectory()
-                                ? 'directory'
-                                : 'file'
-                              : '?'
                             var size = file.stat && file.stat.isFile()
                               ? ` ${bytes(file.stat.size)}`
                               : ''
