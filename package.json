@@ -36,7 +36,7 @@
     "sheetify": "^6.0.0",
     "tachyons": "^4.7.2",
     "throttleit": "^1.0.0",
-    "toiletdb": "github:juliangruber/toiletdb#test",
+    "toiletdb": "^1.4.0",
     "xhr": "^2.3.3",
     "xtend": "^4.0.1"
   },
