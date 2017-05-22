@@ -110,7 +110,7 @@ module.exports = function () {
               </header>
               <div class="flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto">
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Link:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6 truncate">
@@ -118,7 +118,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Size:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -126,7 +126,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Peers:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -134,7 +134,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Author:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -142,7 +142,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Description:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -150,7 +150,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 mb2 ${label}">
                     Download to:
                   </div>
                   <div class="flex flex-auto items-center justify-between bg-white mb2 mw6">
@@ -164,7 +164,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Files:
                   </div>
                   <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
