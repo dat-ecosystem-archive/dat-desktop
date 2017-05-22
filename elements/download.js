@@ -168,7 +168,7 @@ module.exports = function () {
                     Files:
                   </div>
                   <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
-                    ${dat && dat.files
+                    ${dat && dat.files && dat.files.length
                       ? html`
                         <table class="w-100 f7 f6-l ${fileList}">
                           ${dat.files.map(file => {
