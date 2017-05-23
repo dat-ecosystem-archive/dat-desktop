@@ -41,6 +41,9 @@ function mainView (state, emit) {
           ondownload: ({ key, location }) => {
             emit('dats:clone', { key, location })
             emit('download:hide')
+          },
+          onupdate: () => {
+            emit('render')
           }
         }))}
       </div>

@@ -55,7 +55,7 @@ module.exports = function () {
   return component
 
   function render () {
-    var { key, oncancel, err, dat, ondownload } = this.props
+    var { key, oncancel, err, dat, ondownload, onupdate } = this.props
     var location = this.state.location || `${process.env.HOME}/Downloads`
 
     var title = dat
@@ -89,7 +89,7 @@ module.exports = function () {
       })
       if (!files || !files.length) return
       component.state.location = files[0]
-      component.render(component.props)
+      onupdate()
     }
 
     return html`
