@@ -92,7 +92,7 @@ function IntroScreen () {
   function next () {
     component.state.screen++
     component.state.nextScreen = true
-    component.render(component.props)
+    component.props.onupdate()
   }
 
   function render () {
@@ -153,7 +153,7 @@ function IntroScreen () {
     `
   }
 
-  function update (state) {
+  function update () {
     if (this.state.nextScreen) {
       this.state.nextScreen = false
       return true

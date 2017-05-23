@@ -58,6 +58,9 @@ function mainView (state, emit) {
           },
           onOpenHomepage: () => {
             emit('intro:open-homepage')
+          },
+          onupdate: () => {
+            emit('render')
           }
         })}
       </div>
