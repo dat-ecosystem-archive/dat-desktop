@@ -78,7 +78,7 @@ function downloadModel (state, bus) {
             update()
           })
         }
-        walk('/')
+        walk('')
       })
 
       dat.archive.ready(update)
