@@ -1,12 +1,10 @@
 'use strict'
 
 var microcomponent = require('microcomponent')
-var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
-var button = require('./button')
 
 var detailHeader = css`
   :host {
@@ -27,7 +25,7 @@ module.exports = function () {
     var title = dat
       ? dat.metadata
         ? dat.metadata.title
-        : key
+        : dat.key
       : 'Fetching metadata …'
     var author = dat
       ? dat.metadata

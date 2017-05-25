@@ -1,5 +1,3 @@
-var tmpdir = require('os').tmpdir
-var Dat = require('dat-node')
 var xtend = Object.assign
 
 module.exports = inspectModel
