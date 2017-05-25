@@ -292,26 +292,30 @@ function HexContent () {
   component.on('update', update)
   return component
 
+  function onmousemove (ev) {
+    if (!component.state.hover) return
+    if (component._element.contains(ev.target)) return
+    component.state.setHover = false
+    document.body.removeEventListener('mousemove', onmousemove)
+    component.render(component.props)
+  }
+
   function render () {
     var state = this.state.state = this.props.stats.state
     var { emit, dat } = this.props
 
     if (typeof this.state.setHover === 'boolean') {
+      if (this.state.setHover) document.body.addEventListener('mousemove', onmousemove)
       this.state.hover = this.state.setHover
       this.state.setHover = null
     }
 
     if (this.state.hover) {
-      var el = button.icon('pause', {
+      return button.icon('pause', {
         icon: icon('hexagon-pause', {class: 'w2'}),
         class: 'color-neutral-40',
-        onclick: togglePause,
-        onmouseout: ev => {
-          this.state.setHover = false
-          this.render(this.props)
-        }
+        onclick: togglePause
       })
-      return el
     } else if (state === 'loading') {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
