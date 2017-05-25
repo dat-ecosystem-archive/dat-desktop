@@ -1,6 +1,7 @@
 'use strict'
 
 var microcomponent = require('microcomponent')
+var toStr = require('dat-encoding').toStr
 var bytes = require('prettier-bytes')
 var button = require('./button')
 var html = require('choo/html')
@@ -67,7 +68,7 @@ module.exports = function () {
         : 'N/A'
       : '…'
     var description = dat
-      ? dat.metadata
+      ? dat.metadata && dat.metadata.description
         ? dat.metadata.description
         : 'N/A'
       : '…'
@@ -97,6 +98,7 @@ module.exports = function () {
                 Link:
               </div>
               <div class="is-selectable f7 f6-l mb2 mw6 truncate">
+                ${toStr(dat.key)}
               </div>
             </div>
             <div class="flex">
