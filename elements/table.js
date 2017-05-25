@@ -8,11 +8,13 @@ var TableRow = require('./table-row')
 var tableStyles = css`
   :host {
     width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    border-collapse: collapse;
     th,
     td {
       padding-right: .75rem;
       padding-left: .75rem;
-      font-size: .875rem;
     }
     th {
       height: 4rem;
@@ -49,7 +51,7 @@ function tableElement (state, emit) {
   var dats = state.dats.values
   return html`
     <main>
-      <table class="w-100 collapse ${tableStyles}">
+      <table class="${tableStyles}">
         ${tableHead.render()}
         <tbody>
           ${tableRows(dats, state, emit)}
@@ -105,7 +107,7 @@ function TableHead () {
           <th class="cell-1"></th>
           <th class="tl cell-2">Link</th>
           <th class="tl cell-3">Status</th>
-          <th class="tr cell-4">Size</th>
+          <th class="tl cell-4">Size</th>
           <th class="tl cell-5">Peers</th>
           <th class="cell-6"></th>
         </tr>

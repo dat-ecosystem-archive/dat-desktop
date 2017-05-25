@@ -8,11 +8,13 @@ const Table = require('../elements/table')
 const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
 const Inspect = require('../elements/inspect')
+const Download = require('../elements/download')
 
 module.exports = mainView
 
 const header = Header()
 const sprite = Sprite()
+const download = Download()
 const intro = Intro()
 const inspect = Inspect()
 
@@ -21,17 +23,37 @@ const inspect = Inspect()
 function mainView (state, emit) {
   const showIntroScreen = state.intro.show
   const showInspectScreen = state.inspect.show
+  const showDownloadScreen = state.download.show
   const dats = state.dats.values
   const isReady = state.dats.ready
   const headerProps = {
     isReady: isReady,
     oncreate: () => emit('dats:create'),
-    onimport: (link) => emit('dats:clone', link)
+    onimport: (link) => emit('dats:download', link)
   }
 
   document.title = 'Dat Desktop'
 
-	if (showInspectScreen) {
+  if (showDownloadScreen) {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${header.render(headerProps)}
+        ${download.render(Object.assign({}, state.download, {
+          oncancel: () => emit('download:hide'),
+          ondownload: ({ key, location }) => {
+            emit('dats:clone', { key, location })
+            emit('download:hide')
+          },
+          onupdate: () => {
+            emit('render')
+          }
+        }))}
+      </div>
+    `
+  }
+
+  if (showInspectScreen) {
     return html`
       <div>
         ${sprite.render()}
@@ -54,6 +76,9 @@ function mainView (state, emit) {
           },
           onOpenHomepage: () => {
             emit('intro:open-homepage')
+          },
+          onupdate: () => {
+            emit('render')
           }
         })}
       </div>

@@ -15,23 +15,28 @@ var cellStyles = css`
       width: 4rem;
     }
     .cell-2 {
-      width: 17rem;
+      width: 14rem;
+      max-width: 14rem;
+      @media (min-width: 1024px) {
+        max-width: 24rem;
+      }
     }
     .cell-3 {
       width: 15rem;
     }
     .cell-4 {
-      width: 5.5rem;
+      width: 4.5rem;
       white-space: nowrap;
     }
     .cell-5 {
-      width: 6rem;
+      width: 4.5rem;
+      white-space: nowrap;
     }
     .cell-6 {
       width: 10.25rem;
     }
     .cell-truncate {
-      width: 26vw;
+      width: 100%;
     }
   }
 `
@@ -44,7 +49,7 @@ var iconStyles = css`
       color: var(--color-neutral-20);
       svg {
         vertical-align: middle;
-        width: 1.1em;
+        width: 1.4em;
         max-height: 1.6em;
       }
       &:hover,
@@ -64,9 +69,6 @@ var iconStyles = css`
       color: var(--color-neutral-20);
       vertical-align: sub;
       width: 1em;
-      svg {
-        border: 1px solid red;
-      }
       svg polygon {
         fill: inherit;
       }
@@ -76,11 +78,12 @@ var iconStyles = css`
 
 var networkStyles = css`
   :host {
+    vertical-align: top;
     svg {
       height: 1.5rem;
       display: inline-block;
       color: var(--color-neutral-20);
-      vertical-align: middle;
+      vertical-align: top;
       width: 1.1em;
       max-height: 1.6em;
     }
@@ -149,7 +152,7 @@ function Row ({ highlight }) {
         <td class="cell-2">
           <div class="cell-truncate">
             ${titleField.render({ dat, state, emit })}
-            <p class="f7 color-neutral-60 truncate">
+            <p class="f7 f6-l color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
                 ${dat.writable ? 'Read & Write' : 'Read-only'}
@@ -160,12 +163,12 @@ function Row ({ highlight }) {
         <td class="cell-3">
           ${status(dat, stats)}
         </td>
-        <td class="tr cell-4 size">
+        <td class="f6 f5-l cell-4 size">
           ${stats.size}
         </td>
         <td class="cell-5 ${networkStyles}">
           ${networkIcon.render({ dat, emit })}
-          <span class="network">${peers}</span>
+          <span class="network v-top f6 f5-l ml1">${peers}</span>
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
@@ -293,11 +296,31 @@ function HexContent () {
   component.on('update', update)
   return component
 
+  function onmousemove (ev) {
+    if (!component.state.hover) return
+    if (component._element.contains(ev.target)) return
+    component.state.setHover = false
+    document.body.removeEventListener('mousemove', onmousemove)
+    component.render(component.props)
+  }
+
   function render () {
     var state = this.state.state = this.props.stats.state
     var { emit, dat } = this.props
 
-    if (state === 'loading') {
+    if (typeof this.state.setHover === 'boolean') {
+      if (this.state.setHover) document.body.addEventListener('mousemove', onmousemove)
+      this.state.hover = this.state.setHover
+      this.state.setHover = null
+    }
+
+    if (this.state.hover) {
+      return button.icon('pause', {
+        icon: icon('hexagon-pause', {class: 'w2'}),
+        class: 'color-neutral-40',
+        onclick: togglePause
+      })
+    } else if (state === 'loading') {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
         class: 'color-blue hover-color-blue-hover',
@@ -313,7 +336,11 @@ function HexContent () {
       return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
         class: 'color-green hover-color-green-hover',
-        onclick: togglePause
+        onclick: togglePause,
+        onmouseover: ev => {
+          this.state.setHover = true
+          this.render(this.props)
+        }
       })
     } else {
       return button.icon('stale', {
@@ -331,7 +358,8 @@ function HexContent () {
   }
 
   function update ({ dat, stats, emit }) {
-    return stats.state !== this.state.state
+    return stats.state !== this.state.state ||
+      typeof this.state.setHover === 'boolean'
   }
 }
 
@@ -348,10 +376,10 @@ function errorRow (err) {
       </td>
       <td class="cell-2" colspan="4">
         <div class="cell-truncate color-red">
-          <h2 class="f6 normal">
+          <h2 class="f6 f5-l normal">
             Error
           </h2>
-          <p class="f7">
+          <p class="f7 f6-l">
             Could not share ${err.dir}
           </p>
         </div>
