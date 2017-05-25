@@ -2,6 +2,7 @@
 
 var microcomponent = require('microcomponent')
 var bytes = require('prettier-bytes')
+var button = require('./button')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
@@ -9,7 +10,40 @@ var icon = require('./icon')
 var detailHeader = css`
   :host {
     height: 4rem;
+    flex-shrink: 0;
     border-bottom: 1px solid var(--color-neutral-20);
+  }
+`
+
+var detailFooter = css`
+  :host {
+    flex-shrink: 0;
+    border-top: 1px solid var(--color-neutral-20);
+  }
+`
+
+var label = css`
+  :host {
+    font-size: .75rem;
+    min-width: 8rem;
+    color: var(--color-neutral-60);
+  }
+`
+
+var fileList = css`
+  :host {
+    td {
+      padding: .25rem .5rem;
+    }
+    tr:odd td {
+      background-color: var(--color-neutral-04);
+    }
+  }
+`
+
+var fileListContainer = css`
+  :host {
+    min-height: 5rem;
   }
 `
 
@@ -30,7 +64,7 @@ module.exports = function () {
     var author = dat
       ? dat.metadata
         ? dat.metadata.author
-        : 'Anonymous'
+        : 'N/A'
       : '…'
     var description = dat
       ? dat.metadata
@@ -57,59 +91,58 @@ module.exports = function () {
               ${title}
             </h2>
           </header>
-          <div class="flex-auto pv3 ph5 bg-neutral-04">
+          <di class="flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto">
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Link:
               </div>
-              <div class="is-selectable f7 mb2 mw6 truncate">
-                ${dat.key}
+              <div class="is-selectable f7 f6-l mb2 mw6 truncate">
               </div>
             </div>
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Size:
               </div>
-              <div class="is-selectable f7 mb2 mw6">
+              <div class="is-selectable f7 f6-l mb2 mw6">
                 ${size}
               </div>
             </div>
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Peers:
               </div>
-              <div class="is-selectable f7 mb2 mw6">
+              <div class="is-selectable f7 f6-l mb2 mw6">
                 ${peers}
               </div>
             </div>
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Author:
               </div>
-              <div class="is-selectable f7 mb2 mw6">
+              <div class="is-selectable f7 f6-l mb2 mw6">
                 ${author}
               </div>
             </div>
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Description:
               </div>
-              <div class="is-selectable f7 mb2 mw6 h4">
+              <div class="is-selectable f7 f6-l mb2 mw6">
                 ${description}
               </div>
             </div>
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Download to:
               </div>
               <div class="flex flex-auto items-center justify-between bg-white mb2 mw6">
-                <pre class="flex-auto color-neutral-60 ph2 is-selectable f7">
+                <pre class="flex-auto ph2 is-selectable truncate f7 f6-l">
                   ${dat.path}
                 </pre>
               </div>
             </div>
             <div class="flex">
-              <div class="f7 w4 color-neutral-60">
+              <div class="mb2 ${label}">
                 Files:
               </div>
               <div class="flex-auto bg-white mb2 pa2 mw6">
@@ -120,6 +153,13 @@ module.exports = function () {
             </div>
           </div>
         </div>
+        <footer class="pa3 flex items-center justify-between bg-white ${detailFooter}">
+          <div class="flex ml2">
+            ${button('Close', {
+              onclick: oncancel
+            })}
+          </div>
+        </footer>
       </main>
     `
   }
