@@ -47,7 +47,7 @@ function inspectModel (state, bus) {
           update()
         })
       }
-      walk('/')
+      walk('')
     }
   })
 
