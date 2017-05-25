@@ -147,10 +147,33 @@ module.exports = function () {
               <div class="mb2 ${label}">
                 Files:
               </div>
-              <div class="flex-auto bg-white mb2 pa2 mw6">
-                <p class="tc f7 color-pink">
-                  [[[ list of files goes here ]]]
-                </p>
+              <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
+                 ${dat && dat.files
+                    ? html`
+                      <table class="w-100 f7 f6-l ${fileList}">
+                        ${dat.files.map(file => {
+                          var size = file.stat && file.stat.isFile()
+                            ? ` ${bytes(file.stat.size)}`
+                            : ''
+                          return html`
+                            <tr>
+                              <td class="truncate mw5">
+                                ${file.path}
+                              </td>
+                              <td>
+                                ${size}
+                              </td>
+                            </tr>
+                          `
+                        })}
+                      </table>
+                      `
+                    : html`
+                      <div class="f7 f6-l pa2">
+                        N/A
+                      </div>
+                    `
+                  }
               </div>
             </div>
           </div>
