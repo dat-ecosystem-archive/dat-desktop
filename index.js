@@ -37,6 +37,7 @@ const menu = defaultMenu(app, shell)
 menu[menu.length - 1].submenu.push({
   label: 'Doctor',
   click: () => {
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
     const out = Writable({
       write (chunk, env, done) {
         if (mainWindow) mainWindow.webContents.send('log', chunk.toString())
