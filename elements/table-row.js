@@ -376,7 +376,7 @@ function errorRow (err) {
             Error
           </h2>
           <p class="f7 f6-l">
-            Could not share ${err.dir}
+            Could not share ${err.data.dir}
           </p>
         </div>
       </td>
