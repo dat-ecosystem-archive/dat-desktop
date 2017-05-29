@@ -1,4 +1,3 @@
-var mirror = require('mirror-folder')
 var xtend = Object.assign
 
 module.exports = inspectModel
@@ -13,7 +12,6 @@ function inspectModel (state, bus) {
   bus.on('dats:inspect', function (dat) {
     state.inspect.show = true
     state.inspect.dat = dat
-
     update()
     dat.stats.on('update', update)
   })

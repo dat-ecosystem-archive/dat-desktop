@@ -36,22 +36,23 @@ module.exports = function () {
       dat.files = []
       if (dat.archive.content) oncontent()
       else dat.archive.on('content', oncontent)
-      function oncontent () {
-        var fs = { name: '/', fs: dat.archive }
-        var progress = mirror(fs, '/', { dryRun: true })
-        progress.on('put', function (file) {
-          file.name = file.name.slice(1)
-          if (file.name === '') return
-          dat.files.push({
-            path: file.name,
-            stat: file.stat
-          })
-          dat.files.sort(function (a, b) {
-            return a.path.localeCompare(b.path)
-          })
-          onupdate()
+    }
+
+    function oncontent () {
+      var fs = { name: '/', fs: dat.archive }
+      var progress = mirror(fs, '/', { dryRun: true })
+      progress.on('put', function (file) {
+        file.name = file.name.slice(1)
+        if (file.name === '') return
+        dat.files.push({
+          path: file.name,
+          stat: file.stat
         })
-      }
+        dat.files.sort(function (a, b) {
+          return a.path.localeCompare(b.path)
+        })
+        onupdate()
+      })
     }
 
     return html`
