@@ -55,7 +55,7 @@ function HeaderElement () {
     var createButton = button.header('Share Folder', {
       id: 'create-new-dat',
       icon: icon('create-new-dat', { class: shareButtonIcon }),
-      class: 'ml2 b--transparent v-mid color-neutral-30 hover-color-white',
+      class: 'ml2 b--transparent v-mid color-neutral-30 hover-color-white f7',
       onclick: oncreate
     })
 
