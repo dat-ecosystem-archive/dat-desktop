@@ -360,7 +360,7 @@ function HexContent () {
 }
 
 function errorRow (err, emit, deleteButton) {
-  var errorHexIcon = icon('hexagon-down', {
+  var errorHexIcon = icon('hexagon-x', {
     class: 'w2 color-red'
   })
   return html`
