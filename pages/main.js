@@ -41,6 +41,9 @@ function mainView (state, emit) {
           ondownload: ({ key, location }) => {
             emit('dats:clone', { key, location })
             emit('download:hide')
+          },
+          onupdate: () => {
+            emit('render')
           }
         }))}
       </div>
@@ -58,6 +61,9 @@ function mainView (state, emit) {
           },
           onOpenHomepage: () => {
             emit('intro:open-homepage')
+          },
+          onupdate: () => {
+            emit('render')
           }
         })}
       </div>

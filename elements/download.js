@@ -3,6 +3,7 @@
 var microcomponent = require('microcomponent')
 var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
+var fileList = require('./file-list')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
@@ -31,23 +32,6 @@ var label = css`
   }
 `
 
-var fileList = css`
-  :host {
-    td {
-      padding: .25rem .5rem;
-    }
-    tr:odd td {
-      background-color: var(--color-neutral-04);
-    }
-  }
-`
-
-var fileListContainer = css`
-  :host {
-    min-height: 5rem;
-  }
-`
-
 module.exports = function () {
   var component = microcomponent('download')
   component.on('render', render)
@@ -55,7 +39,7 @@ module.exports = function () {
   return component
 
   function render () {
-    var { key, oncancel, err, dat, ondownload } = this.props
+    var { key, oncancel, err, dat, ondownload, onupdate } = this.props
     var location = this.state.location || `${process.env.HOME}/Downloads`
 
     var title = dat
@@ -89,7 +73,7 @@ module.exports = function () {
       })
       if (!files || !files.length) return
       component.state.location = files[0]
-      component.render(component.props)
+      onupdate()
     }
 
     return html`
@@ -110,7 +94,7 @@ module.exports = function () {
               </header>
               <div class="flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto">
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Link:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6 truncate">
@@ -118,7 +102,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Size:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -126,7 +110,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Peers:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -134,7 +118,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Author:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -142,7 +126,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Description:
                   </div>
                   <div class="is-selectable f7 f6-l mb2 mw6">
@@ -150,7 +134,7 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 mb2 ${label}">
                     Download to:
                   </div>
                   <div class="flex flex-auto items-center justify-between bg-white mb2 mw6">
@@ -164,37 +148,10 @@ module.exports = function () {
                   </div>
                 </div>
                 <div class="flex">
-                  <div class="${label}">
+                  <div class="mb2 ${label}">
                     Files:
                   </div>
-                  <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
-                    ${dat && dat.files && dat.files.length
-                      ? html`
-                        <table class="w-100 f7 f6-l ${fileList}">
-                          ${dat.files.map(file => {
-                            var size = file.stat && file.stat.isFile()
-                              ? ` ${bytes(file.stat.size)}`
-                              : ''
-                            return html`
-                              <tr>
-                                <td class="truncate mw5">
-                                  ${file.path}
-                                </td>
-                                <td>
-                                  ${size}
-                                </td>
-                              </tr>
-                            `
-                          })}
-                        </table>
-                        `
-                      : html`
-                        <div class="f7 f6-l pa2">
-                          N/A
-                        </div>
-                      `
-                    }
-                  </div>
+                  ${fileList(dat)}
                 </div>
               </div>
             </div>

@@ -60,12 +60,7 @@ function TitleField () {
   component.on('render:active', renderActive)
   component.on('render:inactive', renderInactive)
   component.on('update', update)
-  component.on('unload', unload)
   return component
-
-  function unload () {
-    component.state = resetState()
-  }
 
   function update ({ dat }) {
     return dat.writable !== this.state.writable ||
@@ -124,7 +119,7 @@ function TitleField () {
       e.preventDefault()
       state.isEditing = true
       state.editValue = state.title
-      component.emit('render', Object.assign({}, component.props))
+      component.render(Object.assign({}, component.props))
     }
   }
 
@@ -189,7 +184,7 @@ function TitleField () {
     function deactivate () {
       document.body.removeEventListener('click', clickedOutside)
       state.isEditing = false
-      component.emit('render', Object.assign({}, component.props))
+      component.render(Object.assign({}, component.props))
     }
 
     function attachListener () {

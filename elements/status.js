@@ -97,7 +97,7 @@ module.exports = function (dat, stats) {
     case 'loading':
       progressText = html`
         <span>
-          <span class="arrow">↓</span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑</span> ${speed(netStats.uploadSpeed)}
+          <span class="arrow">↓ </span> ${speed(netStats.downloadSpeed)}<span class="arrow ml2">↑ </span> ${speed(netStats.uploadSpeed)}
         </span>`
       break
     case 'stale':
