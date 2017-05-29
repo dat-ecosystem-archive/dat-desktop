@@ -1,4 +1,3 @@
-var mirror = require('mirror-folder')
 var tmpdir = require('os').tmpdir
 var Dat = require('dat-node')
 var xtend = Object.assign
@@ -47,25 +46,7 @@ function downloadModel (state, bus) {
         update()
       })
 
-      dat.archive.on('content', function () {
-        update()
-        dat.files = []
-        var fs = { name: '/', fs: dat.archive }
-        var progress = mirror(fs, '/', { dryRun: true })
-        progress.on('put', function (file) {
-          file.name = file.name.slice(1)
-          if (file.name === '') return
-          dat.files.push({
-            path: file.name,
-            stat: file.stat
-          })
-          dat.files.sort(function (a, b) {
-            return a.path.localeCompare(b.path)
-          })
-          update()
-        })
-      })
-
+      dat.archive.on('content', update)
       dat.archive.ready(update)
       update()
     })
