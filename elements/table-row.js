@@ -119,7 +119,7 @@ function Row ({ highlight }) {
 
   function render () {
     var { dat, state, emit } = this.props
-    if (dat instanceof Error) return errorRow(dat)
+    if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
 
     var stats = dat.stats
     var peers = dat.network ? dat.network.connected : 'N/A'
@@ -244,7 +244,8 @@ function DeleteButton () {
       onclick: function (e) {
         e.preventDefault()
         e.stopPropagation()
-        emit('dats:remove', { key: dat.key })
+        console.log('dat', dat, 'data', dat.data)
+        emit('dats:remove', { key: dat.key || dat.data.key })
       }
     })
   }
@@ -359,7 +360,7 @@ function HexContent () {
   }
 }
 
-function errorRow (err) {
+function errorRow (err, emit, deleteButton) {
   var errorHexIcon = icon('hexagon-down', {
     class: 'w2 color-red'
   })
@@ -381,6 +382,9 @@ function errorRow (err) {
         </div>
       </td>
       <td class="cell-6">
+        <div class="flex justify-end ${iconStyles}">
+          ${deleteButton.render({ dat: err, emit })}
+        </div>
       </td>
     </tr>
   `
