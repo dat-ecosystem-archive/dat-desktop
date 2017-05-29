@@ -1,6 +1,5 @@
 var mirror = require('mirror-folder')
 var tmpdir = require('os').tmpdir
-var join = require('path').join
 var Dat = require('dat-node')
 var xtend = Object.assign
 
