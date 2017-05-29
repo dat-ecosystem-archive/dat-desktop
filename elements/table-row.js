@@ -364,13 +364,13 @@ function errorRow (err, emit, deleteButton) {
     class: 'w2 color-red'
   })
   return html`
-    <tr>
+    <tr class="bg-yellow-disabled">
       <td class="cell-1">
         <div class="w2 center">
           ${errorHexIcon}
         </div>
       </td>
-      <td class="cell-2" colspan="5">
+      <td class="cell-2" colspan="4">
         <div class="cell-truncate color-red">
           <h2 class="f6 f5-l normal">
             Error
