@@ -244,7 +244,6 @@ function DeleteButton () {
       onclick: function (e) {
         e.preventDefault()
         e.stopPropagation()
-        console.log('dat', dat, 'data', dat.data)
         emit('dats:remove', { key: dat.key || dat.data.key })
       }
     })
