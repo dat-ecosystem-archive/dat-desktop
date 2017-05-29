@@ -11,6 +11,11 @@ var icon = require('./icon')
 
 var cellStyles = css`
   :host {
+    transition: background-color .025s ease-out;
+    &:hover, &:focus {
+      background-color: var(--color-neutral-04);
+      cursor: pointer;
+    }
     .cell-1 {
       width: 4rem;
     }

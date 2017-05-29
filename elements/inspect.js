@@ -143,7 +143,7 @@ module.exports = function () {
         </div>
         <footer class="pa3 flex items-center justify-between bg-white ${detailFooter}">
           <div class="flex ml2">
-            ${button('Close', {
+            ${button('← Back to Overview', {
               onclick: oncancel
             })}
           </div>
