@@ -1,4 +1,4 @@
-var join = require('path').join
+var mirror = require('mirror-folder')
 var xtend = Object.assign
 
 module.exports = inspectModel
@@ -19,32 +19,17 @@ function inspectModel (state, bus) {
 
     if (!dat.files) {
       dat.files = []
-      walk('')
-    }
-
-    function sort () {
-      dat.files.sort(function (a, b) {
-        return a.path.localeCompare(b.path)
-      })
-    }
-
-    function walk (dir) {
-      dat.archive.readdir(dir, function (err, names) {
-        if (err) return
-        names.forEach(function (name) {
-          var file = { path: join(dir, name) }
-          dat.files.push(file)
-          sort()
-          dat.archive.stat(file.path, function (err, stat) {
-            if (err) return
-            file.stat = stat
-            if (stat.isDirectory()) {
-              file.path += '/'
-              walk(file.path)
-            }
-            sort()
-            update()
-          })
+      var fs = { name: '/', fs: dat.archive }
+      var progress = mirror(fs, '/', { dryRun: true })
+      progress.on('put', function (file) {
+        file.name = file.name.slice(1)
+        if (file.name === '') return
+        dat.files.push({
+          path: file.name,
+          stat: file.stat
+        })
+        dat.files.sort(function (a, b) {
+          return a.path.localeCompare(b.path)
         })
         update()
       })
