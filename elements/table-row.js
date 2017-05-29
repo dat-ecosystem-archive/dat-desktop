@@ -317,25 +317,25 @@ function HexContent () {
     if (this.state.hover) {
       return button.icon('pause', {
         icon: icon('hexagon-pause', {class: 'w2'}),
-        class: 'color-neutral-40',
+        class: 'color-neutral-40 ph0',
         onclick: togglePause
       })
     } else if (state === 'loading') {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
-        class: 'color-blue hover-color-blue-hover',
+        class: 'color-blue hover-color-blue-hover ph0',
         onclick: togglePause
       })
     } else if (state === 'paused') {
       return button.icon('paused', {
         icon: icon('hexagon-resume', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
+        class: 'color-neutral-30 hover-color-neutral-40 ph0',
         onclick: togglePause
       })
     } else if (state === 'complete') {
       return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
-        class: 'color-green hover-color-green-hover',
+        class: 'color-green hover-color-green-hover ph0',
         onclick: togglePause,
         onmouseover: ev => {
           this.state.setHover = true
@@ -345,7 +345,7 @@ function HexContent () {
     } else {
       return button.icon('stale', {
         icon: icon('hexagon-x', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
+        class: 'color-neutral-30 hover-color-neutral-40 ph0',
         onclick: togglePause
       })
     }
@@ -374,13 +374,13 @@ function errorRow (err) {
           ${errorHexIcon}
         </div>
       </td>
-      <td class="cell-2" colspan="4">
+      <td class="cell-2" colspan="5">
         <div class="cell-truncate color-red">
           <h2 class="f6 f5-l normal">
             Error
           </h2>
           <p class="f7 f6-l">
-            Could not share ${err.dir}
+            Could not share ${err.data.dir}
           </p>
         </div>
       </td>
