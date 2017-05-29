@@ -157,7 +157,7 @@ module.exports = function () {
                   <div class="mb2 ${label}">
                     Files:
                   </div>
-                  ${fileList.render({ dat })}
+                  ${fileList.render({ dat, onupdate })}
                 </div>
               </div>
             </div>

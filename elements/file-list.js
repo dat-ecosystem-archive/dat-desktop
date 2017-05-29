@@ -1,5 +1,6 @@
 var microcomponent = require('microcomponent')
 var bytes = require('prettier-bytes')
+var mirror = require('mirror-folder')
 var html = require('choo/html')
 var css = require('sheetify')
 
@@ -29,10 +30,31 @@ module.exports = function () {
   return component
 
   function render () {
-    var dat = this.props.dat
+    var { dat, onupdate } = this.props
+
+    if (!dat.files && dat.archive && dat.archive.on) {
+      dat.files = []
+      dat.archive.on('content', function () {
+        var fs = { name: '/', fs: dat.archive }
+        var progress = mirror(fs, '/', { dryRun: true })
+        progress.on('put', function (file) {
+          file.name = file.name.slice(1)
+          if (file.name === '') return
+          dat.files.push({
+            path: file.name,
+            stat: file.stat
+          })
+          dat.files.sort(function (a, b) {
+            return a.path.localeCompare(b.path)
+          })
+          onupdate()
+        })
+      })
+    }
+
     return html`
       <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
-        ${dat && dat.files
+        ${dat && dat.files && dat.files.length
           ? html`
             <table class="w-100 f7 f6-l ${fileList}">
               ${dat.files.map(file => {
