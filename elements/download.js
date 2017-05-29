@@ -3,7 +3,7 @@
 var microcomponent = require('microcomponent')
 var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
-var fileList = require('./file-list')
+var FileList = require('./file-list')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
@@ -33,13 +33,19 @@ var label = css`
 `
 
 module.exports = function () {
-  var component = microcomponent('download')
+  var component = microcomponent({
+    name: 'download',
+    state: {
+      fileList: FileList()
+    }
+  })
   component.on('render', render)
   component.on('update', update)
   return component
 
   function render () {
     var { key, oncancel, err, dat, ondownload, onupdate } = this.props
+    var { fileList } = this.state
     var location = this.state.location || `${process.env.HOME}/Downloads`
 
     var title = dat
@@ -151,7 +157,7 @@ module.exports = function () {
                   <div class="mb2 ${label}">
                     Files:
                   </div>
-                  ${fileList(dat)}
+                  ${fileList.render({ dat })}
                 </div>
               </div>
             </div>
