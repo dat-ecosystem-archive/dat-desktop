@@ -34,7 +34,9 @@ module.exports = function () {
 
     if (!dat.files && dat.archive && dat.archive.on) {
       dat.files = []
-      dat.archive.on('content', function () {
+      if (dat.archive.content) oncontent()
+      else dat.archive.on('content', oncontent)
+      function oncontent () {
         var fs = { name: '/', fs: dat.archive }
         var progress = mirror(fs, '/', { dryRun: true })
         progress.on('put', function (file) {
@@ -49,7 +51,7 @@ module.exports = function () {
           })
           onupdate()
         })
-      })
+      }
     }
 
     return html`

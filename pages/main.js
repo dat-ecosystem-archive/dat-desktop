@@ -59,7 +59,8 @@ function mainView (state, emit) {
         ${sprite.render()}
         ${header.render(headerProps)}
         ${inspect.render(Object.assign({}, state.inspect, {
-          oncancel: () => emit('inspect:hide')
+          oncancel: () => emit('inspect:hide'),
+          onupdate: () => emit('render')
         }))}
       </div>
     `

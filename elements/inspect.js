@@ -3,7 +3,7 @@
 var microcomponent = require('microcomponent')
 var toStr = require('dat-encoding').toStr
 var bytes = require('prettier-bytes')
-var fileList = require('./file-list')
+var FileList = require('./file-list')
 var button = require('./button')
 var html = require('choo/html')
 var css = require('sheetify')
@@ -33,13 +33,19 @@ var label = css`
 `
 
 module.exports = function () {
-  var component = microcomponent('inspect')
+  var component = microcomponent({
+    name: 'inspect',
+    state: {
+      fileList: FileList()
+    }
+  })
   component.on('render', render)
   component.on('update', update)
   return component
 
   function render () {
-    var { oncancel, dat } = this.props
+    var { oncancel, onupdate, dat } = this.props
+    var { fileList } = this.state
 
     var title = dat
       ? dat.metadata
@@ -131,7 +137,7 @@ module.exports = function () {
               <div class="mb2 ${label}">
                 Files:
               </div>
-              ${fileList(dat)}
+              ${fileList.render({ dat, onupdate })}
             </div>
           </div>
         </div>
