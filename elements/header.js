@@ -42,7 +42,7 @@ function HeaderElement () {
   return component
 
   function render () {
-    var { isReady, onimport, oncreate } = this.props
+    var { isReady, onimport, oncreate, onreport } = this.props
     var { showMenu, willShowMenu } = this.state
 
     if (typeof willShowMenu === 'boolean') {
@@ -115,7 +115,7 @@ function HeaderElement () {
                 Dat Desktop is a peer to peer sharing app built for humans by humans.
               </p>
               <p class="f6 f5-l">
-                <a href="http://github.com/datproject/dat-desktop/issues" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
+                <a onclick=${onreport} href="#" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
               </p>
             </div>
               `
