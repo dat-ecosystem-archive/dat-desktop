@@ -98,7 +98,7 @@ function IntroScreen () {
   }
 
   function render () {
-    var { onOpenHomepage } = this.props
+    var { onOpenHomepage, onexit } = this.props
     var screen = this.state.screen
 
     function openHomepage (ev) {
