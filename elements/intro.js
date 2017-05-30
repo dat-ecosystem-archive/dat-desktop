@@ -107,7 +107,7 @@ function IntroScreen () {
     }
 
     return html`
-      <main class="${intro}" onload="${onload}" onunload="${onunload}">
+      <main class="${intro}">
         <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute ${image}">
         <div class="${content}">
           ${{
