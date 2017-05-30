@@ -22,6 +22,7 @@ deploy:
   script: npm run dist
   on:
     branch: master
+  skip_cleanup: true
 notifications:
   irc:
     channels:
