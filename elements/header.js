@@ -70,8 +70,9 @@ function HeaderElement () {
     })
 
     var menuButton = button.icon('Open Menu', {
-      icon: icon('menu', { class: menuButtonIcon, onclick: openMenu }),
-      class: 'ml3 v-mid color-neutral-20 hover-color-white'
+      icon: icon('menu', { class: menuButtonIcon }),
+      class: 'ml3 v-mid color-neutral-20 hover-color-white',
+      onclick: openMenu
     })
 
     function openMenu () {
