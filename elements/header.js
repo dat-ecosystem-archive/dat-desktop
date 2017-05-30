@@ -30,7 +30,6 @@ const shareButtonIcon = css`
 const menuButtonIcon = css`
   :host {
     width: 1.75em;
-    padding-top: .2rem;
   }
 `
 
@@ -61,17 +60,17 @@ function HeaderElement () {
     var createButton = button.header('Share Folder', {
       id: 'create-new-dat',
       icon: icon('create-new-dat', { class: shareButtonIcon }),
-      class: 'ml2 b--transparent v-mid color-neutral-30 hover-color-white f7',
+      class: 'ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l',
       onclick: oncreate
     })
 
     var loginButton = button.header('Log In', {
-      class: 'ml3 v-mid color-neutral-30 hover-color-white dn'
+      class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l dn'
     })
 
     var menuButton = button.icon('Open Menu', {
       icon: icon('menu', { class: menuButtonIcon }),
-      class: 'ml3 v-mid color-neutral-20 hover-color-white',
+      class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
       onclick: openMenu
     })
 
@@ -90,7 +89,7 @@ function HeaderElement () {
 
     return html`
       <header class="${header}">
-        <div class="fr">
+        <div class="fr relative">
           ${importButton.render({
             onsubmit: onimport
           })}
@@ -99,9 +98,17 @@ function HeaderElement () {
           ${menuButton}
           ${showMenu
             ? html`
-                <ul>
-                  <li>An item!</li>
-                </ul>
+            <div class="absolute right-0 w5 pa3 bg-neutral">
+              <h3 class="f6 f5-l mb2">
+                Dat Desktop x.x.x
+              </h3>
+              <p class="f6 f5-l mb3">
+                Dat Desktop is a peer to peer sharing app built for humans by humans.
+              </p>
+              <p class="f6 f5-l">
+                <a href="http://github.com/datproject/dat-desktop/issues" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
+              </p>
+            </div>
               `
             : ''}
         </div>
