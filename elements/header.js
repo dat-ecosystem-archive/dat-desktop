@@ -4,6 +4,7 @@ const microcomponent = require('microcomponent')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
+const version = require('../package').version
 
 const button = require('./button')
 const DatImport = require('./dat-import')
@@ -108,7 +109,7 @@ function HeaderElement () {
             ? html`
             <div class="absolute right-0 w5 pa3 bg-neutral">
               <h3 class="f6 f5-l mb2">
-                Dat Desktop x.x.x
+                Dat Desktop ${version}
               </h3>
               <p class="f6 f5-l mb3">
                 Dat Desktop is a peer to peer sharing app built for humans by humans.
