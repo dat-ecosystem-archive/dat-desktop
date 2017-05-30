@@ -17,8 +17,11 @@ env:
 install:
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - npm install
-after_success:
-  - npm run dist
+deploy:
+  provider: script
+  script: npm run dist
+  on:
+    branch: master
 notifications:
   irc:
     channels:
