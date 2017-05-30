@@ -43,6 +43,12 @@ function HeaderElement () {
 
   function render () {
     var { isReady, onimport, oncreate } = this.props
+    var { showMenu, toggleMenu } = this.state
+
+    if (typeof toggleMenu === 'boolean') {
+      showMenu = this.state.showMenu = toggleMenu
+      this.state.toggleMenu = null
+    }
 
     assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
     assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
@@ -64,9 +70,22 @@ function HeaderElement () {
     })
 
     var menuButton = button.icon('Open Menu', {
-      icon: icon('menu', { class: menuButtonIcon }),
-      class: 'ml3 v-mid color-neutral-20 hover-color-white dn'
+      icon: icon('menu', { class: menuButtonIcon, onclick: openMenu }),
+      class: 'ml3 v-mid color-neutral-20 hover-color-white'
     })
+
+    function openMenu () {
+      document.body.addEventListener('click', clickedOutside)
+      component.state.toggleMenu = true
+      component.render(component.props)
+    }
+
+    function clickedOutside (e) {
+      if (component._element.contains(e.target)) return
+      document.body.removeEventListener('click', clickedOutside)
+      component.state.toggleMenu = false
+      component.render(component.props)
+    }
 
     return html`
       <header class="${header}">
@@ -77,12 +96,20 @@ function HeaderElement () {
           ${createButton}
           ${loginButton}
           ${menuButton}
+          ${showMenu
+            ? html`
+                <ul>
+                  <li>An item!</li>
+                </ul>
+              `
+            : ''}
         </div>
       </header>
     `
   }
 
   function update (props) {
-    return props.isReady !== this.props.isReady
+    return props.isReady !== this.props.isReady ||
+      typeof this.state.toggleMenu === 'boolean'
   }
 }
