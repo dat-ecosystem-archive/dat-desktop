@@ -87,6 +87,8 @@ function IntroScreen () {
   })
   component.on('render', render)
   component.on('update', update)
+  component.on('load', load)
+  component.on('unload', unload)
   return component
 
   function next () {
@@ -96,27 +98,12 @@ function IntroScreen () {
   }
 
   function render () {
-    var { onexit, onOpenHomepage } = this.props
+    var { onOpenHomepage } = this.props
     var screen = this.state.screen
 
     function openHomepage (ev) {
       ev.preventDefault()
       onOpenHomepage()
-    }
-
-    function onload () {
-      console.log('onload')
-      window.addEventListener('keydown', onkeydown)
-    }
-
-    function onkeydown (ev) {
-      if (ev.code !== 'Escape') return
-      window.removeEventListener('keydown', onkeydown)
-      onexit()
-    }
-
-    function onunload () {
-      window.removeEventListener('keydown', onkeydown)
     }
 
     return html`
@@ -174,5 +161,19 @@ function IntroScreen () {
       return true
     }
     return false
+  }
+
+  function load () {
+    window.addEventListener('keydown', onkeydown)
+  }
+
+  function unload () {
+    window.removeEventListener('keydown', onkeydown)
+  }
+
+  function onkeydown (ev) {
+    if (ev.code !== 'Escape') return
+    window.removeEventListener('keydown', onkeydown)
+    component.props.onexit()
   }
 }
