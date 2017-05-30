@@ -55,7 +55,7 @@
     "test:unit": "node tests/intro.js && electron tests/dat-manager.js",
     "postinstall": "./scripts/build postinstall",
     "pack": "build --dir",
-    "dist": "build --publish=onTagOrDraft"
+    "dist": "git checkout -- tests/ && build --publish=onTagOrDraft"
   },
   "devDependencies": {
     "browserify": "^13.3.0",
