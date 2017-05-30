@@ -23,7 +23,10 @@ var fileList = css`
 
 module.exports = function () {
   var component = microcomponent({
-    name: 'file-list'
+    name: 'file-list',
+    state: {
+      update: true
+    }
   })
   component.on('render', render)
   component.on('update', update)
@@ -32,24 +35,31 @@ module.exports = function () {
   function render () {
     var { dat, onupdate } = this.props
 
-    if (!dat.files && dat.archive && dat.archive.on) {
-      dat.files = []
-      dat.archive.on('content', function () {
-        var fs = { name: '/', fs: dat.archive }
-        var progress = mirror(fs, '/', { dryRun: true })
-        progress.on('put', function (file) {
-          file.name = file.name.slice(1)
-          if (file.name === '') return
-          dat.files.push({
-            path: file.name,
-            stat: file.stat
+    if (dat) {
+      if (dat.files) {
+        this.state.update = false
+      } else {
+        if (dat.archive) {
+          dat.files = []
+          dat.archive.on('content', function () {
+            var fs = { name: '/', fs: dat.archive }
+            var progress = mirror(fs, '/', { dryRun: true })
+            progress.on('put', function (file) {
+              file.name = file.name.slice(1)
+              if (file.name === '') return
+              dat.files.push({
+                path: file.name,
+                stat: file.stat
+              })
+              dat.files.sort(function (a, b) {
+                return a.path.localeCompare(b.path)
+              })
+              component.state.update = true
+              onupdate()
+            })
           })
-          dat.files.sort(function (a, b) {
-            return a.path.localeCompare(b.path)
-          })
-          onupdate()
-        })
-      })
+        }
+      }
     }
 
     return html`
@@ -84,7 +94,7 @@ module.exports = function () {
     `
   }
 
-  function update () {
-    return true
+  function update (props) {
+    return props.dat !== this.props.dat || this.state.update
   }
 }
