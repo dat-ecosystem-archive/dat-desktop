@@ -3,6 +3,7 @@
 var microcomponent = require('microcomponent')
 var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
+var FileList = require('./file-list')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
@@ -31,31 +32,20 @@ var label = css`
   }
 `
 
-var fileList = css`
-  :host {
-    td {
-      padding: .25rem .5rem;
-    }
-    tr:odd td {
-      background-color: var(--color-neutral-04);
-    }
-  }
-`
-
-var fileListContainer = css`
-  :host {
-    min-height: 5rem;
-  }
-`
-
 module.exports = function () {
-  var component = microcomponent('download')
+  var component = microcomponent({
+    name: 'download',
+    state: {
+      fileList: FileList()
+    }
+  })
   component.on('render', render)
   component.on('update', update)
   return component
 
   function render () {
     var { key, oncancel, err, dat, ondownload, onupdate } = this.props
+    var { fileList } = this.state
     var location = this.state.location || `${process.env.HOME}/Downloads`
 
     var title = dat
@@ -167,34 +157,7 @@ module.exports = function () {
                   <div class="mb2 ${label}">
                     Files:
                   </div>
-                  <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
-                    ${dat && dat.files
-                      ? html`
-                        <table class="w-100 f7 f6-l ${fileList}">
-                          ${dat.files.map(file => {
-                            var size = file.stat && file.stat.isFile()
-                              ? ` ${bytes(file.stat.size)}`
-                              : ''
-                            return html`
-                              <tr>
-                                <td class="truncate mw5">
-                                  ${file.path}
-                                </td>
-                                <td>
-                                  ${size}
-                                </td>
-                              </tr>
-                            `
-                          })}
-                        </table>
-                        `
-                      : html`
-                        <div class="f7 f6-l pa2">
-                          N/A
-                        </div>
-                      `
-                    }
-                  </div>
+                  ${fileList.render({ dat, onupdate })}
                 </div>
               </div>
             </div>

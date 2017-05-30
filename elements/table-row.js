@@ -119,7 +119,7 @@ function Row ({ highlight }) {
 
   function render () {
     var { dat, state, emit } = this.props
-    if (dat instanceof Error) return errorRow(dat)
+    if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
 
     var stats = dat.stats
     var peers = dat.network ? dat.network.connected : 'N/A'
@@ -244,7 +244,7 @@ function DeleteButton () {
       onclick: function (e) {
         e.preventDefault()
         e.stopPropagation()
-        emit('dats:remove', { key: dat.key })
+        emit('dats:remove', { key: dat.key || dat.data.key })
       }
     })
   }
@@ -313,25 +313,25 @@ function HexContent () {
     if (this.state.hover) {
       return button.icon('pause', {
         icon: icon('hexagon-pause', {class: 'w2'}),
-        class: 'color-neutral-40',
+        class: 'color-neutral-40 ph0',
         onclick: togglePause
       })
     } else if (state === 'loading') {
       return button.icon('loading', {
         icon: icon('hexagon-down', {class: 'w2'}),
-        class: 'color-blue hover-color-blue-hover',
+        class: 'color-blue hover-color-blue-hover ph0',
         onclick: togglePause
       })
     } else if (state === 'paused') {
       return button.icon('paused', {
         icon: icon('hexagon-resume', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
+        class: 'color-neutral-30 hover-color-neutral-40 ph0',
         onclick: togglePause
       })
     } else if (state === 'complete') {
       return button.icon('complete', {
         icon: icon('hexagon-up', {class: 'w2'}),
-        class: 'color-green hover-color-green-hover',
+        class: 'color-green hover-color-green-hover ph0',
         onclick: togglePause,
         onmouseover: ev => {
           this.state.setHover = true
@@ -341,7 +341,7 @@ function HexContent () {
     } else {
       return button.icon('stale', {
         icon: icon('hexagon-x', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40',
+        class: 'color-neutral-30 hover-color-neutral-40 ph0',
         onclick: togglePause
       })
     }
@@ -359,12 +359,12 @@ function HexContent () {
   }
 }
 
-function errorRow (err) {
-  var errorHexIcon = icon('hexagon-down', {
+function errorRow (err, emit, deleteButton) {
+  var errorHexIcon = icon('hexagon-x', {
     class: 'w2 color-red'
   })
   return html`
-    <tr>
+    <tr class="bg-yellow-disabled">
       <td class="cell-1">
         <div class="w2 center">
           ${errorHexIcon}
@@ -381,6 +381,9 @@ function errorRow (err) {
         </div>
       </td>
       <td class="cell-6">
+        <div class="flex justify-end ${iconStyles}">
+          ${deleteButton.render({ dat: err, emit })}
+        </div>
       </td>
     </tr>
   `
