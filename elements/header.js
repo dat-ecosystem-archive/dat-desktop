@@ -42,11 +42,11 @@ function HeaderElement () {
 
   function render () {
     var { isReady, onimport, oncreate } = this.props
-    var { showMenu, toggleMenu } = this.state
+    var { showMenu, willShowMenu } = this.state
 
-    if (typeof toggleMenu === 'boolean') {
-      showMenu = this.state.showMenu = toggleMenu
-      this.state.toggleMenu = null
+    if (typeof willShowMenu === 'boolean') {
+      showMenu = this.state.showMenu = willShowMenu
+      this.state.willShowMenu = null
     }
 
     assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
@@ -71,20 +71,28 @@ function HeaderElement () {
     var menuButton = button.icon('Open Menu', {
       icon: icon('menu', { class: menuButtonIcon }),
       class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
-      onclick: openMenu
+      onclick: toggle
     })
 
-    function openMenu () {
+    function toggle () {
+      if (component.state.showMenu) hide()
+      else show()
+    }
+
+    function show () {
       document.body.addEventListener('click', clickedOutside)
-      component.state.toggleMenu = true
+      component.state.willShowMenu = true
+      component.render(component.props)
+    }
+
+    function hide () {
+      document.body.removeEventListener('click', clickedOutside)
+      component.state.willShowMenu = false
       component.render(component.props)
     }
 
     function clickedOutside (e) {
-      if (component._element.contains(e.target)) return
-      document.body.removeEventListener('click', clickedOutside)
-      component.state.toggleMenu = false
-      component.render(component.props)
+      if (!component._element.contains(e.target)) hide()
     }
 
     return html`
@@ -118,6 +126,6 @@ function HeaderElement () {
 
   function update (props) {
     return props.isReady !== this.props.isReady ||
-      typeof this.state.toggleMenu === 'boolean'
+      typeof this.state.willShowMenu === 'boolean'
   }
 }
