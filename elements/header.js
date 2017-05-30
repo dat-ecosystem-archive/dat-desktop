@@ -4,7 +4,7 @@ const microcomponent = require('microcomponent')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
-const version = require('../package').version
+const version = require('../package.json').version
 
 const button = require('./button')
 const DatImport = require('./dat-import')
