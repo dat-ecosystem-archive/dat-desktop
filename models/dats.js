@@ -101,11 +101,9 @@ function datsModel (state, bus) {
   bus.on('dats:clone', function ({ key, location }) {
     cloneDat({ key, location })
   })
+
   ipc.on('link', function (event, url) {
-    cloneDat({
-      key: url,
-      location: downloadsDir
-    })
+    bus.emit('dats:download', url)
   })
 
   function cloneDat ({ key: _key, location }) {
