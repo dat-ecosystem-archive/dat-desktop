@@ -8,12 +8,17 @@ function downloadModel (state, bus) {
   var update = bus.emit.bind(bus, 'render')
 
   state.download = xtend({}, state.download, {
-    show: false
+    show: false,
+    dat: null
   })
 
   bus.on('dats:download', function (key) {
     state.download.show = true
     state.download.key = key
+    if (state.download.dat) {
+      state.download.dat.close()
+      state.download.dat = null
+    }
     update()
 
     var dir = `${tmpdir()}/${Date.now()}`

@@ -78,6 +78,7 @@ tap('working with dats', function (t) {
     .then(() => clipboard.write(''))
     .then(() => app.client.click('button[title="Share Dat"]'))
     .then(() => app.client.click('button[title="Copy to Clipboard"]'))
+    .then(() => wait())
     .then(() => clipboard.read())
     .then(text => t.ok(text.match(/^dat:\/\/[0-9a-f]{32}/), 'link copied to clipboard'))
     .then(() => app.stop())

@@ -109,7 +109,7 @@ var networkStyles = css`
 
 module.exports = Row
 
-function Row ({ highlight }) {
+function Row () {
   var hexContent = HexContent()
   var finderButton = FinderButton()
   var linkButton = LinkButton()
@@ -123,8 +123,8 @@ function Row ({ highlight }) {
   return component
 
   function render () {
-    var { dat, state, emit } = this.props
-    if (dat instanceof Error) return errorRow(dat)
+    var { dat, state, emit, highlight } = this.props
+    if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
 
     var stats = dat.stats
     var peers = dat.network ? dat.network.connected : 'N/A'
@@ -253,7 +253,7 @@ function DeleteButton () {
       onclick: function (e) {
         e.preventDefault()
         e.stopPropagation()
-        emit('dats:remove', { key: dat.key })
+        emit('dats:remove', { key: dat.key || dat.data.key })
       }
     })
   }
@@ -368,18 +368,18 @@ function HexContent () {
   }
 }
 
-function errorRow (err) {
-  var errorHexIcon = icon('hexagon-down', {
+function errorRow (err, emit, deleteButton) {
+  var errorHexIcon = icon('hexagon-x', {
     class: 'w2 color-red'
   })
   return html`
-    <tr>
+    <tr class="bg-yellow-disabled">
       <td class="cell-1">
         <div class="w2 center">
           ${errorHexIcon}
         </div>
       </td>
-      <td class="cell-2" colspan="5">
+      <td class="cell-2" colspan="4">
         <div class="cell-truncate color-red">
           <h2 class="f6 f5-l normal">
             Error
@@ -390,6 +390,9 @@ function errorRow (err) {
         </div>
       </td>
       <td class="cell-6">
+        <div class="flex justify-end ${iconStyles}">
+          ${deleteButton.render({ dat: err, emit })}
+        </div>
       </td>
     </tr>
   `

@@ -23,7 +23,10 @@ var fileList = css`
 
 module.exports = function () {
   var component = microcomponent({
-    name: 'file-list'
+    name: 'file-list',
+    state: {
+      update: true
+    }
   })
   component.on('render', render)
   component.on('update', update)
@@ -32,13 +35,19 @@ module.exports = function () {
   function render () {
     var { dat, onupdate } = this.props
 
-    if (!dat.files && dat.archive && dat.archive.on) {
-      dat.files = []
-      if (dat.archive.content) oncontent()
-      else dat.archive.on('content', oncontent)
+    if (dat) {
+      if (dat.files) {
+        this.state.update = false
+      } else {
+        if (dat.archive) {
+          dat.files = []
+          if (dat.archive.content) walk()
+          else dat.archive.on('content', walk)
+        }
+      }
     }
 
-    function oncontent () {
+    function walk () {
       var fs = { name: '/', fs: dat.archive }
       var progress = mirror(fs, '/', { dryRun: true })
       progress.on('put', function (file) {
@@ -51,6 +60,7 @@ module.exports = function () {
         dat.files.sort(function (a, b) {
           return a.path.localeCompare(b.path)
         })
+        component.state.update = true
         onupdate()
       })
     }
@@ -87,7 +97,7 @@ module.exports = function () {
     `
   }
 
-  function update () {
-    return true
+  function update (props) {
+    return props.dat !== this.props.dat || this.state.update
   }
 }
