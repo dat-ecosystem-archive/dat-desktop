@@ -80,9 +80,9 @@ function TableRows () {
         return row.render({ dat, state, emit })
       } else {
         var highlight = !initialLoad
-        var newRow = TableRow({ highlight })
+        var newRow = TableRow()
         elements[key] = newRow
-        return newRow.render({ dat, state, emit })
+        return newRow.render({ dat, state, emit, highlight })
       }
     })
 

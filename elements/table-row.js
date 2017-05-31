@@ -104,7 +104,7 @@ var networkStyles = css`
 
 module.exports = Row
 
-function Row ({ highlight }) {
+function Row () {
   var hexContent = HexContent()
   var finderButton = FinderButton()
   var linkButton = LinkButton()
@@ -118,7 +118,7 @@ function Row ({ highlight }) {
   return component
 
   function render () {
-    var { dat, state, emit } = this.props
+    var { dat, state, emit, highlight } = this.props
     if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
 
     var stats = dat.stats
