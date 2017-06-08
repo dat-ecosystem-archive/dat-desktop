@@ -6,10 +6,12 @@ var registry = Registry()
 module.exports = userModel
 
 function userModel (state, bus) {
-  state.user = xtend(state.user || {}, {
+  state.user = state.user || {}
+  state.user = xtend(state.user, {
     show: null,
     loginError: null,
-    registerError: null
+    registerError: null,
+    session: state.user.session
   })
 
   bus.on('user:login', function () {
@@ -18,14 +20,14 @@ function userModel (state, bus) {
   })
 
   bus.on('user:login!', function (data) {
-    registry.login(data, function (err, res, body) {
+    registry.login(data, function (err, res, session) {
       if (err) {
         state.user.loginError = err
         bus.emit('render')
         return
       }
       state.user.show = null
-      state.user.account = body
+      state.user.session = session
       bus.emit('render')
     })
   })
@@ -36,14 +38,14 @@ function userModel (state, bus) {
   })
 
   bus.on('user:register!', function (data) {
-    registry.register(data, function (err, res, body) {
+    registry.register(data, function (err, res, session) {
       if (err) {
         state.user.registerError = err
         bus.emit('render')
         return
       }
       state.user.show = null
-      state.user.account = body
+      state.user.session = session
       bus.emit('render')
     })
   })
