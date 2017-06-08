@@ -42,7 +42,7 @@ function HeaderElement () {
   return component
 
   function render () {
-    var { isReady, onimport, oncreate, onreport, onlogin } = this.props
+    var { isReady, session, onimport, oncreate, onreport, onlogin } = this.props
     var { showMenu, willShowMenu } = this.state
 
     if (typeof willShowMenu === 'boolean') {
@@ -104,7 +104,9 @@ function HeaderElement () {
             onsubmit: onimport
           })}
           ${createButton}
-          ${loginButton}
+          ${session
+            ? ''
+            : loginButton}
           ${menuButton}
           ${showMenu
             ? html`
@@ -128,6 +130,7 @@ function HeaderElement () {
 
   function update (props) {
     return props.isReady !== this.props.isReady ||
-      typeof this.state.willShowMenu === 'boolean'
+      typeof this.state.willShowMenu === 'boolean' ||
+      props.session !== this.props.session
   }
 }

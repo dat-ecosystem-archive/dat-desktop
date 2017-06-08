@@ -30,6 +30,7 @@ function mainView (state, emit) {
   const isReady = state.dats.ready
   const headerProps = {
     isReady: isReady,
+    session: state.user.session,
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:download', link),
     onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues'),
