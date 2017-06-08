@@ -24,7 +24,6 @@ const prefix = css`
       width: 7.25rem;
       padding-right: .5rem;
       padding-left: 2rem;
-      font-size: .75rem;
       border: 1px solid transparent;
       background-color: transparent;
       color: var(--color-neutral-30);
@@ -77,7 +76,7 @@ function DatImportElement () {
           type="text"
           placeholder="Download"
           onkeydown=${onKeyDown}
-          class="input-reset">
+          class="input-reset f7 f6-l">
         ${icon('link', { class: 'absolute top-0 bottom-0 left-0' })}
       </label>
     `

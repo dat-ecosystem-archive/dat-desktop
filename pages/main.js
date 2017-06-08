@@ -1,6 +1,7 @@
 'use strict'
 
 const html = require('choo/html')
+const shell = require('electron').shell
 
 const Header = require('../elements/header')
 const Sprite = require('../elements/sprite')
@@ -26,7 +27,8 @@ function mainView (state, emit) {
   const headerProps = {
     isReady: isReady,
     oncreate: () => emit('dats:create'),
-    onimport: (link) => emit('dats:download', link)
+    onimport: (link) => emit('dats:download', link),
+    onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues')
   }
 
   document.title = 'Dat Desktop'
