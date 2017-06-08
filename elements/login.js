@@ -3,38 +3,48 @@ var html = require('choo/html')
 
 module.exports = function () {
   var component = microcomponent({
-    name: 'login'
+    name: 'login',
+    state: {
+      email: '',
+      password: ''
+    }
   })
   component.on('render', render)
   component.on('update', update)
   return component
 
   function render () {
-    var { onlogin } = this.props
+    var { onlogin, error } = this.props
+    var { email, password } = this.state
 
     function onsubmit (ev) {
       ev.preventDefault()
       var data = new FormData(ev.target)
-      onlogin({
-        email: data.get('email'),
-        password: data.get('password')
-      })
+      var email = data.get('email')
+      var password = data.get('password')
+      onlogin({ email, password })
+      Object.assign(component.state, { email, password })
     }
 
     return html`
       <div>
         <form onsubmit=${onsubmit}>
-          <input type="email" name="email">
-          <input type="password" name="password">
-          <input type="submit" value="Login">
+          <input type="email" name="email" value=${email} />
+          <input type="password" name="password" value=${password} />
+          <input type="submit" value="Login" />
           <button>Forgot password?</button>
           <button>Register</button>
         </form>
+        ${error
+          ? html`
+              <div>Error! ${error.message}</div>
+            `
+          : ''}
       </div>  
     `  
   }
 
-  function update () {
-    return false
+  function update (props) {
+    return props.error !== this.props.error
   }
 }

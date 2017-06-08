@@ -83,7 +83,8 @@ function mainView (state, emit) {
         ${login.render({
           onlogin: data => {
             emit('user:login!', data)
-          }
+          },
+          error: state.user.loginError
         })}
       </div>
     `
