@@ -34,7 +34,8 @@ function mainView (state, emit) {
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:download', link),
     onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues'),
-    onlogin: () => emit('user:login')
+    onlogin: () => emit('user:login'),
+    onlogout: () => emit('user:logout')
   }
 
   document.title = 'Dat Desktop'

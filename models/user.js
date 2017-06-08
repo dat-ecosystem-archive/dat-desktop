@@ -49,4 +49,12 @@ function userModel (state, bus) {
       bus.emit('render')
     })
   })
+
+  bus.on('user:logout', function () {
+    registry.logout(function (err) {
+      if (err) console.error(err)
+      state.user.session = null
+      bus.emit('render')
+    })
+  })
 }

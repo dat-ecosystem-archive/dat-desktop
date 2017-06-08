@@ -42,7 +42,7 @@ function HeaderElement () {
   return component
 
   function render () {
-    var { isReady, session, onimport, oncreate, onreport, onlogin } = this.props
+    var { isReady, session, onimport, oncreate, onreport, onlogin, onlogout } = this.props
     var { showMenu, willShowMenu } = this.state
 
     if (typeof willShowMenu === 'boolean') {
@@ -97,6 +97,11 @@ function HeaderElement () {
       if (!component._element.contains(e.target)) hide()
     }
 
+    function onclicklogout () {
+      component.state.willShowMenu = false
+      onlogout()
+    }
+
     return html`
       <header class="${header}">
         <div class="fr relative">
@@ -120,6 +125,13 @@ function HeaderElement () {
               <p class="f6 f5-l">
                 <a onclick=${onreport} href="#" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
               </p>
+              ${session
+                ? html`
+                    <p class="f6 f5-l">
+                      <a onclick=${onclicklogout} href="#" class="color-neutral-50 hover-color-neutral-70">Log out</a>
+                    </p>
+                  `
+                : ''}
             </div>
               `
             : ''}
