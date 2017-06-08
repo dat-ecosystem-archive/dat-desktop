@@ -80,7 +80,11 @@ function mainView (state, emit) {
       <div>
         ${sprite.render()}
         ${header.render(headerProps)}
-        ${login.render()}
+        ${login.render({
+          onlogin: data => {
+            emit('user:login!', data)
+          }
+        })}
       </div>
     `
   }

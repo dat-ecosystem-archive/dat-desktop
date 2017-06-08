@@ -17,6 +17,7 @@
     "dat-encoding": "^4.0.1",
     "dat-icons": "^2.2.0",
     "dat-node": "^3.2.3",
+    "dat-registry": "^3.0.2",
     "delegate-electron-events": "github:juliangruber/delegate-electron-events#fix/missing-events",
     "electron-auto-updater": "^0.9.2",
     "electron-default-menu": "^1.0.0",
