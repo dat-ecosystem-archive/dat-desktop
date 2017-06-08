@@ -18,13 +18,15 @@ function userModel (state, bus) {
   })
 
   bus.on('user:login!', function (data) {
-    registry.login(data, function (err, user) {
+    registry.login(data, function (err, res, body) {
       if (err) {
         state.user.loginError = err
         bus.emit('render')
         return
       }
-      console.log({ err, user })
+      state.user.show = null
+      state.user.account = body
+      bus.emit('render')
     })
   })
 
@@ -34,12 +36,15 @@ function userModel (state, bus) {
   })
 
   bus.on('user:register!', function (data) {
-    registry.register(data, function (err, user) {
+    registry.register(data, function (err, res, body) {
       if (err) {
         state.user.registerError = err
         bus.emit('render')
         return
       }
+      state.user.show = null
+      state.user.account = body
+      bus.emit('render')
     })
   })
 }
