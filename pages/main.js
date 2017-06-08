@@ -10,6 +10,7 @@ const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
 const Download = require('../elements/download')
 const Login = require('../elements/login')
+const Register = require('../elements/register')
 
 module.exports = mainView
 
@@ -18,6 +19,7 @@ const sprite = Sprite()
 const download = Download()
 const intro = Intro()
 const login = Login()
+const register = Register()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -75,7 +77,7 @@ function mainView (state, emit) {
     `
   }
 
-  if (state.user.showLogin) {
+  if (state.user.show === 'login') {
     return html`
       <div>
         ${sprite.render()}
@@ -84,7 +86,28 @@ function mainView (state, emit) {
           onlogin: data => {
             emit('user:login!', data)
           },
+          onregister: () => {
+            emit('user:register')
+          },
           error: state.user.loginError
+        })}
+      </div>
+    `
+  }
+
+  if (state.user.show === 'register') {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${header.render(headerProps)}
+        ${register.render({
+          onregister: data => {
+            emit('user:register!', data)
+          },
+          onlogin: () => {
+            emit('user:login')
+          },
+          error: state.user.registerError
         })}
       </div>
     `
