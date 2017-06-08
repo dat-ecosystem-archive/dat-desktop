@@ -9,6 +9,7 @@ const Table = require('../elements/table')
 const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
 const Download = require('../elements/download')
+const Login = require('../elements/login')
 
 module.exports = mainView
 
@@ -16,6 +17,7 @@ const header = Header()
 const sprite = Sprite()
 const download = Download()
 const intro = Intro()
+const login = Login()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -28,7 +30,8 @@ function mainView (state, emit) {
     isReady: isReady,
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:download', link),
-    onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues')
+    onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues'),
+    onlogin: () => emit('user:login')
   }
 
   document.title = 'Dat Desktop'
@@ -68,6 +71,16 @@ function mainView (state, emit) {
             emit('render')
           }
         })}
+      </div>
+    `
+  }
+
+  if (state.user.showLogin) {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${header.render(headerProps)}
+        ${login.render()}
       </div>
     `
   }

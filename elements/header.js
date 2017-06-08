@@ -42,7 +42,7 @@ function HeaderElement () {
   return component
 
   function render () {
-    var { isReady, onimport, oncreate, onreport } = this.props
+    var { isReady, onimport, oncreate, onreport, onlogin } = this.props
     var { showMenu, willShowMenu } = this.state
 
     if (typeof willShowMenu === 'boolean') {
@@ -66,7 +66,8 @@ function HeaderElement () {
     })
 
     var loginButton = button.header('Log In', {
-      class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l dn'
+      class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l',
+      onclick: onlogin
     })
 
     var menuButton = button.icon('Open Menu', {
