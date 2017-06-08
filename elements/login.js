@@ -1,5 +1,6 @@
 var microcomponent = require('microcomponent')
 var html = require('choo/html')
+var FormData = window.FormData
 
 module.exports = function () {
   var component = microcomponent({
@@ -41,7 +42,7 @@ module.exports = function () {
             `
           : ''}
       </div>  
-    `  
+    `
   }
 
   function update (props) {
