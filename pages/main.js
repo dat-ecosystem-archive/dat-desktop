@@ -36,6 +36,8 @@ function mainView (state, emit) {
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:download', link),
     onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues'),
+    onhomepage: () => shell.openExternal('https://datproject.org/'),
+    onprofile: () => shell.openExternal(`https://datproject.org/profile/${state.user.session.username}`),
     onlogin: () => emit('user:login'),
     onlogout: () => emit('user:logout')
   }

@@ -43,7 +43,7 @@ function HeaderElement () {
   return component
 
   function render () {
-    var { isReady, session, onimport, oncreate, onreport, onlogin, onlogout } = this.props
+    var { isReady, session, onimport, oncreate, onreport, onlogin, onlogout, onprofile, onhomepage } = this.props
     var { showMenu, willShowMenu } = this.state
 
     if (typeof willShowMenu === 'boolean') {
@@ -135,12 +135,24 @@ function HeaderElement () {
           ${showMenu
             ? html`
             <div class="absolute right-0 w5 pa3 bg-neutral">
-              <h3 class="f6 f5-l mb2">
-                Dat Desktop ${version}
-              </h3>
-              <p class="f6 f5-l mb3">
-                Dat Desktop is a peer to peer sharing app built for humans by humans.
-              </p>
+              ${session
+                ? html`
+                    <p class="f6 f5-l mb3">
+                      ${session.email}
+                    </p>
+                  `
+                : html`
+                    <p class="f6 f5-l mb3">
+                      Dat Desktop is a peer to peer sharing app built for humans by humans.
+                    </p>
+                  `}
+              ${session
+                ? html`
+                    <p class="f6 f5-l">
+                      <a onclick=${onprofile} href="#" class="color-neutral-50 hover-color-neutral-70">Profile</a>
+                    </p>
+                  `
+                : ''}
               <p class="f6 f5-l">
                 <a onclick=${onreport} href="#" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
               </p>
@@ -151,6 +163,10 @@ function HeaderElement () {
                     </p>
                   `
                 : ''}
+              <h3 class="f6 f5-l mb2">
+                Version ${version} | Built by
+                <a onclick=${onhomepage} href="#" class="color-neutral-50 hover-color-neutral-70">datproject.org</a>
+              </h3>
             </div>
               `
             : ''}
