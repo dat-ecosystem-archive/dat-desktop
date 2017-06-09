@@ -6,7 +6,7 @@ module.exports = function () {
   var component = microcomponent({
     name: 'reset-password',
     state: {
-      email: '',
+      email: ''
     }
   })
   component.on('render', render)

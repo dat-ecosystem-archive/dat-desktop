@@ -128,7 +128,6 @@ function mainView (state, emit) {
     `
   }
 
-
   if (!dats.length) {
     return html`
       <div>
