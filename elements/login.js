@@ -28,20 +28,31 @@ module.exports = function () {
     }
 
     return html`
-      <div>
-        <form onsubmit=${onsubmit}>
-          <input type="email" name="email" value=${email} />
-          <input type="password" name="password" value=${password} />
-          <input type="submit" value="Login" />
-          <button>Forgot password?</button>
-          <button onclick=${onregister}>Register</button>
-        </form>
-        ${error
-          ? html`
-              <div>Error! ${error.message}</div>
-            `
-          : ''}
-      </div>  
+      <main class="flex items-center">
+        <div class="mw5 mb5 center">
+          <h1 class="f4 mb3">Log In</h1>
+          <form onsubmit=${onsubmit}>
+            <p>
+              <input type="email" name="email" value=${email} />
+            </p>
+            <p>
+              <input type="password" name="password" value=${password} />
+            </p>
+            <p>
+              <input type="submit" value="Log In" />
+            </p>
+            <p class="f7">
+              <button class="mr3 pa0 bg-transparent color-blue hover-color-blue-hover">Forgot Password?</button>
+              <button class="pa0 bg-transparent color-blue hover-color-blue-hover" onclick=${onregister}>No Account yet? Register »</button>
+            </p>
+          </form>
+          ${error
+            ? html`
+                <div>Oops. ${error.message}</div>
+              `
+            : ''}
+        </div>
+      </main>
     `
   }
 

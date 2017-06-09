@@ -30,20 +30,33 @@ module.exports = function () {
     }
 
     return html`
-      <div>
-        <form onsubmit=${onsubmit}>
-          <input type="text" name="username" value=${username} />
-          <input type="email" name="email" value=${email} />
-          <input type="password" name="password" value=${password} />
-          <input type="submit" value="Register" />
-          <button onclick=${onlogin}>Login instead</button>
-        </form>
-        ${error
-          ? html`
-              <div>Error! ${error.message}</div>
-            `
-          : ''}
-      </div>  
+      <main class="flex items-center">
+        <div class="mw5 mb5 center">
+          <h1 class="f4 mb3">Create A New Account</h1>
+          <form onsubmit=${onsubmit}>
+            <p>
+              <input type="text" name="username" value=${username} />
+            </p>
+            <p>
+              <input type="email" name="email" value=${email} />
+            </p>
+            <p>
+              <input type="password" name="password" value=${password} />
+            </p>
+            <p>
+              <input type="submit" value="Register" />
+            </p>
+            <p class="f7">
+              <button class="pa0 bg-transparent color-blue hover-color-blue-hover" onclick=${onlogin}>Already have an Account? Log In »</button>
+            </p>
+          </form>
+          ${error
+            ? html`
+                <div>Oops. ${error.message}</div>
+              `
+            : ''}
+        </div>
+      </div>
     `
   }
 
