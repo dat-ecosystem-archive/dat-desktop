@@ -77,8 +77,11 @@ function HeaderElement () {
       onclick: toggle
     })
 
-    var avatar = session && gravatar.url(session.email, {
-      s: 200,
+    var avatar = {
+      size: 23
+    }
+    if (session) avatar.url = gravatar.url(session.email, {
+      s: avatar.size * 2,
       r: 'pg',
       d: '404',
       protocol: 'https'
@@ -119,7 +122,7 @@ function HeaderElement () {
           ${createButton}
           ${session
             ? html`
-                <img src=${avatar} width=200 height=200 />
+                <img src=${avatar.url} width=${avatar.size} height=${avatar.size} />
               `
             : loginButton}
           ${menuButton}
