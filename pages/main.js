@@ -8,6 +8,7 @@ const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
+const Inspect = require('../elements/inspect')
 const Download = require('../elements/download')
 
 module.exports = mainView
@@ -16,11 +17,13 @@ const header = Header()
 const sprite = Sprite()
 const download = Download()
 const intro = Intro()
+const inspect = Inspect()
 
 // render the main view
 // (obj, obj, fn) -> html
 function mainView (state, emit) {
   const showIntroScreen = state.intro.show
+  const showInspectScreen = state.inspect.show
   const showDownloadScreen = state.download.show
   const dats = state.dats.values
   const isReady = state.dats.ready
@@ -47,6 +50,19 @@ function mainView (state, emit) {
           onupdate: () => {
             emit('render')
           }
+        }))}
+      </div>
+    `
+  }
+
+  if (showInspectScreen) {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${header.render(headerProps)}
+        ${inspect.render(Object.assign({}, state.inspect, {
+          oncancel: () => emit('inspect:hide'),
+          onupdate: () => emit('render')
         }))}
       </div>
     `

@@ -191,7 +191,7 @@ function headerButton (innerText, opts) {
 }
 
 function plainButton (innerText, opts) {
-  if (!opts) {
+  if (!opts && typeof innerText === 'object') {
     opts = innerText
     innerText = ''
   }
