@@ -124,10 +124,14 @@ function HeaderElement () {
           ${createButton}
           ${session
             ? html`
-                <img src=${avatar.url} width=${avatar.size} height=${avatar.size} />
+                <img onclick=${toggle} src=${avatar.url} width=${avatar.size} height=${avatar.size} />
               `
-            : loginButton}
-          ${menuButton}
+            : html`
+                <span>
+                  ${menuButton}
+                  ${loginButton}
+                </span>
+              `}
           ${showMenu
             ? html`
             <div class="absolute right-0 w5 pa3 bg-neutral">
