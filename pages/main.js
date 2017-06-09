@@ -11,6 +11,7 @@ const Empty = require('../elements/empty')
 const Download = require('../elements/download')
 const Login = require('../elements/login')
 const Register = require('../elements/register')
+const ResetPassword = require('../elements/reset-password')
 
 module.exports = mainView
 
@@ -20,6 +21,7 @@ const download = Download()
 const intro = Intro()
 const login = Login()
 const register = Register()
+const resetPassword = ResetPassword()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -85,12 +87,9 @@ function mainView (state, emit) {
         ${sprite.render()}
         ${header.render(headerProps)}
         ${login.render({
-          onlogin: data => {
-            emit('user:login!', data)
-          },
-          onregister: () => {
-            emit('user:register')
-          },
+          onlogin: data => emit('user:login!', data),
+          onregister: () => emit('user:register'),
+          onresetpassword: () => emit('user:reset-password'),
           error: state.user.loginError
         })}
       </div>
@@ -114,6 +113,21 @@ function mainView (state, emit) {
       </div>
     `
   }
+
+  if (state.user.show === 'reset password') {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${header.render(headerProps)}
+        ${resetPassword.render({
+          onreset: data => {
+            emit('user:reset-password!', data)
+          }
+        })}
+      </div>
+    `
+  }
+
 
   if (!dats.length) {
     return html`

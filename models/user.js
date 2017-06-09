@@ -57,4 +57,16 @@ function userModel (state, bus) {
       bus.emit('render')
     })
   })
+
+  bus.on('user:reset-password', function () {
+    state.user.show = 'reset password'
+    bus.emit('render')
+  })
+
+  bus.on('user:reset-password!', function (data) {
+    registry.users.resetPassword(data, function (err) {
+      if (err) console.error(err)
+      bus.emit('render')
+    })
+  })
 }

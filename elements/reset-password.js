@@ -4,10 +4,9 @@ var FormData = window.FormData
 
 module.exports = function () {
   var component = microcomponent({
-    name: 'login',
+    name: 'reset-password',
     state: {
       email: '',
-      password: ''
     }
   })
   component.on('render', render)
@@ -15,36 +14,22 @@ module.exports = function () {
   return component
 
   function render () {
-    var { onlogin, onregister, onresetpassword, error } = this.props
-    var { email, password } = this.state
+    var { onreset, error } = this.props
+    var { email } = this.state
 
     function onsubmit (ev) {
       ev.preventDefault()
       var data = new FormData(ev.target)
       var email = data.get('email')
-      var password = data.get('password')
-      onlogin({ email, password })
-      Object.assign(component.state, { email, password })
-    }
-
-    function onclickresetpassword (ev) {
-      ev.preventDefault()
-      onresetpassword()
-    }
-
-    function onclickregister (ev) {
-      ev.preventDefault()
-      onregister()
+      onreset({ email })
+      Object.assign(component.state, { email })
     }
 
     return html`
       <div>
         <form onsubmit=${onsubmit}>
           <input type="email" name="email" value=${email} />
-          <input type="password" name="password" value=${password} />
-          <input type="submit" value="Login" />
-          <button onclick=${onclickresetpassword}>Forgot password?</button>
-          <button onclick=${onclickregister}>Register</button>
+          <input type="submit" value="Reset" />
         </form>
         ${error
           ? html`
