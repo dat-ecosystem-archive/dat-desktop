@@ -29,6 +29,11 @@ module.exports = function () {
       Object.assign(component.state, { username, email, password })
     }
 
+    function onclicklogin (ev) {
+      ev.preventDefault()
+      onlogin()
+    }
+
     return html`
       <div>
         <form onsubmit=${onsubmit}>
@@ -36,7 +41,7 @@ module.exports = function () {
           <input type="email" name="email" value=${email} />
           <input type="password" name="password" value=${password} />
           <input type="submit" value="Register" />
-          <button onclick=${onlogin}>Login instead</button>
+          <button onclick=${onclicklogin}>Login instead</button>
         </form>
         ${error
           ? html`
