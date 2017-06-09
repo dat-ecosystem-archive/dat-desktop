@@ -80,12 +80,14 @@ function HeaderElement () {
     var avatar = {
       size: 23
     }
-    if (session) avatar.url = gravatar.url(session.email, {
-      s: avatar.size * 2,
-      r: 'pg',
-      d: '404',
-      protocol: 'https'
-    })
+    if (session) {
+      avatar.url = gravatar.url(session.email, {
+        s: avatar.size * 2,
+        r: 'pg',
+        d: '404',
+        protocol: 'https'
+      })
+    }
 
     function toggle () {
       if (component.state.showMenu) hide()
