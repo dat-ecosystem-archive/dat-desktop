@@ -1,10 +1,11 @@
 'use strict'
 
+const version = require('../package.json').version
 const microcomponent = require('microcomponent')
+const gravatar = require('gravatar')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
-const version = require('../package.json').version
 
 const button = require('./button')
 const DatImport = require('./dat-import')
@@ -76,6 +77,13 @@ function HeaderElement () {
       onclick: toggle
     })
 
+    var avatar = session && gravatar.url(session.email, {
+      s: 200,
+      r: 'pg',
+      d: '404',
+      protocol: 'https'
+    })
+
     function toggle () {
       if (component.state.showMenu) hide()
       else show()
@@ -110,7 +118,9 @@ function HeaderElement () {
           })}
           ${createButton}
           ${session
-            ? ''
+            ? html`
+                <img src=${avatar} width=200 height=200 />
+              `
             : loginButton}
           ${menuButton}
           ${showMenu
