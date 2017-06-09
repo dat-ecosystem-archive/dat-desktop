@@ -52,7 +52,9 @@ module.exports = function () {
           </form>
           ${error
             ? html`
-                <div>Oops. ${error.message}</div>
+                <p class="mt3 f7 color-red">
+                  Oops. ${error.message}
+                </p>
               `
             : ''}
         </div>
