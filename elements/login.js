@@ -17,7 +17,7 @@ module.exports = function () {
   return component
 
   function render () {
-    var { onlogin, onregister, error } = this.props
+    var { onlogin, onregister, onresetpassword, error } = this.props
     var { email, password } = this.state
 
     function onsubmit (ev) {
@@ -27,6 +27,16 @@ module.exports = function () {
       var password = data.get('password')
       onlogin({ email, password })
       Object.assign(component.state, { email, password })
+    }
+
+    function onclickresetpassword (ev) {
+      ev.preventDefault()
+      onresetpassword()
+    }
+
+    function onclickregister (ev) {
+      ev.preventDefault()
+      onregister()
     }
 
     return html`
@@ -54,8 +64,8 @@ module.exports = function () {
             })}
 
             <p class="f7">
-              <button class="mr3 pa0 bg-transparent color-blue hover-color-blue-hover">Forgot Password?</button>
-              <button class="pa0 bg-transparent color-blue hover-color-blue-hover" onclick=${onregister}>No Account yet? Register »</button>
+              <button onclick=${onclickresetpassword} class="mr3 pa0 bg-transparent color-blue hover-color-blue-hover">Forgot Password?</button>
+              <button onclick=${onclickregister} class="pa0 bg-transparent color-blue hover-color-blue-hover">No Account yet? Register »</button>
             </p>
           </form>
           ${error

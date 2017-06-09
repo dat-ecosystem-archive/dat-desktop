@@ -31,6 +31,11 @@ module.exports = function () {
       Object.assign(component.state, { username, email, password })
     }
 
+    function onclicklogin (ev) {
+      ev.preventDefault()
+      onlogin()
+    }
+
     return html`
       <main class="flex items-center">
         <div class="mw5 mb5 center">
@@ -62,7 +67,7 @@ module.exports = function () {
               class: 'w-100 mb3'
             })}
             <p class="f7">
-              <button class="pa0 bg-transparent color-blue hover-color-blue-hover" onclick=${onlogin}>Already have an Account? Log In »</button>
+              <button class="pa0 bg-transparent color-blue hover-color-blue-hover" onclick=${onclicklogin}>Already have an Account? Log In »</button>
             </p>
           </form>
           ${error

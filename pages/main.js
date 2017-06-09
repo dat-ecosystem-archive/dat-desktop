@@ -11,6 +11,7 @@ const Empty = require('../elements/empty')
 const Download = require('../elements/download')
 const Login = require('../elements/login')
 const Register = require('../elements/register')
+const ResetPassword = require('../elements/reset-password')
 
 module.exports = mainView
 
@@ -20,6 +21,7 @@ const download = Download()
 const intro = Intro()
 const login = Login()
 const register = Register()
+const resetPassword = ResetPassword()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -34,6 +36,8 @@ function mainView (state, emit) {
     oncreate: () => emit('dats:create'),
     onimport: (link) => emit('dats:download', link),
     onreport: () => shell.openExternal('https://github.com/datproject/dat-desktop/issues'),
+    onhomepage: () => shell.openExternal('https://datproject.org/'),
+    onprofile: () => shell.openExternal(`https://datproject.org/profile/${state.user.session.username}`),
     onlogin: () => emit('user:login'),
     onlogout: () => emit('user:logout')
   }
@@ -85,12 +89,9 @@ function mainView (state, emit) {
         ${sprite.render()}
         ${header.render(headerProps)}
         ${login.render({
-          onlogin: data => {
-            emit('user:login!', data)
-          },
-          onregister: () => {
-            emit('user:register')
-          },
+          onlogin: data => emit('user:login!', data),
+          onregister: () => emit('user:register'),
+          onresetpassword: () => emit('user:reset-password'),
           error: state.user.loginError
         })}
       </div>
@@ -110,6 +111,20 @@ function mainView (state, emit) {
             emit('user:login')
           },
           error: state.user.registerError
+        })}
+      </div>
+    `
+  }
+
+  if (state.user.show === 'reset password') {
+    return html`
+      <div>
+        ${sprite.render()}
+        ${header.render(headerProps)}
+        ${resetPassword.render({
+          onreset: data => {
+            emit('user:reset-password!', data)
+          }
         })}
       </div>
     `
