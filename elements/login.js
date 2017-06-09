@@ -1,5 +1,7 @@
 var microcomponent = require('microcomponent')
 var html = require('choo/html')
+var input = require('./input')
+var button = require('./button')
 var FormData = window.FormData
 
 module.exports = function () {
@@ -32,15 +34,25 @@ module.exports = function () {
         <div class="mw5 mb5 center">
           <h1 class="f4 mb3">Log In</h1>
           <form onsubmit=${onsubmit}>
-            <p>
-              <input type="email" name="email" value=${email} />
-            </p>
-            <p>
-              <input type="password" name="password" value=${password} />
-            </p>
-            <p>
-              <input type="submit" value="Log In" />
-            </p>
+
+            ${input(email, {
+              type: 'email',
+              name: 'email',
+              placeholder: 'E-Mail',
+              icon: 'letter'
+            })}
+
+            ${input(password, {
+              type: 'password',
+              name: 'password',
+              placeholder: 'Password',
+              icon: 'lock'
+            })}
+
+            ${button.green('Log In', {
+              class: 'w-100 mb3'
+            })}
+
             <p class="f7">
               <button class="mr3 pa0 bg-transparent color-blue hover-color-blue-hover">Forgot Password?</button>
               <button class="pa0 bg-transparent color-blue hover-color-blue-hover" onclick=${onregister}>No Account yet? Register »</button>
