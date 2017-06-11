@@ -17,7 +17,7 @@
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
     "dat-icons": "^2.2.0",
-    "dat-node": "github:datproject/dat-node#111854a9828d24515aebec6d54b97f96f0246bf2",
+    "dat-node": "github:datproject/dat-node#21ac246ff8b7bccb133d40b4ac7864b59a11873f",
     "delegate-electron-events": "^1.0.1",
     "duplexer2": "^0.1.4",
     "electron-auto-updater": "^0.9.2",
