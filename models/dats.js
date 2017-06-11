@@ -1,4 +1,3 @@
-const remoteProcess = require('electron').remote.process
 const dialog = require('electron').remote.dialog
 const ipc = require('electron').ipcRenderer
 const waterfall = require('run-waterfall')
@@ -6,7 +5,6 @@ const app = require('electron').remote.app
 const encoding = require('dat-encoding')
 const shell = require('electron').shell
 const Multidat = require('multidat')
-const minimist = require('minimist')
 const toilet = require('toiletdb')
 const mkdirp = require('mkdirp')
 const assert = require('assert')
@@ -14,11 +12,11 @@ const Dat = require('dat-node')
 const xtend = require('xtend')
 const path = require('path')
 
-const Modal = require('../elements/modal')
 const createManager = require('../lib/dat-manager')
-var datJson = require('../lib/dat-json')
+const Modal = require('../elements/modal')
+const datJson = require('../lib/dat-json')
+const argv = require('../lib/argv')
 
-var argv = minimist(remoteProcess.argv.slice(2))
 var downloadsDir = (argv.data)
   ? argv.data
   : path.join(app.getPath('downloads'), '/dat')
