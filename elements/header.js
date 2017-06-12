@@ -49,18 +49,22 @@ const avatarButtonStyles = css`
 const menuStyles = css`
   :host {
     width: 14rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     position: absolute;
+    z-index: 2;
     top: 3rem;
     right: 0;
     border: 1px solid var(--color-neutral-20);
+    border-radius: .25rem;
     background-color: var(--color-white);
     color: var(--color-neutral-60);
     box-shadow: 0 0 4px 2px rgba( 0, 0, 0, .1);
     section {
-      padding: 1rem;
-      border-bottom: 1px solid var(--color-neutral-20);
-      &:last-child {
-        border-bottom: none;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      &:first-child {
+        border-bottom: 1px solid var(--color-neutral-20);
       }
     }
     a {
@@ -195,13 +199,13 @@ function HeaderElement () {
               <section>
                 ${session
                   ? html`
-                      <a onclick=${onprofile} href="#" class="db ttu">Profile</a>
+                      <a onclick=${onprofile} href="#" class="db ttu mb2">Profile</a>
                     `
                   : ''}
-                    <a onclick=${onreport} href="#" class="db ttu">Report Bug</a>
+                    <a onclick=${onreport} href="#" class="db ttu mb2">Report Bug</a>
                 ${session
                   ? html`
-                      <a onclick=${onclicklogout} href="#" class="db ttu">Log out</a>
+                      <a onclick=${onclicklogout} href="#" class="db ttu mb2">Log out</a>
                     `
                   : ''}
               </section>
