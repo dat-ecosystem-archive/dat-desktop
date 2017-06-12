@@ -31,7 +31,7 @@ const shareButtonIcon = css`
 
 const menuButtonIcon = css`
   :host {
-    width: 1.75em;
+    width: 1em;
   }
 `
 
@@ -72,7 +72,7 @@ function HeaderElement () {
     })
 
     var menuButton = button.icon('Open Menu', {
-      icon: icon('menu', { class: menuButtonIcon }),
+      icon: icon('info', { class: menuButtonIcon }),
       class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
       onclick: toggle
     })

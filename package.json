@@ -15,7 +15,7 @@
     "dat-colors": "^3.5.0",
     "dat-doctor": "^1.2.2",
     "dat-encoding": "^4.0.1",
-    "dat-icons": "^2.2.0",
+    "dat-icons": "^2.3.0",
     "dat-node": "^3.2.3",
     "dat-registry": "^3.0.2",
     "delegate-electron-events": "github:juliangruber/delegate-electron-events#fix/missing-events",
