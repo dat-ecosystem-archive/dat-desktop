@@ -10,7 +10,12 @@ module.exports = function () {
     state: {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      inputs: {
+        username: input('username'),
+        email: input('email'),
+        password: input('password')
+      }
     }
   })
   component.on('render', render)
@@ -19,7 +24,7 @@ module.exports = function () {
 
   function render () {
     var { onregister, onlogin, error } = this.props
-    var { username, email, password } = this.state
+    var { username, email, password, inputs } = this.state
 
     function onsubmit (ev) {
       ev.preventDefault()
@@ -42,25 +47,28 @@ module.exports = function () {
           <h1 class="f4 mb3">Create A New Account</h1>
           <form onsubmit=${onsubmit}>
 
-            ${input(username, {
+            ${inputs.username.render({
               type: 'text',
               name: 'username',
               placeholder: 'Username',
-              icon: 'happy-dat'
+              icon: 'happy-dat',
+              value: username
             })}
 
-            ${input(email, {
+            ${inputs.email.render({
               type: 'email',
               name: 'email',
               placeholder: 'E-Mail',
-              icon: 'letter'
+              icon: 'letter',
+              value: email
             })}
 
-            ${input(password, {
+            ${inputs.password.render({
               type: 'password',
               name: 'password',
               placeholder: 'Password',
-              icon: 'lock'
+              icon: 'lock',
+              value: password
             })}
 
             ${button.green('Register', {

@@ -9,7 +9,11 @@ module.exports = function () {
     name: 'login',
     state: {
       email: '',
-      password: ''
+      password: '',
+      inputs: {
+        email: input('email'),
+        password: input('password')
+      }
     }
   })
   component.on('render', render)
@@ -18,7 +22,7 @@ module.exports = function () {
 
   function render () {
     var { onlogin, onregister, onresetpassword, error } = this.props
-    var { email, password } = this.state
+    var { email, password, inputs } = this.state
 
     function onsubmit (ev) {
       ev.preventDefault()
@@ -45,18 +49,20 @@ module.exports = function () {
           <h1 class="f4 mb3">Log In</h1>
           <form onsubmit=${onsubmit}>
 
-            ${input(email, {
+            ${inputs.email.render({
               type: 'email',
               name: 'email',
               placeholder: 'E-Mail',
-              icon: 'letter'
+              icon: 'letter',
+              value: email
             })}
 
-            ${input(password, {
+            ${inputs.password.render({
               type: 'password',
               name: 'password',
               placeholder: 'Password',
-              icon: 'lock'
+              icon: 'lock',
+              value: password
             })}
 
             ${button.green('Log In', {

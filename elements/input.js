@@ -1,8 +1,8 @@
 'use strict'
 
+const microcomponent = require('microcomponent')
 const html = require('choo/html')
 const css = require('sheetify')
-const assert = require('assert')
 const icon = require('./icon')
 
 var baseStyles = css`
@@ -51,30 +51,32 @@ var baseStyles = css`
 
 module.exports = inputElement
 
-function inputElement (value, opts) {
-  opts = opts || {}
+function inputElement (name) {
+  var component = microcomponent(`input-${name}`)
+  component.on('render', render)
+  component.on('update', update)
+  return component
 
-  assert.equal(typeof value, 'string', 'elements/input: value should be type string')
-  assert.equal(typeof opts, 'object', 'elements/input: opts should be type object')
+  function render () {
+    var { name, type, placeholder, value, icon: inputIcon } = this.props
+    var classNames = baseStyles
+    if (this.props.class) classNames += ' ' + this.props.class
 
-  var classNames = baseStyles
-  if (opts.class) classNames += (' ' + opts.class)
+    return html`
+      <label
+        for="${name}"
+        class="relative mt2 mb2 db ${classNames}">
+        <input
+          type="${type}"
+          name="${name}"
+          placeholder="${placeholder}"
+          value="${value}">
+        ${icon(inputIcon)}
+      </label>
+    `
+  }
 
-  var type = opts.type
-  var name = opts.name
-  var placeholder = opts.placeholder
-  var inputIcon = opts.icon
-
-  return html`
-    <label
-      for="${name}"
-      class="relative mt2 mb2 db ${classNames}">
-      <input
-        type="${type}"
-        name="${name}"
-        placeholder="${placeholder}"
-        value="${value}">
-      ${icon(inputIcon)}
-    </label>
-  `
+  function update () {
+    return false
+  }
 }
