@@ -46,6 +46,33 @@ const avatarButtonStyles = css`
   }
 `
 
+const menuStyles = css`
+  :host {
+    width: 14rem;
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    border: 1px solid var(--color-neutral-20);
+    background-color: var(--color-white);
+    color: var(--color-neutral-60);
+    box-shadow: 0 0 4px 2px rgba( 0, 0, 0, .1);
+    section {
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-neutral-20);
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    a {
+      text-decoration: none;
+      color: var(--color-neutral-80);
+      &:hover, &:focus {
+        color: var(--color-blue-hover);
+      }
+    }
+  }
+`
+
 function HeaderElement () {
   var importButton = DatImport()
   var component = microcomponent({ name: 'header' })
@@ -153,39 +180,35 @@ function HeaderElement () {
               `}
           ${showMenu
             ? html`
-            <div class="absolute right-0 w5 pa3 bg-neutral">
+            <div class="${menuStyles}">
               ${session
                 ? html`
-                    <p class="f6 f5-l mb3">
+                    <section class="f7">
                       ${session.email}
-                    </p>
+                    </section>
                   `
                 : html`
-                    <p class="f6 f5-l mb3">
+                    <section class="f7">
                       Dat Desktop is a peer to peer sharing app built for humans by humans.
-                    </p>
+                    </section>
                   `}
-              ${session
-                ? html`
-                    <p class="f6 f5-l">
-                      <a onclick=${onprofile} href="#" class="color-neutral-50 hover-color-neutral-70">Profile</a>
-                    </p>
-                  `
-                : ''}
-              <p class="f6 f5-l">
-                <a onclick=${onreport} href="#" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
-              </p>
-              ${session
-                ? html`
-                    <p class="f6 f5-l">
-                      <a onclick=${onclicklogout} href="#" class="color-neutral-50 hover-color-neutral-70">Log out</a>
-                    </p>
-                  `
-                : ''}
-              <h3 class="f6 f5-l mb2">
+              <section>
+                ${session
+                  ? html`
+                      <a onclick=${onprofile} href="#" class="db ttu">Profile</a>
+                    `
+                  : ''}
+                    <a onclick=${onreport} href="#" class="db ttu">Report Bug</a>
+                ${session
+                  ? html`
+                      <a onclick=${onclicklogout} href="#" class="db ttu">Log out</a>
+                    `
+                  : ''}
+              </section>
+              <section class="f7">
                 Version ${version} | Built by
-                <a onclick=${onhomepage} href="#" class="color-neutral-50 hover-color-neutral-70">datproject.org</a>
-              </h3>
+                <a onclick=${onhomepage} href="#">datproject.org</a>
+              </section>
             </div>
               `
             : ''}
