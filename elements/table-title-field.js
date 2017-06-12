@@ -134,7 +134,7 @@ function TitleField () {
     var state = this.state
     return html`
       <div>
-        <div class="${overlay}"></div>
+        <div class=${overlay} onclick=${deactivate}></div>
         <div class="${editableField} bg-white nt1 nb1 nl1 pl1 shadow-1 flex justify-between">
           <input class="bn f6 normal w-100"
             value=${state.editValue} onkeyup=${handleKeypress} />
@@ -162,13 +162,9 @@ function TitleField () {
 
     function renderButton () {
       if (state.editValue === state.title) {
-        return html`
-          ${button('Save', { onload: attachListener })}
-        `
+        return button('Save', { onclick: deactivate })
       } else {
-        return html`
-          ${button.green('Save', { onclick: handleSave, onload: attachListener })}
-        `
+        return button.green('Save', { onclick: handleSave })
       }
     }
 
@@ -181,19 +177,10 @@ function TitleField () {
       deactivate()
     }
 
-    function deactivate () {
-      document.body.removeEventListener('click', clickedOutside)
+    function deactivate (e) {
+      if (e) e.stopPropagation()
       state.isEditing = false
       component.render(Object.assign({}, component.props))
-    }
-
-    function attachListener () {
-      document.body.addEventListener('click', clickedOutside)
-    }
-
-    function clickedOutside (e) {
-      var source = e.target
-      if (source.className === overlay) deactivate()
     }
   }
 }

@@ -11,6 +11,11 @@ var icon = require('./icon')
 
 var cellStyles = css`
   :host {
+    transition: background-color .025s ease-out;
+    &:hover, &:focus {
+      background-color: var(--color-neutral-04);
+      cursor: pointer;
+    }
     .cell-1 {
       width: 4rem;
     }
@@ -138,8 +143,12 @@ function Row () {
           ? 'loading'
           : 'stale'
 
+    function onclick () {
+      emit('dats:inspect', dat)
+    }
+
     return html`
-      <tr id=${key} class=${styles}>
+      <tr id=${key} class=${styles} onclick=${onclick}>
         <td class="cell-1">
           <div class="w2 center">
             ${hexContent.render({ dat, stats, emit })}
