@@ -35,6 +35,17 @@ const menuButtonIcon = css`
   }
 `
 
+const avatarButtonStyles = css`
+  :host {
+    border: 2px solid var(--color-neutral-40);
+    vertical-align: middle;
+    background-color: var(--color-pink);
+    &:hover, &:focus {
+      border-color: var(--color-white);
+    }
+  }
+`
+
 function HeaderElement () {
   var importButton = DatImport()
   var component = microcomponent({ name: 'header' })
@@ -66,7 +77,7 @@ function HeaderElement () {
       onclick: oncreate
     })
 
-    var loginButton = button.header('Log In', {
+    var loginButton = button.green('Log In', {
       class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l',
       onclick: onlogin
     })
@@ -78,7 +89,7 @@ function HeaderElement () {
     })
 
     var avatar = {
-      size: 23
+      size: 26
     }
     if (session) {
       avatar.url = gravatar.url(session.email, {
@@ -88,6 +99,14 @@ function HeaderElement () {
         protocol: 'https'
       })
     }
+
+    var avatarButton = html`
+      <img  onclick=${toggle}
+            src=${avatar.url}
+            width=${avatar.size}
+            height=${avatar.size}
+            class="${avatarButtonStyles} ml4" />
+    `
 
     function toggle () {
       if (component.state.showMenu) hide()
@@ -124,7 +143,7 @@ function HeaderElement () {
           ${createButton}
           ${session
             ? html`
-                <img onclick=${toggle} src=${avatar.url} width=${avatar.size} height=${avatar.size} />
+                ${avatarButton}
               `
             : html`
                 <span>
