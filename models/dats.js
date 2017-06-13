@@ -67,9 +67,10 @@ function datsModel (state, bus) {
       manager = createManager({
         multidat,
         dbPaused
-      }, function (err, dats) {
+      }, function (err, dats, speed) {
         if (err) return bus.emit('error', err)
         state.dats.values = dats
+        state.dats.speed = speed
         state.dats.ready = true
         bus.emit('render')
       })
