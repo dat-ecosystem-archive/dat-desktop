@@ -10,7 +10,9 @@ const style = css`
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 2rem;
+    padding: .5rem 1rem;
+    background-color: var(--color-neutral-04);
+    color: var(--color-neutral-60);
   }
 `
 
@@ -26,9 +28,9 @@ module.exports = function () {
     const { up, down } = this.props
     return html`
       <div id="status-bar" class=${style}>
-        <span>Download: ${bytes(down)}/s</span>
-        <span>Upload: ${bytes(up)}/s</span>
-      </div>  
+        <span class="f7 mr3">Download: ${bytes(down)}/s</span>
+        <span class="f7">Upload: ${bytes(up)}/s</span>
+      </div>
     `
   }
 }
