@@ -34,7 +34,7 @@ body {
 
 main {
   overflow-y: auto;
-  height: calc(100vh - 2.5rem); /* height of header */
+  height: calc(100vh - 5rem); /* height of header + status bar */
   background-color: var(--color-white);
 }
 
