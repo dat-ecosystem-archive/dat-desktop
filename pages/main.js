@@ -3,21 +3,23 @@
 const html = require('choo/html')
 const shell = require('electron').shell
 
+const StatusBar = require('../elements/status-bar')
+const Download = require('../elements/download')
+const Inspect = require('../elements/inspect')
 const Header = require('../elements/header')
 const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
-const Inspect = require('../elements/inspect')
-const Download = require('../elements/download')
 
 module.exports = mainView
 
+const statusBar = StatusBar()
+const download = Download()
+const inspect = Inspect()
 const header = Header()
 const sprite = Sprite()
-const download = Download()
 const intro = Intro()
-const inspect = Inspect()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -94,6 +96,7 @@ function mainView (state, emit) {
         ${sprite.render()}
         ${header.render(headerProps)}
         ${Empty()}
+        ${statusBar.render(state.dats.speed)}
       </div>
     `
   }
@@ -103,6 +106,7 @@ function mainView (state, emit) {
       ${sprite.render()}
       ${header.render(headerProps)}
       ${Table(state, emit)}
+      ${statusBar.render(state.dats.speed)}
     </div>
   `
 }

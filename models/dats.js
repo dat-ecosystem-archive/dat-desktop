@@ -30,7 +30,8 @@ function datsModel (state, bus) {
     downloadsDir: downloadsDir,
     removalKey: null,
     ready: false,
-    values: []
+    values: [],
+    speed: { up: 0, down: 0 }
   }, state.dats)
 
   var manager = null
