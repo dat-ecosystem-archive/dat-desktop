@@ -137,7 +137,7 @@ function confirmModal () {
   return Modal({
     render: render,
     onexit: onexit,
-    class: 'modal'
+    class: 'modal bg-black-20'
   })
 
   function onexit () {
@@ -256,7 +256,7 @@ function errorModal () {
   return Modal({
     render: render,
     onexit: onexit,
-    class: 'modal'
+    class: 'modal bg-black-20'
   })
 
   function render (message) {
@@ -293,7 +293,7 @@ function warningModal () {
   return Modal({
     render: render,
     onexit: onexit,
-    class: 'modal'
+    class: 'modal bg-black-20'
   })
 
   function render (message) {
@@ -335,7 +335,7 @@ function linkModal () {
     onunload: onunload,
     onexit: onexit,
     render: render,
-    class: 'modal'
+    class: 'modal bg-black-20'
   })
 
   return modal
