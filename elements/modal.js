@@ -270,7 +270,7 @@ function errorModal () {
 
     return html`
       <div class="relative flex flex-column justify-center ${prefix}">
-        <section class="pa4">
+        <section>
           <h3 class="f4">Oops, something went wrong</h3>
           <p class="mt3 mb4 f7 color-neutral-70 overflow-x-auto">
             ${message}

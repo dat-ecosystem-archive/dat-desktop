@@ -3,27 +3,29 @@
 const html = require('choo/html')
 const shell = require('electron').shell
 
+const ResetPassword = require('../elements/reset-password')
+const StatusBar = require('../elements/status-bar')
+const Download = require('../elements/download')
+const Register = require('../elements/register')
+const Inspect = require('../elements/inspect')
 const Header = require('../elements/header')
 const Sprite = require('../elements/sprite')
 const Table = require('../elements/table')
 const Intro = require('../elements/intro')
 const Empty = require('../elements/empty')
-const Inspect = require('../elements/inspect')
-const Download = require('../elements/download')
 const Login = require('../elements/login')
-const Register = require('../elements/register')
-const ResetPassword = require('../elements/reset-password')
 
 module.exports = mainView
 
+const resetPassword = ResetPassword()
+const statusBar = StatusBar()
+const download = Download()
+const register = Register()
+const inspect = Inspect()
 const header = Header()
 const sprite = Sprite()
-const download = Download()
 const intro = Intro()
-const inspect = Inspect()
 const login = Login()
-const register = Register()
-const resetPassword = ResetPassword()
 
 // render the main view
 // (obj, obj, fn) -> html
@@ -152,6 +154,7 @@ function mainView (state, emit) {
         ${sprite.render()}
         ${header.render(headerProps)}
         ${Empty()}
+        ${statusBar.render(state.dats.speed)}
       </div>
     `
   }
@@ -161,6 +164,7 @@ function mainView (state, emit) {
       ${sprite.render()}
       ${header.render(headerProps)}
       ${Table(state, emit)}
+      ${statusBar.render(state.dats.speed)}
     </div>
   `
 }
