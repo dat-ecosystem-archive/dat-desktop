@@ -13,7 +13,7 @@
       alt="Build Status" />
   </a>
   <!-- Standard -->
-  <a href="https://codecov.io/github/yoshuawuyts/choo">
+  <a href="https://standardjs.com">
     <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square"
       alt="Standard" />
   </a>
