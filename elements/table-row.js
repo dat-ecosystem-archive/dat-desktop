@@ -54,8 +54,11 @@ var iconStyles = css`
       color: var(--color-neutral-20);
       svg {
         vertical-align: middle;
-        width: 1.4em;
+        width: 1.1em;
         max-height: 1.6em;
+        @media (min-width: 960px) {
+          width: 1.4em;
+        }
       }
       &:hover,
       &:focus {
