@@ -21,8 +21,11 @@ var cellStyles = css`
     }
     .cell-2 {
       width: 14rem;
-      max-width: 14rem;
-      @media (min-width: 1024px) {
+      max-width: 12rem;
+      @media (min-width: 768px) {
+        max-width: 20rem;
+      }
+      @media (min-width: 1280px) {
         max-width: 24rem;
       }
     }
@@ -54,8 +57,11 @@ var iconStyles = css`
       color: var(--color-neutral-20);
       svg {
         vertical-align: middle;
-        width: 1.4em;
+        width: 1.1em;
         max-height: 1.6em;
+        @media (min-width: 960px) {
+          width: 1.4em;
+        }
       }
       &:hover,
       &:focus {
