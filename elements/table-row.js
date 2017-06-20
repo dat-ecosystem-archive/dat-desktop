@@ -1,7 +1,7 @@
 var microcomponent = require('microcomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
-var html = require('choo/html')
+var html = require('rooch/html')
 var css = require('sheetify')
 
 var TitleField = require('./table-title-field')

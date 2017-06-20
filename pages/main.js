@@ -1,6 +1,7 @@
 'use strict'
 
-const html = require('choo/html')
+const html = require('rooch/html')
+const h = require('rooch/h')
 const shell = require('electron').shell
 
 const StatusBar = require('../elements/status-bar')
@@ -17,8 +18,6 @@ module.exports = mainView
 const statusBar = StatusBar()
 const download = Download()
 const inspect = Inspect()
-const header = Header()
-const sprite = Sprite()
 const intro = Intro()
 
 // render the main view
@@ -90,6 +89,12 @@ function mainView (state, emit) {
     `
   }
 
+  return html`
+    <div>
+      ${h(Sprite)}
+      ${h(Header, headerProps)}
+    </div>
+  `
   if (!dats.length) {
     return html`
       <div>

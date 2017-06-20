@@ -1,6 +1,6 @@
 var microcomponent = require('microcomponent')
 var nanolog = require('nanologger')
-var html = require('choo/html')
+var html = require('rooch/html')
 var css = require('sheetify')
 
 var TableRow = require('./table-row')

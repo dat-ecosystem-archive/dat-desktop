@@ -1,12 +1,10 @@
 'use strict'
 
-const microcomponent = require('microcomponent')
-const html = require('choo/html')
+const Component = require('rooch/component')
+const html = require('rooch/html')
 const assert = require('assert')
 const css = require('sheetify')
 const icon = require('./icon')
-
-module.exports = DatImportElement
 
 const prefix = css`
   :host {
@@ -58,15 +56,9 @@ const prefix = css`
     }
   }
 `
-
-function DatImportElement () {
-  var component = microcomponent({ name: 'dat-import' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
-
-  function render () {
-    const onsubmit = this.props.onsubmit
+module.exports = class Import extends Component {
+  render (props) {
+    const onsubmit = props.onsubmit
 
     assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
 
@@ -88,8 +80,7 @@ function DatImportElement () {
       onsubmit(value)
     }
   }
-
-  function update () {
+  componentShouldUpdate () {
     return false
   }
 }

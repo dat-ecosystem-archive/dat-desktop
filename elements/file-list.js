@@ -1,7 +1,7 @@
 var microcomponent = require('microcomponent')
 var bytes = require('prettier-bytes')
 var mirror = require('mirror-folder')
-var html = require('choo/html')
+var html = require('rooch/html')
 var css = require('sheetify')
 
 var fileListContainer = css`

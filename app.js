@@ -2,7 +2,7 @@ const persist = require('choo-persist')
 const expose = require('choo-expose')
 const log = require('choo-log')
 const css = require('sheetify')
-const choo = require('choo')
+const choo = require('rooch')
 const xtend = Object.assign
 
 require('./lib/monkeypatch')

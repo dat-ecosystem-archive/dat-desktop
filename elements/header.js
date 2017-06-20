@@ -1,7 +1,7 @@
 'use strict'
 
-const microcomponent = require('microcomponent')
-const html = require('choo/html')
+const Component = require('rooch/component')
+const html = require('rooch/html')
 const assert = require('assert')
 const css = require('sheetify')
 const version = require('../package.json').version
@@ -9,8 +9,6 @@ const version = require('../package.json').version
 const button = require('./button')
 const DatImport = require('./dat-import')
 const icon = require('./icon')
-
-module.exports = HeaderElement
 
 const header = css`
   :host {
@@ -34,20 +32,14 @@ const menuButtonIcon = css`
   }
 `
 
-function HeaderElement () {
-  var importButton = DatImport()
-  var component = microcomponent({ name: 'header' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
-
-  function render () {
-    var { isReady, onimport, oncreate, onreport } = this.props
-    var { showMenu, willShowMenu } = this.state
+module.exports = class Header extends Component {
+  render (props, state) {
+    var { isReady, onimport, oncreate, onreport } = props
+    var { showMenu, willShowMenu } = state
 
     if (typeof willShowMenu === 'boolean') {
-      showMenu = this.state.showMenu = willShowMenu
-      this.state.willShowMenu = null
+      showMenu = state.showMenu = willShowMenu
+      state.willShowMenu = null
     }
 
     assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
@@ -124,9 +116,8 @@ function HeaderElement () {
       </header>
     `
   }
-
-  function update (props) {
+  /*shouldComponentUpdate (nextProps, nextState) {
     return props.isReady !== this.props.isReady ||
       typeof this.state.willShowMenu === 'boolean'
-  }
+  }*/
 }

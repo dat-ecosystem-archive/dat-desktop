@@ -1,4 +1,4 @@
-var html = require('choo/html')
+var html = require('rooch/html')
 var css = require('sheetify')
 
 var icon = require('../elements/icon')

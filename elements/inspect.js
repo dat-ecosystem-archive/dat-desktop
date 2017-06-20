@@ -5,7 +5,7 @@ var toStr = require('dat-encoding').toStr
 var bytes = require('prettier-bytes')
 var FileList = require('./file-list')
 var button = require('./button')
-var html = require('choo/html')
+var html = require('rooch/html')
 var css = require('sheetify')
 var icon = require('./icon')
 
