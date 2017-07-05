@@ -110,6 +110,7 @@ function mainView (state, emit) {
           onlogin: data => emit('user:login!', data),
           onregister: () => emit('user:register'),
           onresetpassword: () => emit('user:reset-password'),
+          onexit: () => emit('user:login!', false),
           error: state.user.loginError
         })}
       </div>

@@ -20,6 +20,10 @@ function userModel (state, bus) {
   })
 
   bus.on('user:login!', function (data) {
+    if (!data) {
+      state.user.show = null
+      bus.emit('render')
+    }
     registry.login(data, function (err, res, session) {
       if (err) {
         state.user.loginError = err

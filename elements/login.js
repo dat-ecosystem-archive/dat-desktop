@@ -21,7 +21,7 @@ module.exports = function () {
   return component
 
   function render () {
-    var { onlogin, onregister, onresetpassword, error } = this.props
+    var { onlogin, onregister, onresetpassword, onexit, error } = this.props
     var { email, password, inputs } = this.state
 
     function onsubmit (ev) {
@@ -81,6 +81,7 @@ module.exports = function () {
               </p>
               `
             : ''}
+          <button onclick=${onexit}>Exit</button>
         </div>
       </main>
     `
