@@ -113,6 +113,7 @@ function mainView (state, emit) {
           onexit: () => emit('user:login!', false),
           error: state.user.loginError
         })}
+        ${statusBar.render(state.dats.speed)}
       </div>
     `
   }
@@ -131,6 +132,7 @@ function mainView (state, emit) {
           },
           error: state.user.registerError
         })}
+        ${statusBar.render(state.dats.speed)}
       </div>
     `
   }
@@ -145,6 +147,7 @@ function mainView (state, emit) {
             emit('user:reset-password!', data)
           }
         })}
+        ${statusBar.render(state.dats.speed)}
       </div>
     `
   }
