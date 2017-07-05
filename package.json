@@ -8,7 +8,7 @@
   "author": "Dat Team",
   "dependencies": {
     "base-elements": "^2.2.1",
-    "choo": "^5.1.0",
+    "choo": "^6.0.0-2",
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
     "choo-persist": "^3.0.0",
@@ -32,7 +32,7 @@
     "ms": "^0.7.2",
     "multidat": "^5.0.1",
     "nanologger": "^1.0.2",
-    "nanomorph": "^5.0.0",
+    "nanomorph": "^5.1.2",
     "prettier-bytes": "^1.0.3",
     "rimraf": "^2.5.4",
     "run-waterfall": "^1.1.3",
