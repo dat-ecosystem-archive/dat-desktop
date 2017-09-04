@@ -4,6 +4,15 @@ const log = require('choo-log')
 const css = require('sheetify')
 const choo = require('choo')
 const xtend = Object.assign
+const remoteProcess = require('electron').remote.process
+const remoteApp = require('electron').remote.app
+const minimist = require('minimist')
+const path = require('path')
+
+const argv = minimist(remoteProcess.argv.slice(2))
+const downloadsDir = (argv.data)
+  ? argv.data
+  : path.join(remoteApp.getPath('downloads'), '/dat')
 
 require('./lib/monkeypatch')
 
@@ -28,7 +37,8 @@ app.use(require('./models/intro'))
 app.use(require('./models/inspect'))
 app.use(require('./models/download'))
 app.use(require('./models/drag-drop'))
-app.use(require('./models/dats'))
+app.use(require('./models/dats')({dbLocation: argv.db, downloadsDir: downloadsDir}))
+app.use(require('./models/desktop'))
 app.use(require('./models/error'))
 
 app.route('/', require('./pages/main'))
