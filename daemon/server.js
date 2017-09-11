@@ -4,34 +4,27 @@ const minimist = require('minimist')
 const fs = require('fs')
 const net = require('net')
 const explain = require('explain-error')
+const ToiletDbAsync = require('../lib/toiletdb-async')
+const List = require('../lib/dat-list')
+const config = require('../config')()
 
 const bus = nanobus()
 const state = {}
-const argv = minimist(process.argv.slice(2))
-const config = {
-  socket: '../dats.sock'
-}
-const downloadsDir = (argv.data)
-  ? argv.data
-  : path.join('./downloads', '/dat') // @TODO daemon config
 
-require('../models/dats')({dbLocation: argv.db, downloadsDir: downloadsDir})(state, bus)
+require('../models/dats')({dbLocation: config.metadata, downloadsDir: config.downloadsDir})(state, bus)
 require('../models/download')(state, bus)
 
-bus.once('dats:manager', function (manager) {
+bus.once('dats:manager', async function (manager) {
   daemon(manager)
 })
 
-process.on('unhandledException', function (err) {
-  if (err._thrown) return
-  err._thrown = true
-  throw err
-})
-
-function daemon (manager) {
+async function daemon (manager) {
   try {
     fs.unlinkSync(config.socket)
   } catch (e) {}
+
+  const list = new List(await ToiletDbAsync(config.list), manager)
+  await list.share(config.dirList)
 
   net.createServer((socket) => {
     bus.on('error', function (err) {
@@ -49,16 +42,19 @@ function daemon (manager) {
           fs.stat(directory, (err, stat) => {
             if (err) return bus.emit('error', explain(err, 'models/window: fs.stat error on dirname'))
             if (!stat.isDirectory()) return bus.emit('error', 'Path is not a directory')
-            manager.create(directory, function (err, dat) {
+            manager.create(directory, async function (err, dat) {
               if (err) return bus.emit('error', err)
               socket.end(`dat://${dat.key.toString('hex')}\n`)
+              await list.save()
             })
           })
 
           break
         case 'list':
-          state.dats.values.forEach((e) => {
-            socket.write(`dat://${e.key.toString('hex')}\n`)
+          socket.write(`List available through dat://${list.key}\n`)
+
+          list.list.forEach((e) => {
+            socket.write(`dat://${e}\n`)
           })
 
           socket.end()
@@ -71,10 +67,11 @@ function daemon (manager) {
             return
           }
 
-          manager.close(key, function (err) {
+          manager.close(key, async function (err) {
             if (err) return bus.emit('error', err)
             bus.emit('render')
             socket.end(`${key} removed`)
+            await list.save()
           })
 
           break
@@ -84,3 +81,9 @@ function daemon (manager) {
     })
   }).listen(config.socket)
 }
+
+process.on('unhandledException', function (err) {
+  if (err._thrown) return
+  err._thrown = true
+  throw err
+})

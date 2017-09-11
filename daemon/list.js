@@ -1,5 +1,6 @@
 const net = require('net')
-const client = net.connect('../dats.sock', () => {
+const config = require('../config')()
+const client = net.connect(config.socket, () => {
   client.write('list')
 })
 

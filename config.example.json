@@ -1,0 +1,7 @@
+{
+  "metadata": "./test/fixtures/metadata",
+  // Stored in metadata
+  "list": "data/list.json", // must have it's own sub-directory!
+  "socket": "filing.sock"
+}
+
