@@ -29,6 +29,7 @@ app.use(require('./models/inspect'))
 app.use(require('./models/download'))
 app.use(require('./models/drag-drop'))
 app.use(require('./models/dats'))
+app.use(require('./models/user'))
 app.use(require('./models/error'))
 
 app.route('/', require('./pages/main'))

@@ -1,10 +1,11 @@
 'use strict'
 
+const version = require('../package.json').version
 const microcomponent = require('microcomponent')
+const gravatar = require('gravatar')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
-const version = require('../package.json').version
 
 const button = require('./button')
 const DatImport = require('./dat-import')
@@ -30,7 +31,49 @@ const shareButtonIcon = css`
 
 const menuButtonIcon = css`
   :host {
-    width: 1.75em;
+    width: 1em;
+  }
+`
+
+const avatarButtonStyles = css`
+  :host {
+    border: 2px solid var(--color-neutral-40);
+    vertical-align: middle;
+    background-color: var(--color-pink);
+    &:hover, &:focus {
+      border-color: var(--color-white);
+    }
+  }
+`
+
+const menuStyles = css`
+  :host {
+    width: 14rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: absolute;
+    z-index: 2;
+    top: 3rem;
+    right: 0;
+    border: 1px solid var(--color-neutral-20);
+    border-radius: .25rem;
+    background-color: var(--color-white);
+    color: var(--color-neutral-60);
+    box-shadow: 0 0 4px 2px rgba( 0, 0, 0, .1);
+    section {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      &:first-child {
+        border-bottom: 1px solid var(--color-neutral-20);
+      }
+    }
+    a {
+      text-decoration: none;
+      color: var(--color-neutral-80);
+      &:hover, &:focus {
+        color: var(--color-blue-hover);
+      }
+    }
   }
 `
 
@@ -42,7 +85,7 @@ function HeaderElement () {
   return component
 
   function render () {
-    var { isReady, onimport, oncreate, onreport } = this.props
+    var { isReady, session, onimport, oncreate, onreport, onlogin, onlogout, onprofile, onhomepage } = this.props
     var { showMenu, willShowMenu } = this.state
 
     if (typeof willShowMenu === 'boolean') {
@@ -65,15 +108,36 @@ function HeaderElement () {
       onclick: oncreate
     })
 
-    var loginButton = button.header('Log In', {
-      class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l dn'
+    var loginButton = button.green('Log In', {
+      class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l',
+      onclick: onlogin
     })
 
     var menuButton = button.icon('Open Menu', {
-      icon: icon('menu', { class: menuButtonIcon }),
+      icon: icon('info', { class: menuButtonIcon }),
       class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
       onclick: toggle
     })
+
+    var avatar = {
+      size: 26
+    }
+    if (session) {
+      avatar.url = gravatar.url(session.email, {
+        s: avatar.size * 2,
+        r: 'pg',
+        d: '404',
+        protocol: 'https'
+      })
+    }
+
+    var avatarButton = html`
+      <img  onclick=${toggle}
+            src=${avatar.url}
+            width=${avatar.size}
+            height=${avatar.size}
+            class="${avatarButtonStyles} ml4" />
+    `
 
     function toggle () {
       if (component.state.showMenu) hide()
@@ -96,6 +160,11 @@ function HeaderElement () {
       if (!component._element.contains(e.target)) hide()
     }
 
+    function onclicklogout () {
+      component.state.willShowMenu = false
+      onlogout()
+    }
+
     return html`
       <header class="${header}">
         <div class="fr relative">
@@ -103,20 +172,47 @@ function HeaderElement () {
             onsubmit: onimport
           })}
           ${createButton}
-          ${loginButton}
-          ${menuButton}
+          ${session
+            ? html`
+                ${avatarButton}
+              `
+            : html`
+                <span>
+                  ${menuButton}
+                  ${loginButton}
+                </span>
+              `}
           ${showMenu
             ? html`
-            <div class="absolute right-0 w5 pa3 bg-neutral">
-              <h3 class="f6 f5-l mb2">
-                Dat Desktop ${version}
-              </h3>
-              <p class="f6 f5-l mb3">
-                Dat Desktop is a peer to peer sharing app built for humans by humans.
-              </p>
-              <p class="f6 f5-l">
-                <a onclick=${onreport} href="#" class="color-neutral-50  hover-color-neutral-70">Report Bug</a>
-              </p>
+            <div class="${menuStyles}">
+              ${session
+                ? html`
+                    <section class="f7">
+                      ${session.email}
+                    </section>
+                  `
+                : html`
+                    <section class="f7">
+                      Dat Desktop is a peer to peer sharing app built for humans by humans.
+                    </section>
+                  `}
+              <section>
+                ${session
+                  ? html`
+                      <a onclick=${onprofile} href="#" class="db ttu mb2">Profile</a>
+                    `
+                  : ''}
+                    <a onclick=${onreport} href="#" class="db ttu mb2">Report Bug</a>
+                ${session
+                  ? html`
+                      <a onclick=${onclicklogout} href="#" class="db ttu mb2">Log out</a>
+                    `
+                  : ''}
+              </section>
+              <section class="f7">
+                Version ${version} | Built by
+                <a onclick=${onhomepage} href="#">datproject.org</a>
+              </section>
             </div>
               `
             : ''}
@@ -127,6 +223,7 @@ function HeaderElement () {
 
   function update (props) {
     return props.isReady !== this.props.isReady ||
-      typeof this.state.willShowMenu === 'boolean'
+      typeof this.state.willShowMenu === 'boolean' ||
+      props.session !== this.props.session
   }
 }
