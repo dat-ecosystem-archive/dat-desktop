@@ -11,6 +11,7 @@ const rimraf = require('rimraf')
 const css = require('sheetify')
 const path = require('path')
 const fs = require('fs')
+const os = require('os')
 
 const button = require('./button')
 const icon = require('./icon')
@@ -246,7 +247,7 @@ function crashModal () {
   }
 
   function clearDatabase () {
-    const dbLocation = path.join(process.env.HOME, '.dat-desktop')
+    const dbLocation = path.join(os.homedir(), '.dat-desktop')
     const dbFile = path.join(dbLocation, 'dats.json')
     fs.unlink(dbFile, onexit)
   }

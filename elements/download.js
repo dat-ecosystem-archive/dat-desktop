@@ -8,6 +8,7 @@ var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
 var button = require('./button')
+var os = require('os')
 
 var detailHeader = css`
   :host {
@@ -46,7 +47,7 @@ module.exports = function () {
   function render () {
     var { key, oncancel, err, dat, ondownload, onupdate } = this.props
     var { fileList } = this.state
-    var location = this.state.location || `${process.env.HOME}/Downloads`
+    var location = this.state.location || `${os.homedir()}/Downloads`
 
     var title = dat
       ? dat.metadata
