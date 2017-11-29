@@ -13,6 +13,7 @@ const assert = require('assert')
 const Dat = require('dat-node')
 const xtend = require('xtend')
 const path = require('path')
+const os = require('os')
 
 const Modal = require('../elements/modal')
 const createManager = require('../lib/dat-manager')
@@ -41,7 +42,7 @@ function datsModel (state, bus) {
   }
 
   // boot multidat, create the ~/Downloads/dat directory
-  var dbLocation = argv.db || path.join(process.env.HOME, '.dat-desktop')
+  var dbLocation = argv.db || path.join(os.homedir(), '.dat-desktop')
   var dbMultidriveFile = path.join(dbLocation, 'dats.json')
   var dbPausedFile = path.join(dbLocation, 'paused.json')
   var dbMultidrive, dbPaused
