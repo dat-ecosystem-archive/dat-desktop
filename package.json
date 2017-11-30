@@ -41,18 +41,18 @@
     "xtend": "^4.0.1"
   },
   "scripts": {
-    "bundle": "scripts/build.js bundle",
-    "watch": "scripts/browserify.js watch",
+    "bundle": "node scripts/build.js bundle",
+    "watch": "node scripts/browserify.js watch",
     "deps": "dependency-check . --entry app.js && dependency-check . --entry app.js --extra -i tachyons -i dat-colors --no-dev",
-    "rebuild": "scripts/build.js rebuild",
+    "rebuild": "node scripts/build.js rebuild",
     "burnthemall": "rm -rf ~/.electron && npm run clean && npm install && npm run bundle",
     "clean": "rm -rf node_modules/",
-    "build-background": "scripts/build.js background",
+    "build-background": "node scripts/build.js background",
     "start": "NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
     "test:unit": "node tests/intro.js && electron tests/dat-manager.js",
-    "postinstall": "scripts/build.js postinstall",
+    "postinstall": "node scripts/build.js postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
   },
