@@ -12,7 +12,7 @@ const exec = cmd => execSync(cmd, { env: npmRunPath.env(), encoding: 'utf8' })
 
 const rebuild = () => {
   const electronVersion = exec('electron --version').trim().slice(1)
-  const electronAbi = exec('electron --abi')
+  const electronAbi = exec('electron --abi').trim()
   console.error('[scripts/build] rebuilding native deps')
   console.error('[scripts/build] detected electron=%s abi=%s', electronVersion, electronAbi)
   exec(`npm rebuild \
