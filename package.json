@@ -43,7 +43,7 @@
   "scripts": {
     "bundle": "node scripts/build.js bundle",
     "watch": "node scripts/browserify.js watch",
-    "deps": "dependency-check . --entry app.js && dependency-check . --entry app.js --extra -i tachyons -i dat-colors --no-dev",
+    "deps": "dependency-check . --entry app.js && dependency-check . --entry app.js --extra -i tachyons -i dat-colors -i cross-env --no-dev",
     "rebuild": "node scripts/build.js rebuild",
     "burnthemall": "rm -rf ~/.electron && npm run clean && npm install && npm run bundle",
     "clean": "rm -rf node_modules/",
