@@ -1,6 +1,5 @@
 var Nanocomponent = require('nanocomponent')
 var encoding = require('dat-encoding')
-var bytes = require('prettier-bytes')
 var html = require('choo/html')
 var css = require('sheetify')
 
@@ -8,6 +7,7 @@ var TitleField = require('./table-title-field')
 var button = require('./button')
 var status = require('./status')
 var icon = require('./icon')
+var { datSize, datPeers, datState } = require('../lib/datInfo')
 
 var cellStyles = css`
   :host {
@@ -118,52 +118,44 @@ module.exports = Row
 function Row () {
   if (!(this instanceof Row)) return new Row()
   Nanocomponent.call(this)
+
+  this.parts = {
+    hexContent: HexContent(),
+    finderButton: FinderButton(),
+    linkButton: LinkButton(),
+    deleteButton: DeleteButton(),
+    titleField: TitleField(),
+    networkIcon: NetworkIcon()
+  }
 }
 
 Row.prototype = Object.create(Nanocomponent.prototype)
 
 Row.prototype.createElement = function (props) {
-  var hexContent = HexContent()
-  var finderButton = FinderButton()
-  var linkButton = LinkButton()
-  var deleteButton = DeleteButton()
-  var titleField = TitleField()
-  var networkIcon = NetworkIcon()
+  var { dat, emit, highlight } = props
+  var parts = this.parts
+  if (dat instanceof Error) return errorRow(dat, emit, parts.deleteButton)
 
-  var { dat, state, emit, highlight } = props
-  if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
-
-  var stats = dat.stats
-  var peers = dat.network ? dat.network.connected : 'N/A'
   var key = encoding.encode(dat.key)
   var styles = cellStyles
   if (highlight) styles += ' fade-highlight'
 
-  stats.size = dat.archive.content
-    ? bytes(dat.archive.content.byteLength)
-    : 'N/A'
-  stats.state = !dat.network
-    ? 'paused'
-    : dat.writable || dat.progress === 1
-    ? 'complete'
-    : peers
-    ? 'loading'
-    : 'stale'
-
   function onclick () {
-    emit('dats:inspect', dat)
+    if (!parts.titleField.state.isEditing) {
+      emit('dats:inspect', dat)
+    }
   }
 
   return html`
       <tr id=${key} class=${styles} onclick=${onclick}>
         <td class="cell-1">
           <div class="w2 center">
-            ${hexContent.render({ dat, stats, emit })}
+            ${parts.hexContent.render(props)}
           </div>
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            ${titleField.render({ dat, state, emit })}
+            ${parts.titleField.render(props)}
             <p class="f7 f6-l color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
@@ -173,28 +165,28 @@ Row.prototype.createElement = function (props) {
           </div>
         </td>
         <td class="cell-3">
-          ${status(dat, stats)}
+          ${status(dat)}
         </td>
         <td class="f6 f5-l cell-4 size">
-          ${stats.size}
+          ${datSize(dat)}
         </td>
         <td class="cell-5 ${networkStyles}">
-          ${networkIcon.render({ dat, emit })}
-          <span class="network v-top f6 f5-l ml1">${peers}</span>
+          ${parts.networkIcon.render(props)}
+          <span class="network v-top f6 f5-l ml1">${datPeers(dat)}</span>
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
-            ${finderButton.render({ dat, emit })}
-            ${linkButton.render({ dat, emit })}
-            ${deleteButton.render({ dat, emit })}
+            ${parts.finderButton.render(props)}
+            ${parts.linkButton.render(props)}
+            ${parts.deleteButton.render(props)}
           </div>
         </td>
       </tr>
     `
 }
 
-Row.prototype.update = function () {
-  return false
+Row.prototype.update = function (props) {
+  return Object.values(this.parts).find(component => component.update(props, true)) !== undefined
 }
 
 function FinderButton () {
@@ -312,22 +304,23 @@ function HexContent () {
 HexContent.prototype = Object.create(Nanocomponent.prototype)
 
 HexContent.prototype.createElement = function (props) {
-  var state = this.state.state = props.stats.state
+  var state = this.state.state = datState(props.dat)
   var { emit, dat } = props
 
   var self = this
   function onmousemove (ev) {
-    if (!self.state.hover) return
-    if (self.element.contains(ev.target)) return
-    self.state.setHover = false
-    document.body.removeEventListener('mousemove', onmousemove)
-    self.render(props)
+    if (!self.element.contains(ev.target)) {
+      self.state.hover = false
+      self.state.update = true
+      self.state.listening = false
+      document.body.removeEventListener('mousemove', onmousemove)
+      emit('render')
+    }
   }
 
-  if (typeof this.state.setHover === 'boolean') {
-    if (this.state.setHover) document.body.addEventListener('mousemove', onmousemove)
-    this.state.hover = this.state.setHover
-    this.state.setHover = null
+  if (this.state.hover && !this.state.listening) {
+    document.body.addEventListener('mousemove', onmousemove)
+    this.state.listening = true
   }
 
   if (this.state.hover) {
@@ -354,8 +347,9 @@ HexContent.prototype.createElement = function (props) {
       class: 'color-green hover-color-green-hover ph0',
       onclick: togglePause,
       onmouseover: ev => {
-        this.state.setHover = true
-        this.rerender()
+        this.state.hover = true
+        this.state.update = true
+        emit('render')
       }
     })
   } else {
@@ -373,9 +367,22 @@ HexContent.prototype.createElement = function (props) {
   }
 }
 
-HexContent.prototype.update = function ({ dat, stats, emit }) {
-  return stats.state !== this.state.state ||
-    typeof this.state.setHover === 'boolean'
+HexContent.prototype.update = function ({ dat, emit }, external) {
+  if (this.state.update) {
+    if (!external) {
+      // `.update` is usually called (and part of) the `.render` method
+      // meaning that setting "state.update" once will result in exactly
+      // one rendering. However, since the table-row is a complex component
+      // and the table row uses `.update` to see if any of the child
+      // components would need an update. If the call comes from
+      // the parent (or externally) we do not reset the update property
+      // to make sure that `.state.update` stays true until actually
+      // rendering the component
+      this.state.update = false
+    }
+    return true
+  }
+  return datState(dat) !== this.state.state
 }
 
 function errorRow (err, emit, deleteButton) {
