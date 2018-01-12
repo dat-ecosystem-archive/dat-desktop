@@ -1,8 +1,10 @@
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 var bytes = require('prettier-bytes')
 var mirror = require('mirror-folder')
 var html = require('choo/html')
 var css = require('sheetify')
+
+module.exports = FileList
 
 var fileListContainer = css`
   :host {
@@ -21,51 +23,53 @@ var fileList = css`
   }
 `
 
-module.exports = function () {
-  var component = microcomponent({
-    name: 'file-list',
-    state: {
-      update: true
-    }
-  })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+function FileList () {
+  if (!(this instanceof FileList)) return new FileList()
+  Nanocomponent.call(this)
+  this.state = {
+    update: true
+  }
+  this.props = null
+}
 
-  function render () {
-    var { dat, onupdate } = this.props
+FileList.prototype = Object.create(Nanocomponent.prototype)
 
-    if (dat) {
-      if (dat.files) {
-        this.state.update = false
-      } else {
-        if (dat.archive) {
-          dat.files = []
-          if (dat.archive.content) walk()
-          else dat.archive.on('content', walk)
-        }
+FileList.prototype.createElement = function (props) {
+  var self = this
+  this.props = props
+  var { dat, onupdate } = this.props
+
+  if (dat) {
+    if (dat.files) {
+      this.state.update = false
+    } else {
+      if (dat.archive) {
+        dat.files = []
+        if (dat.archive.content) walk()
+        else dat.archive.on('content', walk)
       }
     }
+  }
 
-    function walk () {
-      var fs = { name: '/', fs: dat.archive }
-      var progress = mirror(fs, '/', { dryRun: true })
-      progress.on('put', function (file) {
-        file.name = file.name.slice(1)
-        if (file.name === '') return
-        dat.files.push({
-          path: file.name,
-          stat: file.stat
-        })
-        dat.files.sort(function (a, b) {
-          return a.path.localeCompare(b.path)
-        })
-        component.state.update = true
-        onupdate()
+  function walk () {
+    var fs = { name: '/', fs: dat.archive }
+    var progress = mirror(fs, '/', { dryRun: true })
+    progress.on('put', function (file) {
+      file.name = file.name.slice(1)
+      if (file.name === '') return
+      dat.files.push({
+        path: file.name,
+        stat: file.stat
       })
-    }
+      dat.files.sort(function (a, b) {
+        return a.path.localeCompare(b.path)
+      })
+      self.state.update = true
+      onupdate()
+    })
+  }
 
-    return html`
+  return html`
       <div class="flex-auto bg-white mb2 mw6 ${fileListContainer}">
         ${dat && dat.files && dat.files.length
           ? html`
@@ -87,7 +91,7 @@ module.exports = function () {
               })}
             </table>
             `
-          : html`
+            : html`
             <div class="f7 f6-l pa2">
               N/A
             </div>
@@ -95,9 +99,8 @@ module.exports = function () {
         }
       </div>
     `
-  }
+}
 
-  function update (props) {
-    return props.dat !== this.props.dat || this.state.update
-  }
+FileList.prototype.update = function (props) {
+  return props.dat !== this.props.dat || this.state.update
 }

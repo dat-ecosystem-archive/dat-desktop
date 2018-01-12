@@ -1,6 +1,6 @@
 'use strict'
 
-const microcomponent = require('microcomponent')
+const Nanocomponent = require('nanocomponent')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
@@ -35,68 +35,73 @@ const menuButtonIcon = css`
 `
 
 function HeaderElement () {
+  if (!(this instanceof HeaderElement)) return new HeaderElement()
+  Nanocomponent.call(this)
+  this.props = null
+  this.state = {}
+}
+
+HeaderElement.prototype = Object.create(Nanocomponent.prototype)
+
+HeaderElement.prototype.createElement = function (props) {
+  this.props = props
+  var { isReady, onimport, oncreate, onreport } = this.props
+  var { showMenu, willShowMenu } = this.state
   var importButton = DatImport()
-  var component = microcomponent({ name: 'header' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
 
-  function render () {
-    var { isReady, onimport, oncreate, onreport } = this.props
-    var { showMenu, willShowMenu } = this.state
+  if (typeof willShowMenu === 'boolean') {
+    showMenu = this.state.showMenu = willShowMenu
+    this.state.willShowMenu = null
+  }
 
-    if (typeof willShowMenu === 'boolean') {
-      showMenu = this.state.showMenu = willShowMenu
-      this.state.willShowMenu = null
-    }
+  assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
+  assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
+  assert.equal(typeof oncreate, 'function', 'elements/header: oncreate should be type function')
 
-    assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
-    assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
-    assert.equal(typeof oncreate, 'function', 'elements/header: oncreate should be type function')
+  if (!isReady) {
+    return html`<header class="${header}"></header>`
+  }
 
-    if (!isReady) {
-      return html`<header class="${header}"></header>`
-    }
+  var createButton = button.header('Share Folder', {
+    id: 'create-new-dat',
+    icon: icon('create-new-dat', { class: shareButtonIcon }),
+    class: 'ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l',
+    onclick: oncreate
+  })
 
-    var createButton = button.header('Share Folder', {
-      id: 'create-new-dat',
-      icon: icon('create-new-dat', { class: shareButtonIcon }),
-      class: 'ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l',
-      onclick: oncreate
-    })
+  var loginButton = button.header('Log In', {
+    class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l dn'
+  })
 
-    var loginButton = button.header('Log In', {
-      class: 'ml3 v-mid color-neutral-30 hover-color-white f7 f6-l dn'
-    })
+  var menuButton = button.icon('Open Menu', {
+    icon: icon('menu', { class: menuButtonIcon }),
+    class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
+    onclick: toggle
+  })
 
-    var menuButton = button.icon('Open Menu', {
-      icon: icon('menu', { class: menuButtonIcon }),
-      class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
-      onclick: toggle
-    })
+  var self = this
+  function toggle () {
+    if (self.state.showMenu) hide()
+    else show()
+  }
 
-    function toggle () {
-      if (component.state.showMenu) hide()
-      else show()
-    }
+  function show () {
+    document.body.addEventListener('click', clickedOutside)
+    self.state.willShowMenu = true
+    self.createElement(self.props)
+  }
 
-    function show () {
-      document.body.addEventListener('click', clickedOutside)
-      component.state.willShowMenu = true
-      component.render(component.props)
-    }
+  function hide () {
+    document.body.removeEventListener('click', clickedOutside)
+    self.state.willShowMenu = false
+    self.createElement(self.props)
+  }
 
-    function hide () {
-      document.body.removeEventListener('click', clickedOutside)
-      component.state.willShowMenu = false
-      component.render(component.props)
-    }
+  function clickedOutside (e) {
+    if (!self.createElement(self.props).contains(e.target)) hide()
+  }
 
-    function clickedOutside (e) {
-      if (!component._element.contains(e.target)) hide()
-    }
-
-    return html`
+  return html`
       <header class="${header}">
         <div class="fr relative">
           ${importButton.render({
@@ -123,10 +128,9 @@ function HeaderElement () {
         </div>
       </header>
     `
-  }
+}
 
-  function update (props) {
-    return props.isReady !== this.props.isReady ||
-      typeof this.state.willShowMenu === 'boolean'
-  }
+HeaderElement.prototype.update = function (props) {
+  return props.isReady !== this.props.isReady ||
+    typeof this.state.willShowMenu === 'boolean'
 }

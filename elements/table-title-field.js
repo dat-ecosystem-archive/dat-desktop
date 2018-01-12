@@ -1,4 +1,4 @@
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 var nanomorph = require('nanomorph')
 var html = require('choo/html')
 var css = require('sheetify')
@@ -52,21 +52,10 @@ module.exports = TitleField
 // - pressing enter (saving)
 // - clicking the save button (saving)
 function TitleField () {
-  var component = microcomponent({
-    name: 'table-title-field',
-    state: resetState()
-  })
-  component.on('render', render)
-  component.on('render:active', renderActive)
-  component.on('render:inactive', renderInactive)
-  component.on('update', update)
-  return component
-
-  function update ({ dat }) {
-    return dat.writable !== this.state.writable ||
-      dat.key.toString('hex') !== this.state.key ||
-      this.state.title !== dat.metadata.title || '#' + this.state.key
-  }
+  if (!(this instanceof TitleField)) return new TitleField()
+  Nanocomponent.call(this)
+  this.props = null
+  this.state = resetState()
 
   function resetState () {
     return {
@@ -77,28 +66,33 @@ function TitleField () {
       key: null
     }
   }
+}
 
-  function render () {
-    var dat = component.props.dat
-    var state = component.state
+TitleField.prototype = Object.create(Nanocomponent.prototype)
 
-    if (dat) {
-      state.writable = dat.writable
-      state.key = dat.key.toString('hex')
-      state.title = dat.metadata.title || ''
-      state.placeholderTitle = '#' + state.key
-    }
+TitleField.prototype.createElement = function (props) {
+  var dat = props.dat
+  this.props = props
+  var state = this.state
 
-    if (state.isEditing && state.writable) return component.emit('render:active')
-    else return component.emit('render:inactive')
+  if (dat) {
+    state.writable = dat.writable
+    state.key = dat.key.toString('hex')
+    state.title = dat.metadata.title || ''
+    state.placeholderTitle = '#' + state.key
   }
 
-  function renderInactive () {
-    var state = this.state
-    state.editValue = ''
+  if (state.isEditing && state.writable) return this.renderActive()
+  else return this.renderInactive()
+}
 
-    return state.writable
-      ? html`
+TitleField.prototype.renderInactive = function () {
+  var self = this
+  var state = this.state
+  state.editValue = ''
+
+  return state.writable
+    ? html`
           <div class=${editableField}>
             <h2 class="f6 f5-l normal truncate pr3" onclick=${onclick}>
               ${state.title || state.placeholderTitle}
@@ -106,7 +100,7 @@ function TitleField () {
             </h2>
           </div>
         `
-      : html`
+    : html`
           <div>
             <h2 class="f6 f5-l normal truncate pr3">
               ${state.title || state.placeholderTitle}
@@ -114,25 +108,25 @@ function TitleField () {
           </div>
         `
 
-    function onclick (e) {
-      e.stopPropagation()
-      e.preventDefault()
-      state.isEditing = true
-      state.editValue = state.title
-      component.render(Object.assign({}, component.props))
-    }
+  function onclick (e) {
+    e.stopPropagation()
+    e.preventDefault()
+    state.isEditing = true
+    state.editValue = state.title
+    self.render(Object.assign({}, self.props))
   }
+}
 
-  function renderActive () {
-    setTimeout(function () {
-      var input = self._element.querySelector('input')
-      input.focus()
-      input.select()
-    }, 0)
+TitleField.prototype.renderActive = function () {
+  var self = this
+  setTimeout(function () {
+    var input = self.element.querySelector('input')
+    input.focus()
+    input.select()
+  }, 0)
 
-    var self = this
-    var state = this.state
-    return html`
+  var state = this.state
+  return html`
       <div>
         <div class=${overlay} onclick=${deactivate}></div>
         <div class="${editableField} bg-white nt1 nb1 nl1 pl1 shadow-1 flex justify-between">
@@ -143,44 +137,50 @@ function TitleField () {
       </div>
     `
 
-    function handleKeypress (e) {
-      var oldValue = state.editValue
-      var newValue = e.target.value
-      state.editValue = newValue
-      e.stopPropagation()
+  function handleKeypress (e) {
+    var oldValue = state.editValue
+    var newValue = e.target.value
+    state.editValue = newValue
+    e.stopPropagation()
 
-      if (e.code === 'Escape') {
-        e.preventDefault()
-        deactivate()
-      } else if (e.code === 'Enter') {
-        e.preventDefault()
-        handleSave()
-      } else if (oldValue !== newValue) {
-        nanomorph(self._element.querySelector('button'), renderButton())
-      }
-    }
-
-    function renderButton () {
-      if (state.editValue === state.title) {
-        return button('Save', { onclick: deactivate })
-      } else {
-        return button.green('Save', { onclick: handleSave })
-      }
-    }
-
-    function handleSave (e) {
-      if (e) {
-        e.stopPropagation()
-        e.preventDefault()
-      }
-      component.props.emit('dats:update-title', { key: self.state.key, title: self.state.editValue })
+    if (e.code === 'Escape') {
+      e.preventDefault()
       deactivate()
-    }
-
-    function deactivate (e) {
-      if (e) e.stopPropagation()
-      state.isEditing = false
-      component.render(Object.assign({}, component.props))
+    } else if (e.code === 'Enter') {
+      e.preventDefault()
+      handleSave()
+    } else if (oldValue !== newValue) {
+      nanomorph(self.element.querySelector('button'), renderButton())
     }
   }
+
+  function renderButton () {
+    if (state.editValue === state.title) {
+      return button('Save', { onclick: deactivate })
+    } else {
+      return button.green('Save', { onclick: handleSave })
+    }
+  }
+
+  function handleSave (e) {
+    if (e) {
+      e.stopPropagation()
+      e.preventDefault()
+    }
+    self.props.emit('dats:update-title', { key: self.state.key, title: self.state.editValue })
+    deactivate()
+  }
+
+  function deactivate (e) {
+    if (e) e.stopPropagation()
+    state.isEditing = false
+    self.render(Object.assign({}, self.props))
+  }
 }
+
+TitleField.prototype.update = function ({ dat }) {
+  return dat.writable !== this.state.writable ||
+    dat.key.toString('hex') !== this.state.key ||
+    this.state.title !== dat.metadata.title || '#' + this.state.key
+}
+

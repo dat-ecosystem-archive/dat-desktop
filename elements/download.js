@@ -1,6 +1,6 @@
 'use strict'
 
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 var dialog = require('electron').remote.dialog
 var bytes = require('prettier-bytes')
 var FileList = require('./file-list')
@@ -9,6 +9,8 @@ var css = require('sheetify')
 var icon = require('./icon')
 var button = require('./button')
 var os = require('os')
+
+module.exports = Download
 
 var detailHeader = css`
   :host {
@@ -33,57 +35,56 @@ var label = css`
   }
 `
 
-module.exports = function () {
-  var component = microcomponent({
-    name: 'download',
-    state: {
-      fileList: FileList()
-    }
-  })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+function Download () {
+  if (!(this instanceof Download)) return new Download()
+  Nanocomponent.call(this)
+  this.state = {
+    fileList: FileList()
+  }
+}
 
-  function render () {
-    var { key, oncancel, err, dat, ondownload, onupdate } = this.props
-    var { fileList } = this.state
-    var location = this.state.location || `${os.homedir()}/Downloads`
+Download.prototype = Object.create(Nanocomponent.prototype)
 
-    var title = dat
+Download.prototype.createElement = function (props) {
+  var { key, oncancel, err, dat, ondownload, onupdate } = props
+  var { fileList } = this.state
+  var location = this.state.location || `${os.homedir()}/Downloads`
+
+  var title = dat
       ? dat.metadata
         ? dat.metadata.title
         : key
       : 'Fetching metadata …'
-    var author = dat
+  var author = dat
       ? dat.metadata
         ? dat.metadata.author
         : 'N/A'
       : '…'
-    var description = dat
+  var description = dat
       ? dat.metadata
         ? dat.metadata.description
         : 'N/A'
       : '…'
-    var size = dat
+  var size = dat
       ? dat.archive.content
         ? bytes(dat.archive.content.byteLength)
         : 'N/A'
       : '…'
-    var peers = dat
+  var peers = dat
       ? dat.network.connected
       : '…'
 
-    function onChangeLocation () {
-      var files = dialog.showOpenDialog({
-        properties: ['openDirectory'],
-        defaultPath: location
-      })
-      if (!files || !files.length) return
-      component.state.location = files[0]
-      onupdate()
-    }
+  function onChangeLocation () {
+    var files = dialog.showOpenDialog({
+      properties: ['openDirectory'],
+      defaultPath: location
+    })
+    if (!files || !files.length) return
+    this.state.location = files[0]
+    onupdate()
+  }
 
-    return html`
+  return html`
       <main class="flex flex-column">
       ${err
         ? html`
@@ -177,9 +178,9 @@ module.exports = function () {
         </footer>
       </main>
     `
-  }
-
-  function update (props) {
-    return true
-  }
 }
+
+Download.prototype.update = function (props) {
+  return true
+}
+

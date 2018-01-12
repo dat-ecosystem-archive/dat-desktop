@@ -1,6 +1,6 @@
 'use strict'
 
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 var toStr = require('dat-encoding').toStr
 var bytes = require('prettier-bytes')
 var FileList = require('./file-list')
@@ -8,6 +8,8 @@ var button = require('./button')
 var html = require('choo/html')
 var css = require('sheetify')
 var icon = require('./icon')
+
+module.exports = Inspect
 
 var detailHeader = css`
   :host {
@@ -32,46 +34,45 @@ var label = css`
   }
 `
 
-module.exports = function () {
-  var component = microcomponent({
-    name: 'inspect',
-    state: {
-      fileList: FileList()
-    }
-  })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+function Inspect () {
+  if (!(this instanceof Inspect)) return new Inspect()
+  Nanocomponent.call(this)
+  this.state = {
+    fileList: FileList()
+  }
+}
 
-  function render () {
-    var { oncancel, onupdate, dat } = this.props
-    var { fileList } = this.state
+Inspect.prototype = Object.create(Nanocomponent.prototype)
 
-    var title = dat
+Inspect.prototype.createElement = function (props) {
+  var { oncancel, onupdate, dat } = props
+  var { fileList } = this.state
+
+  var title = dat
       ? dat.metadata
         ? dat.metadata.title
         : dat.key
       : 'Fetching metadata …'
-    var author = dat
+  var author = dat
       ? dat.metadata
         ? dat.metadata.author
         : 'N/A'
       : '…'
-    var description = dat
+  var description = dat
       ? dat.metadata && dat.metadata.description
         ? dat.metadata.description
         : 'N/A'
       : '…'
-    var size = dat
+  var size = dat
       ? dat.archive.content
         ? bytes(dat.archive.content.byteLength)
         : 'N/A'
       : '…'
-    var peers = dat
+  var peers = dat
       ? dat.network.connected
       : '…'
 
-    return html`
+  return html`
       <main class="flex flex-column">
         <div class="flex flex-column flex-auto">
           <header class="flex items-center ${detailHeader}">
@@ -150,9 +151,9 @@ module.exports = function () {
         </footer>
       </main>
     `
-  }
-
-  function update (props) {
-    return true
-  }
 }
+
+Inspect.prototype.update = function (props) {
+  return true
+}
+

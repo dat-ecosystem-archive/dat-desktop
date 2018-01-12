@@ -1,4 +1,4 @@
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 var encoding = require('dat-encoding')
 var bytes = require('prettier-bytes')
 var html = require('choo/html')
@@ -116,6 +116,13 @@ var networkStyles = css`
 module.exports = Row
 
 function Row () {
+  if (!(this instanceof Row)) return new Row()
+  Nanocomponent.call(this)
+}
+
+Row.prototype = Object.create(Nanocomponent.prototype)
+
+Row.prototype.createElement = function (props) {
   var hexContent = HexContent()
   var finderButton = FinderButton()
   var linkButton = LinkButton()
@@ -123,37 +130,31 @@ function Row () {
   var titleField = TitleField()
   var networkIcon = NetworkIcon()
 
-  var component = microcomponent({ name: 'table-row' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+  var { dat, state, emit, highlight } = props
+  if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
 
-  function render () {
-    var { dat, state, emit, highlight } = this.props
-    if (dat instanceof Error) return errorRow(dat, emit, deleteButton)
+  var stats = dat.stats
+  var peers = dat.network ? dat.network.connected : 'N/A'
+  var key = encoding.encode(dat.key)
+  var styles = cellStyles
+  if (highlight) styles += ' fade-highlight'
 
-    var stats = dat.stats
-    var peers = dat.network ? dat.network.connected : 'N/A'
-    var key = encoding.encode(dat.key)
-    var styles = cellStyles
-    if (highlight) styles += ' fade-highlight'
+  stats.size = dat.archive.content
+    ? bytes(dat.archive.content.byteLength)
+    : 'N/A'
+  stats.state = !dat.network
+    ? 'paused'
+    : dat.writable || dat.progress === 1
+    ? 'complete'
+    : peers
+    ? 'loading'
+    : 'stale'
 
-    stats.size = dat.archive.content
-      ? bytes(dat.archive.content.byteLength)
-      : 'N/A'
-    stats.state = !dat.network
-      ? 'paused'
-      : dat.writable || dat.progress === 1
-        ? 'complete'
-        : peers
-          ? 'loading'
-          : 'stale'
+  function onclick () {
+    emit('dats:inspect', dat)
+  }
 
-    function onclick () {
-      emit('dats:inspect', dat)
-    }
-
-    return html`
+  return html`
       <tr id=${key} class=${styles} onclick=${onclick}>
         <td class="cell-1">
           <div class="w2 center">
@@ -190,188 +191,191 @@ function Row () {
         </td>
       </tr>
     `
-  }
+}
 
-  function update (props) {
-    return true
-  }
+Row.prototype.update = function () {
+  return false
 }
 
 function FinderButton () {
-  var component = microcomponent({ name: 'finder-button' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+  if (!(this instanceof FinderButton)) return new FinderButton()
+  Nanocomponent.call(this)
+}
 
-  function render () {
-    var { dat, emit } = this.props
-    return button.icon('Open in Finder', {
-      icon: icon('open-in-finder'),
-      class: 'row-action',
-      onclick: function (e) {
-        e.preventDefault()
-        e.stopPropagation()
-        emit('dats:open', dat)
-      }
-    })
-  }
+FinderButton.prototype = Object.create(Nanocomponent.prototype)
 
-  function update () {
-    return false
-  }
+FinderButton.prototype.createElement = function (props) {
+  var { dat, emit } = props
+  return button.icon('Open in Finder', {
+    icon: icon('open-in-finder'),
+    class: 'row-action',
+    onclick: function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      emit('dats:open', dat)
+    }
+  })
+}
+
+FinderButton.prototype.update = function () {
+  return false
 }
 
 function LinkButton () {
-  var component = microcomponent({ name: 'link-button' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+  if (!(this instanceof LinkButton)) return new LinkButton()
+  Nanocomponent.call(this)
+}
 
-  function render () {
-    var { dat, emit } = this.props
-    return button.icon('Share Dat', {
-      icon: icon('link'),
-      class: 'row-action',
-      onclick: function (e) {
-        e.preventDefault()
-        e.stopPropagation()
-        emit('dats:share', dat)
-      }
-    })
-  }
+LinkButton.prototype = Object.create(Nanocomponent.prototype)
 
-  function update () {
-    return false
-  }
+LinkButton.prototype.createElement = function (props) {
+  var { dat, emit } = props
+  return button.icon('Share Dat', {
+    icon: icon('link'),
+    class: 'row-action',
+    onclick: function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      emit('dats:share', dat)
+    }
+  })
+}
+
+LinkButton.prototype.update = function () {
+  return false
 }
 
 function DeleteButton () {
-  var component = microcomponent({ name: 'delete-button' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+  if (!(this instanceof DeleteButton)) return new DeleteButton()
+  Nanocomponent.call(this)
+}
 
-  function render () {
-    var { dat, emit } = this.props
-    return button.icon('Remove Dat', {
-      icon: icon('delete'),
-      class: 'row-action delete',
-      onclick: function (e) {
-        e.preventDefault()
-        e.stopPropagation()
-        emit('dats:remove', { key: dat.key || dat.data.key })
-      }
-    })
-  }
+DeleteButton.prototype = Object.create(Nanocomponent.prototype)
 
-  function update () {
-    return false
-  }
+DeleteButton.prototype.createElement = function (props) {
+  var { dat, emit } = props
+  return button.icon('Remove Dat', {
+    icon: icon('delete'),
+    class: 'row-action delete',
+    onclick: function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      emit('dats:remove', { key: dat.key || dat.data.key })
+    }
+  })
+}
+
+DeleteButton.prototype.update = function () {
+  return false
 }
 
 function NetworkIcon () {
-  var component = microcomponent({
-    name: 'network-icon',
-    state: {
-      peerCount: 0
-    }
-  })
-  component.on('render', render)
-  component.on('update', update)
-  return component
-
-  function render () {
-    var { dat } = this.props
-    var peerCount = this.state.peerCount = dat.network
-      ? dat.network.connected
-      : 0
-    var iconClass = peerCount === 0
-      ? 'network-peers-0'
-      : peerCount === 1
-        ? 'network-peers-1'
-        : 'network-peers-many'
-
-    return icon('network', { class: iconClass })
+  if (!(this instanceof NetworkIcon)) return new NetworkIcon()
+  Nanocomponent.call(this)
+  this.state = {
+    peerCount: 0
   }
+}
 
-  function update ({ dat, emit }) {
-    var newPeerCount = dat.network ? dat.network.connected : 0
-    return this.state.peerCount !== newPeerCount
-  }
+NetworkIcon.prototype = Object.create(Nanocomponent.prototype)
+
+NetworkIcon.prototype.createElement = function (props) {
+  var { dat } = props
+  var peerCount = this.state.peerCount = dat.network
+    ? dat.network.connected
+    : 0
+  var iconClass = peerCount === 0
+    ? 'network-peers-0'
+    : peerCount === 1
+    ? 'network-peers-1'
+    : 'network-peers-many'
+
+  return html`
+    <div>${icon('network', { class: iconClass })}</div>
+  `
+}
+
+NetworkIcon.prototype.update = function ({ dat, emit }) {
+  var newPeerCount = dat.network ? dat.network.connected : 0
+  return this.state.peerCount !== newPeerCount
 }
 
 // create a new hexcontent icon
 function HexContent () {
-  var component = microcomponent({ name: 'hex-content' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+  if (!(this instanceof HexContent)) return new HexContent()
+  Nanocomponent.call(this)
+  this.state = {
+    peerCount: 0
+  }
+}
 
+HexContent.prototype = Object.create(Nanocomponent.prototype)
+
+HexContent.prototype.createElement = function (props) {
+  var state = this.state.state = props.stats.state
+  var { emit, dat } = props
+
+  var self = this
   function onmousemove (ev) {
-    if (!component.state.hover) return
-    if (component._element.contains(ev.target)) return
-    component.state.setHover = false
+    if (!self.state.hover) return
+    if (self.element.contains(ev.target)) return
+    self.state.setHover = false
     document.body.removeEventListener('mousemove', onmousemove)
-    component.render(component.props)
+    self.render(props)
   }
 
-  function render () {
-    var state = this.state.state = this.props.stats.state
-    var { emit, dat } = this.props
-
-    if (typeof this.state.setHover === 'boolean') {
-      if (this.state.setHover) document.body.addEventListener('mousemove', onmousemove)
-      this.state.hover = this.state.setHover
-      this.state.setHover = null
-    }
-
-    if (this.state.hover) {
-      return button.icon('pause', {
-        icon: icon('hexagon-pause', {class: 'w2'}),
-        class: 'color-neutral-40 ph0',
-        onclick: togglePause
-      })
-    } else if (state === 'loading') {
-      return button.icon('loading', {
-        icon: icon('hexagon-down', {class: 'w2'}),
-        class: 'color-blue hover-color-blue-hover ph0',
-        onclick: togglePause
-      })
-    } else if (state === 'paused') {
-      return button.icon('paused', {
-        icon: icon('hexagon-resume', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40 ph0',
-        onclick: togglePause
-      })
-    } else if (state === 'complete') {
-      return button.icon('complete', {
-        icon: icon('hexagon-up', {class: 'w2'}),
-        class: 'color-green hover-color-green-hover ph0',
-        onclick: togglePause,
-        onmouseover: ev => {
-          this.state.setHover = true
-          this.render(this.props)
-        }
-      })
-    } else {
-      return button.icon('stale', {
-        icon: icon('hexagon-x', {class: 'w2'}),
-        class: 'color-neutral-30 hover-color-neutral-40 ph0',
-        onclick: togglePause
-      })
-    }
-
-    function togglePause (e) {
-      e.preventDefault()
-      e.stopPropagation()
-      emit('dats:toggle-pause', dat)
-    }
+  if (typeof this.state.setHover === 'boolean') {
+    if (this.state.setHover) document.body.addEventListener('mousemove', onmousemove)
+    this.state.hover = this.state.setHover
+    this.state.setHover = null
   }
 
-  function update ({ dat, stats, emit }) {
-    return stats.state !== this.state.state ||
-      typeof this.state.setHover === 'boolean'
+  if (this.state.hover) {
+    return button.icon('pause', {
+      icon: icon('hexagon-pause', {class: 'w2'}),
+      class: 'color-neutral-40 ph0',
+      onclick: togglePause
+    })
+  } else if (state === 'loading') {
+    return button.icon('loading', {
+      icon: icon('hexagon-down', {class: 'w2'}),
+      class: 'color-blue hover-color-blue-hover ph0',
+      onclick: togglePause
+    })
+  } else if (state === 'paused') {
+    return button.icon('paused', {
+      icon: icon('hexagon-resume', {class: 'w2'}),
+      class: 'color-neutral-30 hover-color-neutral-40 ph0',
+      onclick: togglePause
+    })
+  } else if (state === 'complete') {
+    return button.icon('complete', {
+      icon: icon('hexagon-up', {class: 'w2'}),
+      class: 'color-green hover-color-green-hover ph0',
+      onclick: togglePause,
+      onmouseover: ev => {
+        this.state.setHover = true
+        this.rerender()
+      }
+    })
+  } else {
+    return button.icon('stale', {
+      icon: icon('hexagon-x', {class: 'w2'}),
+      class: 'color-neutral-30 hover-color-neutral-40 ph0',
+      onclick: togglePause
+    })
   }
+
+  function togglePause (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    emit('dats:toggle-pause', dat)
+  }
+}
+
+HexContent.prototype.update = function ({ dat, stats, emit }) {
+  return stats.state !== this.state.state ||
+    typeof this.state.setHover === 'boolean'
 }
 
 function errorRow (err, emit, deleteButton) {

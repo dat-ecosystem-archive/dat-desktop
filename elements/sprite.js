@@ -1,21 +1,27 @@
-const microcomponent = require('microcomponent')
+var html = require('choo/html')
+const Nanocomponent = require('nanocomponent')
 const datIcons = require('dat-icons/raw')
 
-module.exports = svgSprite
+module.exports = SvgSprite
 
-function svgSprite () {
-  const component = microcomponent({ name: 'svg-sprite' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
-
-  function render () {
-    const _el = document.createElement('div')
-    _el.innerHTML = datIcons()
-    return _el.childNodes[0]
-  }
-
-  function update () {
-    return false
-  }
+function SvgSprite () {
+  if (!(this instanceof SvgSprite)) return new SvgSprite()
+  Nanocomponent.call(this)
 }
+
+SvgSprite.prototype = Object.create(Nanocomponent.prototype)
+
+SvgSprite.prototype.createElement = function () {
+  const _el = document.createElement('div')
+  _el.innerHTML = datIcons()
+  return html`
+  <div>
+    ${_el.childNodes[0]}
+  </div>
+  `
+}
+
+SvgSprite.prototype.update = function () {
+  return false
+}
+

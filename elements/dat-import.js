@@ -1,6 +1,6 @@
 'use strict'
 
-const microcomponent = require('microcomponent')
+const Nanocomponent = require('nanocomponent')
 const html = require('choo/html')
 const assert = require('assert')
 const css = require('sheetify')
@@ -60,17 +60,18 @@ const prefix = css`
 `
 
 function DatImportElement () {
-  var component = microcomponent({ name: 'dat-import' })
-  component.on('render', render)
-  component.on('update', update)
-  return component
+  if (!(this instanceof DatImportElement)) return new DatImportElement()
+  Nanocomponent.call(this)
+}
 
-  function render () {
-    const onsubmit = this.props.onsubmit
+DatImportElement.prototype = Object.create(Nanocomponent.prototype)
 
-    assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
+DatImportElement.prototype.createElement = function (props) {
+  const onsubmit = props.onsubmit
 
-    return html`
+  assert.equal(typeof onsubmit, 'function', 'dat-import: onsubmit should be type function')
+
+  return html`
       <label for="dat-import" class="relative dib pa0 b--none ${prefix}">
         <input name="dat-import"
           type="text"
@@ -80,16 +81,14 @@ function DatImportElement () {
         ${icon('link', { class: 'absolute top-0 bottom-0 left-0' })}
       </label>
     `
-
-    function onKeyDown (e) {
-      const value = e.target.value
-      if (e.key !== 'Enter' || !value) return
-      e.target.value = ''
-      onsubmit(value)
-    }
+  function onKeyDown (e) {
+    const value = e.target.value
+    if (e.key !== 'Enter' || !value) return
+    e.target.value = ''
+    onsubmit(value)
   }
+}
 
-  function update () {
-    return false
-  }
+DatImportElement.prototype.update = function (props) {
+  return false
 }

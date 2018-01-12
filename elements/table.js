@@ -1,4 +1,4 @@
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 var nanolog = require('nanologger')
 var html = require('choo/html')
 var css = require('sheetify')
@@ -42,17 +42,17 @@ var tableStyles = css`
   }
 `
 
-var tableHead = TableHead()
 var tableRows = TableRows()
 
 module.exports = tableElement
 
 function tableElement (state, emit) {
+  var tableHead = TableHead()
   var dats = state.dats.values
   return html`
     <main>
       <table class="${tableStyles}">
-        ${tableHead.render()}
+        ${tableHead.createElement()}
         <tbody>
           ${tableRows(dats, state, emit)}
         </tbody>
@@ -77,12 +77,12 @@ function TableRows () {
       var row = elements[key]
       usedKeys.push(key)
       if (row) {
-        return row.render({ dat, state, emit })
+        return row.createElement({ dat, state, emit })
       } else {
         var highlight = !initialLoad
         var newRow = TableRow()
         elements[key] = newRow
-        return newRow.render({ dat, state, emit, highlight })
+        return newRow.createElement({ dat, state, emit, highlight })
       }
     })
 
@@ -96,12 +96,14 @@ function TableRows () {
 }
 
 function TableHead () {
-  return microcomponent({
-    name: 'table-head',
-    pure: true
-  })
-  .on('render', function () {
-    return html`
+  if (!(this instanceof TableHead)) return new TableHead()
+  Nanocomponent.call(this)
+}
+
+TableHead.prototype = Object.create(Nanocomponent.prototype)
+
+TableHead.prototype.createElement = function () {
+  return html`
       <thead>
         <tr>
           <th class="cell-1"></th>
@@ -113,5 +115,8 @@ function TableHead () {
         </tr>
       </thead>
     `
-  })
+}
+
+TableHead.prototype.update = function () {
+  return
 }

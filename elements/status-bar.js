@@ -1,9 +1,11 @@
 'use strict'
 
-const microcomponent = require('microcomponent')
+const Nanocomponent = require('nanocomponent')
 const bytes = require('prettier-bytes')
 const html = require('choo/html')
 const css = require('sheetify')
+
+module.exports = StatusBar
 
 const style = css`
   :host {
@@ -16,21 +18,23 @@ const style = css`
   }
 `
 
-module.exports = function () {
-  const component = microcomponent({
-    name: 'status bar',
-    pure: true
-  })
-  component.on('render', render)
-  return component
+function StatusBar () {
+  if (!(this instanceof StatusBar)) return new StatusBar()
+  Nanocomponent.call(this)
+}
 
-  function render () {
-    const { up, down } = this.props
-    return html`
+StatusBar.prototype = Object.create(Nanocomponent.prototype)
+
+StatusBar.prototype.createElement = function (props) {
+  const { up, down } = props
+  return html`
       <div id="status-bar" class=${style}>
         <span class="f7 mr3">Download: ${bytes(down)}/s</span>
         <span class="f7">Upload: ${bytes(up)}/s</span>
       </div>
     `
-  }
+}
+
+StatusBar.prototype.update = function () {
+  return
 }

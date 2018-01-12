@@ -1,6 +1,6 @@
 var html = require('choo/html')
 var css = require('sheetify')
-var microcomponent = require('microcomponent')
+var Nanocomponent = require('nanocomponent')
 
 var button = require('./button')
 
@@ -79,34 +79,34 @@ function dots (screen) {
 }
 
 function IntroScreen () {
-  var component = microcomponent({
-    name: 'intro',
-    state: {
-      screen: 0
-    }
-  })
-  component.on('render', render)
-  component.on('update', update)
-  component.on('load', load)
-  component.on('unload', unload)
-  return component
+  if (!(this instanceof IntroScreen)) return new IntroScreen()
+  Nanocomponent.call(this)
+  this.state = {
+    screen: 0
+  }
+  this.props = null
+}
 
-  function next () {
-    component.state.screen++
-    component.state.nextScreen = true
-    component.props.onupdate()
+IntroScreen.prototype = Object.create(Nanocomponent.prototype)
+
+IntroScreen.prototype.createElement = function (props) {
+  this.props = props
+  var { onOpenHomepage, onexit } = this.props
+  var screen = this.state.screen
+
+  function openHomepage (ev) {
+    ev.preventDefault()
+    onOpenHomepage()
   }
 
-  function render () {
-    var { onOpenHomepage, onexit } = this.props
-    var screen = this.state.screen
+  var self = this
+  function next () {
+    self.state.screen++
+    self.state.nextScreen = true
+    self.props.onupdate()
+  }
 
-    function openHomepage (ev) {
-      ev.preventDefault()
-      onOpenHomepage()
-    }
-
-    return html`
+  return html`
       <main class="${intro}">
         <img src="./assets/intro-${screen + 1}.svg" alt="" class="absolute ${image}">
         <div class="${content}">
@@ -142,38 +142,38 @@ function IntroScreen () {
         </div>
         ${screen === 0
           ? button.green('Get Started', { onclick: next, class: 'mt2 mb5 relative' })
-          : html`
+            : html`
             <div class="${footer}">
                 ${button('Skip Intro', { onclick: onexit })}
                 ${dots(screen)}
                 ${screen < 5
                   ? button.green('Next', { onclick: next })
-                  : button.green('Done', { onclick: onexit })}
+                    : button.green('Done', { onclick: onexit })}
               </div>
             `}
       </main>
     `
-  }
-
-  function update () {
-    if (this.state.nextScreen) {
-      this.state.nextScreen = false
-      return true
-    }
-    return false
-  }
-
-  function load () {
-    window.addEventListener('keydown', onkeydown)
-  }
-
-  function unload () {
-    window.removeEventListener('keydown', onkeydown)
-  }
-
-  function onkeydown (ev) {
-    if (ev.code !== 'Escape') return
-    window.removeEventListener('keydown', onkeydown)
-    component.props.onexit()
-  }
 }
+
+IntroScreen.prototype.update = function (props) {
+  if (this.state.nextScreen) {
+    this.state.nextScreen = false
+    return true
+  }
+  return false
+}
+
+IntroScreen.prototype.load = function () {
+  window.addEventListener('keydown', this.onkeydown)
+}
+
+IntroScreen.prototype.unload = function () {
+  window.removeEventListener('keydown', this.onkeydown)
+}
+
+IntroScreen.prototype.onkeydown = function (ev) {
+  if (ev.code !== 'Escape') return
+  window.removeEventListener('keydown', this.onkeydown)
+  this.props.onexit()
+}
+
