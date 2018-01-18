@@ -19,6 +19,9 @@ const header = css`
     background-color: var(--color-neutral);
     color: var(--color-white);
     -webkit-app-region: drag;
+    z-index: 1000;
+    position: relative;
+    width: 100%;
   }
 `
 
@@ -45,14 +48,9 @@ HeaderElement.prototype = Object.create(Nanocomponent.prototype)
 
 HeaderElement.prototype.createElement = function (props) {
   this.props = props
-  var { isReady, onimport, oncreate, onreport } = this.props
-  var { showMenu, willShowMenu } = this.state
+  var { isReady, onimport, oncreate, onreport, onupdate } = this.props
+  var { showMenu } = this.state
   var importButton = DatImport()
-
-  if (typeof willShowMenu === 'boolean') {
-    showMenu = this.state.showMenu = willShowMenu
-    this.state.willShowMenu = null
-  }
 
   assert.equal(typeof isReady, 'boolean', 'elements/header: isReady should be type boolean')
   assert.equal(typeof onimport, 'function', 'elements/header: onimport should be type function')
@@ -76,29 +74,30 @@ HeaderElement.prototype.createElement = function (props) {
   var menuButton = button.icon('Open Menu', {
     icon: icon('menu', { class: menuButtonIcon }),
     class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
-    onclick: toggle
+    onclick: function () {
+      toggle(true)
+      return false
+    }
   })
 
   var self = this
-  function toggle () {
-    if (self.state.showMenu) hide()
-    else show()
-  }
-
-  function show () {
-    document.body.addEventListener('click', clickedOutside)
-    self.state.willShowMenu = true
-    self.createElement(self.props)
-  }
-
-  function hide () {
-    document.body.removeEventListener('click', clickedOutside)
-    self.state.willShowMenu = false
-    self.createElement(self.props)
+  function toggle (newState) {
+    if (self.state.showMenu !== newState) {
+      self.state.showMenu = newState
+      setTimeout(function () {
+        if (newState) {
+          document.body.addEventListener('click', clickedOutside)
+        } else {
+          document.body.removeEventListener('click', clickedOutside)
+        }
+      }, 1)
+      self.state.update = true
+      onupdate()
+    }
   }
 
   function clickedOutside (e) {
-    if (!self.createElement(self.props).contains(e.target)) hide()
+    if (!self.createElement(self.props).contains(e.target)) toggle(false)
   }
 
   return html`
@@ -130,7 +129,14 @@ HeaderElement.prototype.createElement = function (props) {
     `
 }
 
+HeaderElement.prototype.consumeUpdate = function () {
+  if (!this.state.update) {
+    return false
+  }
+  this.state.update = false
+  return true
+}
+
 HeaderElement.prototype.update = function (props) {
-  return props.isReady !== this.props.isReady ||
-    typeof this.state.willShowMenu === 'boolean'
+  return props.isReady !== this.props.isReady || this.consumeUpdate()
 }
