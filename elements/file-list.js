@@ -50,6 +50,7 @@ FileList.prototype.createElement = function (props) {
       }
     }
   }
+  var self = this
 
   function walk () {
     var fs = { name: '/', fs: dat.archive }
