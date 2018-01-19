@@ -4,6 +4,7 @@ var html = require('choo/html')
 var css = require('sheetify')
 
 var TableRow = require('./table-row')
+var TableHead = require('./table-head')
 
 var tableStyles = css`
   :host {
@@ -43,16 +44,16 @@ var tableStyles = css`
 `
 
 var tableRows = TableRows()
+var tableHead = TableHead()
 
 module.exports = tableElement
 
 function tableElement (state, emit) {
-  var tableHead = TableHead()
   var dats = state.dats.values
   return html`
     <main>
       <table class="${tableStyles}">
-        ${tableHead.createElement()}
+        ${tableHead.render()}
         <tbody>
           ${tableRows(dats, state, emit)}
         </tbody>
@@ -93,30 +94,4 @@ function TableRows () {
     initialLoad = false
     return renderedElements
   }
-}
-
-function TableHead () {
-  if (!(this instanceof TableHead)) return new TableHead()
-  Nanocomponent.call(this)
-}
-
-TableHead.prototype = Object.create(Nanocomponent.prototype)
-
-TableHead.prototype.createElement = function () {
-  return html`
-      <thead>
-        <tr>
-          <th class="cell-1"></th>
-          <th class="tl cell-2">Link</th>
-          <th class="tl cell-3">Status</th>
-          <th class="tl cell-4">Size</th>
-          <th class="tl cell-5">Peers</th>
-          <th class="cell-6"></th>
-        </tr>
-      </thead>
-    `
-}
-
-TableHead.prototype.update = function () {
-  return
 }
