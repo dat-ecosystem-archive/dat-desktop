@@ -114,7 +114,8 @@ TitleField.prototype.renderInactive = function () {
     e.preventDefault()
     state.isEditing = true
     state.editValue = state.title
-    self.render(Object.assign({}, self.props))
+    state.update = true
+    self.props.emit('render')
   }
 }
 
@@ -175,13 +176,40 @@ TitleField.prototype.renderActive = function () {
   function deactivate (e) {
     if (e) e.stopPropagation()
     state.isEditing = false
-    self.render(Object.assign({}, self.props))
+    state.update = true
+    self.props.emit('render')
   }
 }
 
-TitleField.prototype.update = function ({ dat }) {
-  return dat.writable !== this.state.writable ||
-    dat.key.toString('hex') !== this.state.key ||
-    this.state.title !== dat.metadata.title || '#' + this.state.key
-}
+TitleField.prototype.update = function ({ dat }, external) {
+  if (this.state.update) {
+    if (!external) {
+      // `.update` is usually called (and part of) the `.render` method
+      // meaning that setting "state.update" once will result in exactly
+      // one rendering. However, since the table-row is a complex component
+      // and the table row uses `.update` to see if any of the child
+      // components would need an update. If the call comes from
+      // the parent (or externally) we do not reset the update property
+      // to make sure that `.state.update` stays true until actually
+      // rendering the component
+      this.state.update = false
+    }
+    return true
+  }
 
+  if (dat.writable !== this.state.writable) {
+    return true
+  }
+
+  if (dat.key.toString('hex') !== this.state.key) {
+    return true
+  }
+
+  var oldTitle = (dat.metadata.title || '#' + this.state.key)
+
+  if (this.state.title !== oldTitle) {
+    return true
+  }
+
+  return false
+}
