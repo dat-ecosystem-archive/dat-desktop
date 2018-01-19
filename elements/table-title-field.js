@@ -82,8 +82,9 @@ TitleField.prototype.createElement = function (props) {
     state.placeholderTitle = '#' + state.key
   }
 
-  if (state.isEditing && state.writable) return this.renderActive()
-  else return this.renderInactive()
+  return (state.isEditing && state.writable)
+    ? this.renderActive()
+    : this.renderInactive()
 }
 
 TitleField.prototype.renderInactive = function () {
