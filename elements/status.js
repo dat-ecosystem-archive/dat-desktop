@@ -1,6 +1,7 @@
 const bytes = require('prettier-bytes')
 const html = require('choo/html')
 const css = require('sheetify')
+const { datState } = require('../lib/datInfo')
 
 const progressbar = css`
   :host {
@@ -82,15 +83,16 @@ const progressSubline = css`
 
 module.exports = function (dat, stats) {
   var progress = Math.floor((dat.progress || 0) * 100)
-  var progressbarLine = (stats.state === 'loading')
+  var state = datState(dat)
+  var progressbarLine = (state === 'loading')
     ? 'line-loading'
-    : (stats.state === 'paused' || stats.state === 'stale')
+    : (state === 'paused' || state === 'stale')
       ? 'line-paused'
       : 'line-complete'
   var netStats = dat.stats.network
 
   var progressText
-  switch (stats.state) {
+  switch (state) {
     case 'complete':
       progressText = `Complete. ↑ ${speed(netStats.uploadSpeed)}`
       break
