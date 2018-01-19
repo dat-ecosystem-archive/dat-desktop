@@ -68,7 +68,7 @@ Inspect.prototype.createElement = function (props) {
         ? bytes(dat.archive.content.byteLength)
         : 'N/A'
       : '…'
-  var peers = dat
+  var peers = (dat && dat.network)
       ? dat.network.connected
       : '…'
 
