@@ -1,4 +1,3 @@
-var Nanocomponent = require('nanocomponent')
 var nanolog = require('nanologger')
 var html = require('choo/html')
 var css = require('sheetify')
