@@ -9,6 +9,7 @@
   "dependencies": {
     "base-elements": "^2.2.1",
     "choo": "^6.6.0",
+    "choo-component-preview": "^1.1.0",
     "choo-expose": "^1.0.0",
     "choo-log": "^6.0.0",
     "choo-persist": "^3.0.0",
