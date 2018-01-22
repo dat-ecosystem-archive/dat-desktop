@@ -119,7 +119,7 @@ function Row () {
   if (!(this instanceof Row)) return new Row()
   Nanocomponent.call(this)
 
-  this.parts = {
+  this.partials = {
     hexContent: HexContent(),
     finderButton: FinderButton(),
     linkButton: LinkButton(),
@@ -133,15 +133,15 @@ Row.prototype = Object.create(Nanocomponent.prototype)
 
 Row.prototype.createElement = function (props) {
   var { dat, emit, highlight } = props
-  var parts = this.parts
-  if (dat instanceof Error) return errorRow(dat, emit, parts.deleteButton)
+  var partials = this.partials
+  if (dat instanceof Error) return errorRow(dat, emit, partials.deleteButton)
 
   var key = encoding.encode(dat.key)
   var styles = cellStyles
   if (highlight) styles += ' fade-highlight'
 
   function onclick () {
-    if (!parts.titleField.state.isEditing) {
+    if (!partials.titleField.state.isEditing) {
       emit('dats:inspect', dat)
     }
   }
@@ -150,12 +150,12 @@ Row.prototype.createElement = function (props) {
       <tr id=${key} class=${styles} onclick=${onclick}>
         <td class="cell-1">
           <div class="w2 center">
-            ${parts.hexContent.render(props)}
+            ${partials.hexContent.render(props)}
           </div>
         </td>
         <td class="cell-2">
           <div class="cell-truncate">
-            ${parts.titleField.render(props)}
+            ${partials.titleField.render(props)}
             <p class="f7 f6-l color-neutral-60 truncate">
               <span class="author">${dat.metadata.author || 'Anonymous'} • </span>
               <span class="title">
@@ -171,14 +171,14 @@ Row.prototype.createElement = function (props) {
           ${datSize(dat)}
         </td>
         <td class="cell-5 ${networkStyles}">
-          ${parts.networkIcon.render(props)}
+          ${partials.networkIcon.render(props)}
           <span class="network v-top f6 f5-l ml1">${datPeers(dat)}</span>
         </td>
         <td class="cell-6">
           <div class="flex justify-end ${iconStyles}">
-            ${parts.finderButton.render(props)}
-            ${parts.linkButton.render(props)}
-            ${parts.deleteButton.render(props)}
+            ${partials.finderButton.render(props)}
+            ${partials.linkButton.render(props)}
+            ${partials.deleteButton.render(props)}
           </div>
         </td>
       </tr>
@@ -186,7 +186,7 @@ Row.prototype.createElement = function (props) {
 }
 
 Row.prototype.update = function (props) {
-  return Object.values(this.parts).find(component => component.update(props, true)) !== undefined
+  return Object.values(this.partials).find(component => component.update(props, true)) !== undefined
 }
 
 function FinderButton () {
