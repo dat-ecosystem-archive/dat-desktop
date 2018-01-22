@@ -97,13 +97,13 @@ HeaderElement.prototype.createElement = function (props) {
   }
 
   function clickedOutside (e) {
-    if (!self.createElement(self.props).contains(e.target)) toggle(false)
+    if (!self.element.contains(e.target)) toggle(false)
   }
 
   return html`
       <header class="${header}">
         <div class="fr relative">
-          ${importButton.createElement({
+          ${importButton.render({
             onsubmit: onimport
           })}
           ${createButton}
