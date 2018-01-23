@@ -27,6 +27,7 @@ tap('init', function (t) {
       .then((val) => t.notEqual(val.width, 0, 'getBounds'))
       .then(() => app.browserWindow.getBounds())
       .then((val) => t.notEqual(val.height, 0, 'getBounds'))
+      .catch(e => t.fail(e))
       .then(() => endTest(app))
   })
   t.end()
@@ -53,6 +54,7 @@ tap('onboarding', function (t) {
       .then(() => app.client.click('button'))
       .then(() => wait())
       .then(() => app.client.getText('button[title="Skip Intro"]'))
+      .catch(e => t.fail(e))
       .then(() => endTest(app))
   })
   t.end()
@@ -99,6 +101,7 @@ tap('working with dats', function (t) {
     .then(() => wait())
     .then(() => app.client.getText('.tutorial'))
     .then((text) => t.ok(text.toLowerCase().match(/share/), 'now the dat is gone and welcome screen is back'))
+    .catch(e => t.fail(e))
     .then(() => endTest(app))
 })
 
