@@ -106,12 +106,14 @@ tap('working with dats', function (t) {
 })
 
 // Create a new app instance
-function createApp () {
-  return new spectron.Application({
+function createApp (opts) {
+  var app = new spectron.Application({
     path: path.join(__dirname, '../node_modules/.bin/electron'),
     args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA, '--db', TEST_DATA_DB],
     env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true }
   })
+  process.on('SIGTERM', () => endTest(app))
+  return app
 }
 
 // Starts the app, waits for it to load, returns a promise
