@@ -3,6 +3,7 @@ var spectron = require('spectron')
 var path = require('path')
 var tap = require('tap').test
 var del = require('del')
+var { execSync } = require('child_process')
 
 var TEST_DATA = path.join(__dirname, 'test_data')
 var TEST_DATA_DB = path.join(TEST_DATA, 'multidat.json')
@@ -138,7 +139,13 @@ function wait (ms) {
 
 // Quit the app, end the test, either in success (!err) or failure (err)
 function endTest (app) {
-  var paths = [TEST_DATA, path.join(__dirname, 'fixtures', '.dat')]
-  return del(paths)
-    .then(() => app.stop())
+  var fixPath = path.join(__dirname, 'fixtures')
+  return Promise.all([
+    del(fixPath),
+    del(TEST_DATA)
+  ])
+    .then(() => {
+      execSync(`git checkout -- "${fixPath}"`)
+      return app.stop()
+    })
 }
