@@ -26,6 +26,15 @@ var downloadsDir = (argv.data)
 
 module.exports = datsModel
 
+function showOpenDialog () {
+  if (process.env.TEST_OPEN_DIALOG_RESULT) {
+    return [process.env.TEST_OPEN_DIALOG_RESULT]
+  }
+  return dialog.showOpenDialog({
+    properties: ['openDirectory']
+  })
+}
+
 function datsModel (state, bus) {
   state.dats = xtend({
     downloadsDir: downloadsDir,
@@ -92,9 +101,7 @@ function datsModel (state, bus) {
   // choose a directory and convert it to a dat archive
   bus.on('dats:create', function (pathname) {
     if (!pathname) {
-      var files = dialog.showOpenDialog({
-        properties: ['openDirectory']
-      })
+      var files = showOpenDialog()
       if (!files || !files.length) return
       pathname = files[0]
     }

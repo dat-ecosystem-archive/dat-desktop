@@ -62,7 +62,9 @@ tap('onboarding', function (t) {
 })
 
 tap('working with dats', function (t) {
-  var app = createApp()
+  var app = createApp({
+    openDialogResult: path.join(__dirname, 'fixtures')
+  })
   return waitForLoad(app)
     .then(() => app.browserWindow.isVisible())
     .then((isVisible) => t.ok(isVisible, 'isVisible'))
@@ -108,10 +110,11 @@ tap('working with dats', function (t) {
 
 // Create a new app instance
 function createApp (opts) {
+  opts = opts || {}
   var app = new spectron.Application({
     path: path.join(__dirname, '../node_modules/.bin/electron'),
     args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA, '--db', TEST_DATA_DB],
-    env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true }
+    env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true, TEST_OPEN_DIALOG_RESULT: opts.openDialogResult }
   })
   process.on('SIGTERM', () => endTest(app))
   return app
