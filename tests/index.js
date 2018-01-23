@@ -72,7 +72,7 @@ tap('working with dats', function (t) {
     .then(() => wait(4000))
     .then(() => app.client.click('button[title="Skip Intro"]'))
     .then(() => wait())
-    .then(() => app.client.click('button')) // create new
+    .then(() => app.client.click('button[title="Share Folder"]')) // create new
     .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
