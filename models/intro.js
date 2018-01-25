@@ -10,7 +10,7 @@ function introModel (state, bus) {
 
   // FIXME: wait for DOMContentLoaded
   // requires some sort of global load event first
-  bus.on('dats:loaded', function () {
+  bus.once('dats:loaded', function () {
     if (state.dats.values.length) return
     state.intro.show = true
     bus.emit('render')
