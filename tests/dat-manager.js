@@ -1,3 +1,4 @@
+#!/usr/bin/env node node_modules/.bin/electron
 var tape = require('tape')
 var Multidat = require('multidat')
 var toilet = require('toiletdb/inmemory')

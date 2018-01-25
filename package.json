@@ -51,7 +51,7 @@
     "start": "cross-env NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
     "test:integration": "node tests",
-    "test:unit": "node tests/intro.js && electron tests/dat-manager.js",
+    "test:unit": "./tests/dat-manager.js && ./tests/intro.js",
     "postinstall": "node scripts/build.js postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"

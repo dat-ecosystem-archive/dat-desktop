@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var EventEmitter = require('events').EventEmitter
 var tape = require('tape')
 var spok = require('spok')
