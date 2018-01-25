@@ -6,6 +6,7 @@ var tap = require('tap').test
 var del = require('del')
 var { execSync } = require('child_process')
 var wait = require('./utils/wait')
+var waitForAndClick = require('./utils/waitForAndClick')
 
 var TEST_DATA = path.join(__dirname, 'test_data')
 var TEST_DATA_DB = path.join(TEST_DATA, 'multidat.json')
@@ -38,8 +39,7 @@ tap('onboarding', function (t) {
       .then(() => t.resolveMatch(app.browserWindow.getTitle(), 'Dat Desktop | Welcome', 'correct title'))
       .then(() => app.client.click('button'))
       .then(() => wait())
-      .then(() => app.client.click('button[title="Skip Intro"]'))
-      .then(() => wait())
+      .then(() => waitForAndClick(t, app, 'button[title="Skip Intro"]'))
       .then(() => t.resolveMatch(app.browserWindow.getTitle(), 'Dat Desktop', 'correct title'))
       .then(() => app.stop())
       .then(() => Promise.resolve(app = createApp()))
@@ -58,11 +58,9 @@ tap('working with dats', function (t) {
   var app = createApp()
   return waitForLoad(app)
     .then(() => t.resolveMatch(app.browserWindow.isVisible(), true, 'isVisible'))
-    .then(() => app.client.click('button'))
-    .then(() => wait(4000))
-    .then(() => app.client.click('button[title="Skip Intro"]'))
-    .then(() => wait())
-    .then(() => app.client.click('button')) // create new
+    .then(() => waitForAndClick(t, app, 'button[title="Get Started"]'))
+    .then(() => waitForAndClick(t, app, 'button[title="Skip Intro"]'))
+    .then(() => waitForAndClick(t, app, 'button'))
     .then(() => wait())
     .then(() => app.client.getText('.size'))
     .then((text) => {
@@ -85,8 +83,7 @@ tap('working with dats', function (t) {
     .then((text) => {
       t.ok(text.match(/(126|52) B/), 'contains correct size')
     })
-    .then(() => wait())
-    .then(() => app.client.click('button.delete'))
+    .then(() => waitForAndClick(t, app, 'button.delete'))
     .then(() => app.client.click('button.cancel-button'))
     .then(() => app.client.click('button.delete'))
     .then(() => app.client.click('button.confirm-button'))
