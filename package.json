@@ -50,8 +50,8 @@
     "build-background": "node scripts/build.js background",
     "start": "cross-env NODE_ENV=development electron .",
     "test": "standard && npm run deps && npm run test:unit && npm run test:integration",
-    "test:integration": "./tests/index.js",
-    "test:unit": "./tests/dat-manager.js && ./tests/intro.js",
+    "test:integration": "node ./tests/index.js",
+    "test:unit": "electron ./tests/dat-manager.js && node ./tests/intro.js",
     "postinstall": "node scripts/build.js postinstall",
     "pack": "build --dir",
     "dist": "build --publish=onTagOrDraft"
