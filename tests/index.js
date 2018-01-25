@@ -5,6 +5,7 @@ var path = require('path')
 var tap = require('tap').test
 var del = require('del')
 var { execSync } = require('child_process')
+var wait = require('./utils/wait')
 
 var TEST_DATA = path.join(__dirname, 'test_data')
 var TEST_DATA_DB = path.join(TEST_DATA, 'multidat.json')
@@ -116,14 +117,6 @@ function waitForLoad (app, t) {
     return app.client.windowByIndex(0)
   }).then(function () {
     return app.client.waitUntilWindowLoaded()
-  })
-}
-
-// Returns a promise that resolves after 'ms' milliseconds. Default: 1 second
-function wait (ms) {
-  ms = ms || 3000
-  return new Promise(function (resolve, reject) {
-    setTimeout(resolve, ms)
   })
 }
 
