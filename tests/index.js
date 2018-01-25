@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var clipboard = require('clipboardy')
 var spectron = require('spectron')
 var path = require('path')
