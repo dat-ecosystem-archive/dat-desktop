@@ -1,9 +1,13 @@
 #!/usr/bin/env node node_modules/.bin/electron
-var tape = require('tape')
+var tap = require('tap')
+var test = tap.test
 var Multidat = require('multidat')
 var toilet = require('toiletdb/inmemory')
 
 var Manager = require('../lib/dat-manager')
+tap.on('result', function (res) {
+  process.exit(res.ok ? 0 : 1)
+})
 
 function setup (db, dbPaused, cb) {
   if (typeof db === 'function') {
@@ -22,7 +26,7 @@ function setup (db, dbPaused, cb) {
   })
 }
 
-tape('dat-manager', function (t) {
+test('dat-manager', function (t) {
   t.test('Manager({ multidat, dbPaused, onupdate })', function (t) {
     t.test('assert arguments', function (t) {
       setup(function (err, { multidat, dbPaused }) {
@@ -267,11 +271,7 @@ tape('dat-manager', function (t) {
         })
       })
     })
-  })
-
-  t.test('finish', function (t) {
     t.end()
-    process.exit(Number(!t._ok))
   })
 
   t.end()

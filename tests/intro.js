@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 var EventEmitter = require('events').EventEmitter
-var tape = require('tape')
+var test = require('tap').test
 var spok = require('spok')
 
 var intro = require('../models/intro')
 
-tape('models/intro: should initialize with a default state', function (t) {
+test('models/intro: should initialize with a default state', function (t) {
   var state = {}
   var emitter = new EventEmitter()
   intro(state, emitter)
@@ -17,7 +17,7 @@ tape('models/intro: should initialize with a default state', function (t) {
   t.end()
 })
 
-tape('should show intro screen if there are no dats', function (t) {
+test('should show intro screen if there are no dats', function (t) {
   var state = {
     dats: {
       values: []
@@ -37,7 +37,7 @@ tape('should show intro screen if there are no dats', function (t) {
   t.end()
 })
 
-tape('should be able to hide the intro screen', function (t) {
+test('should be able to hide the intro screen', function (t) {
   var state = {
     intro: {
       show: true
