@@ -13,22 +13,16 @@ tap('init', function (t) {
   t.test('should be able to boot up the app', function (t) {
     var app = createApp()
     return waitForLoad(app)
-      .then(() => app.browserWindow.isVisible())
-      .then((val) => t.ok(val, 'isVisible'))
-      .then(() => app.client.getWindowCount())
-      .then((val) => t.equal(val, 1, 'getWindowCount'))
-      .then(() => app.browserWindow.isMinimized())
-      .then((val) => t.equal(val, false, 'isMinimized'))
-      .then(() => app.browserWindow.isDevToolsOpened())
-      .then((val) => t.equal(val, false, 'isDevToolsOpened'))
-      .then(() => app.browserWindow.isVisible())
-      .then((val) => t.equal(val, true, 'isVisible'))
-      .then(() => app.browserWindow.isFocused())
-      .then((val) => t.equal(val, true, 'isFocused'))
-      .then(() => app.browserWindow.getBounds())
-      .then((val) => t.notEqual(val.width, 0, 'getBounds'))
-      .then(() => app.browserWindow.getBounds())
-      .then((val) => t.notEqual(val.height, 0, 'getBounds'))
+      .then(() => Promise.all([
+        t.resolveMatch(app.browserWindow.isVisible(), true, 'isVisible'),
+        t.resolveMatch(app.client.getWindowCount(), 1, 'getWindowCount'),
+        t.resolveMatch(app.browserWindow.isMinimized(), false, 'isMinimized'),
+        t.resolveMatch(app.browserWindow.isDevToolsOpened(), false, 'isDevToolsOpened'),
+        t.resolveMatch(app.browserWindow.isVisible(), true, 'isVisible'),
+        t.resolveMatch(app.browserWindow.isFocused(), true, 'isFocused'),
+        t.resolveMatch(app.browserWindow.getBounds().then(bounds => bounds.width !== 0), true, 'getBounds'),
+        t.resolveMatch(app.browserWindow.getBounds().then(bounds => bounds.height !== 0), true, 'getBounds')
+      ]))
       .catch(e => t.fail(e))
       .then(() => endTest(app))
   })
@@ -39,16 +33,13 @@ tap('onboarding', function (t) {
   t.test('intro should show every time you open the app as long as you have no dats', function (t) {
     var app = createApp()
     return waitForLoad(app)
-      .then(() => app.browserWindow.isVisible())
-      .then((isVisible) => t.ok(isVisible, 'isVisible'))
-      .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
+      .then(() => t.resolveMatch(app.browserWindow.isVisible(), true, 'isVisible'))
+      .then(() => t.resolveMatch(app.browserWindow.getTitle(), 'Dat Desktop | Welcome', 'correct title'))
       .then(() => app.client.click('button'))
       .then(() => wait())
       .then(() => app.client.click('button[title="Skip Intro"]'))
       .then(() => wait())
-      .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop', 'correct title'))
+      .then(() => t.resolveMatch(app.browserWindow.getTitle(), 'Dat Desktop', 'correct title'))
       .then(() => app.stop())
       .then(() => Promise.resolve(app = createApp()))
       .then(() => waitForLoad(app))
@@ -65,8 +56,7 @@ tap('onboarding', function (t) {
 tap('working with dats', function (t) {
   var app = createApp()
   return waitForLoad(app)
-    .then(() => app.browserWindow.isVisible())
-    .then((isVisible) => t.ok(isVisible, 'isVisible'))
+    .then(() => t.resolveMatch(app.browserWindow.isVisible(), true, 'isVisible'))
     .then(() => app.client.click('button'))
     .then(() => wait(4000))
     .then(() => app.client.click('button[title="Skip Intro"]'))
@@ -83,8 +73,7 @@ tap('working with dats', function (t) {
     .then(() => app.client.click('button[title="Share Dat"]'))
     .then(() => app.client.click('button[title="Copy to Clipboard"]'))
     .then(() => wait())
-    .then(() => clipboard.read())
-    .then(text => t.ok(text.match(/^dat:\/\/[0-9a-f]{32}/), 'link copied to clipboard'))
+    .then(() => t.resolveMatch(clipboard.read(), /^dat:\/\/[0-9a-f]{32}/, 'link copied to clipboard'))
     .then(() => app.stop())
     .then(() => Promise.resolve(app = createApp()))
     .then(() => waitForLoad(app))
