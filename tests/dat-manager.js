@@ -73,6 +73,7 @@ tape('dat-manager', function (t) {
         })
       }
     })
+    t.end()
   })
 
   t.test('.create(dir, opts, cb)', function (t) {
@@ -119,6 +120,7 @@ tape('dat-manager', function (t) {
         })
       })
     })
+    t.end()
   })
 
   t.test('.close(key, cb)', function (t) {
@@ -148,6 +150,7 @@ tape('dat-manager', function (t) {
         })
       })
     })
+    t.end()
   })
 
   t.test('.pause(dat, cb)', function (t) {
@@ -174,6 +177,7 @@ tape('dat-manager', function (t) {
         })
       })
     })
+    t.end()
   })
 
   t.test('.resume(dat, cb)', function (t) {
@@ -206,6 +210,7 @@ tape('dat-manager', function (t) {
         })
       })
     })
+    t.end()
   })
 
   t.test('.togglePause(dat, cb)', function (t) {
@@ -268,4 +273,6 @@ tape('dat-manager', function (t) {
     t.end()
     process.exit(Number(!t._ok))
   })
+
+  t.end()
 })
