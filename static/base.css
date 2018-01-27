@@ -1,0 +1,91 @@
+@font-face {
+  font-family: 'SourceSansPro';
+  src: url('fonts/SourceSansPro-Regular.ttf')  format('truetype')
+}
+
+@font-face {
+  font-family: 'SourceCodePro';
+  src: url('fonts/SourceCodePro-Regular.ttf')  format('truetype')
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+main {
+  overflow-y: auto;
+  height: calc(100vh - 5rem); /* height of header + status bar */
+  background-color: var(--color-white);
+}
+
+body, input, textarea, select, button {
+  font-family: 'SourceSansPro', sans-serif;
+  &:focus {
+    outline: none;
+  }
+}
+
+pre, code {
+  font-family: 'SourceCodePro', monospace;
+}
+
+input, textarea, select, button {
+  -webkit-user-drag: none;
+}
+
+html {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+button {
+  border: none;
+}
+
+.is-selectable {
+  -webkit-user-select: auto;
+  cursor: auto;
+}
+
+.is-draggable {
+  -webkit-app-region: drag;
+}
+
+/* fading animation to highlight new dats */
+.fade-highlight {
+  animation: fade-highlight 2.25s ease-in-out;
+}
+@keyframes fade-highlight {
+  0% { background-color: rgba(42,202,75,.2); }
+  35% { background-color: rgba(42,202,75,.2); }
+  100% { background-color: rgba(42,202,75,0); }
+}
