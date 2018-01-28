@@ -18,7 +18,7 @@ export const addDat = key => dispatch => {
   dispatch({ type: 'ADD_DAT', key, path })
 
   Dat(path, { key }, (error, dat) => {
-    if (error) return dispatch({ type: 'ADD_DAT_ERR', key, error })
+    if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
 
     dat.joinNetwork()
     dat.trackStats()
