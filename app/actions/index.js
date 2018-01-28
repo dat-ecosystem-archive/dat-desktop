@@ -111,7 +111,6 @@ export const confirmDeleteDat = key => dispatch => {
   clearInterval(dat.updateInterval)
 
   dat.close()
-
   dats.delete(key)
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
