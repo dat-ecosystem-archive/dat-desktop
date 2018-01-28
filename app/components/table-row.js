@@ -130,11 +130,11 @@ const LinkButton = ({ ...props }) => (
   />
 )
 
-const DeleteButton = ({ onDeleteDat }) => (
+const DeleteButton = ({ ...props }) => (
   <Button.Icon
     icon={<Icon name="delete" />}
     className="row-action"
-    onClick={onDeleteDat}
+    { ...props }
   />
 )
 
@@ -176,7 +176,7 @@ const Row = ({ dat, shareDat, onDeleteDat }) => (
       <IconContainer className="flex justify-end">
         <FinderButton dat={dat} />
         <LinkButton onClick={() => shareDat(`dat://${dat.key}`)} />
-        <DeleteButton onDeleteDat={() => onDeleteDat(dat.key)}/>
+        <DeleteButton onClick={() => onDeleteDat(dat.key)} />
       </IconContainer>
     </td>
   </Tr>

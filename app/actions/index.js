@@ -5,6 +5,8 @@ import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard } from 'electron'
 
+const dats = new Map()
+
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
 export const copyLink = link => {
   clipboard.writeText(link)
@@ -23,6 +25,7 @@ export const addDat = key => dispatch => {
     dat.joinNetwork()
     dat.trackStats()
 
+    dats.set(key, dat)
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
     dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
 
@@ -78,6 +81,7 @@ export const addDat = key => dispatch => {
     })
 
     const updateConnections = () => {
+      if (dat.network)
       dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
     }
     updateConnections()
@@ -95,8 +99,7 @@ export const addDat = key => dispatch => {
 export const deleteDat = key => dispatch => {
   dispatch({ type: 'REMOVE_DAT', key })
   const path = `${homedir()}/Downloads/${key}`
-  Dat(path, { key }, (error, dat) => {
-    if (error) return dispatch({ type: 'REMOVE_DAT_ERR' })
-    dat.close()
-  })
+  const dat = dats.get(key)
+  dat.close()
+  dats.delete(key)
 }
