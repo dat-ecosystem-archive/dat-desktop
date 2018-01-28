@@ -91,3 +91,12 @@ export const addDat = key => dispatch => {
     }, 1000)
   })
 }
+
+export const deleteDat = key => dispatch => {
+  dispatch({ type: 'REMOVE_DAT', key })
+  const path = `${homedir()}/Downloads/${key}`
+  Dat(path, { key }, (error, dat) => {
+    if (error) return dispatch({ type: 'REMOVE_DAT_ERR' })
+    dat.close()
+  })
+}

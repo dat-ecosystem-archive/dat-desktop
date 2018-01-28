@@ -43,6 +43,11 @@ const redatApp = (state = defaultState, action) => {
           }
         }
       }
+    case 'REMOVE_DAT':
+      let { [action.key]: del, ...remainingDats } = state.dats
+      return {...state,
+        dats: remainingDats
+      }
     case 'DAT_METADATA':
       return {...state,
         dats: {...state.dats,

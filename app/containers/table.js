@@ -1,7 +1,7 @@
 'use strict'
 
 import Table from '../components/table'
-import { shareDat } from '../actions'
+import { shareDat, deleteDat } from '../actions'
 import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({
@@ -9,7 +9,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  shareDat: link => dispatch(shareDat(link))
+  shareDat: link => dispatch(shareDat(link)),
+  onDeleteDat: key => dispatch(deleteDat(key)) 
 })
 
 const TableContainer = connect(

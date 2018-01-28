@@ -39,7 +39,7 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, shareDat }) => (
+const Table = ({ dats, shareDat, onDeleteDat }) => (
   <main>
     <StyledTable>
        <thead>
