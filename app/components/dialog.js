@@ -3,6 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Icon from './icon'
+import * as Button from './button'
 
 const Inner = styled.div`
   min-width: 25rem;
@@ -134,6 +135,48 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
       </LabelInput>
       <p className="f7 color-neutral-70">
         Anyone with this link can view your Dat.
+      </p>
+      <button
+        onClick={onExit}
+        className="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
+        aria-label="Close Modal"
+      >
+        <Icon name="cross" />
+      </button>
+    </Inner>
+  </div>
+)
+
+export const Confirm = ({ dat, onConfirm, onExit }) => (
+  <div
+    className="modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999"
+    style={{ display: dat ? 'flex' : 'none' }}
+  >
+    <Inner
+      className="relative flex flex-column justify-center"
+    >
+      <h3 className="f4">
+        Remove Dat
+      </h3>
+      <p className="mt3 mb4 f7 color-neutral-70">
+        Are you sure you want to remove this dat?
+        <br />
+        This can’t be undone.
+      </p>
+      <p>
+        <Button.Green
+          className="fr ml3 confirm-button"
+          onClick={() => onConfirm(dat)}
+        >
+          Yes, Remove Dat
+        </Button.Green>
+        <Button.Plain
+          className="fr cancel-button"
+          onClick={onExit}
+          autoFocus={true}
+        >
+          No, Cancel
+        </Button.Plain>
       </p>
       <button
         onClick={onExit}

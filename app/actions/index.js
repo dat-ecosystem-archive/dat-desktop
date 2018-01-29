@@ -96,10 +96,13 @@ export const addDat = key => dispatch => {
   })
 }
 
-export const deleteDat = key => dispatch => {
-  dispatch({ type: 'REMOVE_DAT', key })
+export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
+export const confirmDeleteDat = key => dispatch => {
   const path = `${homedir()}/Downloads/${key}`
   const dat = dats.get(key)
   dat.close()
   dats.delete(key)
+  dispatch({ type: 'REMOVE_DAT', key })
+  dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
+export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
