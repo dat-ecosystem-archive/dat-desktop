@@ -39,7 +39,7 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, shareDat }) => (
+const Table = ({ dats, shareDat, onDeleteDat }) => (
   <main>
     <StyledTable>
        <thead>
@@ -54,7 +54,7 @@ const Table = ({ dats, shareDat }) => (
       </thead>
       <tbody>
         {Object.keys(dats).map(key => (
-          <TableRow dat={dats[key]} key={key} shareDat={shareDat} />
+          <TableRow dat={dats[key]} key={key} shareDat={shareDat} onDeleteDat={onDeleteDat} />
         ))}
       </tbody>
     </StyledTable>
