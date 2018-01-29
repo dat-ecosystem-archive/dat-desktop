@@ -112,35 +112,35 @@ const LabelInput = styled.label`
 
 export const Link = ({ link, copied, onCopy, onExit }) => (
   <div
-    className="modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999"
+    className='modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999'
     style={{ display: link ? 'flex' : 'none' }}
   >
-  	<Inner
-      className="relative flex flex-column justify-center"
+    <Inner
+      className='relative flex flex-column justify-center'
     >
-      <h3 className="f4">
+      <h3 className='f4'>
         Copy Dat Link
       </h3>
-      <LabelInput for="dat-link" className="relative mt4 mb4">
+      <LabelInput for='dat-link' className='relative mt4 mb4'>
         <p className={`f7 mt0 mb0 tr absolute confirmation ${copied ? 'show-confirmation' : ''}`}>
-          <Icon name="check" />
+          <Icon name='check' />
           Link copied to clipboard
         </p>
-        <input name="dat-link" type="text" value={link || ''} className="relative dib pa0 dat-input-input"></input>
-        <Icon name="link" />
-        <button className="absolute pointer dat-input-button" title="Copy to Clipboard" aria-label="Copy to Clipboard" onClick={() => onCopy(link)}>
-          <Icon name="clipboard" />
+        <input name='dat-link' type='text' value={link || ''} className='relative dib pa0 dat-input-input' />
+        <Icon name='link' />
+        <button className='absolute pointer dat-input-button' title='Copy to Clipboard' aria-label='Copy to Clipboard' onClick={() => onCopy(link)}>
+          <Icon name='clipboard' />
         </button>
       </LabelInput>
-      <p className="f7 color-neutral-70">
+      <p className='f7 color-neutral-70'>
         Anyone with this link can view your Dat.
       </p>
       <button
         onClick={onExit}
-        className="absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit"
-        aria-label="Close Modal"
+        className='absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit'
+        aria-label='Close Modal'
       >
-        <Icon name="cross" />
+        <Icon name='cross' />
       </button>
     </Inner>
   </div>

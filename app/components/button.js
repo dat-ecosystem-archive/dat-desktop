@@ -20,7 +20,6 @@ const HeaderButton = BaseButton.extend`
   }
 `
 
-
 var PlainButton = styled.button`
   padding: .5rem .75rem;
   font-size: .75rem;
@@ -83,7 +82,7 @@ export const Icon = ({ icon, ...props }) => (
 export const Plain = ({ children, ...props }) => (
   <PlainButton {...props}>
     <InnerWrapperComponent>
-      {children} 
+      {children}
     </InnerWrapperComponent>
   </PlainButton>
 )
@@ -91,7 +90,7 @@ export const Plain = ({ children, ...props }) => (
 export const Green = ({ children, icon, ...props }) => (
   <GreenButton {...props}>
     <InnerWrapperComponent icon={icon}>
-      {children} 
+      {children}
     </InnerWrapperComponent>
   </GreenButton>
 )
@@ -99,7 +98,7 @@ export const Green = ({ children, icon, ...props }) => (
 export const Red = ({ children, icon, ...props }) => (
   <RedButton {...props}>
     <InnerWrapperComponent icon={icon}>
-      {children} 
+      {children}
     </InnerWrapperComponent>
   </RedButton>
 )
@@ -107,7 +106,7 @@ export const Red = ({ children, icon, ...props }) => (
 const InnerWrapperComponent = ({ children, icon }) => (
   <InnerWrapper>
     {icon}
-    <span className="btn-text ml1">
+    <span className='btn-text ml1'>
       {children}
     </span>
   </InnerWrapper>

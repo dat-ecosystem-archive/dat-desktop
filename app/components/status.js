@@ -73,7 +73,7 @@ const ProgressBar = styled.div`
   }
 `
 
-const ProgressSubline= styled.span`
+const ProgressSubline = styled.span`
   .arrow {
     vertical-align: top;
   }
@@ -82,7 +82,6 @@ const ProgressSubline= styled.span`
 const speed = n => `${bytes(n || 0)}/s`
 
 const Status = ({ dat }) => {
-  const stats = dat.stats
   const progress = Math.floor((dat.progress || 0) * 100)
   const progressbarLine = dat.state === 'loading'
     ? 'line-loading'
@@ -99,7 +98,7 @@ const Status = ({ dat }) => {
     case 'loading':
       progressText = (
         <span>
-          <span className="arrow">↓ </span> {speed(netStats.downloadSpeed)}<span className="arrow ml2">↑ </span> {speed(netStats.uploadSpeed)}
+          <span className='arrow'>↓ </span> {speed(netStats.downloadSpeed)}<span className='arrow ml2'>↑ </span> {speed(netStats.uploadSpeed)}
         </span>
       )
       break
@@ -109,20 +108,18 @@ const Status = ({ dat }) => {
     default:
       progressText = 'Paused.'
   }
-  
 
   return (
     <div>
       <ProgressBar>
-        <div className="f6 f5-l counter">
+        <div className='f6 f5-l counter'>
           {progress}%
         </div>
-        <div className="bar">
-          <div className={`line ${progressbarLine}`} style={{width: `${progress}%`}}>
-          </div>
+        <div className='bar'>
+          <div className={`line ${progressbarLine}`} style={{width: `${progress}%`}} />
         </div>
       </ProgressBar>
-      <p className="f7 f6-l color-neutral-60 truncate">
+      <p className='f7 f6-l color-neutral-60 truncate'>
         <ProgressSubline>
           {progressText}
         </ProgressSubline>

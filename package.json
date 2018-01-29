@@ -8,6 +8,7 @@
   "author": "Dat Team",
   "scripts": {
     "start": "electron .",
+    "test": "standard",
     "watch": "webpack --watch"
   },
   "devDependencies": {
