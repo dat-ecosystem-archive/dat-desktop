@@ -4,9 +4,17 @@ var toilet = require('toiletdb/inmemory')
 
 var Manager = require('../lib/dat-manager')
 
-function setup (cb) {
-  var db = toilet()
-  var dbPaused = toilet()
+function setup (db, dbPaused, cb) {
+  if (typeof db === 'function') {
+    dbPaused = db
+    db = null
+  }
+  if (typeof dbPaused === 'function') {
+    cb = dbPaused
+    dbPaused = null
+  }
+  if (!db) db = toilet()
+  if (!dbPaused) dbPaused = toilet()
   Multidat(db, function (err, multidat) {
     if (err) return cb(err)
     cb(null, { multidat, dbPaused })
@@ -25,25 +33,44 @@ tape('dat-manager', function (t) {
         t.throws(Manager.bind(null, { multidat }, onupdate))
         var manager = Manager({ multidat, dbPaused }, onupdate)
         t.ok(manager)
-        t.end()
+        manager.disconnect(function (err) {
+          t.error(err)
+          t.end()
+        })
       })
     })
     t.test('load existing dats', function (t) {
-      setup(function (err, { multidat, dbPaused }) {
+      var db = toilet()
+      var dbPaused = toilet()
+      setup(db, dbPaused, function (err, { multidat, dbPaused }) {
         t.error(err)
         function onupdate () {}
-        var managerA = Manager({ multidat, dbPaused }, onupdate)
-        managerA.create(`/tmp/${Math.random()}`, function (err) {
+        var manager = Manager({ multidat, dbPaused }, onupdate)
+        manager.create(`/tmp/${Math.random()}`, function (err) {
           t.error(err)
-          function onupdate (err, dats) {
-            if (t.ended || dats.length !== 1) return
+          manager.disconnect(function () {
             t.error(err)
-            t.equal(dats.length, 1)
-            t.end()
-          }
-          Manager({ multidat, dbPaused }, onupdate)
+            secondTime()
+          })
         })
       })
+      function secondTime () {
+        setup(db, dbPaused, function (err, { multidat, dbPaused }) {
+          t.error(err)
+          var manager = Manager({ multidat, dbPaused }, onupdate)
+          var ended = false
+          function onupdate (err, dats) {
+            if (ended || dats.length !== 1) return
+            ended = true
+            t.error(err)
+            t.equal(dats.length, 1, 'The dat should exist the second time around')
+            manager.disconnect(function (err) {
+              t.error(err)
+              t.end()
+            })
+          }
+        })
+      }
     })
   })
 
@@ -59,20 +86,27 @@ tape('dat-manager', function (t) {
         t.throws(manager.create.bind(manager, dir, {}))
         manager.create(dir, {}, function () {})
         manager.create(dir, function () {})
-        t.end()
+        manager.disconnect(function (err) {
+          t.error(err)
+          t.end()
+        })
       })
     })
     t.test('create a dat', function (t) {
       setup(function (err, { multidat, dbPaused }) {
         t.error(err)
+        var ended = false
         function onupdate (err, dats) {
-          if (t.ended) return
+          if (ended) return
           t.error(err)
           var dat = dats[0]
           if (dat && dat.network && dat.metadata && dat.metadata.title && dat.stats && typeof dat.progress === 'number') {
             t.equal(dat.metadata.title, basename)
             t.equal(dat.metadata.author, 'Anonymous')
-            t.end()
+            manager.disconnect(function (err) {
+              t.error(err)
+              t.end()
+            })
           }
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
@@ -88,12 +122,13 @@ tape('dat-manager', function (t) {
 
   t.test('.close(key, cb)', function (t) {
     t.test('close a dat', function (t) {
-      t.plan(5)
+      t.plan(6)
       setup(function (err, { multidat, dbPaused }) {
         t.error(err, 'setup')
         var closing = false
+        var ended = false
         function onupdate (err, dats) {
-          if (!t.ended && closing && dats.length === 0) {
+          if (!ended && closing && dats.length === 0) {
             t.error(err)
             t.ok(true, 'onupdate')
           }
@@ -104,6 +139,10 @@ tape('dat-manager', function (t) {
           closing = true
           manager.close(dat.key, function (err) {
             t.error(err, 'dat closed')
+            ended = true
+            manager.disconnect(function (err) {
+              t.error(err)
+            })
           })
         })
       })
@@ -120,7 +159,10 @@ tape('dat-manager', function (t) {
           var dat = dats[0]
           if (!dat) return
           t.notOk(dat.network)
-          t.end()
+          manager.disconnect(function (err) {
+            t.error(err)
+            t.end()
+          })
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
         manager.create(`/tmp/${Math.random()}`, function (err, dat) {
@@ -138,12 +180,17 @@ tape('dat-manager', function (t) {
       setup(function (err, { multidat, dbPaused }) {
         t.error(err)
         var resuming = false
+        var ended = false
         function onupdate (err, dats) {
-          if (!dats.length || !resuming || t.ended) return
+          if (!dats.length || !resuming || ended) return
+          ended = true
           t.error(err)
           var dat = dats[0]
           t.ok(dat.network)
-          t.end()
+          manager.disconnect(function (err) {
+            t.error(err)
+            t.end()
+          })
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
         manager.create(`/tmp/${Math.random()}`, function (err, dat) {
@@ -164,13 +211,17 @@ tape('dat-manager', function (t) {
     t.test('pause a dat', function (t) {
       setup(function (err, { multidat, dbPaused }) {
         t.error(err)
+        var ended = false
         function onupdate (err, dats) {
-          if (!dats.length || t.ended) return
+          if (!dats.length || ended) return
+          ended = true
           t.error(err)
           var dat = dats[0]
-          if (!dat) return
           t.notOk(dat.network)
-          t.end()
+          manager.disconnect(function (err) {
+            t.error(err)
+            t.end()
+          })
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
         manager.create(`/tmp/${Math.random()}`, function (err, dat) {
@@ -185,12 +236,17 @@ tape('dat-manager', function (t) {
       setup(function (err, { multidat, dbPaused }) {
         t.error(err)
         var resuming = false
+        var ended = false
         function onupdate (err, dats) {
-          if (!dats.length || !resuming || t.ended) return
+          if (!dats.length || !resuming || ended) return
+          ended = true
           t.error(err)
           var dat = dats[0]
           t.ok(dat.network)
-          t.end()
+          manager.disconnect(function (err) {
+            t.error(err)
+            t.end()
+          })
         }
         var manager = Manager({ multidat, dbPaused }, onupdate)
         manager.create(`/tmp/${Math.random()}`, function (err, dat) {
