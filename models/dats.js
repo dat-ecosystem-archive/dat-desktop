@@ -75,9 +75,9 @@ function datsModel (state, bus) {
         state.dats.speed = speed
         state.dats.ready = true
         bus.emit('render')
+        bus.emit('dats:loaded')
+        done()
       })
-      bus.emit('dats:loaded')
-      done()
     }
   ]
 
