@@ -13,9 +13,6 @@ const mapDispatchToProps = dispatch => ({
   onDeleteDat: key => dispatch(deleteDat(key))
 })
 
-const TableContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Table)
+const TableContainer = connect(mapStateToProps, mapDispatchToProps)(Table)
 
 export default TableContainer

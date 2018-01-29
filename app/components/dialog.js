@@ -9,7 +9,7 @@ const Inner = styled.div`
   max-width: 32rem;
   padding: 2rem 2.5rem 2rem;
   background-color: var(--color-white);
-  box-shadow: 0 1.2rem 2.4rem rgba(0,0,0,.5);
+  box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.5);
   .exit {
     border: none;
     color: var(--color-neutral-40);
@@ -22,7 +22,7 @@ const Inner = styled.div`
     vertical-align: middle;
     width: 1.6em;
     max-height: 1.6em;
-    transition: color .025s ease-out;
+    transition: color 0.025s ease-out;
     margin-right: auto;
     margin-left: auto;
   }
@@ -54,20 +54,20 @@ const LabelInput = styled.label`
     position: absolute;
     top: 0;
     bottom: 0;
-    padding-top: calc(var(--icon-height) - .35rem);
-    padding-left: .75rem;
+    padding-top: calc(var(--icon-height) - 0.35rem);
+    padding-left: 0.75rem;
     pointer-events: none;
     display: block;
     width: var(--icon-height);
     height: var(--icon-height);
-    transition: color .025s ease-out;
+    transition: color 0.025s ease-out;
   }
   .icon-link {
     left: 0;
     color: var(--color-neutral-30);
   }
   .icon-clipboard {
-    right: .8rem;
+    right: 0.8rem;
   }
   .dat-input-input {
     width: 100%;
@@ -93,20 +93,20 @@ const LabelInput = styled.label`
   }
   .icon-check {
     width: var(--icon-height);
-    height: .875rem;
-    vertical-align: -.15rem;
+    height: 0.875rem;
+    vertical-align: -0.15rem;
     display: inline-block;
   }
   .confirmation {
     right: 0;
     opacity: 0;
-    top: -.5rem;
+    top: -0.5rem;
     color: var(--color-blue);
   }
   .show-confirmation {
     top: -1.2rem;
     opacity: 1;
-    transition: all .15s ease-out;
+    transition: all 0.15s ease-out;
   }
 `
 
@@ -115,20 +115,30 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
     className='modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999'
     style={{ display: link ? 'flex' : 'none' }}
   >
-    <Inner
-      className='relative flex flex-column justify-center'
-    >
-      <h3 className='f4'>
-        Copy Dat Link
-      </h3>
+    <Inner className='relative flex flex-column justify-center'>
+      <h3 className='f4'>Copy Dat Link</h3>
       <LabelInput for='dat-link' className='relative mt4 mb4'>
-        <p className={`f7 mt0 mb0 tr absolute confirmation ${copied ? 'show-confirmation' : ''}`}>
+        <p
+          className={`f7 mt0 mb0 tr absolute confirmation ${
+            copied ? 'show-confirmation' : ''
+          }`}
+        >
           <Icon name='check' />
           Link copied to clipboard
         </p>
-        <input name='dat-link' type='text' value={link || ''} className='relative dib pa0 dat-input-input' />
+        <input
+          name='dat-link'
+          type='text'
+          value={link || ''}
+          className='relative dib pa0 dat-input-input'
+        />
         <Icon name='link' />
-        <button className='absolute pointer dat-input-button' title='Copy to Clipboard' aria-label='Copy to Clipboard' onClick={() => onCopy(link)}>
+        <button
+          className='absolute pointer dat-input-button'
+          title='Copy to Clipboard'
+          aria-label='Copy to Clipboard'
+          onClick={() => onCopy(link)}
+        >
           <Icon name='clipboard' />
         </button>
       </LabelInput>

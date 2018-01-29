@@ -8,8 +8,8 @@ const Label = styled.label`
   --icon-height: 1.2rem;
   color: var(--color-neutral-30);
   .icon-link {
-    padding-top: .42rem;
-    padding-left: .5rem;
+    padding-top: 0.42rem;
+    padding-left: 0.5rem;
     pointer-events: none;
     width: var(--icon-height);
     height: var(--icon-height);
@@ -17,16 +17,16 @@ const Label = styled.label`
   input {
     height: 2rem;
     width: 7.25rem;
-    padding-right: .5rem;
+    padding-right: 0.5rem;
     padding-left: 2rem;
     border: 1px solid transparent;
     background-color: transparent;
     color: var(--color-neutral-30);
     opacity: 1;
     text-transform: uppercase;
-    letter-spacing: .025em;
+    letter-spacing: 0.025em;
     transition-property: width;
-    transition-duration: .15s;
+    transition-duration: 0.15s;
     transition-timing-function: ease-in;
     &::-webkit-input-placeholder {
       color: var(--color-neutral-30);
@@ -63,7 +63,8 @@ const DatImport = ({ onAddDat }) => {
 
   return (
     <Label for='dat-import' className='relative dib pa0 b--none'>
-      <input name='dat-import'
+      <input
+        name='dat-import'
         type='text'
         placeholder='Download'
         onKeyDown={onKeyDown}

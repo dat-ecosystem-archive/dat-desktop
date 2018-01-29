@@ -9,7 +9,11 @@ const Svg = styled.svg`
 `
 
 const Icon = ({ name, ...props }) => (
-  <Svg viewBox='0 0 16 16' {...props} className={`icon-${name} ${props.className || ''}`}>
+  <Svg
+    viewBox='0 0 16 16'
+    {...props}
+    className={`icon-${name} ${props.className || ''}`}
+  >
     <use xlinkHref={`#daticon-${name}`} />
   </Svg>
 )
