@@ -146,4 +146,4 @@ export const inspectDat = key => dispatch => {
   dispatch({ type: 'INSPECT_DAT', key })
 }
 
-export const closeInspectDat = key => ({ type: 'INSPECT_DAT_CLOSE', key })
+export const closeInspectDat = () => ({ type: 'INSPECT_DAT_CLOSE' })

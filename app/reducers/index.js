@@ -78,7 +78,7 @@ const redatApp = (state = defaultState, action) => {
     case 'INSPECT_DAT_CLOSE': 
       return { ...state, 
         inspect: { ...state.inspect,
-          dat: null,
+          key: null,
           show: false
         }
       }

@@ -128,7 +128,7 @@ const Inspect = ({ dat, closeInspectDat, addFilesToDat }) => {
       </div>
       <DetailFooter className="pa3 flex items-center justify-between bg-white">
         <div className="flex ml2">
-          <PlainButton onClick={() => closeInspectDat(dat)}>
+          <PlainButton onClick={() => closeInspectDat()}>
             ← Back to Overview
           </PlainButton>
         </div>

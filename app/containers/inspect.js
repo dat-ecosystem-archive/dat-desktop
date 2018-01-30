@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  closeInspectDat: dat => dispatch(closeInspectDat)
+  closeInspectDat: () => dispatch(closeInspectDat())
 })
 
 const InspectContainer = connect(
