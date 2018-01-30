@@ -7,6 +7,7 @@ import Icon from './icon'
 import Status from './status'
 import bytes from 'prettier-bytes'
 import FinderButton from './finder-button'
+import HexContent from './hex-content'
 
 const Tr = styled.tr`
   transition: background-color .025s ease-out;
@@ -105,40 +106,6 @@ const NetworkContainer = styled.td`
     --polygon-1-color: var(--color-red);
   }
 `
-
-const HexContent = ({ dat }) => {
-  if (dat.state === 'loading') {
-    return (
-      <Button.Icon
-        icon={<Icon name="hexagon-down" className="w2" />}
-        className="color-blue hover-color-blue-hover ph0"
-      />
-    )
-  }
-  if (dat.state === 'paused') {
-    return (
-      <Button.Icon
-        icon={<Icon name="hexagon-resume" className="w2" />}
-        className="color-neutral-30 hover-color-neutral-40 ph0"
-      />
-    )
-  }
-  if (dat.state === 'complete') {
-    return (
-      <Button.Icon
-        icon={<Icon name="hexagon-up" className="w2" />}
-        className="color-green hover-color-green-hover ph0"
-      />
-    )
-  }
-
-  return (
-    <Button.Icon
-      icon={<Icon name="hexagon-x" className="w2" />}
-      className="color-neutral-30 hover-color-neutral-40 ph0"
-    />
-  )
-}
 
 const NetworkIcon = ({ dat }) => {
   const iconClass = dat.peers === 0
