@@ -2,6 +2,7 @@
 
 const { app, BrowserWindow } = require('electron')
 const { neutral } = require('dat-colors')
+const autoUpdater = require('./lib/auto-updater')
 
 let win
 
@@ -16,6 +17,11 @@ app.on('ready', () => {
   })
   win.loadURL(`file://${__dirname}/index.html`)
   win.webContents.openDevTools()
+
+  if (process.env.NODE_ENV === 'production') {
+    const log = str => win && win.webContents.send('log', str)
+    autoUpdater({ log })
+  }
 })
 
 app.on('window-all-closed', () => app.quit())
