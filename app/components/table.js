@@ -40,7 +40,7 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, shareDat, onDeleteDat }) => {
+const Table = ({ dats, showInspect, shareDat, onDeleteDat, inspectDat }) => {
   if (!Object.keys(dats).length) return <Empty />
 
   return (
@@ -63,6 +63,7 @@ const Table = ({ dats, shareDat, onDeleteDat }) => {
               key={key}
               shareDat={shareDat}
               onDeleteDat={onDeleteDat}
+              inspectDat={inspectDat}
             />
           ))}
         </tbody>

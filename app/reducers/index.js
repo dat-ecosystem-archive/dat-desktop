@@ -14,6 +14,10 @@ const defaultState = {
   speed: {
     up: 0,
     down: 0
+  },
+  inspect: {
+    key: null,
+    show: false
   }
 }
 
@@ -64,6 +68,28 @@ const redatApp = (state = defaultState, action) => {
     case 'REMOVE_DAT':
       const { [action.key]: del, ...dats } = state.dats
       return { ...state, dats }
+    case 'INSPECT_DAT':
+      return { ...state,
+        inspect: { ...state.inspect,
+          key: action.key,
+          show: true
+        }
+      }
+    case 'INSPECT_DAT_CLOSE': 
+      return { ...state, 
+        inspect: { ...state.inspect,
+          dat: null,
+          show: false
+        }
+      }
+    case 'ADD_FILE_TO_DAT':
+      return { ...state,
+        dats: { ...state.dats,
+          [action.key]: {...state.dats[action.key],
+            files: action.files
+          }
+        }
+      }
     case 'DAT_METADATA':
       return {
         ...state,
