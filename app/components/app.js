@@ -5,6 +5,7 @@ import Sprite from './sprite'
 import Header from './header'
 import TableContainer from '../containers/table'
 import LinkContainer from '../containers/dialog'
+import DragDropContainer from '../containers/drag-drop'
 
 const App = () => (
   <Fragment>
@@ -12,6 +13,7 @@ const App = () => (
     <Header />
     <TableContainer />
     <LinkContainer />
+    <DragDropContainer />
   </Fragment>
 )
 
