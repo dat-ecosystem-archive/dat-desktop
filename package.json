@@ -69,7 +69,7 @@
     "nodemon": "^1.9.2",
     "npm-run-path": "^2.0.2",
     "sheetify-nested": "^1.0.2",
-    "spectron": "^3.5.0",
+    "spectron": "^3.8.0",
     "spok": "^0.7.0",
     "standard": "^7.1.2",
     "tap": "^11.0.1",
