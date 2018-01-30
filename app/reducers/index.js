@@ -7,6 +7,10 @@ const defaultState = {
       link: null,
       copied: false
     }
+  },
+  speed: {
+    up: 0,
+    down: 0
   }
 }
 
@@ -21,7 +25,10 @@ const redatApp = (state = defaultState, action) => {
             loading: true,
             metadata: {},
             stats: {
-              network: {}
+              network: {
+                uploadSpeed: 0,
+                downloadSpeed: 0
+              }
             }
           }
         }
@@ -90,8 +97,12 @@ const redatApp = (state = defaultState, action) => {
       return {...state,
         dats: {...state.dats,
           [action.key]: {...state.dats[action.key],
-            stats: {...state.dats[action.key].stats, network: action.stats}
+            stats: {...state.dats[action.key].stats, network: {...action.stats}}
           }
+        },
+        speed: {
+          up: state.speed.up - state.dats[action.key].stats.network.uploadSpeed + action.stats.uploadSpeed,
+          down: state.speed.down - state.dats[action.key].stats.network.downloadSpeed + action.stats.downloadSpeed
         }
       }
     case 'DAT_PEERS':
