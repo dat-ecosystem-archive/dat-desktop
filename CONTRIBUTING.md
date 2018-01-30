@@ -19,4 +19,4 @@ If there is no issue that describes your poblem, go ahead and [open a new issue]
 
 ## Pull Requests
 
-Please give 36-48h time for reviews on each Pull Request, as we are a distributed team of non-fulltime contributors.
+Please give 2 week days of time for reviews on each Pull Request, as we are a distributed team of non-fulltime contributors.
