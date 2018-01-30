@@ -9,6 +9,7 @@ import App from './components/app'
 import logger from 'redux-logger'
 import persistState from 'redux-localstorage'
 import thunk from 'redux-thunk'
+import { ipcRenderer as ipc } from 'electron'
 
 const store = createStore(
   redatApp,
@@ -21,3 +22,5 @@ render(
   </Provider>,
   document.querySelector('div')
 )
+
+ipc.on('log', (_, str) => console.log(str))
