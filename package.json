@@ -63,7 +63,7 @@
     "cross-env": "^5.1.1",
     "del": "^2.2.2",
     "dependency-check": "^2.6.0",
-    "electron": "^1.7.9",
+    "electron": "^1.7.11",
     "electron-builder": "^8.6.0",
     "envify": "^4.0.0",
     "nodemon": "^1.9.2",
