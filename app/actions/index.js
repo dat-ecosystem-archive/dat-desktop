@@ -91,7 +91,14 @@ export const addDat = key => dispatch => {
       const stats = JSON.stringify(dat.stats.network)
       if (stats === prevNetworkStats) return
       prevNetworkStats = stats
-      dispatch({ type: 'DAT_NETWORK_STATS', key, stats: {...dat.stats.network} })
+      dispatch({
+        type: 'DAT_NETWORK_STATS',
+        key,
+        stats: {
+          up: dat.stats.network.uploadSpeed,
+          down: dat.stats.network.downloadSpeed
+        }
+      })
     }, 1000)
   })
 }
