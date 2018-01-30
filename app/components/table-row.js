@@ -108,7 +108,7 @@ const NetworkContainer = styled.td`
 
 const HexContent = () => (
   <Button.Icon
-    icon={<Icon name="hexagon-down" className="c2" />}
+    icon={<Icon name="hexagon-down" className="w2" />}
     className="color-blue hover-color-blue-hover ph0"
   />
 )
