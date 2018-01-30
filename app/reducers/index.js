@@ -97,7 +97,7 @@ const redatApp = (state = defaultState, action) => {
       return {...state,
         dats: {...state.dats,
           [action.key]: {...state.dats[action.key],
-            stats: {...state.dats[action.key].stats, network: {...action.stats}}
+            stats: {...state.dats[action.key].stats, network: action.stats}
           }
         },
         speed: {
