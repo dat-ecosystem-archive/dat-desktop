@@ -86,7 +86,7 @@ const Status = ({ dat }) => {
   const progress = Math.floor((dat.progress || 0) * 100)
   const progressbarLine = dat.state === 'loading'
     ? 'line-loading'
-    : dat.state === 'paused' || dat.state === 'stale'
+    : dat.paused || dat.state === 'stale'
       ? 'line-paused'
       : 'line-complete'
   const netStats = dat.stats.network

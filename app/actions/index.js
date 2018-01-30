@@ -4,6 +4,7 @@ import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard } from 'electron'
+import { EventEmitter } from 'events'
 
 const dats = new Map()
 
@@ -22,6 +23,7 @@ export const addDat = key => dispatch => {
   Dat(path, { key }, (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
 
+    dat.events = new EventEmitter()
     dat.joinNetwork()
     dat.trackStats()
 
@@ -71,14 +73,17 @@ export const addDat = key => dispatch => {
     }
     updateProgress()
 
-    dat.network.on('connection', con => {
-      updateConnections()
-      updateState()
-      con.on('close', () => {
+    dat.events.on('join network', () => {
+      dat.network.on('connection', con => {
         updateConnections()
         updateState()
+        con.on('close', () => {
+          updateConnections()
+          updateState()
+        })
       })
     })
+    dat.events.emit('join network')
 
     const updateConnections = () => {
       if (dat.network)
@@ -110,4 +115,17 @@ export const deleteDat = key => dispatch => {
   dat.close()
 
   dats.delete(key)
+}
+
+export const togglePause = ({ key, paused }) => dispatch => {
+  const dat = dats.get(key)
+  if (paused) {
+    dat.joinNetwork()
+    dat.events.emit('join network')
+  } else {
+    dat.leaveNetwork()
+  }
+  dispatch(paused
+    ? { type: 'RESUME_DAT', key: key }
+    : { type: 'PAUSE_DAT', key: key })
 }

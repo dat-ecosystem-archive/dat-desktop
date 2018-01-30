@@ -11,6 +11,9 @@ const BaseButton = styled.button`
   .icon-only {
     .btn-text { display: none }
   }
+  :hover, :focus {
+    outline: 0;
+  }
 `
 
 const HeaderButton = BaseButton.extend`

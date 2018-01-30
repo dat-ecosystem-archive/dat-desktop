@@ -140,10 +140,10 @@ const TitleField = ({ dat }) => (
   </div>
 )
 
-const Row = ({ dat, shareDat, onDeleteDat }) => (
+const Row = ({ dat, shareDat, onDeleteDat, onTogglePause }) => (
   <Tr>
     <td className="cell-1">
-      <div className="w2 center">
+      <div className="w2 center" onClick={() => onTogglePause(dat)}>
         <HexContent dat={dat} />
       </div>
     </td>
