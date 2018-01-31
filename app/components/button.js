@@ -5,25 +5,27 @@ import styled from 'styled-components'
 
 const BaseButton = styled.button`
   text-transform: uppercase;
-  letter-spacing: .025em;
+  letter-spacing: 0.025em;
   cursor: pointer;
   background-color: transparent;
   .icon-only {
-    .btn-text { display: none }
+    .btn-text {
+      display: none;
+    }
   }
 `
 
 const HeaderButton = BaseButton.extend`
   color: var(--color-neutral-30);
-  :hover, :focus {
+  :hover,
+  :focus {
     color: var(--color-white);
   }
 `
 
-
 var PlainButton = styled.button`
-  padding: .5rem .75rem;
-  font-size: .75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
   background-color: transparent;
   color: var(--color-neutral-40);
   :hover,
@@ -33,8 +35,8 @@ var PlainButton = styled.button`
 `
 
 var GreenButton = styled.button`
-  padding: .5rem .75rem;
-  font-size: .75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
   background-color: var(--color-green);
   color: var(--color-neutral-04);
   :hover,
@@ -45,8 +47,8 @@ var GreenButton = styled.button`
 `
 
 var RedButton = styled.button`
-  padding: .5rem .75rem;
-  font-size: .75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
   background-color: var(--color-red);
   color: var(--color-neutral-04);
   :hover,
@@ -66,49 +68,37 @@ const InnerWrapper = styled.div`
 
 export const Header = ({ children, icon, ...props }) => (
   <HeaderButton {...props}>
-    <InnerWrapperComponent icon={icon}>
-      {children}
-    </InnerWrapperComponent>
+    <InnerWrapperComponent icon={icon}>{children}</InnerWrapperComponent>
   </HeaderButton>
 )
 
 export const Icon = ({ icon, ...props }) => (
   <BaseButton {...props}>
-    <InnerWrapper>
-      {icon}
-    </InnerWrapper>
+    <InnerWrapper>{icon}</InnerWrapper>
   </BaseButton>
 )
 
 export const Plain = ({ children, ...props }) => (
   <PlainButton {...props}>
-    <InnerWrapperComponent>
-      {children} 
-    </InnerWrapperComponent>
+    <InnerWrapperComponent>{children}</InnerWrapperComponent>
   </PlainButton>
 )
 
 export const Green = ({ children, icon, ...props }) => (
   <GreenButton {...props}>
-    <InnerWrapperComponent icon={icon}>
-      {children} 
-    </InnerWrapperComponent>
+    <InnerWrapperComponent icon={icon}>{children}</InnerWrapperComponent>
   </GreenButton>
 )
 
 export const Red = ({ children, icon, ...props }) => (
   <RedButton {...props}>
-    <InnerWrapperComponent icon={icon}>
-      {children} 
-    </InnerWrapperComponent>
+    <InnerWrapperComponent icon={icon}>{children}</InnerWrapperComponent>
   </RedButton>
 )
 
 const InnerWrapperComponent = ({ children, icon }) => (
   <InnerWrapper>
     {icon}
-    <span className="btn-text ml1">
-      {children}
-    </span>
+    <span className='btn-text ml1'>{children}</span>
   </InnerWrapper>
 )

@@ -43,7 +43,7 @@ export const addDat = key => dispatch => {
     dat.stats.on('update', stats => {
       if (!stats) stats = dat.stats.get()
       updateProgress(stats)
-      dispatch({ type: 'DAT_STATS', key, stats: {...stats} })
+      dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
     })
 
     const updateState = () => {
@@ -51,9 +51,7 @@ export const addDat = key => dispatch => {
         ? 'paused'
         : dat.writable || dat.progress === 1
           ? 'complete'
-          : dat.network.connected
-            ? 'loading'
-            : 'stale'
+          : dat.network.connected ? 'loading' : 'stale'
       dispatch({ type: 'DAT_STATE', key, state })
     }
     updateState()
@@ -62,9 +60,7 @@ export const addDat = key => dispatch => {
       if (!stats) stats = dat.stats.get()
       const progress = !dat.stats
         ? 0
-        : dat.writable
-          ? 1
-          : Math.min(1, stats.downloaded / stats.length)
+        : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
       dat.progress = progress
       dispatch({ type: 'DAT_PROGRESS', key, progress })
       updateState()
@@ -81,17 +77,22 @@ export const addDat = key => dispatch => {
     })
 
     const updateConnections = () => {
-      if (dat.network)
-      dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+      if (dat.network) {
+        dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+      }
     }
     updateConnections()
 
     let prevNetworkStats
-    setInterval(() => {
+    dat.updateInterval = setInterval(() => {
       const stats = JSON.stringify(dat.stats.network)
       if (stats === prevNetworkStats) return
       prevNetworkStats = stats
-      dispatch({ type: 'DAT_NETWORK_STATS', key, stats: {...dat.stats.network} })
+      dispatch({
+        type: 'DAT_NETWORK_STATS',
+        key,
+        stats: { ...dat.stats.network }
+      })
     }, 1000)
   })
 }
@@ -100,7 +101,15 @@ export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
   const path = `${homedir()}/Downloads/${key}`
   const dat = dats.get(key)
+
+  for (const con of dat.network.connections) {
+    con.removeAllListeners()
+  }
+  dat.stats.removeAllListeners()
+  clearInterval(dat.updateInterval)
+
   dat.close()
+
   dats.delete(key)
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
