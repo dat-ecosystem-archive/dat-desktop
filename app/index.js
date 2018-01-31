@@ -12,7 +12,7 @@ import thunk from 'redux-thunk'
 
 const store = createStore(
   redatApp,
-  compose(/* persistState(), */applyMiddleware(thunk, logger))
+  compose(/* persistState(), */ applyMiddleware(thunk, logger))
 )
 
 render(

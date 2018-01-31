@@ -9,8 +9,9 @@ import bytes from 'prettier-bytes'
 import FinderButton from './finder-button'
 
 const Tr = styled.tr`
-  transition: background-color .025s ease-out;
-  &:hover, &:focus {
+  transition: background-color 0.025s ease-out;
+  &:hover,
+  &:focus {
     background-color: var(--color-neutral-04);
     cursor: pointer;
   }
@@ -141,20 +142,15 @@ const HexContent = ({ dat }) => {
 }
 
 const NetworkIcon = ({ dat }) => {
-  const iconClass = dat.peers === 0
-    ? 'network-peers-0'
-    : dat.peers === 1
-      ? 'network-peers-1'
-      : 'network-peers-many'
+  const iconClass =
+    dat.peers === 0
+      ? 'network-peers-0'
+      : dat.peers === 1 ? 'network-peers-1' : 'network-peers-many'
   return <Icon name='network' className={iconClass} />
 }
 
 const LinkButton = ({ ...props }) => (
-  <Button.Icon
-    icon={<Icon name='link' />}
-    className='row-action'
-    {...props}
-  />
+  <Button.Icon icon={<Icon name='link' />} className='row-action' {...props} />
 )
 
 const DeleteButton = ({ ...props }) => (
@@ -184,17 +180,19 @@ const Row = ({ dat, shareDat, onDeleteDat }) => (
       <div className='cell-truncate'>
         <TitleField dat={dat} />
         <p className='f7 f6-l color-neutral-60 truncate'>
-          <span className='author'>{dat.metadata.author || 'Anonymous'} • </span>
-          <span className='title'>{dat.writable ? 'Read & Write' : 'Read-only'}</span>
+          <span className='author'>
+            {dat.metadata.author || 'Anonymous'} •{' '}
+          </span>
+          <span className='title'>
+            {dat.writable ? 'Read & Write' : 'Read-only'}
+          </span>
         </p>
       </div>
     </td>
     <td className='cell-3'>
       <Status dat={dat} />
     </td>
-    <td className='f6 f5-l cell-4 size'>
-      {bytes(dat.stats.length || 0)}
-    </td>
+    <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.length || 0)}</td>
     <NetworkContainer className='cell-5'>
       <NetworkIcon dat={dat} />
       <span className='network v-top f6 f5-l ml1'>{dat.peers}</span>

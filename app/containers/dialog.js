@@ -12,9 +12,6 @@ const mapDispatchToProps = dispatch => ({
   onExit: () => dispatch(closeShareDat())
 })
 
-const LinkContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Link)
+const LinkContainer = connect(mapStateToProps, mapDispatchToProps)(Link)
 
 export default LinkContainer
