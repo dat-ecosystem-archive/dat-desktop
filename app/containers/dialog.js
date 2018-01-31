@@ -1,7 +1,9 @@
 import { Link, Confirm } from '../components/dialog'
 import {
-  copyLink, closeShareDat,
-  confirmDeleteDat, cancelDeleteDat
+  copyLink,
+  closeShareDat,
+  confirmDeleteDat,
+  cancelDeleteDat
 } from '../actions'
 import { connect } from 'react-redux'
 

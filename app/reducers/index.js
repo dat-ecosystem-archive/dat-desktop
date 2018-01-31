@@ -168,16 +168,20 @@ const redatApp = (state = defaultState, action) => {
         }
       }
     case 'DIALOGS_DELETE_OPEN':
-      return {...state,
-        dialogs: {...state.dialogs,
+      return {
+        ...state,
+        dialogs: {
+          ...state.dialogs,
           delete: {
             dat: action.key
           }
         }
       }
     case 'DIALOGS_DELETE_CLOSE':
-      return {...state,
-        dialogs: {...state.dialogs,
+      return {
+        ...state,
+        dialogs: {
+          ...state.dialogs,
           delete: {
             dat: null
           }

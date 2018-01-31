@@ -99,7 +99,6 @@ export const addDat = key => dispatch => {
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
-  const path = `${homedir()}/Downloads/${key}`
   const dat = dats.get(key)
 
   for (const con of dat.network.connections) {
