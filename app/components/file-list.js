@@ -28,7 +28,7 @@ const List = ({ dat }) => (
           <FileListTable className="w-100 f7 f6-l ">
             <tbody>
               {dat.files.map(file => {
-                var size = (Number(file.size) == file.size) && file.isFile
+                const size = (Number(file.size) == file.size) && file.isFile
                   ? bytes(file.size)
                   : ''
                 return (
