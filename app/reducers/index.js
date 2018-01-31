@@ -6,6 +6,9 @@ const defaultState = {
     link: {
       link: null,
       copied: false
+    },
+    delete: {
+      dat: null
     }
   }
 }
@@ -161,6 +164,26 @@ const redatApp = (state = defaultState, action) => {
           link: {
             link: null,
             copied: false
+          }
+        }
+      }
+    case 'DIALOGS_DELETE_OPEN':
+      return {
+        ...state,
+        dialogs: {
+          ...state.dialogs,
+          delete: {
+            dat: action.key
+          }
+        }
+      }
+    case 'DIALOGS_DELETE_CLOSE':
+      return {
+        ...state,
+        dialogs: {
+          ...state.dialogs,
+          delete: {
+            dat: null
           }
         }
       }
