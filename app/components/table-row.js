@@ -142,11 +142,10 @@ const HexContent = ({ dat }) => {
 }
 
 const NetworkIcon = ({ dat }) => {
-  const iconClass = dat.peers === 0
-    ? 'network-peers-0'
-    : dat.peers === 1
-      ? 'network-peers-1'
-      : 'network-peers-many'
+  const iconClass =
+    dat.peers === 0
+      ? 'network-peers-0'
+      : dat.peers === 1 ? 'network-peers-1' : 'network-peers-many'
   return <Icon name='network' className={iconClass} />
 }
 
