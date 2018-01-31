@@ -107,18 +107,46 @@ const NetworkContainer = styled.td`
   }
 `
 
-const HexContent = () => (
-  <Button.Icon
-    icon={<Icon name='hexagon-down' className='c2' />}
-    className='color-blue hover-color-blue-hover ph0'
-  />
-)
+const HexContent = ({ dat }) => {
+  if (dat.state === 'loading') {
+    return (
+      <Button.Icon
+        icon={<Icon name='hexagon-down' className='w2' />}
+        className='color-blue hover-color-blue-hover ph0'
+      />
+    )
+  }
+  if (dat.state === 'paused') {
+    return (
+      <Button.Icon
+        icon={<Icon name='hexagon-resume' className='w2' />}
+        className='color-neutral-30 hover-color-neutral-40 ph0'
+      />
+    )
+  }
+  if (dat.state === 'complete') {
+    return (
+      <Button.Icon
+        icon={<Icon name='hexagon-up' className='w2' />}
+        className='color-green hover-color-green-hover ph0'
+      />
+    )
+  }
+
+  return (
+    <Button.Icon
+      icon={<Icon name='hexagon-x' className='w2' />}
+      className='color-neutral-30 hover-color-neutral-40 ph0'
+    />
+  )
+}
 
 const NetworkIcon = ({ dat }) => {
-  const iconClass =
-    dat.peers === 0
-      ? 'network-peers-0'
-      : dat.peers === 1 ? 'network-peers-1' : 'network-peers-many'
+  const iconClass = dat.peers === 0
+    ? 'network-peers-0'
+    : dat.peers === 1
+      ? 'network-peers-1'
+      : 'network-peers-many'
   return <Icon name='network' className={iconClass} />
 }
 
@@ -146,7 +174,7 @@ const Row = ({ dat, shareDat, onDeleteDat }) => (
   <Tr>
     <td className='cell-1'>
       <div className='w2 center'>
-        <HexContent />
+        <HexContent dat={dat} />
       </div>
     </td>
     <td className='cell-2'>

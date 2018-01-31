@@ -19,5 +19,5 @@ render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.querySelector('main')
+  document.querySelector('div')
 )
