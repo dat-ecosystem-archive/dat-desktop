@@ -8,9 +8,6 @@ const mapDispatchToProps = dispatch => ({
   onDrop: list => dispatch(dropFolder(list[0]))
 })
 
-const DragDropContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FileDrop)
+const DragDropContainer = connect(mapStateToProps, mapDispatchToProps)(FileDrop)
 
 export default DragDropContainer
