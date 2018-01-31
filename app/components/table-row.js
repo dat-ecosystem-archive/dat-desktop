@@ -10,8 +10,9 @@ import FinderButton from './finder-button'
 import HexContent from './hex-content'
 
 const Tr = styled.tr`
-  transition: background-color .025s ease-out;
-  &:hover, &:focus {
+  transition: background-color 0.025s ease-out;
+  &:hover,
+  &:focus {
     background-color: var(--color-neutral-04);
     cursor: pointer;
   }
@@ -108,33 +109,28 @@ const NetworkContainer = styled.td`
 `
 
 const NetworkIcon = ({ dat }) => {
-  const iconClass = dat.peers === 0
-    ? 'network-peers-0'
-    : dat.peers === 1
-      ? 'network-peers-1'
-      : 'network-peers-many'
-  return <Icon name="network" className={iconClass} />
+  const iconClass =
+    dat.peers === 0
+      ? 'network-peers-0'
+      : dat.peers === 1 ? 'network-peers-1' : 'network-peers-many'
+  return <Icon name='network' className={iconClass} />
 }
 
 const LinkButton = ({ ...props }) => (
-  <Button.Icon
-    icon={<Icon name="link" />}
-    className="row-action"
-    {...props}
-  />
+  <Button.Icon icon={<Icon name='link' />} className='row-action' {...props} />
 )
 
 const DeleteButton = ({ ...props }) => (
   <Button.Icon
-    icon={<Icon name="delete" />}
-    className="row-action"
-    { ...props }
+    icon={<Icon name='delete' />}
+    className='row-action'
+    {...props}
   />
 )
 
 const TitleField = ({ dat }) => (
   <div>
-    <h2 className="f6 f5-l normal truncate pr3">
+    <h2 className='f6 f5-l normal truncate pr3'>
       {dat.metadata.title || `#${dat.key}`}
     </h2>
   </div>
@@ -142,32 +138,34 @@ const TitleField = ({ dat }) => (
 
 const Row = ({ dat, shareDat, onDeleteDat, onTogglePause }) => (
   <Tr>
-    <td className="cell-1">
-      <div className="w2 center" onClick={() => onTogglePause(dat)}>
+    <td className='cell-1'>
+      <div className='w2 center' onClick={() => onTogglePause(dat)}>
         <HexContent dat={dat} />
       </div>
     </td>
-    <td className="cell-2">
-      <div className="cell-truncate">
+    <td className='cell-2'>
+      <div className='cell-truncate'>
         <TitleField dat={dat} />
-        <p className="f7 f6-l color-neutral-60 truncate">
-          <span className="author">{dat.metadata.author || 'Anonymous'} • </span>
-          <span className="title">{dat.writable ? 'Read & Write' : 'Read-only'}</span>
+        <p className='f7 f6-l color-neutral-60 truncate'>
+          <span className='author'>
+            {dat.metadata.author || 'Anonymous'} •{' '}
+          </span>
+          <span className='title'>
+            {dat.writable ? 'Read & Write' : 'Read-only'}
+          </span>
         </p>
       </div>
     </td>
-    <td className="cell-3">
+    <td className='cell-3'>
       <Status dat={dat} />
     </td>
-    <td className="f6 f5-l cell-4 size">
-      {bytes(dat.stats.length || 0)}
-    </td>
-    <NetworkContainer className="cell-5">
+    <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.length || 0)}</td>
+    <NetworkContainer className='cell-5'>
       <NetworkIcon dat={dat} />
-      <span className="network v-top f6 f5-l ml1">{dat.peers}</span>
+      <span className='network v-top f6 f5-l ml1'>{dat.peers}</span>
     </NetworkContainer>
-    <td className="cell-6">
-      <IconContainer className="flex justify-end">
+    <td className='cell-6'>
+      <IconContainer className='flex justify-end'>
         <FinderButton dat={dat} />
         <LinkButton onClick={() => shareDat(`dat://${dat.key}`)} />
         <DeleteButton onClick={() => onDeleteDat(dat.key)} />

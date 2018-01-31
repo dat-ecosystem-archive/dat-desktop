@@ -14,9 +14,6 @@ const mapDispatchToProps = dispatch => ({
   onTogglePause: dat => dispatch(togglePause(dat))
 })
 
-const TableContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Table)
+const TableContainer = connect(mapStateToProps, mapDispatchToProps)(Table)
 
 export default TableContainer

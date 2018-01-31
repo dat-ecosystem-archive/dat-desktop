@@ -3,6 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import TableRow from './table-row'
+import Empty from './empty'
 
 const StyledTable = styled.table`
   width: 100%;
@@ -11,12 +12,12 @@ const StyledTable = styled.table`
   border-collapse: collapse;
   th,
   td {
-    padding-right: .75rem;
-    padding-left: .75rem;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
   }
   th {
     height: 4rem;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: normal;
     color: var(--color-neutral-60);
     border-bottom: 1px solid var(--color-neutral-20);
@@ -39,26 +40,36 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, shareDat, onDeleteDat, onTogglePause }) => (
-  <main>
-    <StyledTable>
-       <thead>
-        <tr>
-          <th className="cell-1"></th>
-          <th className="tl cell-2">Link</th>
-          <th className="tl cell-3">Status</th>
-          <th className="tl cell-4">Size</th>
-          <th className="tl cell-5">Peers</th>
-          <th className="cell-6"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.keys(dats).map(key => (
-          <TableRow dat={dats[key]} key={key} shareDat={shareDat} onDeleteDat={onDeleteDat} onTogglePause={onTogglePause} />
-        ))}
-      </tbody>
-    </StyledTable>
-  </main>
-)
+const Table = ({ dats, shareDat, onDeleteDat, onTogglePause }) => {
+  if (!Object.keys(dats).length) return <Empty />
+
+  return (
+    <main>
+      <StyledTable>
+        <thead>
+          <tr>
+            <th className='cell-1' />
+            <th className='tl cell-2'>Link</th>
+            <th className='tl cell-3'>Status</th>
+            <th className='tl cell-4'>Size</th>
+            <th className='tl cell-5'>Peers</th>
+            <th className='cell-6' />
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(dats).map(key => (
+            <TableRow
+              dat={dats[key]}
+              key={key}
+              shareDat={shareDat}
+              onDeleteDat={onDeleteDat}
+              onTogglePause={onTogglePause}
+            />
+          ))}
+        </tbody>
+      </StyledTable>
+    </main>
+  )
+}
 
 export default Table

@@ -69,7 +69,14 @@ tape('dat-manager', function (t) {
           if (t.ended) return
           t.error(err)
           var dat = dats[0]
-          if (dat && dat.network && dat.metadata && dat.metadata.title && dat.stats && typeof dat.progress === 'number') {
+          if (
+            dat &&
+            dat.network &&
+            dat.metadata &&
+            dat.metadata.title &&
+            dat.stats &&
+            typeof dat.progress === 'number'
+          ) {
             t.equal(dat.metadata.title, basename)
             t.equal(dat.metadata.author, 'Anonymous')
             t.end()

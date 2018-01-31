@@ -12,49 +12,52 @@ tap('init', function (t) {
     var app = createApp()
     return waitForLoad(app)
       .then(() => app.browserWindow.isVisible())
-      .then((val) => t.ok(val, 'isVisible'))
+      .then(val => t.ok(val, 'isVisible'))
       .then(() => app.client.getWindowCount())
-      .then((val) => t.equal(val, 1, 'getWindowCount'))
+      .then(val => t.equal(val, 1, 'getWindowCount'))
       .then(() => app.browserWindow.isMinimized())
-      .then((val) => t.equal(val, false, 'isMinimized'))
+      .then(val => t.equal(val, false, 'isMinimized'))
       .then(() => app.browserWindow.isDevToolsOpened())
-      .then((val) => t.equal(val, false, 'isDevToolsOpened'))
+      .then(val => t.equal(val, false, 'isDevToolsOpened'))
       .then(() => app.browserWindow.isVisible())
-      .then((val) => t.equal(val, true, 'isVisible'))
+      .then(val => t.equal(val, true, 'isVisible'))
       .then(() => app.browserWindow.isFocused())
-      .then((val) => t.equal(val, true, 'isFocused'))
+      .then(val => t.equal(val, true, 'isFocused'))
       .then(() => app.browserWindow.getBounds())
-      .then((val) => t.notEqual(val.width, 0, 'getBounds'))
+      .then(val => t.notEqual(val.width, 0, 'getBounds'))
       .then(() => app.browserWindow.getBounds())
-      .then((val) => t.notEqual(val.height, 0, 'getBounds'))
+      .then(val => t.notEqual(val.height, 0, 'getBounds'))
       .then(() => endTest(app))
   })
   t.end()
 })
 
 tap('onboarding', function (t) {
-  t.test('intro should show every time you open the app as long as you have no dats', function (t) {
-    var app = createApp()
-    return waitForLoad(app)
-      .then(() => app.browserWindow.isVisible())
-      .then((isVisible) => t.ok(isVisible, 'isVisible'))
-      .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
-      .then(() => app.client.click('button'))
-      .then(() => wait())
-      .then(() => app.client.click('button[title="Skip Intro"]'))
-      .then(() => wait())
-      .then(() => app.browserWindow.getTitle())
-      .then((title) => t.equal(title, 'Dat Desktop', 'correct title'))
-      .then(() => app.stop())
-      .then(() => Promise.resolve(app = createApp()))
-      .then(() => waitForLoad(app))
-      .then(() => app.browserWindow.isVisible())
-      .then(() => app.client.click('button'))
-      .then(() => wait())
-      .then(() => app.client.getText('button[title="Skip Intro"]'))
-      .then(() => endTest(app))
-  })
+  t.test(
+    'intro should show every time you open the app as long as you have no dats',
+    function (t) {
+      var app = createApp()
+      return waitForLoad(app)
+        .then(() => app.browserWindow.isVisible())
+        .then(isVisible => t.ok(isVisible, 'isVisible'))
+        .then(() => app.browserWindow.getTitle())
+        .then(title => t.equal(title, 'Dat Desktop | Welcome', 'correct title'))
+        .then(() => app.client.click('button'))
+        .then(() => wait())
+        .then(() => app.client.click('button[title="Skip Intro"]'))
+        .then(() => wait())
+        .then(() => app.browserWindow.getTitle())
+        .then(title => t.equal(title, 'Dat Desktop', 'correct title'))
+        .then(() => app.stop())
+        .then(() => Promise.resolve((app = createApp())))
+        .then(() => waitForLoad(app))
+        .then(() => app.browserWindow.isVisible())
+        .then(() => app.client.click('button'))
+        .then(() => wait())
+        .then(() => app.client.getText('button[title="Skip Intro"]'))
+        .then(() => endTest(app))
+    }
+  )
   t.end()
 })
 
@@ -62,7 +65,7 @@ tap('working with dats', function (t) {
   var app = createApp()
   return waitForLoad(app)
     .then(() => app.browserWindow.isVisible())
-    .then((isVisible) => t.ok(isVisible, 'isVisible'))
+    .then(isVisible => t.ok(isVisible, 'isVisible'))
     .then(() => app.client.click('button'))
     .then(() => wait(4000))
     .then(() => app.client.click('button[title="Skip Intro"]'))
@@ -70,25 +73,27 @@ tap('working with dats', function (t) {
     .then(() => app.client.click('button')) // create new
     .then(() => wait())
     .then(() => app.client.getText('.size'))
-    .then((text) => {
+    .then(text => {
       t.ok(text.match(/(126|52) B/), 'contains correct size')
     })
     .then(() => app.client.getText('.network'))
-    .then((text) => t.ok(text.match(/0/), 'contains network size'))
+    .then(text => t.ok(text.match(/0/), 'contains network size'))
     .then(() => clipboard.write(''))
     .then(() => app.client.click('button[title="Share Dat"]'))
     .then(() => app.client.click('button[title="Copy to Clipboard"]'))
     .then(() => wait())
     .then(() => clipboard.read())
-    .then(text => t.ok(text.match(/^dat:\/\/[0-9a-f]{32}/), 'link copied to clipboard'))
+    .then(text =>
+      t.ok(text.match(/^dat:\/\/[0-9a-f]{32}/), 'link copied to clipboard')
+    )
     .then(() => app.stop())
-    .then(() => Promise.resolve(app = createApp()))
+    .then(() => Promise.resolve((app = createApp())))
     .then(() => waitForLoad(app))
     .then(() => app.browserWindow.isVisible())
-    .then((isVisible) => t.equal(isVisible, true, 'reloaded and is visible'))
+    .then(isVisible => t.equal(isVisible, true, 'reloaded and is visible'))
     .then(() => wait())
     .then(() => app.client.getText('.size'))
-    .then((text) => {
+    .then(text => {
       t.ok(text.match(/(126|52) B/), 'contains correct size')
     })
     .then(() => wait())
@@ -98,7 +103,12 @@ tap('working with dats', function (t) {
     .then(() => app.client.click('button.confirm-button'))
     .then(() => wait())
     .then(() => app.client.getText('.tutorial'))
-    .then((text) => t.ok(text.toLowerCase().match(/share/), 'now the dat is gone and welcome screen is back'))
+    .then(text =>
+      t.ok(
+        text.toLowerCase().match(/share/),
+        'now the dat is gone and welcome screen is back'
+      )
+    )
     .then(() => endTest(app))
 })
 
@@ -106,21 +116,31 @@ tap('working with dats', function (t) {
 function createApp () {
   return new spectron.Application({
     path: path.join(__dirname, '../node_modules/.bin/electron'),
-    args: [path.join(__dirname, '../index.js'), '--data', TEST_DATA, '--db', TEST_DATA_DB],
+    args: [
+      path.join(__dirname, '../index.js'),
+      '--data',
+      TEST_DATA,
+      '--db',
+      TEST_DATA_DB
+    ],
     env: { NODE_ENV: 'test', RUNNING_IN_SPECTRON: true }
   })
 }
 
 // Starts the app, waits for it to load, returns a promise
 function waitForLoad (app, t) {
-  return app.start().then(function () {
-    return app.client.waitUntilWindowLoaded()
-  }).then(function () {
-    // Switch to the main window
-    return app.client.windowByIndex(0)
-  }).then(function () {
-    return app.client.waitUntilWindowLoaded()
-  })
+  return app
+    .start()
+    .then(function () {
+      return app.client.waitUntilWindowLoaded()
+    })
+    .then(function () {
+      // Switch to the main window
+      return app.client.windowByIndex(0)
+    })
+    .then(function () {
+      return app.client.waitUntilWindowLoaded()
+    })
 }
 
 // Returns a promise that resolves after 'ms' milliseconds. Default: 1 second
@@ -134,6 +154,5 @@ function wait (ms) {
 // Quit the app, end the test, either in success (!err) or failure (err)
 function endTest (app) {
   var paths = [TEST_DATA, path.join(__dirname, 'fixtures', '.dat')]
-  return del(paths)
-    .then(() => app.stop())
+  return del(paths).then(() => app.stop())
 }
