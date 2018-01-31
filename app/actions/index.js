@@ -43,7 +43,7 @@ export const addDat = key => dispatch => {
     dat.stats.on('update', stats => {
       if (!stats) stats = dat.stats.get()
       updateProgress(stats)
-      dispatch({ type: 'DAT_STATS', key, stats: {...stats} })
+      dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
     })
 
     const updateState = () => {
@@ -51,9 +51,7 @@ export const addDat = key => dispatch => {
         ? 'paused'
         : dat.writable || dat.progress === 1
           ? 'complete'
-          : dat.network.connected
-            ? 'loading'
-            : 'stale'
+          : dat.network.connected ? 'loading' : 'stale'
       dispatch({ type: 'DAT_STATE', key, state })
     }
     updateState()
@@ -62,9 +60,7 @@ export const addDat = key => dispatch => {
       if (!stats) stats = dat.stats.get()
       const progress = !dat.stats
         ? 0
-        : dat.writable
-          ? 1
-          : Math.min(1, stats.downloaded / stats.length)
+        : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
       dat.progress = progress
       dispatch({ type: 'DAT_PROGRESS', key, progress })
       updateState()
@@ -81,8 +77,9 @@ export const addDat = key => dispatch => {
     })
 
     const updateConnections = () => {
-      if (dat.network)
-      dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+      if (dat.network) {
+        dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+      }
     }
     updateConnections()
 
@@ -103,9 +100,8 @@ export const addDat = key => dispatch => {
   })
 }
 
-export const deleteDat = key => dispatch => {
-  dispatch({ type: 'REMOVE_DAT', key })
-  const path = `${homedir()}/Downloads/${key}`
+export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
+export const confirmDeleteDat = key => dispatch => {
   const dat = dats.get(key)
 
   for (const con of dat.network.connections) {
@@ -117,4 +113,7 @@ export const deleteDat = key => dispatch => {
   dat.close()
 
   dats.delete(key)
+  dispatch({ type: 'REMOVE_DAT', key })
+  dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
+export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })

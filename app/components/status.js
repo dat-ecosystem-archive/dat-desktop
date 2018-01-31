@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import bytes from 'prettier-bytes'
 
 const ProgressBar = styled.div`
-  --progress-height: .5rem;
+  --progress-height: 0.5rem;
   --bar-height: var(--progress-height);
   --counter-width: 2.5rem;
   --tile-width: 28px;
@@ -13,7 +13,7 @@ const ProgressBar = styled.div`
   min-width: 8rem;
   max-width: 24rem;
   overflow: hidden;
-  padding-top: .4rem;
+  padding-top: 0.4rem;
   .bar {
     height: var(--progress-height);
     width: calc(100% - var(--counter-width));
@@ -43,11 +43,11 @@ const ProgressBar = styled.div`
         -45deg,
         transparent,
         transparent var(--stripe-width),
-        rgba(255,255,255,.1) var(--stripe-width),
-        rgba(255,255,255,.1) calc(2 * var(--stripe-width))
+        rgba(255, 255, 255, 0.1) var(--stripe-width),
+        rgba(255, 255, 255, 0.1) calc(2 * var(--stripe-width))
       );
       background-size: var(--tile-width) var(--bar-height);
-      animation: move-bg .75s linear infinite;
+      animation: move-bg 0.75s linear infinite;
     }
   }
   .line-complete {
@@ -59,7 +59,7 @@ const ProgressBar = styled.div`
   .counter {
     float: right;
     min-width: var(--counter-width);
-    margin-top: -.4rem;
+    margin-top: -0.4rem;
     text-align: right;
   }
 
@@ -73,7 +73,7 @@ const ProgressBar = styled.div`
   }
 `
 
-const ProgressSubline= styled.span`
+const ProgressSubline = styled.span`
   .arrow {
     vertical-align: top;
   }
@@ -82,13 +82,13 @@ const ProgressSubline= styled.span`
 const speed = n => `${bytes(n || 0)}/s`
 
 const Status = ({ dat }) => {
-  const stats = dat.stats
   const progress = Math.floor((dat.progress || 0) * 100)
-  const progressbarLine = dat.state === 'loading'
-    ? 'line-loading'
-    : dat.state === 'paused' || dat.state === 'stale'
-      ? 'line-paused'
-      : 'line-complete'
+  const progressbarLine =
+    dat.state === 'loading'
+      ? 'line-loading'
+      : dat.state === 'paused' || dat.state === 'stale'
+        ? 'line-paused'
+        : 'line-complete'
   const netStats = dat.stats.network
 
   let progressText
@@ -99,7 +99,8 @@ const Status = ({ dat }) => {
     case 'loading':
       progressText = (
         <span>
-          <span className="arrow">↓ </span> {speed(netStats.down)}<span className="arrow ml2">↑ </span> {speed(netStats.up)}
+          <span className='arrow'>↓ </span> {speed(netStats.down)}
+          <span className='arrow ml2'>↑ </span> {speed(netStats.up)}
         </span>
       )
       break
@@ -109,23 +110,20 @@ const Status = ({ dat }) => {
     default:
       progressText = 'Paused.'
   }
-  
 
   return (
     <div>
       <ProgressBar>
-        <div className="f6 f5-l counter">
-          {progress}%
-        </div>
-        <div className="bar">
-          <div className={`line ${progressbarLine}`} style={{width: `${progress}%`}}>
-          </div>
+        <div className='f6 f5-l counter'>{progress}%</div>
+        <div className='bar'>
+          <div
+            className={`line ${progressbarLine}`}
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </ProgressBar>
-      <p className="f7 f6-l color-neutral-60 truncate">
-        <ProgressSubline>
-          {progressText}
-        </ProgressSubline>
+      <p className='f7 f6-l color-neutral-60 truncate'>
+        <ProgressSubline>{progressText}</ProgressSubline>
       </p>
     </div>
   )

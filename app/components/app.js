@@ -4,7 +4,7 @@ import React, { Fragment } from 'react'
 import Sprite from './sprite'
 import Header from './header'
 import TableContainer from '../containers/table'
-import LinkContainer from '../containers/dialog'
+import * as Dialog from '../containers/dialog'
 import StatusBarContainer from '../containers/status-bar'
 
 const App = () => (
@@ -13,7 +13,8 @@ const App = () => (
     <Header />
     <TableContainer />
     <StatusBarContainer />
-    <LinkContainer />
+    <Dialog.LinkContainer />
+    <Dialog.ConfirmContainer />
   </Fragment>
 )
 
