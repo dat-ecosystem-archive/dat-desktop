@@ -1,6 +1,6 @@
 'use strict'
 
-import React from 'react'
+import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import TableRow from './table-row'
 import Empty from './empty'
@@ -40,7 +40,13 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, showInspect, shareDat, onDeleteDat, inspectDat }) => {
+const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat }) => {
+  if (!show) return (
+    <Fragment>
+      <div></div>
+    </Fragment>
+  )
+
   if (!Object.keys(dats).length) return <Empty />
 
   return (

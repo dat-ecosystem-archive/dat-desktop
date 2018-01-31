@@ -15,10 +15,7 @@ const defaultState = {
     up: 0,
     down: 0
   },
-  inspect: {
-    key: null,
-    show: false
-  }
+  inspect: { key: null }
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -71,15 +68,13 @@ const redatApp = (state = defaultState, action) => {
     case 'INSPECT_DAT':
       return { ...state,
         inspect: { ...state.inspect,
-          key: action.key,
-          show: true
+          key: action.key
         }
       }
     case 'INSPECT_DAT_CLOSE': 
       return { ...state, 
         inspect: { ...state.inspect,
-          key: null,
-          show: false
+          key: null
         }
       }
     case 'DAT_FILES':
