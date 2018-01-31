@@ -81,8 +81,7 @@ export const addDat = key => dispatch => {
     })
 
     const updateConnections = () => {
-      if (dat.network)
-      dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+      if (dat.network) { dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected }) }
     }
     updateConnections()
 
@@ -98,7 +97,6 @@ export const addDat = key => dispatch => {
 
 export const deleteDat = key => dispatch => {
   dispatch({ type: 'REMOVE_DAT', key })
-  const path = `${homedir()}/Downloads/${key}`
   const dat = dats.get(key)
 
   for (const con of dat.network.connections) {

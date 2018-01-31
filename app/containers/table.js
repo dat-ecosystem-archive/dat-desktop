@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   shareDat: link => dispatch(shareDat(link)),
-  onDeleteDat: key => dispatch(deleteDat(key)) 
+  onDeleteDat: key => dispatch(deleteDat(key))
 })
 
 const TableContainer = connect(
