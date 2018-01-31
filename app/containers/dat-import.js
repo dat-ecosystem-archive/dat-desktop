@@ -10,9 +10,8 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const DatImportContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DatImport)
+const DatImportContainer = connect(mapStateToProps, mapDispatchToProps)(
+  DatImport
+)
 
 export default DatImportContainer
