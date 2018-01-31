@@ -8,8 +8,8 @@ import { shell } from 'electron'
 
 const FinderButton = ({ dat, onClick }) => (
   <Button.Icon
-    icon={<Icon name="open-in-finder" />}
-    className="row-action"
+    icon={<Icon name='open-in-finder' />}
+    className='row-action'
     onClick={() => shell.openExternal(`file://${resolve(dat.path)}`, () => {})}
   />
 )
