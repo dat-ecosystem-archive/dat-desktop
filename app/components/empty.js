@@ -13,7 +13,7 @@ const Main = styled.main`
   }
   .dotted-lines {
     position: absolute;
-    top: .25rem;
+    top: 0.25rem;
     right: 5.5rem;
     width: 17rem;
     z-index: 3;
@@ -37,34 +37,32 @@ const Main = styled.main`
     top: 6rem;
     right: 8.5rem;
     svg {
-      margin-bottom: -.75rem;
+      margin-bottom: -0.75rem;
     }
   }
 `
 
 const Empty = () => (
   <Main>
-    <img src="./assets/table-skeleton.svg" alt="" className="skeleton" />
-    <div className="tutorial">
-      <img src="./assets/dotted-lines.svg" alt="" className="dotted-lines" />
-      <div className="link">
-        <Icon name="link" />
-        <h3 className="f4 ttu mt0 mb0">
-          Download A Dat
-        </h3>
-        <p className="f7">
+    <img src='./assets/table-skeleton.svg' alt='' className='skeleton' />
+    <div className='tutorial'>
+      <img src='./assets/dotted-lines.svg' alt='' className='dotted-lines' />
+      <div className='link'>
+        <Icon name='link' />
+        <h3 className='f4 ttu mt0 mb0'>Download A Dat</h3>
+        <p className='f7'>
           … and keep data up-to-date
           <br />
           by entering the link here.
         </p>
       </div>
-      <div className="tr create-new-dat">
-        <Icon name="create-new-dat" />
-        <h3 className="f4 ttu mt0 mb0">Share a Folder</h3>
-        <p className="f7">
+      <div className='tr create-new-dat'>
+        <Icon name='create-new-dat' />
+        <h3 className='f4 ttu mt0 mb0'>Share a Folder</h3>
+        <p className='f7'>
           … and sync changes by sharing
           <br />
-           the link with someone else.
+          the link with someone else.
         </p>
       </div>
     </div>
