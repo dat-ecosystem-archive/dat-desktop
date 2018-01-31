@@ -86,7 +86,7 @@ export const addDat = key => dispatch => {
     updateConnections()
 
     let prevNetworkStats
-    setInterval(() => {
+    dat.updateInterval = setInterval(() => {
       const stats = JSON.stringify(dat.stats.network)
       if (stats === prevNetworkStats) return
       prevNetworkStats = stats
@@ -98,6 +98,14 @@ export const addDat = key => dispatch => {
 export const deleteDat = key => dispatch => {
   dispatch({ type: 'REMOVE_DAT', key })
   const dat = dats.get(key)
+
+  for (const con of dat.network.connections) {
+    con.removeAllListeners()
+  }
+  dat.stats.removeAllListeners()
+  clearInterval(dat.updateInterval)
+
   dat.close()
+
   dats.delete(key)
 }
