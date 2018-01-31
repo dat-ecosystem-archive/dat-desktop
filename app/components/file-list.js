@@ -24,27 +24,32 @@ const FileListTable = styled.table`
 const List = ({ dat }) => (
   <FileListContainer>
     {dat && dat.files && dat.files.length
-        ?
-        <FileListTable className="w-100 f7 f6-l ">
-          <tbody>
-            {dat.files.map(file => {
-              var size = (Number(file.size) == file.size) && file.isFile
-                ? bytes(file.size)
-                : ''
-              return <tr key={file.path}>
-                <td className="truncate mw5">
-                  {file.path}
-                </td>
-                <td>
-                  {size}
-                </td>
-              </tr>
-            })}
-          </tbody>
-        </FileListTable>
-        : <div className="f7 f6-l pa2">
-          N/A
-        </div>
+        ? (
+          <FileListTable className="w-100 f7 f6-l ">
+            <tbody>
+              {dat.files.map(file => {
+                var size = (Number(file.size) == file.size) && file.isFile
+                  ? bytes(file.size)
+                  : ''
+                return (
+                  <tr key={file.path}>
+                    <td className="truncate mw5">
+                      {file.path}
+                    </td>
+                    <td>
+                      {size}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </FileListTable>
+        )
+        : (
+          <div className="f7 f6-l pa2">
+            N/A
+          </div>
+        )
     }
   </FileListContainer>
 )
