@@ -10,9 +10,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({})
 
-const StatusBarContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StatusBar)
+const StatusBarContainer = connect(mapStateToProps, mapDispatchToProps)(
+  StatusBar
+)
 
 export default StatusBarContainer

@@ -130,8 +130,14 @@ const redatApp = (state = defaultState, action) => {
           }
         },
         speed: {
-          up: state.speed.up - state.dats[action.key].stats.network.up + action.stats.up,
-          down: state.speed.down - state.dats[action.key].stats.network.down + action.stats.down
+          up:
+            state.speed.up -
+            state.dats[action.key].stats.network.up +
+            action.stats.up,
+          down:
+            state.speed.down -
+            state.dats[action.key].stats.network.down +
+            action.stats.down
         }
       }
     case 'DAT_PEERS':

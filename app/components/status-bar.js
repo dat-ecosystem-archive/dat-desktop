@@ -6,15 +6,15 @@ const Bar = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   background-color: var(--color-neutral-04);
   color: var(--color-neutral-60);
 `
 
 const StatusBar = ({ up, down }) => (
-  <Bar id="status-bar">
-    <span className="f7 mr3">Download: {bytes(down)}/s</span>
-    <span className="f7">Upload: {bytes(up)}/s</span>
+  <Bar id='status-bar'>
+    <span className='f7 mr3'>Download: {bytes(down)}/s</span>
+    <span className='f7'>Upload: {bytes(up)}/s</span>
   </Bar>
 )
 
