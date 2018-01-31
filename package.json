@@ -8,6 +8,7 @@
   "author": "Dat Team",
   "scripts": {
     "start": "electron .",
+    "test": "prettier-standard 'app/**/*.js' 'tests/**/*.js' && standard",
     "watch": "webpack --watch"
   },
   "devDependencies": {
@@ -17,6 +18,8 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "electron": "^1.7.10",
+    "prettier-standard": "^8.0.0",
+    "standard": "^10.0.3",
     "webpack": "^3.10.0"
   },
   "dependencies": {

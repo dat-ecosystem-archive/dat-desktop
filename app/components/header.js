@@ -8,7 +8,7 @@ import Icon from './icon'
 
 const Container = styled.header`
   height: 2.5rem;
-  padding: .25rem .75rem;
+  padding: 0.25rem 0.75rem;
   -webkit-app-region: drag;
   background-color: var(--color-neutral);
   color: var(--color-white);
@@ -16,11 +16,11 @@ const Container = styled.header`
 
 const Header = ({ onSubmit }) => (
   <Container>
-    <div className="fr relative">
+    <div className='fr relative'>
       <DatImport />
       <Button.Header
-        icon={<Icon name="create-new-dat" style={{width: '1.2em'}} />}
-        className="ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l"
+        icon={<Icon name='create-new-dat' style={{ width: '1.2em' }} />}
+        className='ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l'
       >
         Share Folder
       </Button.Header>
