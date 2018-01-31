@@ -91,7 +91,10 @@ export const addDat = key => dispatch => {
       dispatch({
         type: 'DAT_NETWORK_STATS',
         key,
-        stats: { ...dat.stats.network }
+        stats: {
+          up: dat.stats.network.uploadSpeed,
+          down: dat.stats.network.downloadSpeed
+        }
       })
     }, 1000)
   })

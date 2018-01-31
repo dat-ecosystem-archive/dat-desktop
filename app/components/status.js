@@ -94,13 +94,13 @@ const Status = ({ dat }) => {
   let progressText
   switch (dat.state) {
     case 'complete':
-      progressText = `Complete. ↑ ${speed(netStats.uploadSpeed)}`
+      progressText = `Complete. ↑ ${speed(netStats.up)}`
       break
     case 'loading':
       progressText = (
         <span>
-          <span className='arrow'>↓ </span> {speed(netStats.downloadSpeed)}
-          <span className='arrow ml2'>↑ </span> {speed(netStats.uploadSpeed)}
+          <span className='arrow'>↓ </span> {speed(netStats.down)}
+          <span className='arrow ml2'>↑ </span> {speed(netStats.up)}
         </span>
       )
       break
