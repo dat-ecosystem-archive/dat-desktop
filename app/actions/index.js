@@ -131,7 +131,7 @@ export const togglePause = ({ key, paused }) => dispatch => {
   } else {
     dat.leaveNetwork()
   }
-  dispatch(paused
-    ? { type: 'RESUME_DAT', key: key }
-    : { type: 'PAUSE_DAT', key: key })
+  dispatch(
+    paused ? { type: 'RESUME_DAT', key: key } : { type: 'PAUSE_DAT', key: key }
+  )
 }

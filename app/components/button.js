@@ -13,7 +13,8 @@ const BaseButton = styled.button`
       display: none;
     }
   }
-  :hover, :focus {
+  :hover,
+  :focus {
     outline: 0;
   }
 `

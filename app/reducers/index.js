@@ -202,19 +202,28 @@ const redatApp = (state = defaultState, action) => {
           ...state.dialogs,
           delete: {
             dat: null
+          }
+        }
+      }
     case 'PAUSE_DAT':
-      return {...state,
-        dats: {...state.dats,
-          [action.key]: {...state.dats[action.key],
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
             paused: true,
-            peers: 0,
+            peers: 0
           }
         }
       }
     case 'RESUME_DAT':
-      return {...state,
-        dats: {...state.dats,
-          [action.key]: {...state.dats[action.key],
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
             paused: false,
             state: 'stale'
           }
