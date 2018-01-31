@@ -82,7 +82,7 @@ const redatApp = (state = defaultState, action) => {
           show: false
         }
       }
-    case 'ADD_FILE_TO_DAT':
+    case 'DAT_FILES':
       return { ...state,
         dats: { ...state.dats,
           [action.key]: {...state.dats[action.key],

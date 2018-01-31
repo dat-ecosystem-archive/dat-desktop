@@ -58,7 +58,7 @@ export const addDat = key => dispatch => {
         })
 
         const { files } = dat
-        dispatch({ type: 'ADD_FILE_TO_DAT', key, files })
+        dispatch({ type: 'DAT_FILES', key, files })
       }) 
     }
 
