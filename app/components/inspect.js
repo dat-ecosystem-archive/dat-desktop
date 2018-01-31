@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { toStr } from 'dat-encoding'
 import bytes from 'prettier-bytes'
 import FileList from './file-list'
-import icon from './icon'
+import Icon from './icon'
 import { Plain as PlainButton } from './button'
 
 const DetailHeader = styled.header`
@@ -61,7 +61,7 @@ const Inspect = ({ dat, closeInspectDat, addFilesToDat }) => {
       <div className="flex flex-column flex-auto">
         <DetailHeader className="flex items-center">
           <div className="w3">
-            {icon('hexagon-down', {className: 'w2 center color-neutral-30'})}
+            <Icon name="hexagon-down" className="w2 center color-neutral-30" />
           </div>
           <h2 className="f5 normal truncate pr3 w-90">
             {title}
