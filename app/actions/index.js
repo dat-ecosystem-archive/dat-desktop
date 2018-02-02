@@ -4,6 +4,7 @@ import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard } from 'electron'
+import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
@@ -58,6 +59,30 @@ export const addDat = ({ key, path }) => dispatch => {
 
       dispatch({ type: 'DAT_METADATA', key, metadata })
     })
+
+    const walk = () => {
+      if (!dat.files) dat.files = []
+      var fs = { name: '/', fs: dat.archive }
+      var progress = mirror(fs, '/', { dryRun: true })
+      progress.on('put', function (file) {
+        file.name = file.name.slice(1)
+        if (file.name === '') return
+        dat.files.push({
+          path: file.name,
+          size: file.stat.size,
+          isFile: file.stat.isFile()
+        })
+        dat.files.sort(function (a, b) {
+          return a.path.localeCompare(b.path)
+        })
+
+        const { files } = dat
+        dispatch({ type: 'DAT_FILES', key, files })
+      })
+    }
+
+    if (dat.archive.content) walk()
+    else dat.archive.on('content', walk)
 
     dat.stats.on('update', stats => {
       if (!stats) stats = dat.stats.get()
@@ -130,12 +155,17 @@ export const confirmDeleteDat = key => dispatch => {
   clearInterval(dat.updateInterval)
 
   dat.close()
-
   dats.delete(key)
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
+
+export const inspectDat = key => dispatch => {
+  dispatch({ type: 'INSPECT_DAT', key })
+}
+
+export const closeInspectDat = () => ({ type: 'INSPECT_DAT_CLOSE' })
 
 export const dropFolder = folder => async dispatch => {
   const isDirectory = (await stat(folder.path)).isDirectory()

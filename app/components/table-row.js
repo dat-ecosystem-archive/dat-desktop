@@ -169,8 +169,8 @@ const TitleField = ({ dat }) => (
   </div>
 )
 
-const Row = ({ dat, shareDat, onDeleteDat }) => (
-  <Tr>
+const Row = ({ dat, shareDat, onDeleteDat, inspectDat }) => (
+  <Tr onClick={() => inspectDat(dat.key)}>
     <td className='cell-1'>
       <div className='w2 center'>
         <HexContent dat={dat} />

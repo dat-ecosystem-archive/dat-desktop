@@ -29,6 +29,7 @@
     "dat-icons": "^2.5.1",
     "dat-node": "^3.5.6",
     "electron-default-menu": "^1.0.1",
+    "mirror-folder": "^2.1.1",
     "prettier-bytes": "^1.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
