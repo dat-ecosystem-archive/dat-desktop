@@ -2,6 +2,7 @@
 
 const { app, BrowserWindow, shell, Menu } = require('electron')
 const { neutral } = require('dat-colors')
+const autoUpdater = require('./lib/auto-updater')
 const defaultMenu = require('electron-default-menu')
 const doctor = require('dat-doctor')
 const { Writable } = require('stream')
@@ -35,6 +36,11 @@ app.on('ready', () => {
   win.loadURL(`file://${__dirname}/index.html`)
   win.webContents.openDevTools()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
+
+  if (process.env.NODE_ENV === 'production') {
+    const log = str => win && win.webContents.send('log', str)
+    autoUpdater({ log })
+  }
 })
 
 app.on('window-all-closed', () => app.quit())
