@@ -14,7 +14,8 @@ const defaultState = {
   speed: {
     up: 0,
     down: 0
-  }
+  },
+  inspect: { key: null }
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -28,6 +29,7 @@ const redatApp = (state = defaultState, action) => {
             key: action.key,
             path: action.path,
             loading: true,
+            paused: false,
             metadata: {},
             stats: {
               network: {
@@ -64,6 +66,33 @@ const redatApp = (state = defaultState, action) => {
     case 'REMOVE_DAT':
       const { [action.key]: del, ...dats } = state.dats
       return { ...state, dats }
+    case 'INSPECT_DAT':
+      return {
+        ...state,
+        inspect: {
+          ...state.inspect,
+          key: action.key
+        }
+      }
+    case 'INSPECT_DAT_CLOSE':
+      return {
+        ...state,
+        inspect: {
+          ...state.inspect,
+          key: null
+        }
+      }
+    case 'DAT_FILES':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            files: action.files
+          }
+        }
+      }
     case 'DAT_METADATA':
       return {
         ...state,
@@ -201,6 +230,30 @@ const redatApp = (state = defaultState, action) => {
           ...state.dialogs,
           delete: {
             dat: null
+          }
+        }
+      }
+    case 'PAUSE_DAT':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            paused: true,
+            peers: 0
+          }
+        }
+      }
+    case 'RESUME_DAT':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            paused: false,
+            state: 'stale'
           }
         }
       }
