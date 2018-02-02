@@ -73,7 +73,7 @@ class IntroScreen extends Component {
 
   onkeydown (ev) {
     if (ev.code !== 'Escape') return
-    window.removeEventListener('keydown', onkeydown)
+    window.removeEventListener('keydown', this.onkeydown)
     this.props.hide()
   }
 
