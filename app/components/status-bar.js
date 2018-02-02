@@ -12,12 +12,13 @@ const Bar = styled.div`
 `
 
 const StatusBar = ({ up, down, show }) => {
-  if (!show) return (
-    <Fragment>
-      <div>
-      </div>
-    </Fragment>
-  )
+  if (!show) {
+    return (
+      <Fragment>
+        <div />
+      </Fragment>
+    )
+  }
 
   return (
     <Bar id='status-bar'>

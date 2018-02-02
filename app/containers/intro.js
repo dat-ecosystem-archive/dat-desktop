@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   openHomepage: () => openHomepage(),
-  next: (screen) =>  dispatch(nextIntro(screen)),
+  next: screen => dispatch(nextIntro(screen)),
   hide: () => dispatch(hideIntro())
 })
 
