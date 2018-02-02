@@ -6,15 +6,17 @@ import Header from './header'
 import TableContainer from '../containers/table'
 import * as Dialog from '../containers/dialog'
 import StatusBarContainer from '../containers/status-bar'
+import DragDropContainer from '../containers/drag-drop'
 
 const App = () => (
   <Fragment>
     <Sprite />
     <Header />
     <TableContainer />
-    <StatusBarContainer />
     <Dialog.LinkContainer />
     <Dialog.ConfirmContainer />
+    <StatusBarContainer />
+    <DragDropContainer />
   </Fragment>
 )
 

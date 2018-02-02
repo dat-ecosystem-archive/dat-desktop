@@ -32,13 +32,15 @@
     "prettier-bytes": "^1.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-file-drop": "^0.1.9",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "styled-components": "^2.4.0",
-    "tachyons": "^4.9.1"
+    "tachyons": "^4.9.1",
+    "util-promisify": "^2.1.0"
   },
   "build": {
     "appId": "com.datproject.dat",
