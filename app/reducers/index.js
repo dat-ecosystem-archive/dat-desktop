@@ -29,6 +29,7 @@ const redatApp = (state = defaultState, action) => {
             key: action.key,
             path: action.path,
             loading: true,
+            paused: false,
             metadata: {},
             stats: {
               network: {
@@ -229,6 +230,30 @@ const redatApp = (state = defaultState, action) => {
           ...state.dialogs,
           delete: {
             dat: null
+          }
+        }
+      }
+    case 'PAUSE_DAT':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            paused: true,
+            peers: 0
+          }
+        }
+      }
+    case 'RESUME_DAT':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            paused: false,
+            state: 'stale'
           }
         }
       }

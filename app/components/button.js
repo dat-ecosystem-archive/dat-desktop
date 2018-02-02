@@ -13,6 +13,10 @@ const BaseButton = styled.button`
       display: none;
     }
   }
+  :hover,
+  :focus {
+    outline: 0;
+  }
 `
 
 const HeaderButton = BaseButton.extend`

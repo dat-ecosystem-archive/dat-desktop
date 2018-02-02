@@ -32,7 +32,6 @@ export const addDat = ({ key, path }) => dispatch => {
       dispatch({ type: 'ADD_DAT', key, path })
     }
 
-    dat.joinNetwork()
     dat.trackStats()
     if (dat.writable) dat.importFiles()
 
@@ -90,15 +89,7 @@ export const addDat = ({ key, path }) => dispatch => {
       dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
     })
 
-    const updateState = () => {
-      const state = !dat.network
-        ? 'paused'
-        : dat.writable || dat.progress === 1
-          ? 'complete'
-          : dat.network.connected ? 'loading' : 'stale'
-      dispatch({ type: 'DAT_STATE', key, state })
-    }
-    updateState()
+    dispatch(updateState(dat))
 
     const updateProgress = stats => {
       if (!stats) stats = dat.stats.get()
@@ -107,25 +98,12 @@ export const addDat = ({ key, path }) => dispatch => {
         : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
       dat.progress = progress
       dispatch({ type: 'DAT_PROGRESS', key, progress })
-      updateState()
+      dispatch(updateState(dat))
     }
     updateProgress()
 
-    dat.network.on('connection', con => {
-      updateConnections()
-      updateState()
-      con.on('close', () => {
-        updateConnections()
-        updateState()
-      })
-    })
-
-    const updateConnections = () => {
-      if (dat.network) {
-        dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
-      }
-    }
-    updateConnections()
+    joinNetwork(dat)(dispatch)
+    updateConnections(dat)(dispatch)
 
     let prevNetworkStats
     dat.updateInterval = setInterval(() => {
@@ -142,6 +120,34 @@ export const addDat = ({ key, path }) => dispatch => {
       })
     }, 1000)
   })
+}
+
+const joinNetwork = dat => dispatch => {
+  dat.joinNetwork()
+  dat.network.on('connection', con => {
+    updateConnections(dat)(dispatch)
+    dispatch(updateState(dat))
+    con.on('close', () => {
+      updateConnections(dat)(dispatch)
+      dispatch(updateState(dat))
+    })
+  })
+}
+
+const updateConnections = dat => dispatch => {
+  if (!dat.network) return
+  const key = encode(dat.key)
+  dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+}
+
+const updateState = dat => {
+  const key = encode(dat.key)
+  const state = !dat.network
+    ? 'paused'
+    : dat.writable || dat.progress === 1
+      ? 'complete'
+      : dat.network.connected ? 'loading' : 'stale'
+  return { type: 'DAT_STATE', key, state }
 }
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
@@ -161,10 +167,23 @@ export const confirmDeleteDat = key => dispatch => {
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
+export const togglePause = ({ key, paused }) => dispatch => {
+  const dat = dats.get(key)
+  if (paused) {
+    joinNetwork(dat)(dispatch)
+  } else {
+    dat.leaveNetwork()
+  }
+  if (paused) {
+    dispatch({ type: 'RESUME_DAT', key: key })
+  } else {
+    dispatch({ type: 'PAUSE_DAT', key: key })
+  }
+}
+
 export const inspectDat = key => dispatch => {
   dispatch({ type: 'INSPECT_DAT', key })
 }
-
 export const closeInspectDat = () => ({ type: 'INSPECT_DAT_CLOSE' })
 
 export const dropFolder = folder => async dispatch => {

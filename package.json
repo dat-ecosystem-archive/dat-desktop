@@ -35,6 +35,7 @@
     "react-dom": "^16.2.0",
     "react-file-drop": "^0.1.9",
     "react-redux": "^5.0.6",
+    "react-swap": "^2.0.2",
     "redux": "^3.7.2",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^3.0.6",
