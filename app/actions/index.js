@@ -78,7 +78,7 @@ export const addDat = ({ key, path }) => dispatch => {
 
         const { files } = dat
         dispatch({ type: 'DAT_FILES', key, files })
-      }) 
+      })
     }
 
     if (dat.archive.content) walk()

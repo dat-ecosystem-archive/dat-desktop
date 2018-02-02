@@ -66,21 +66,28 @@ const redatApp = (state = defaultState, action) => {
       const { [action.key]: del, ...dats } = state.dats
       return { ...state, dats }
     case 'INSPECT_DAT':
-      return { ...state,
-        inspect: { ...state.inspect,
+      return {
+        ...state,
+        inspect: {
+          ...state.inspect,
           key: action.key
         }
       }
-    case 'INSPECT_DAT_CLOSE': 
-      return { ...state, 
-        inspect: { ...state.inspect,
+    case 'INSPECT_DAT_CLOSE':
+      return {
+        ...state,
+        inspect: {
+          ...state.inspect,
           key: null
         }
       }
     case 'DAT_FILES':
-      return { ...state,
-        dats: { ...state.dats,
-          [action.key]: {...state.dats[action.key],
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
             files: action.files
           }
         }

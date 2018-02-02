@@ -41,11 +41,13 @@ const StyledTable = styled.table`
 `
 
 const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat }) => {
-  if (!show) return (
-    <Fragment>
-      <div></div>
-    </Fragment>
-  )
+  if (!show) {
+    return (
+      <Fragment>
+        <div />
+      </Fragment>
+    )
+  }
 
   if (!Object.keys(dats).length) return <Empty />
 

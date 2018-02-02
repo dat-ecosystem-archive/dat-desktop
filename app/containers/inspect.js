@@ -12,9 +12,6 @@ const mapDispatchToProps = dispatch => ({
   closeInspectDat: () => dispatch(closeInspectDat())
 })
 
-const InspectContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Inspect)
+const InspectContainer = connect(mapStateToProps, mapDispatchToProps)(Inspect)
 
 export default InspectContainer
