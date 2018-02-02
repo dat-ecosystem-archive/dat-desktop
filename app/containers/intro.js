@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 import IntroScreen from '../components/intro'
-import { onHomepage, nextIntro, hideIntro } from '../actions'
+import { openHomepage, nextIntro, hideIntro } from '../actions'
 
 const mapStateToProps = state => ({
   show: state.intro.show && !state.dats.length,
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  onHomepage: () => onHomepage(),
+  openHomepage: () => openHomepage(),
   next: (screen) =>  dispatch(nextIntro(screen)),
   hide: () => dispatch(hideIntro())
 })

@@ -86,7 +86,7 @@ class IntroScreen extends Component {
   }
 
   render () {
-    const { show, screen, hide, next, onHomepage } = this.props
+    const { show, screen, hide, next, openHomepage } = this.props
 
     if (!show) return (
       <Fragment>
@@ -123,7 +123,7 @@ class IntroScreen extends Component {
             5: (
               <p className='mw5 f4'>
                 You can also import existing Dats.
-                Check out <a href='https://datproject.org/' className='color-green-disabled hover-color-green' onClick={() => openHomepage()}>datproject.org</a> to explore open datasets.
+                Check out <a href='#' className='color-green-disabled hover-color-green' onClick={() => openHomepage()}>datproject.org</a> to explore open datasets.
               </p>
             )
           }[screen]}
