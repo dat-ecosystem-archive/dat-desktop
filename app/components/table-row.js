@@ -136,8 +136,8 @@ const TitleField = ({ dat }) => (
   </div>
 )
 
-const Row = ({ dat, shareDat, onDeleteDat, onTogglePause }) => (
-  <Tr>
+const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
+  <Tr onClick={() => inspectDat(dat.key)}>
     <td className='cell-1'>
       <div className='w2 center' onClick={() => onTogglePause(dat)}>
         <HexContent dat={dat} />

@@ -1,6 +1,6 @@
 'use strict'
 
-import React from 'react'
+import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import TableRow from './table-row'
 import Empty from './empty'
@@ -40,7 +40,15 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, shareDat, onDeleteDat, onTogglePause }) => {
+const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat, onTogglePause }) => {
+  if (!show) {
+    return (
+      <Fragment>
+        <div />
+      </Fragment>
+    )
+  }
+
   if (!Object.keys(dats).length) return <Empty />
 
   return (
@@ -64,6 +72,7 @@ const Table = ({ dats, shareDat, onDeleteDat, onTogglePause }) => {
               shareDat={shareDat}
               onDeleteDat={onDeleteDat}
               onTogglePause={onTogglePause}
+              inspectDat={inspectDat}
             />
           ))}
         </tbody>
