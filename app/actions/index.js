@@ -5,8 +5,13 @@ import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard } from 'electron'
 import mirror from 'mirror-folder'
+import fs from 'fs'
+import promisify from 'util-promisify'
+import { basename } from 'path'
 
 const dats = new Map()
+
+const stat = promisify(fs.stat)
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
 export const copyLink = link => {
@@ -15,16 +20,30 @@ export const copyLink = link => {
 }
 export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
 
-export const addDat = key => dispatch => {
-  key = encode(key)
-  const path = `${homedir()}/Downloads/${key}`
-  dispatch({ type: 'ADD_DAT', key, path })
+export const addDat = ({ key, path }) => dispatch => {
+  if (key) key = encode(key)
+  if (!path) path = `${homedir()}/Downloads/${key}`
+  if (key) dispatch({ type: 'ADD_DAT', key, path })
 
   Dat(path, { key }, (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
+    if (!key) {
+      key = encode(dat.key)
+      dispatch({ type: 'ADD_DAT', key, path })
+    }
 
     dat.joinNetwork()
     dat.trackStats()
+    if (dat.writable) dat.importFiles()
+
+    dispatch({
+      type: 'DAT_METADATA',
+      key,
+      metadata: {
+        title: basename(path),
+        author: 'Anonymous'
+      }
+    })
 
     dats.set(key, dat)
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
@@ -147,3 +166,9 @@ export const inspectDat = key => dispatch => {
 }
 
 export const closeInspectDat = () => ({ type: 'INSPECT_DAT_CLOSE' })
+
+export const dropFolder = folder => async dispatch => {
+  const isDirectory = (await stat(folder.path)).isDirectory()
+  if (!isDirectory) return
+  addDat({ path: folder.path })(dispatch)
+}

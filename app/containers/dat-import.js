@@ -6,7 +6,7 @@ const mapStateToProps = state => state
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddDat: key => dispatch(addDat(key))
+    onAddDat: key => dispatch(addDat({ key }))
   }
 }
 
