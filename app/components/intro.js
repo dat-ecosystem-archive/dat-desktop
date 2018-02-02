@@ -38,6 +38,33 @@ const Image = styled.img`
     max-height: 100vh;
 `
 
+const StyledDots = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .dot {
+      width: .5rem;
+      height: .5rem;
+      margin: .25rem;
+      border-radius: 50%;
+      background-color: var(--color-black);
+    }
+    .active {
+      background-color: var(--color-blue);
+    }
+`
+
+const Dots = ({ screen }) => (
+  <StyledDots>
+    {Array(5).fill(null).map((_, i) => {
+      const _className = (i === screen - 1)
+        ? 'dot active'
+        : 'dot'
+      return <div key={i} className={_className}></div>
+    })}
+  </StyledDots>
+)
+
 const IntroScreen = ({ show, screen, openHomepage, next, hide }) => {
   if (!show) return (
     <Fragment>
@@ -90,6 +117,7 @@ const IntroScreen = ({ show, screen, openHomepage, next, hide }) => {
               <PlainButton onClick={() => hide()}>
                 Skip Intro
               </PlainButton>
+              <Dots screen={screen} />
               { screen < 5 
                   ? (
                     <GreenButton onClick={() => next(screen)}>
