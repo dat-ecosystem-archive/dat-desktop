@@ -1,6 +1,7 @@
 'use strict'
 
 import Dat from 'dat-node'
+import { shell } from 'electron'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard } from 'electron'
@@ -172,3 +173,7 @@ export const dropFolder = folder => async dispatch => {
   if (!isDirectory) return
   addDat({ path: folder.path })(dispatch)
 }
+
+export const onHomepage = () => shell.openExternal('https://datproject.org/')
+export const nextIntro = (screen) => ({ type: 'NEXT_INTRO', screen })
+export const hideIntro = () => ({ type: 'HIDE_INTRO' })

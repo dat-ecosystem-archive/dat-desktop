@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import bytes from 'prettier-bytes'
 
@@ -11,11 +11,20 @@ const Bar = styled.div`
   color: var(--color-neutral-60);
 `
 
-const StatusBar = ({ up, down }) => (
-  <Bar id='status-bar'>
-    <span className='f7 mr3'>Download: {bytes(down)}/s</span>
-    <span className='f7'>Upload: {bytes(up)}/s</span>
-  </Bar>
-)
+const StatusBar = ({ up, down, show }) => {
+  if (!show) return (
+    <Fragment>
+      <div>
+      </div>
+    </Fragment>
+  )
+
+  return (
+    <Bar id='status-bar'>
+      <span className='f7 mr3'>Download: {bytes(down)}/s</span>
+      <span className='f7'>Upload: {bytes(up)}/s</span>
+    </Bar>
+  )
+}
 
 export default StatusBar
