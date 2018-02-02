@@ -137,7 +137,12 @@ const TitleField = ({ dat }) => (
 )
 
 const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
-  <Tr onClick={() => inspectDat(dat.key)}>
+  <Tr
+    onClick={ev => {
+      if (ev.target.tagName === 'SVG' || ev.target.tagName === 'use') return
+      inspectDat(dat.key)
+    }}
+  >
     <td className='cell-1'>
       <div className='w2 center' onClick={() => onTogglePause(dat)}>
         <HexContent dat={dat} />
