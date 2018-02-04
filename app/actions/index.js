@@ -9,7 +9,7 @@ import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
 
-const dats = new Map()
+const dats = {}
 
 const stat = promisify(fs.stat)
 
@@ -44,7 +44,8 @@ export const addDat = ({ key, path }) => dispatch => {
       }
     })
 
-    dats.set(key, dat)
+    dats[key] = dat
+
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
     dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
 
@@ -152,7 +153,7 @@ const updateState = dat => {
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
-  const dat = dats.get(key)
+  const dat = dats[key]
 
   for (const con of dat.network.connections) {
     con.removeAllListeners()
@@ -161,14 +162,14 @@ export const confirmDeleteDat = key => dispatch => {
   clearInterval(dat.updateInterval)
 
   dat.close()
-  dats.delete(key)
+  delete dats[key]
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
 export const togglePause = ({ key, paused }) => dispatch => {
-  const dat = dats.get(key)
+  const dat = dats[key]
   if (paused) {
     joinNetwork(dat)(dispatch)
   } else {
