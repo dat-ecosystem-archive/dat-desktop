@@ -12,6 +12,8 @@ import { basename } from 'path'
 const dats = new Map()
 
 const stat = promisify(fs.stat)
+const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
 const { Notification } = window
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
@@ -224,3 +226,28 @@ export const dropFolder = folder => async dispatch => {
   if (!isDirectory) return
   addDat({ path: folder.path })(dispatch)
 }
+
+export const activateTitleEditing = title => ({
+  type: 'ACTIVATE_TITLE_EDITING',
+  title
+})
+
+export const editTitle = title => ({ type: 'EDIT_TITLE', title })
+
+export const updateTitle = (key, path, editValue) => {
+  const filePath = `${path}/dat.json`
+  readFile(filePath)
+    .then(blob => JSON.parse)
+    .then(metadata => ({ ...metadata, title: editValue }))
+    .then(metadata => writeFile(filePath, JSON.stringify(metadata)))
+
+  return {
+    type: 'UPDATE_TITLE',
+    key,
+    editValue
+  }
+}
+
+export const deactivateTitleEditing = () => ({
+  type: 'DEACTIVATE_TITLE_EDITING'
+})
