@@ -7,14 +7,11 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import redatApp from './reducers'
 import App from './components/app'
 import logger from 'redux-logger'
-// import persistState from 'redux-localstorage'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
+import { loadFromLocalStorage } from './actions'
 
-const store = createStore(
-  redatApp,
-  compose(/* persistState(), */ applyMiddleware(thunk, logger))
-)
+const store = createStore(redatApp, compose(applyMiddleware(thunk, logger)))
 
 render(
   <Provider store={store}>
@@ -22,5 +19,7 @@ render(
   </Provider>,
   document.querySelector('div')
 )
+
+store.dispatch(loadFromLocalStorage())
 
 ipc.on('log', (_, str) => console.log(str))

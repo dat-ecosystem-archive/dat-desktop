@@ -11,6 +11,7 @@ import { basename } from 'path'
 
 const dats = {}
 
+const { localStorage } = window
 const stat = promisify(fs.stat)
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
@@ -44,7 +45,17 @@ export const addDat = ({ key, path }) => dispatch => {
       }
     })
 
+    dat.path = path
     dats[key] = dat
+    localStorage.setItem(
+      'state',
+      JSON.stringify(
+        Object.keys(dats).map(key => ({
+          key,
+          path: dats[key].path
+        }))
+      )
+    )
 
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
     dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
@@ -191,4 +202,13 @@ export const dropFolder = folder => async dispatch => {
   const isDirectory = (await stat(folder.path)).isDirectory()
   if (!isDirectory) return
   addDat({ path: folder.path })(dispatch)
+}
+
+export const loadFromLocalStorage = () => dispatch => {
+  const blob = localStorage.getItem('state')
+  if (!blob) return
+  const dats = JSON.parse(blob)
+  for (const dat of dats) {
+    addDat(dat)(dispatch)
+  }
 }
