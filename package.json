@@ -8,7 +8,7 @@
   "author": "Dat Team",
   "scripts": {
     "start": "electron .",
-    "test": "prettier-standard 'app/**/*.js' 'tests/**/*.js' && standard",
+    "test": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' && standard",
     "watch": "webpack --watch"
   },
   "devDependencies": {
