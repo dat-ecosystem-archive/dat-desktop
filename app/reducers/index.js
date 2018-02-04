@@ -15,7 +15,8 @@ const defaultState = {
     up: 0,
     down: 0
   },
-  inspect: { key: null }
+  inspect: { key: null },
+  editing: {}
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -178,6 +179,41 @@ const redatApp = (state = defaultState, action) => {
             peers: action.peers
           }
         }
+      }
+    case 'UPDATE_TITLE':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            metadata: {
+              ...state.dats[action.key].metadata,
+              title: action.editValue
+            }
+          }
+        }
+      }
+    case 'MAKE_EDITABLE':
+      return {
+        ...state,
+        editing: {
+          ...state.editing,
+          isEditing: true
+        }
+      }
+    case 'EDIT_TITLE':
+      return {
+        ...state,
+        editing: {
+          ...state.editing,
+          editValue: action.title
+        }
+      }
+    case 'DEACTIVATE_EDITING':
+      return {
+        ...state,
+        editing: {}
       }
     case 'DIALOGS_LINK_OPEN':
       return {

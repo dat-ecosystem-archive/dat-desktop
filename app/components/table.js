@@ -40,7 +40,18 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat }) => {
+const Table = ({
+  dats,
+  show,
+  editing,
+  shareDat,
+  onDeleteDat,
+  inspectDat,
+  updateTitle,
+  makeEditable,
+  editTitle,
+  deactivate
+}) => {
   if (!show) {
     return (
       <Fragment>
@@ -68,10 +79,15 @@ const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat }) => {
           {Object.keys(dats).map(key => (
             <TableRow
               dat={dats[key]}
+              editing={editing}
               key={key}
               shareDat={shareDat}
               onDeleteDat={onDeleteDat}
               inspectDat={inspectDat}
+              updateTitle={updateTitle}
+              makeEditable={makeEditable}
+              editTitle={editTitle}
+              deactivate={deactivate}
             />
           ))}
         </tbody>

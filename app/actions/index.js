@@ -172,3 +172,15 @@ export const dropFolder = folder => async dispatch => {
   if (!isDirectory) return
   addDat({ path: folder.path })(dispatch)
 }
+
+export const updateTitle = (key, path, editValue) => ({
+  type: 'UPDATE_TITLE',
+  key,
+  editValue
+})
+
+export const makeEditable = title => ({ type: 'MAKE_EDITABLE', title })
+
+export const editTitle = title => ({ type: 'EDIT_TITLE', title })
+
+export const deactivate = () => ({ type: 'DEACTIVATE_EDITING' })

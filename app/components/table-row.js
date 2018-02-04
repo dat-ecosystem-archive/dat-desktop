@@ -7,6 +7,7 @@ import Icon from './icon'
 import Status from './status'
 import bytes from 'prettier-bytes'
 import FinderButton from './finder-button'
+import TitleField from './title-field'
 
 const Tr = styled.tr`
   transition: background-color 0.025s ease-out;
@@ -161,15 +162,17 @@ const DeleteButton = ({ ...props }) => (
   />
 )
 
-const TitleField = ({ dat }) => (
-  <div>
-    <h2 className='f6 f5-l normal truncate pr3'>
-      {dat.metadata.title || `#${dat.key}`}
-    </h2>
-  </div>
-)
-
-const Row = ({ dat, shareDat, onDeleteDat, inspectDat }) => (
+const Row = ({
+  dat,
+  editing,
+  shareDat,
+  onDeleteDat,
+  inspectDat,
+  updateTitle,
+  makeEditable,
+  editTitle,
+  deactivate
+}) => (
   <Tr onClick={() => inspectDat(dat.key)}>
     <td className='cell-1'>
       <div className='w2 center'>
@@ -178,7 +181,14 @@ const Row = ({ dat, shareDat, onDeleteDat, inspectDat }) => (
     </td>
     <td className='cell-2'>
       <div className='cell-truncate'>
-        <TitleField dat={dat} />
+        <TitleField
+          dat={dat}
+          editing={editing}
+          updateTitle={updateTitle}
+          makeEditable={makeEditable}
+          editTitle={editTitle}
+          deactivate={deactivate}
+        />
         <p className='f7 f6-l color-neutral-60 truncate'>
           <span className='author'>
             {dat.metadata.author || 'Anonymous'} •{' '}
