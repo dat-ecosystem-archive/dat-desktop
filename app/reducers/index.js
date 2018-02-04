@@ -15,11 +15,31 @@ const defaultState = {
     up: 0,
     down: 0
   },
-  inspect: { key: null }
+  inspect: { key: null },
+  intro: {
+    show: true,
+    screen: 1
+  }
 }
 
 const redatApp = (state = defaultState, action) => {
   switch (action.type) {
+    case 'NEXT_INTRO':
+      return {
+        ...state,
+        intro: {
+          ...state.intro,
+          screen: action.screen + 1
+        }
+      }
+    case 'HIDE_INTRO':
+      return {
+        ...state,
+        intro: {
+          ...state.intro,
+          show: false
+        }
+      }
     case 'ADD_DAT':
       return {
         ...state,

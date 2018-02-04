@@ -1,9 +1,9 @@
 'use strict'
 
 import Dat from 'dat-node'
+import { shell, clipboard } from 'electron'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
-import { clipboard } from 'electron'
 import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
@@ -191,3 +191,7 @@ export const dropFolder = folder => async dispatch => {
   if (!isDirectory) return
   addDat({ path: folder.path })(dispatch)
 }
+
+export const openHomepage = () => shell.openExternal('https://datproject.org/')
+export const nextIntro = screen => ({ type: 'NEXT_INTRO', screen })
+export const hideIntro = () => ({ type: 'HIDE_INTRO' })
