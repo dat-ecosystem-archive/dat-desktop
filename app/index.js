@@ -4,7 +4,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
-import redatApp from './reducers'
+import datDesktopApp from './reducers'
 import App from './components/app'
 import logger from 'redux-logger'
 // import persistState from 'redux-localstorage'
@@ -12,7 +12,7 @@ import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
 
 const store = createStore(
-  redatApp,
+  datDesktopApp,
   compose(/* persistState(), */ applyMiddleware(thunk, logger))
 )
 
