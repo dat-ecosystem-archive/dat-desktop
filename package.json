@@ -38,7 +38,6 @@
     "react-redux": "^5.0.6",
     "react-swap": "^2.0.2",
     "redux": "^3.7.2",
-    "redux-localstorage": "^0.4.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "styled-components": "^2.4.0",
