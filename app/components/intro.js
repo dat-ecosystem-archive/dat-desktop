@@ -59,8 +59,8 @@ const Dots = ({ screen }) => (
     {Array(5)
       .fill(null)
       .map((_, i) => {
-        const _className = i === screen - 1 ? 'dot active' : 'dot'
-        return <div key={i} className={_className} />
+        const className = i === screen - 1 ? 'dot active' : 'dot'
+        return <div key={i} className={className} />
       })}
   </StyledDots>
 )
