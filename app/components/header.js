@@ -14,13 +14,14 @@ const Container = styled.header`
   color: var(--color-white);
 `
 
-const Header = ({ onSubmit }) => (
+const Header = ({ onShare }) => (
   <Container>
     <div className='fr relative'>
       <DatImport />
       <Button.Header
         icon={<Icon name='create-new-dat' style={{ width: '1.2em' }} />}
         className='ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l'
+        onClick={onShare}
       >
         Share Folder
       </Button.Header>
