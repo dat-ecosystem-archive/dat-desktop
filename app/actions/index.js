@@ -223,18 +223,20 @@ export const loadFromDisk = () => async dispatch => {
     await mkdir(`${homedir()}/.dat-desktop`)
   } catch (_) {}
 
-  let blob = {}
-  try {
-    blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
-  } catch (_) {}
-  const paused = JSON.parse(blob)
-
+  let blob
   try {
     blob = await readFile(`${homedir()}/.dat-desktop/dats.json`, 'utf8')
   } catch (_) {
     return
   }
   const datOpts = JSON.parse(blob)
+
+  blob = {}
+  try {
+    blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
+  } catch (_) {}
+  const paused = JSON.parse(blob)
+
   for (const key of Object.keys(datOpts)) {
     const opts = JSON.parse(datOpts[key])
     addDat({
