@@ -8,7 +8,7 @@
   "author": "Dat Team",
   "scripts": {
     "start": "electron .",
-    "test": "prettier-standard 'app/**/*.js' 'tests/**/*.js' && standard",
+    "test": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' && standard",
     "watch": "webpack --watch"
   },
   "devDependencies": {
@@ -30,11 +30,13 @@
     "dat-node": "^3.5.6",
     "electron-default-menu": "^1.0.1",
     "mirror-folder": "^2.1.1",
+    "ms": "^2.1.1",
     "prettier-bytes": "^1.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-file-drop": "^0.1.9",
     "react-redux": "^5.0.6",
+    "react-swap": "^2.0.2",
     "redux": "^3.7.2",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^3.0.6",

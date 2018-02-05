@@ -40,7 +40,14 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat }) => {
+const Table = ({
+  dats,
+  show,
+  shareDat,
+  onDeleteDat,
+  inspectDat,
+  onTogglePause
+}) => {
   if (!show) {
     return (
       <Fragment>
@@ -71,6 +78,7 @@ const Table = ({ dats, show, shareDat, onDeleteDat, inspectDat }) => {
               key={key}
               shareDat={shareDat}
               onDeleteDat={onDeleteDat}
+              onTogglePause={onTogglePause}
               inspectDat={inspectDat}
             />
           ))}

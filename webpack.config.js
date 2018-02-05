@@ -5,6 +5,7 @@ module.exports = {
     filename: 'static/build.js',
     libraryTarget: 'commonjs2'
   },
+  devtool: 'eval',
   node: {
     __dirname: true
   },

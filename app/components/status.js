@@ -86,9 +86,7 @@ const Status = ({ dat }) => {
   const progressbarLine =
     dat.state === 'loading'
       ? 'line-loading'
-      : dat.state === 'paused' || dat.state === 'stale'
-        ? 'line-paused'
-        : 'line-complete'
+      : dat.paused || dat.state === 'stale' ? 'line-paused' : 'line-complete'
   const netStats = dat.stats.network
 
   let progressText
