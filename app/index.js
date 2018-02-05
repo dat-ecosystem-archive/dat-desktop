@@ -9,7 +9,7 @@ import App from './components/app'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
-import { loadFromLocalStorage } from './actions'
+import { loadFromDisk } from './actions'
 
 const store = createStore(redatApp, compose(applyMiddleware(thunk, logger)))
 
@@ -20,6 +20,6 @@ render(
   document.querySelector('div')
 )
 
-store.dispatch(loadFromLocalStorage())
+store.dispatch(loadFromDisk())
 
 ipc.on('log', (_, str) => console.log(str))

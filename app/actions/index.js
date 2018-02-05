@@ -8,11 +8,13 @@ import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
+import os from 'os'
 
 const dats = {}
 
-const { localStorage } = window
 const stat = promisify(fs.stat)
+const readFile = promisify(fs.readFile)
+const mkdir = promisify(fs.mkdir)
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
 export const copyLink = link => {
@@ -47,15 +49,7 @@ export const addDat = ({ key, path }) => dispatch => {
 
     dat.path = path
     dats[key] = dat
-    localStorage.setItem(
-      'state',
-      JSON.stringify(
-        Object.keys(dats).map(key => ({
-          key,
-          path: dats[key].path
-        }))
-      )
-    )
+    storeOnDisk()
 
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
     dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
@@ -174,6 +168,7 @@ export const confirmDeleteDat = key => dispatch => {
 
   dat.close()
   delete dats[key]
+  storeOnDisk()
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
@@ -204,11 +199,36 @@ export const dropFolder = folder => async dispatch => {
   addDat({ path: folder.path })(dispatch)
 }
 
-export const loadFromLocalStorage = () => dispatch => {
-  const blob = localStorage.getItem('state')
-  if (!blob) return
-  const datOpts = JSON.parse(blob)
-  for (const datOpt of datOpts) {
-    addDat(datOpt)(dispatch)
+export const loadFromDisk = () => async dispatch => {
+  try {
+    await mkdir(`${os.homedir()}/.dat-desktop`)
+  } catch (_) {
+
   }
+
+  let blob
+  try {
+    blob = await readFile(`${os.homedir()}/.dat-desktop/dats.json`, 'utf8')
+  } catch (_) {
+    return
+  }
+  const datOpts = JSON.parse(blob)
+  for (const key of Object.keys(datOpts)) {
+    addDat({
+      key: key,
+      path: JSON.parse(datOpts[key]).dir
+    })(dispatch)
+  }
+}
+
+const storeOnDisk = () => {
+  fs.writeFile(`${os.homedir()}/.dat-desktop/dats.json`, JSON.stringify(
+    Object.keys(dats).reduce((acc, key) => ({
+      ...acc,
+      [key]: JSON.stringify({
+        dir: dats[key].path,
+        opts: {}
+      })
+    }), {})
+  ), () => {})
 }
