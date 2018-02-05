@@ -11,7 +11,10 @@ import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
 import { loadFromDisk } from './actions'
 
-const store = createStore(datDesktopApp, compose(applyMiddleware(thunk, logger)))
+const store = createStore(
+  datDesktopApp,
+  compose(applyMiddleware(thunk, logger))
+)
 
 render(
   <Provider store={store}>

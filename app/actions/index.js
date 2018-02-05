@@ -8,7 +8,6 @@ import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
-import os from 'os'
 
 const dats = {}
 
@@ -210,14 +209,12 @@ export const dropFolder = folder => async dispatch => {
 
 export const loadFromDisk = () => async dispatch => {
   try {
-    await mkdir(`${os.homedir()}/.dat-desktop`)
-  } catch (_) {
-
-  }
+    await mkdir(`${homedir()}/.dat-desktop`)
+  } catch (_) {}
 
   let blob
   try {
-    blob = await readFile(`${os.homedir()}/.dat-desktop/dats.json`, 'utf8')
+    blob = await readFile(`${homedir()}/.dat-desktop/dats.json`, 'utf8')
   } catch (_) {
     return
   }
@@ -231,13 +228,20 @@ export const loadFromDisk = () => async dispatch => {
 }
 
 const storeOnDisk = () => {
-  fs.writeFile(`${os.homedir()}/.dat-desktop/dats.json`, JSON.stringify(
-    Object.keys(dats).reduce((acc, key) => ({
-      ...acc,
-      [key]: JSON.stringify({
-        dir: dats[key].path,
-        opts: {}
-      })
-    }), {})
-  ), () => {})
+  fs.writeFile(
+    `${homedir()}/.dat-desktop/dats.json`,
+    JSON.stringify(
+      Object.keys(dats).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: JSON.stringify({
+            dir: dats[key].path,
+            opts: {}
+          })
+        }),
+        {}
+      )
+    ),
+    () => {}
+  )
 }
