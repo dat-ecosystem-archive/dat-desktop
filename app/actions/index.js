@@ -247,31 +247,25 @@ export const loadFromDisk = () => async dispatch => {
 }
 
 const storeOnDisk = async () => {
-  await writeFile(
-    `${homedir()}/.dat-desktop/dats.json`,
-    JSON.stringify(
-      Object.keys(dats).reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: JSON.stringify({
-            dir: dats[key].path,
-            opts: dats[key].opts
-          })
-        }),
-        {}
-      )
-    )
+  const dir = `${homedir()}/.dat-desktop`
+  const datsState = Object.keys(dats).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: JSON.stringify({
+        dir: dats[key].path,
+        opts: dats[key].opts
+      })
+    }),
+    {}
   )
-  await writeFile(
-    `${homedir()}/.dat-desktop/paused.json`,
-    JSON.stringify(
-      Object.keys(dats).reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: !dats[key].dat.network
-        }),
-        {}
-      )
-    )
+  const pausedState = Object.keys(dats).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: !dats[key].dat.network
+    }),
+    {}
   )
+
+  await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
+  await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
 }
