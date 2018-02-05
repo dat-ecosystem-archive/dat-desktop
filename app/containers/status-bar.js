@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 const mapStateToProps = state => ({
   up: state.speed.up,
   down: state.speed.down,
-  show: state.dats.length || !state.intro.show
+  show: state.screen === 'dats'
 })
 
 const mapDispatchToProps = dispatch => ({})

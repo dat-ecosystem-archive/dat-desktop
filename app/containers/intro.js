@@ -5,7 +5,7 @@ import IntroScreen from '../components/intro'
 import { openHomepage, nextIntro, hideIntro } from '../actions'
 
 const mapStateToProps = state => ({
-  show: state.intro.show && !state.dats.length,
+  show: state.screen === 'intro',
   screen: state.intro.screen
 })
 

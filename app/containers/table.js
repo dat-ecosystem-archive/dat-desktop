@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({
   dats: state.dats,
-  show: !state.inspect.key && !state.intro.show
+  show: state.screen === 'dats'
 })
 
 const mapDispatchToProps = dispatch => ({

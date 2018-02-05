@@ -2,6 +2,7 @@
 
 const defaultState = {
   dats: [],
+  screen: 'intro',
   dialogs: {
     link: {
       link: null,
@@ -15,9 +16,10 @@ const defaultState = {
     up: 0,
     down: 0
   },
-  inspect: { key: null },
+  inspect: {
+    key: null
+  },
   intro: {
-    show: true,
     screen: 1
   }
 }
@@ -28,17 +30,13 @@ const redatApp = (state = defaultState, action) => {
       return {
         ...state,
         intro: {
-          ...state.intro,
           screen: action.screen + 1
         }
       }
     case 'HIDE_INTRO':
       return {
         ...state,
-        intro: {
-          ...state.intro,
-          show: false
-        }
+        screen: 'dats'
       }
     case 'ADD_DAT':
       return {
@@ -59,10 +57,7 @@ const redatApp = (state = defaultState, action) => {
             }
           }
         },
-        intro: {
-          ...state.intro,
-          show: false
-        }
+        screen: 'dats'
       }
     case 'ADD_DAT_ERROR':
       return {
@@ -93,18 +88,15 @@ const redatApp = (state = defaultState, action) => {
     case 'INSPECT_DAT':
       return {
         ...state,
+        screen: 'inspect',
         inspect: {
-          ...state.inspect,
           key: action.key
         }
       }
     case 'INSPECT_DAT_CLOSE':
       return {
         ...state,
-        inspect: {
-          ...state.inspect,
-          key: null
-        }
+        screen: 'dats'
       }
     case 'DAT_FILES':
       return {
