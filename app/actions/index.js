@@ -3,7 +3,7 @@
 import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
-import { clipboard } from 'electron'
+import { clipboard, remote } from 'electron'
 import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
@@ -22,6 +22,15 @@ export const copyLink = link => {
   return { type: 'DIALOGS_LINK_COPY' }
 }
 export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
+
+export const createDat = () => dispatch => {
+  const files = remote.dialog.showOpenDialog({
+    properties: ['openDirectory']
+  })
+  if (!files || !files.length) return
+  const path = files[0]
+  addDat({ path })(dispatch)
+}
 
 export const addDat = ({ key, path }) => dispatch => {
   if (key) key = encode(key)
