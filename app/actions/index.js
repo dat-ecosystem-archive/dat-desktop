@@ -3,7 +3,7 @@
 import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
-import { clipboard, remote } from 'electron'
+import { clipboard, remote, ipcRenderer } from 'electron'
 import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
@@ -106,8 +106,21 @@ export const addDat = ({ key, path }) => dispatch => {
         ? 0
         : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
       dat.progress = progress
+
       dispatch({ type: 'DAT_PROGRESS', key, progress })
       dispatch(updateState(dat))
+
+      const incomplete = []
+      for (const [, d] of dats) {
+        if (d.network && d.progress < 1) incomplete.push(d)
+      }
+      let totalProgress = incomplete.length
+        ? incomplete.reduce((acc, dat) => {
+          return acc + dat.progress
+        }, 0) / incomplete.length
+        : 1
+      if (totalProgress === 1) totalProgress = -1 // deactivate
+      if (ipcRenderer) ipcRenderer.send('progress', totalProgress)
     }
     updateProgress()
 
