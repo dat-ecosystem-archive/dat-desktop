@@ -252,8 +252,7 @@ const redatApp = (state = defaultState, action) => {
           ...state.dats,
           [action.key]: {
             ...state.dats[action.key],
-            paused: false,
-            state: 'stale'
+            paused: false
           }
         }
       }
