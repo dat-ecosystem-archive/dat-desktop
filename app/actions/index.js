@@ -31,10 +31,18 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
-export const addDat = ({ key, path }) => dispatch => {
+export const addDat = ({ key, path, ...opts }) => dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
+
   if (key) dispatch({ type: 'ADD_DAT', key, path })
+  opts = {
+    watch: true,
+    resume: true,
+    ignoreHidden: true,
+    compareFileContent: true,
+    ...opts
+  }
 
   Dat(path, { key }, (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
@@ -44,7 +52,7 @@ export const addDat = ({ key, path }) => dispatch => {
     }
 
     dat.trackStats()
-    if (dat.writable) dat.importFiles()
+    if (dat.writable) dat.importFiles(opts)
 
     dispatch({
       type: 'DAT_METADATA',
@@ -55,8 +63,7 @@ export const addDat = ({ key, path }) => dispatch => {
       }
     })
 
-    dat.path = path
-    dats[key] = dat
+    dats[key] = { dat, path, opts }
     storeOnDisk()
 
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
@@ -166,7 +173,7 @@ const updateState = dat => {
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
-  const dat = dats[key]
+  const { dat } = dats[key]
 
   for (const con of dat.network.connections) {
     con.removeAllListeners()
@@ -183,7 +190,7 @@ export const confirmDeleteDat = key => dispatch => {
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
 export const togglePause = ({ key, paused }) => dispatch => {
-  const dat = dats[key]
+  const { dat } = dats[key]
   if (paused) {
     joinNetwork(dat)(dispatch)
   } else {
@@ -220,9 +227,11 @@ export const loadFromDisk = () => async dispatch => {
   }
   const datOpts = JSON.parse(blob)
   for (const key of Object.keys(datOpts)) {
+    const opts = JSON.parse(datOpts[key])
     addDat({
       key: key,
-      path: JSON.parse(datOpts[key]).dir
+      path: opts.dir,
+      ...opts
     })(dispatch)
   }
 }
@@ -236,7 +245,7 @@ const storeOnDisk = () => {
           ...acc,
           [key]: JSON.stringify({
             dir: dats[key].path,
-            opts: {}
+            opts: dats[key].opts
           })
         }),
         {}
