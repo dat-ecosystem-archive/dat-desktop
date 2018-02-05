@@ -3,7 +3,7 @@
 import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
-import { clipboard, remote, ipcRenderer } from 'electron'
+import { clipboard, remote, ipcRenderer, shell } from 'electron'
 import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
@@ -12,6 +12,7 @@ import { basename } from 'path'
 const dats = new Map()
 
 const stat = promisify(fs.stat)
+const { Notification } = window
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
 export const copyLink = link => {
@@ -102,6 +103,7 @@ export const addDat = ({ key, path }) => dispatch => {
 
     const updateProgress = stats => {
       if (!stats) stats = dat.stats.get()
+      const prevProgress = dat.progress
       const progress = !dat.stats
         ? 0
         : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
@@ -109,6 +111,15 @@ export const addDat = ({ key, path }) => dispatch => {
 
       dispatch({ type: 'DAT_PROGRESS', key, progress })
       dispatch(updateState(dat))
+
+      const unfinishedBefore = prevProgress < 1 && prevProgress > 0
+      if (dat.progress === 1 && unfinishedBefore) {
+        const notification = new Notification('Download finished', {
+          body: key
+        })
+        notification.onclick = () =>
+          shell.openExternal(`file://${dat.path}`, () => {})
+      }
 
       const incomplete = []
       for (const [, d] of dats) {
