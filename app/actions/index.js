@@ -207,8 +207,8 @@ export const dropFolder = folder => async dispatch => {
 export const loadFromLocalStorage = () => dispatch => {
   const blob = localStorage.getItem('state')
   if (!blob) return
-  const dats = JSON.parse(blob)
-  for (const dat of dats) {
-    addDat(dat)(dispatch)
+  const datOpts = JSON.parse(blob)
+  for (const datOpt of datOpts) {
+    addDat(datOpt)(dispatch)
   }
 }
