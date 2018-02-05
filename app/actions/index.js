@@ -226,8 +226,7 @@ export const loadFromDisk = () => async dispatch => {
   let blob = {}
   try {
     blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
-  } catch (_) {
-  }
+  } catch (_) {}
   const paused = JSON.parse(blob)
 
   try {
@@ -245,8 +244,6 @@ export const loadFromDisk = () => async dispatch => {
       ...opts
     })(dispatch)
   }
-
-  
 }
 
 const storeOnDisk = async () => {
