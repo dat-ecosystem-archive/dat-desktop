@@ -29,7 +29,7 @@ const redatApp = (state = defaultState, action) => {
             key: action.key,
             path: action.path,
             loading: true,
-            paused: false,
+            paused: action.paused,
             metadata: {},
             stats: {
               network: {

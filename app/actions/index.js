@@ -13,6 +13,7 @@ const dats = {}
 
 const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
 const mkdir = promisify(fs.mkdir)
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
@@ -31,11 +32,11 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
-export const addDat = ({ key, path, ...opts }) => dispatch => {
+export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
 
-  if (key) dispatch({ type: 'ADD_DAT', key, path })
+  if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
   opts = {
     watch: true,
     resume: true,
@@ -48,7 +49,7 @@ export const addDat = ({ key, path, ...opts }) => dispatch => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
     if (!key) {
       key = encode(dat.key)
-      dispatch({ type: 'ADD_DAT', key, path })
+      dispatch({ type: 'ADD_DAT', key, path, paused })
     }
 
     dat.trackStats()
@@ -62,9 +63,6 @@ export const addDat = ({ key, path, ...opts }) => dispatch => {
         author: 'Anonymous'
       }
     })
-
-    dats[key] = { dat, path, opts }
-    storeOnDisk()
 
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
     dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
@@ -123,8 +121,10 @@ export const addDat = ({ key, path, ...opts }) => dispatch => {
     }
     updateProgress()
 
-    joinNetwork(dat)(dispatch)
-    updateConnections(dat)(dispatch)
+    if (!paused) {
+      joinNetwork(dat)(dispatch)
+      updateConnections(dat)(dispatch)
+    }
 
     let prevNetworkStats
     dat.updateInterval = setInterval(() => {
@@ -140,6 +140,9 @@ export const addDat = ({ key, path, ...opts }) => dispatch => {
         }
       })
     }, 1000)
+
+    dats[key] = { dat, path, opts }
+    storeOnDisk()
   })
 }
 
@@ -196,6 +199,7 @@ export const togglePause = ({ key, paused }) => dispatch => {
   } else {
     dat.leaveNetwork()
   }
+  storeOnDisk()
   if (paused) {
     dispatch({ type: 'RESUME_DAT', key: key })
   } else {
@@ -219,7 +223,13 @@ export const loadFromDisk = () => async dispatch => {
     await mkdir(`${homedir()}/.dat-desktop`)
   } catch (_) {}
 
-  let blob
+  let blob = {}
+  try {
+    blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
+  } catch (_) {
+  }
+  const paused = JSON.parse(blob)
+
   try {
     blob = await readFile(`${homedir()}/.dat-desktop/dats.json`, 'utf8')
   } catch (_) {
@@ -231,13 +241,16 @@ export const loadFromDisk = () => async dispatch => {
     addDat({
       key: key,
       path: opts.dir,
+      paused: paused[key],
       ...opts
     })(dispatch)
   }
+
+  
 }
 
-const storeOnDisk = () => {
-  fs.writeFile(
+const storeOnDisk = async () => {
+  await writeFile(
     `${homedir()}/.dat-desktop/dats.json`,
     JSON.stringify(
       Object.keys(dats).reduce(
@@ -250,7 +263,18 @@ const storeOnDisk = () => {
         }),
         {}
       )
-    ),
-    () => {}
+    )
+  )
+  await writeFile(
+    `${homedir()}/.dat-desktop/paused.json`,
+    JSON.stringify(
+      Object.keys(dats).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: !dats[key].dat.network
+        }),
+        {}
+      )
+    )
   )
 }
