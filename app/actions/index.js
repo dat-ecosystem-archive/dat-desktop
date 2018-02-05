@@ -1,10 +1,9 @@
 'use strict'
 
 import Dat from 'dat-node'
-import { shell, clipboard } from 'electron'
+import { shell, clipboard, remote } from 'electron'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
-import { clipboard, remote } from 'electron'
 import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
