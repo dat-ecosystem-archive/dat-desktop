@@ -58,6 +58,10 @@ const redatApp = (state = defaultState, action) => {
               }
             }
           }
+        },
+        intro: {
+          ...state.intro,
+          show: false
         }
       }
     case 'ADD_DAT_ERROR':
