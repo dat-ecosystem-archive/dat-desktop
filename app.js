@@ -18,6 +18,7 @@ app.use(persist({
     return xtend({}, state, { dats: {} })
   }
 }))
+app.use(require('choo-component-preview')())
 
 if (process.env.NODE_ENV === 'development') {
   app.use(log())
