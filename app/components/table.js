@@ -2,7 +2,7 @@
 
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
-import TableRow from './table-row'
+import TableRowContainer from '../containers/table-row'
 import Empty from './empty'
 
 const StyledTable = styled.table`
@@ -73,14 +73,7 @@ const Table = ({
         </thead>
         <tbody>
           {Object.keys(dats).map(key => (
-            <TableRow
-              dat={dats[key]}
-              key={key}
-              shareDat={shareDat}
-              onDeleteDat={onDeleteDat}
-              onTogglePause={onTogglePause}
-              inspectDat={inspectDat}
-            />
+            <TableRowContainer key={key} datKey={key} />
           ))}
         </tbody>
       </StyledTable>
