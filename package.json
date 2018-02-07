@@ -20,7 +20,8 @@
     "electron": "^1.7.10",
     "prettier-standard": "^8.0.0",
     "standard": "^10.0.3",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "dat-colors": "^3.5.1",
