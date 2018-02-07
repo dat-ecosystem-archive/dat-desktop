@@ -47,7 +47,7 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
     ...opts
   }
 
-  Dat(path, { key }, (error, dat) => {
+  Dat(path, { key }, async (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
     if (!key) {
       key = encode(dat.key)
@@ -144,7 +144,7 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
     }, 1000)
 
     dats[key] = { dat, path, opts }
-    storeOnDisk()
+    await storeOnDisk()
   })
 }
 
@@ -177,7 +177,7 @@ const updateState = dat => {
 }
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
-export const confirmDeleteDat = key => dispatch => {
+export const confirmDeleteDat = key => async dispatch => {
   const { dat } = dats[key]
 
   for (const con of dat.network.connections) {
@@ -188,20 +188,20 @@ export const confirmDeleteDat = key => dispatch => {
 
   dat.close()
   delete dats[key]
-  storeOnDisk()
+  await storeOnDisk()
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
-export const togglePause = ({ key, paused }) => dispatch => {
+export const togglePause = ({ key, paused }) => async dispatch => {
   const { dat } = dats[key]
   if (paused) {
     joinNetwork(dat)(dispatch)
   } else {
     dat.leaveNetwork()
   }
-  storeOnDisk()
+  await storeOnDisk()
   if (paused) {
     dispatch({ type: 'RESUME_DAT', key: key })
   } else {
