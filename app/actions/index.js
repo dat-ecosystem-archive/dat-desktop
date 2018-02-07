@@ -8,8 +8,10 @@ import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
+import { createLock } from 'flexLock'
 
 const dats = {}
+const indexLock = createLock()
 
 const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
@@ -249,6 +251,7 @@ export const loadFromDisk = () => async dispatch => {
 }
 
 const storeOnDisk = async () => {
+  const unlock = await indexLock()
   const dir = `${homedir()}/.dat-desktop`
   const datsState = Object.keys(dats).reduce(
     (acc, key) => ({
@@ -270,4 +273,5 @@ const storeOnDisk = async () => {
 
   await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
   await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+  unlock()
 }
