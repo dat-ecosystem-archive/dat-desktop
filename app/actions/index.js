@@ -8,10 +8,11 @@ import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
-import { createLock } from 'flexLock'
+import { createLock, createLocker } from 'flexLock'
 
 const dats = {}
 const indexLock = createLock()
+const datsLock = createLocker()
 
 const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
@@ -34,9 +35,10 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
-export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
+export const addDat = ({ key, path, paused, ...opts }) => async dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
+  const unlock = await datsLock(key)
 
   if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
   opts = {
@@ -145,6 +147,7 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
 
     dats[key] = { dat, path, opts }
     await storeOnDisk()
+    unlock()
   })
 }
 
@@ -178,6 +181,7 @@ const updateState = dat => {
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => async dispatch => {
+  const unlock = await datsLock(key)
   const { dat } = dats[key]
 
   for (const con of dat.network.connections) {
@@ -191,10 +195,12 @@ export const confirmDeleteDat = key => async dispatch => {
   await storeOnDisk()
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
+  unlock()
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
 export const togglePause = ({ key, paused }) => async dispatch => {
+  const unlock = await datsLock(key)
   const { dat } = dats[key]
   if (paused) {
     joinNetwork(dat)(dispatch)
@@ -207,6 +213,7 @@ export const togglePause = ({ key, paused }) => async dispatch => {
   } else {
     dispatch({ type: 'PAUSE_DAT', key: key })
   }
+  unlock()
 }
 
 export const inspectDat = key => dispatch => {
