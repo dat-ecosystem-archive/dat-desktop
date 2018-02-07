@@ -86,7 +86,9 @@ const Status = ({ dat }) => {
   const progressbarLine =
     dat.state === 'loading'
       ? 'line-loading'
-      : dat.paused || dat.state === 'stale' ? 'line-paused' : 'line-complete'
+      : dat.paused || dat.state === 'stale' || dat.state === 'disconnected'
+        ? 'line-paused'
+        : 'line-complete'
   const netStats = dat.stats.network
 
   let progressText
@@ -108,6 +110,9 @@ const Status = ({ dat }) => {
         break
       case 'stale':
         progressText = 'waiting for peers…'
+        break
+      case 'disconnected':
+        progressText = 'waiting for connection…'
         break
       default:
         progressText = 'Paused.'

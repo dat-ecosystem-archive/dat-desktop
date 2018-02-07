@@ -144,7 +144,7 @@ const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
     }}
   >
     <td className='cell-1'>
-      <div className='w2 center' onClick={() => onTogglePause(dat)}>
+      <div className='w2 center' onClick={() => onTogglePause(dat.key)}>
         <HexContent dat={dat} />
       </div>
     </td>

@@ -1,6 +1,6 @@
 'use strict'
 
-import Dat from 'dat-node'
+import DatRaw from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard, remote } from 'electron'
@@ -8,9 +8,14 @@ import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
+import { createLock, createLocker } from 'flexLock'
 
 const dats = {}
+let pausedDats = {}
+const indexLock = createLock()
+const datsLock = createLocker()
 
+const Dat = promisify(DatRaw)
 const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
@@ -32,11 +37,11 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
-export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
+export const addDat = ({ key, path, ...opts }) => async dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
+  const unlock = await datsLock(key)
 
-  if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
   opts = {
     watch: true,
     resume: true,
@@ -45,105 +50,110 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
     ...opts
   }
 
-  Dat(path, { key }, (error, dat) => {
-    if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
-    if (!key) {
-      key = encode(dat.key)
-      dispatch({ type: 'ADD_DAT', key, path, paused })
+  let dat
+  try {
+    dat = await Dat(path, { key })
+  } catch (error) {
+    return dispatch({ type: 'ADD_DAT_ERROR', key, error })
+  }
+
+  if (!key) {
+    key = encode(dat.key)
+  }
+  dispatch({ type: 'ADD_DAT', key, path })
+
+  dat.trackStats()
+  if (dat.writable) dat.importFiles(opts)
+
+  dispatch({
+    type: 'DAT_METADATA',
+    key,
+    metadata: {
+      title: basename(path),
+      author: 'Anonymous'
     }
+  })
 
-    dat.trackStats()
-    if (dat.writable) dat.importFiles(opts)
+  dispatch({ type: 'ADD_DAT_SUCCESS', key })
+  dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
 
+  dat.archive.readFile('/dat.json', (err, blob) => {
+    if (err) return
+
+    let metadata = {}
+    try {
+      metadata = JSON.parse(blob)
+    } catch (_) {}
+
+    dispatch({ type: 'DAT_METADATA', key, metadata })
+  })
+
+  const walk = () => {
+    if (!dat.files) dat.files = []
+    var fs = { name: '/', fs: dat.archive }
+    var progress = mirror(fs, '/', { dryRun: true })
+    progress.on('put', function (file) {
+      file.name = file.name.slice(1)
+      if (file.name === '') return
+      dat.files.push({
+        path: file.name,
+        size: file.stat.size,
+        isFile: file.stat.isFile()
+      })
+      dat.files.sort(function (a, b) {
+        return a.path.localeCompare(b.path)
+      })
+
+      const { files } = dat
+      dispatch({ type: 'DAT_FILES', key, files })
+    })
+  }
+
+  if (dat.archive.content) walk()
+  else dat.archive.on('content', walk)
+
+  dat.stats.on('update', stats => {
+    if (!stats) stats = dat.stats.get()
+    updateProgress(stats)
+    dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
+  })
+
+  dispatch(updateState(dat))
+
+  const updateProgress = stats => {
+    if (!stats) stats = dat.stats.get()
+    const progress = !dat.stats
+      ? 0
+      : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
+    dat.progress = progress
+    dispatch({ type: 'DAT_PROGRESS', key, progress })
+    dispatch(updateState(dat))
+  }
+  updateProgress()
+
+  if (!pausedDats[dat.key]) {
+    joinNetwork(dat)(dispatch)
+    updateConnections(dat)(dispatch)
+  }
+
+  let prevNetworkStats
+  dat.updateInterval = setInterval(() => {
+    const stats = JSON.stringify(dat.stats.network)
+    if (stats === prevNetworkStats) return
+    prevNetworkStats = stats
     dispatch({
-      type: 'DAT_METADATA',
+      type: 'DAT_NETWORK_STATS',
       key,
-      metadata: {
-        title: basename(path),
-        author: 'Anonymous'
+      stats: {
+        up: dat.stats.network.uploadSpeed,
+        down: dat.stats.network.downloadSpeed
       }
     })
+  }, 1000)
 
-    dispatch({ type: 'ADD_DAT_SUCCESS', key })
-    dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
-
-    dat.archive.readFile('/dat.json', (err, blob) => {
-      if (err) return
-
-      let metadata = {}
-      try {
-        metadata = JSON.parse(blob)
-      } catch (_) {}
-
-      dispatch({ type: 'DAT_METADATA', key, metadata })
-    })
-
-    const walk = () => {
-      if (!dat.files) dat.files = []
-      var fs = { name: '/', fs: dat.archive }
-      var progress = mirror(fs, '/', { dryRun: true })
-      progress.on('put', function (file) {
-        file.name = file.name.slice(1)
-        if (file.name === '') return
-        dat.files.push({
-          path: file.name,
-          size: file.stat.size,
-          isFile: file.stat.isFile()
-        })
-        dat.files.sort(function (a, b) {
-          return a.path.localeCompare(b.path)
-        })
-
-        const { files } = dat
-        dispatch({ type: 'DAT_FILES', key, files })
-      })
-    }
-
-    if (dat.archive.content) walk()
-    else dat.archive.on('content', walk)
-
-    dat.stats.on('update', stats => {
-      if (!stats) stats = dat.stats.get()
-      updateProgress(stats)
-      dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
-    })
-
-    dispatch(updateState(dat))
-
-    const updateProgress = stats => {
-      if (!stats) stats = dat.stats.get()
-      const progress = !dat.stats
-        ? 0
-        : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
-      dat.progress = progress
-      dispatch({ type: 'DAT_PROGRESS', key, progress })
-      dispatch(updateState(dat))
-    }
-    updateProgress()
-
-    if (!paused) {
-      joinNetwork(dat)(dispatch)
-      updateConnections(dat)(dispatch)
-    }
-
-    let prevNetworkStats
-    dat.updateInterval = setInterval(() => {
-      const stats = JSON.stringify(dat.stats.network)
-      if (stats === prevNetworkStats) return
-      prevNetworkStats = stats
-      dispatch({
-        type: 'DAT_NETWORK_STATS',
-        key,
-        stats: {
-          up: dat.stats.network.uploadSpeed,
-          down: dat.stats.network.downloadSpeed
-        }
-      })
-    }, 1000)
-
-    dats[key] = { dat, path, opts }
-    storeOnDisk()
-  })
+  dats[key] = { dat, path, opts }
+  await storeOnDisk()
+  unlock()
 }
 
 const joinNetwork = dat => dispatch => {
@@ -166,16 +176,19 @@ const updateConnections = dat => dispatch => {
 
 const updateState = dat => {
   const key = encode(dat.key)
-  const state = !dat.network
+  const state = pausedDats[dat.key]
     ? 'paused'
-    : dat.writable || dat.progress === 1
-      ? 'complete'
-      : dat.network.connected ? 'loading' : 'stale'
+    : !dat.network
+      ? 'disconnected'
+      : dat.writable || dat.progress === 1
+        ? 'complete'
+        : dat.network.connected ? 'loading' : 'stale'
   return { type: 'DAT_STATE', key, state }
 }
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
-export const confirmDeleteDat = key => dispatch => {
+export const confirmDeleteDat = key => async dispatch => {
+  const unlock = await datsLock(key)
   const { dat } = dats[key]
 
   for (const con of dat.network.connections) {
@@ -186,25 +199,35 @@ export const confirmDeleteDat = key => dispatch => {
 
   dat.close()
   delete dats[key]
-  storeOnDisk()
+  delete pausedDats[key]
+  await storeOnDisk()
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
+  unlock()
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
-export const togglePause = ({ key, paused }) => dispatch => {
+export const togglePause = (key) => async dispatch => {
+  const unlock = await datsLock(key)
   const { dat } = dats[key]
-  if (paused) {
+  const wasPaused = pausedDats[key]
+  if (wasPaused) {
+    delete pausedDats[key]
+  } else {
+    pausedDats[key] = true
+  }
+  if (wasPaused) {
     joinNetwork(dat)(dispatch)
   } else {
     dat.leaveNetwork()
   }
-  storeOnDisk()
-  if (paused) {
-    dispatch({ type: 'RESUME_DAT', key: key })
+  await storeOnDisk()
+  if (wasPaused) {
+    dispatch({ type: 'RESUME_DAT', key })
   } else {
-    dispatch({ type: 'PAUSE_DAT', key: key })
+    dispatch({ type: 'PAUSE_DAT', key })
   }
+  unlock()
 }
 
 export const inspectDat = key => dispatch => {
@@ -235,20 +258,20 @@ export const loadFromDisk = () => async dispatch => {
   try {
     blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
   } catch (_) {}
-  const paused = JSON.parse(blob)
+  pausedDats = JSON.parse(blob)
 
   for (const key of Object.keys(datOpts)) {
     const opts = JSON.parse(datOpts[key])
     addDat({
       key: key,
       path: opts.dir,
-      paused: paused[key],
       ...opts
     })(dispatch)
   }
 }
 
 const storeOnDisk = async () => {
+  const unlock = await indexLock()
   const dir = `${homedir()}/.dat-desktop`
   const datsState = Object.keys(dats).reduce(
     (acc, key) => ({
@@ -260,14 +283,10 @@ const storeOnDisk = async () => {
     }),
     {}
   )
-  const pausedState = Object.keys(dats).reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: !dats[key].dat.network
-    }),
-    {}
-  )
 
-  await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
-  await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+  await Promise.all([
+    writeFile(`${dir}/dats.json`, JSON.stringify(datsState)),
+    writeFile(`${dir}/paused.json`, JSON.stringify(pausedDats))
+  ])
+  unlock()
 }

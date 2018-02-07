@@ -29,6 +29,7 @@
     "dat-icons": "^2.5.1",
     "dat-node": "^3.5.6",
     "electron-default-menu": "^1.0.1",
+    "flexlock": "^1.1.0",
     "mirror-folder": "^2.1.1",
     "ms": "^2.1.1",
     "prettier-bytes": "^1.0.4",
