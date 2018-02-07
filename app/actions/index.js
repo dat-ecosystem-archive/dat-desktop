@@ -278,7 +278,9 @@ const storeOnDisk = async () => {
     {}
   )
 
-  await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
-  await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+  await Promise.all([
+    writeFile(`${dir}/dats.json`, JSON.stringify(datsState)),
+    writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+  ])
   unlock()
 }
