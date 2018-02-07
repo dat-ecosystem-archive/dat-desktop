@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   shareDat: link => dispatch(shareDat(link)),
   onDeleteDat: key => dispatch(deleteDat(key)),
-  onTogglePause: dat => dispatch(togglePause(dat)),
+  onTogglePause: key => dispatch(togglePause(key)),
   inspectDat: key => dispatch(inspectDat(key))
 })
 

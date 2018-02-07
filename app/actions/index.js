@@ -37,12 +37,11 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
-export const addDat = ({ key, path, paused, ...opts }) => async dispatch => {
+export const addDat = ({ key, path, ...opts }) => async dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
   const unlock = await datsLock(key)
 
-  if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
   opts = {
     watch: true,
     resume: true,
@@ -60,8 +59,8 @@ export const addDat = ({ key, path, paused, ...opts }) => async dispatch => {
 
   if (!key) {
     key = encode(dat.key)
-    dispatch({ type: 'ADD_DAT', key, path, paused })
   }
+  dispatch({ type: 'ADD_DAT', key, path })
 
   dat.trackStats()
   if (dat.writable) dat.importFiles(opts)
@@ -132,7 +131,7 @@ export const addDat = ({ key, path, paused, ...opts }) => async dispatch => {
   }
   updateProgress()
 
-  if (!paused) {
+  if (!pausedDats[dat.key]) {
     joinNetwork(dat)(dispatch)
     updateConnections(dat)(dispatch)
   }
@@ -200,6 +199,7 @@ export const confirmDeleteDat = key => async dispatch => {
 
   dat.close()
   delete dats[key]
+  delete pausedDats[key]
   await storeOnDisk()
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
@@ -207,24 +207,25 @@ export const confirmDeleteDat = key => async dispatch => {
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
-export const togglePause = ({ key, paused }) => async dispatch => {
+export const togglePause = (key) => async dispatch => {
   const unlock = await datsLock(key)
   const { dat } = dats[key]
-  if (paused) {
-    pausedDats[key] = true
-  } else {
+  const wasPaused = pausedDats[key]
+  if (wasPaused) {
     delete pausedDats[key]
+  } else {
+    pausedDats[key] = true
   }
-  if (paused) {
+  if (wasPaused) {
     joinNetwork(dat)(dispatch)
   } else {
     dat.leaveNetwork()
   }
   await storeOnDisk()
-  if (paused) {
-    dispatch({ type: 'RESUME_DAT', key: key })
+  if (wasPaused) {
+    dispatch({ type: 'RESUME_DAT', key })
   } else {
-    dispatch({ type: 'PAUSE_DAT', key: key })
+    dispatch({ type: 'PAUSE_DAT', key })
   }
   unlock()
 }
@@ -264,7 +265,6 @@ export const loadFromDisk = () => async dispatch => {
     addDat({
       key: key,
       path: opts.dir,
-      paused: pausedDats[key],
       ...opts
     })(dispatch)
   }
