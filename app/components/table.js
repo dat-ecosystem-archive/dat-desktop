@@ -73,7 +73,7 @@ const Table = ({
         </thead>
         <tbody>
           {Object.keys(dats).map(key => (
-            <TableRowContainer key={key} datKey={key} />
+            <TableRowContainer key={key} dat={dats[key]} />
           ))}
         </tbody>
       </StyledTable>

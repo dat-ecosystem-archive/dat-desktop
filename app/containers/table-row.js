@@ -5,9 +5,9 @@ import TableRow from '../components/table-row'
 import { shareDat, deleteDat, togglePause, inspectDat } from '../actions'
 
 const makeMapStateToProps = (initialState, initialProps) => {
-  const { datKey } = initialProps
+  const { dat } = initialProps
   const mapStateToProps = state => ({
-    dat: state.dats[datKey]
+    dat
   })
 
   return mapStateToProps
