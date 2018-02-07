@@ -11,6 +11,7 @@ import { basename } from 'path'
 import { createLock, createLocker } from 'flexLock'
 
 const dats = {}
+let pausedDats = {}
 const indexLock = createLock()
 const datsLock = createLocker()
 
@@ -176,11 +177,13 @@ const updateConnections = dat => dispatch => {
 
 const updateState = dat => {
   const key = encode(dat.key)
-  const state = !dat.network
+  const state = pausedDats[dat.key]
     ? 'paused'
-    : dat.writable || dat.progress === 1
-      ? 'complete'
-      : dat.network.connected ? 'loading' : 'stale'
+    : !dat.network
+      ? 'disconnected'
+      : dat.writable || dat.progress === 1
+        ? 'complete'
+        : dat.network.connected ? 'loading' : 'stale'
   return { type: 'DAT_STATE', key, state }
 }
 
@@ -207,6 +210,11 @@ export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 export const togglePause = ({ key, paused }) => async dispatch => {
   const unlock = await datsLock(key)
   const { dat } = dats[key]
+  if (paused) {
+    pausedDats[key] = true
+  } else {
+    delete pausedDats[key]
+  }
   if (paused) {
     joinNetwork(dat)(dispatch)
   } else {
@@ -249,14 +257,14 @@ export const loadFromDisk = () => async dispatch => {
   try {
     blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
   } catch (_) {}
-  const paused = JSON.parse(blob)
+  pausedDats = JSON.parse(blob)
 
   for (const key of Object.keys(datOpts)) {
     const opts = JSON.parse(datOpts[key])
     addDat({
       key: key,
       path: opts.dir,
-      paused: paused[key],
+      paused: pausedDats[key],
       ...opts
     })(dispatch)
   }
@@ -275,17 +283,10 @@ const storeOnDisk = async () => {
     }),
     {}
   )
-  const pausedState = Object.keys(dats).reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: !dats[key].dat.network
-    }),
-    {}
-  )
 
   await Promise.all([
     writeFile(`${dir}/dats.json`, JSON.stringify(datsState)),
-    writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+    writeFile(`${dir}/paused.json`, JSON.stringify(pausedDats))
   ])
   unlock()
 }
