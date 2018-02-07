@@ -1,6 +1,6 @@
 'use strict'
 
-import Dat from 'dat-node'
+import DatRaw from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import { clipboard, remote } from 'electron'
@@ -14,6 +14,7 @@ const dats = {}
 const indexLock = createLock()
 const datsLock = createLocker()
 
+const Dat = promisify(DatRaw)
 const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
@@ -49,106 +50,110 @@ export const addDat = ({ key, path, paused, ...opts }) => async dispatch => {
     ...opts
   }
 
-  Dat(path, { key }, async (error, dat) => {
-    if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
-    if (!key) {
-      key = encode(dat.key)
-      dispatch({ type: 'ADD_DAT', key, path, paused })
+  let dat
+  try {
+    dat = await Dat(path, { key })
+  } catch (error) {
+    return dispatch({ type: 'ADD_DAT_ERROR', key, error })
+  }
+
+  if (!key) {
+    key = encode(dat.key)
+    dispatch({ type: 'ADD_DAT', key, path, paused })
+  }
+
+  dat.trackStats()
+  if (dat.writable) dat.importFiles(opts)
+
+  dispatch({
+    type: 'DAT_METADATA',
+    key,
+    metadata: {
+      title: basename(path),
+      author: 'Anonymous'
     }
+  })
 
-    dat.trackStats()
-    if (dat.writable) dat.importFiles(opts)
+  dispatch({ type: 'ADD_DAT_SUCCESS', key })
+  dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
 
+  dat.archive.readFile('/dat.json', (err, blob) => {
+    if (err) return
+
+    let metadata = {}
+    try {
+      metadata = JSON.parse(blob)
+    } catch (_) {}
+
+    dispatch({ type: 'DAT_METADATA', key, metadata })
+  })
+
+  const walk = () => {
+    if (!dat.files) dat.files = []
+    var fs = { name: '/', fs: dat.archive }
+    var progress = mirror(fs, '/', { dryRun: true })
+    progress.on('put', function (file) {
+      file.name = file.name.slice(1)
+      if (file.name === '') return
+      dat.files.push({
+        path: file.name,
+        size: file.stat.size,
+        isFile: file.stat.isFile()
+      })
+      dat.files.sort(function (a, b) {
+        return a.path.localeCompare(b.path)
+      })
+
+      const { files } = dat
+      dispatch({ type: 'DAT_FILES', key, files })
+    })
+  }
+
+  if (dat.archive.content) walk()
+  else dat.archive.on('content', walk)
+
+  dat.stats.on('update', stats => {
+    if (!stats) stats = dat.stats.get()
+    updateProgress(stats)
+    dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
+  })
+
+  dispatch(updateState(dat))
+
+  const updateProgress = stats => {
+    if (!stats) stats = dat.stats.get()
+    const progress = !dat.stats
+      ? 0
+      : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
+    dat.progress = progress
+    dispatch({ type: 'DAT_PROGRESS', key, progress })
+    dispatch(updateState(dat))
+  }
+  updateProgress()
+
+  if (!paused) {
+    joinNetwork(dat)(dispatch)
+    updateConnections(dat)(dispatch)
+  }
+
+  let prevNetworkStats
+  dat.updateInterval = setInterval(() => {
+    const stats = JSON.stringify(dat.stats.network)
+    if (stats === prevNetworkStats) return
+    prevNetworkStats = stats
     dispatch({
-      type: 'DAT_METADATA',
+      type: 'DAT_NETWORK_STATS',
       key,
-      metadata: {
-        title: basename(path),
-        author: 'Anonymous'
+      stats: {
+        up: dat.stats.network.uploadSpeed,
+        down: dat.stats.network.downloadSpeed
       }
     })
+  }, 1000)
 
-    dispatch({ type: 'ADD_DAT_SUCCESS', key })
-    dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
-
-    dat.archive.readFile('/dat.json', (err, blob) => {
-      if (err) return
-
-      let metadata = {}
-      try {
-        metadata = JSON.parse(blob)
-      } catch (_) {}
-
-      dispatch({ type: 'DAT_METADATA', key, metadata })
-    })
-
-    const walk = () => {
-      if (!dat.files) dat.files = []
-      var fs = { name: '/', fs: dat.archive }
-      var progress = mirror(fs, '/', { dryRun: true })
-      progress.on('put', function (file) {
-        file.name = file.name.slice(1)
-        if (file.name === '') return
-        dat.files.push({
-          path: file.name,
-          size: file.stat.size,
-          isFile: file.stat.isFile()
-        })
-        dat.files.sort(function (a, b) {
-          return a.path.localeCompare(b.path)
-        })
-
-        const { files } = dat
-        dispatch({ type: 'DAT_FILES', key, files })
-      })
-    }
-
-    if (dat.archive.content) walk()
-    else dat.archive.on('content', walk)
-
-    dat.stats.on('update', stats => {
-      if (!stats) stats = dat.stats.get()
-      updateProgress(stats)
-      dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
-    })
-
-    dispatch(updateState(dat))
-
-    const updateProgress = stats => {
-      if (!stats) stats = dat.stats.get()
-      const progress = !dat.stats
-        ? 0
-        : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
-      dat.progress = progress
-      dispatch({ type: 'DAT_PROGRESS', key, progress })
-      dispatch(updateState(dat))
-    }
-    updateProgress()
-
-    if (!paused) {
-      joinNetwork(dat)(dispatch)
-      updateConnections(dat)(dispatch)
-    }
-
-    let prevNetworkStats
-    dat.updateInterval = setInterval(() => {
-      const stats = JSON.stringify(dat.stats.network)
-      if (stats === prevNetworkStats) return
-      prevNetworkStats = stats
-      dispatch({
-        type: 'DAT_NETWORK_STATS',
-        key,
-        stats: {
-          up: dat.stats.network.uploadSpeed,
-          down: dat.stats.network.downloadSpeed
-        }
-      })
-    }, 1000)
-
-    dats[key] = { dat, path, opts }
-    await storeOnDisk()
-    unlock()
-  })
+  dats[key] = { dat, path, opts }
+  await storeOnDisk()
+  unlock()
 }
 
 const joinNetwork = dat => dispatch => {
