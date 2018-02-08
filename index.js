@@ -43,6 +43,10 @@ app.on('ready', () => {
   }
 })
 
+app.on('will-finish-launching', () => {
+  app.on('open-url', url => win.webContents.send('link', url))
+})
+
 app.on('window-all-closed', () => app.quit())
 
 const quit = app.makeSingleInstance(() => {
