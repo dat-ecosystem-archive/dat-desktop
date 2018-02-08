@@ -15,7 +15,13 @@ const defaultState = {
     up: 0,
     down: 0
   },
-  inspect: { key: null }
+  inspect: {
+    key: null
+  },
+  view: {
+    key: null,
+    path: null
+  }
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -255,6 +261,14 @@ const redatApp = (state = defaultState, action) => {
             paused: false,
             state: 'stale'
           }
+        }
+      }
+    case 'VIEW_FILE':
+      return {
+        ...state,
+        view: {
+          key: action.key,
+          path: action.path
         }
       }
     default:

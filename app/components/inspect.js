@@ -4,7 +4,7 @@ import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import { toStr } from 'dat-encoding'
 import bytes from 'prettier-bytes'
-import FileList from './file-list'
+import FileList from '../containers/file-list'
 import Icon from './icon'
 import { Plain as PlainButton } from './button'
 

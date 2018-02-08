@@ -21,7 +21,7 @@ const FileListTable = styled.table`
   }
 `
 
-const List = ({ dat }) => (
+const List = ({ dat, onClickFile }) => (
   <FileListContainer>
     {dat && dat.files && dat.files.length ? (
       <FileListTable className='w-100 f7 f6-l '>
@@ -32,7 +32,7 @@ const List = ({ dat }) => (
                 ? bytes(file.size)
                 : ''
             return (
-              <tr key={file.path}>
+              <tr key={file.path} onClick={() => onClickFile(file.path)}>
                 <td className='truncate mw5'>{file.path}</td>
                 <td>{size}</td>
               </tr>

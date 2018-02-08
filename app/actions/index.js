@@ -224,3 +224,5 @@ export const dropFolder = folder => async dispatch => {
   if (!isDirectory) return
   addDat({ path: folder.path })(dispatch)
 }
+
+export const viewFile = (key, path) => ({ type: 'VIEW_FILE', key, path })
