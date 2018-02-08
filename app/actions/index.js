@@ -3,7 +3,7 @@
 import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
-import { clipboard, remote } from 'electron'
+import { clipboard, remote, ipcRenderer, shell } from 'electron'
 import mirror from 'mirror-folder'
 import fs from 'fs'
 import promisify from 'util-promisify'
@@ -15,6 +15,7 @@ const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 const mkdir = promisify(fs.mkdir)
+const { Notification } = window
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
 export const copyLink = link => {
@@ -112,12 +113,35 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
 
     const updateProgress = stats => {
       if (!stats) stats = dat.stats.get()
+      const prevProgress = dat.progress
       const progress = !dat.stats
         ? 0
         : dat.writable ? 1 : Math.min(1, stats.downloaded / stats.length)
       dat.progress = progress
+
       dispatch({ type: 'DAT_PROGRESS', key, progress })
       dispatch(updateState(dat))
+
+      const unfinishedBefore = prevProgress < 1 && prevProgress > 0
+      if (dat.progress === 1 && unfinishedBefore) {
+        const notification = new Notification('Download finished', {
+          body: key
+        })
+        notification.onclick = () =>
+          shell.openExternal(`file://${dat.path}`, () => {})
+      }
+
+      const incomplete = []
+      for (const [, d] of dats) {
+        if (d.network && d.progress < 1) incomplete.push(d)
+      }
+      let totalProgress = incomplete.length
+        ? incomplete.reduce((acc, dat) => {
+          return acc + dat.progress
+        }, 0) / incomplete.length
+        : 1
+      if (totalProgress === 1) totalProgress = -1 // deactivate
+      if (ipcRenderer) ipcRenderer.send('progress', totalProgress)
     }
     updateProgress()
 

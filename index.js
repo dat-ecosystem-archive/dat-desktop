@@ -1,6 +1,6 @@
 'use strict'
 
-const { app, BrowserWindow, shell, Menu } = require('electron')
+const { app, BrowserWindow, shell, Menu, ipcMain } = require('electron')
 const { neutral } = require('dat-colors')
 const autoUpdater = require('./lib/auto-updater')
 const defaultMenu = require('electron-default-menu')
@@ -37,10 +37,16 @@ app.on('ready', () => {
   win.webContents.openDevTools()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
 
+  ipcMain.on('progress', (_, progress) => win && win.setProgressBar(progress))
+
   if (process.env.NODE_ENV === 'production') {
     const log = str => win && win.webContents.send('log', str)
     autoUpdater({ log })
   }
+})
+
+app.on('will-finish-launching', () => {
+  app.on('open-url', url => win.webContents.send('link', url))
 })
 
 app.on('window-all-closed', () => app.quit())
