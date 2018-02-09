@@ -90,23 +90,28 @@ const Status = ({ dat }) => {
   const netStats = dat.stats.network
 
   let progressText
-  switch (dat.state) {
-    case 'complete':
-      progressText = `Complete. ↑ ${speed(netStats.up)}`
-      break
-    case 'loading':
-      progressText = (
-        <span>
-          <span className='arrow'>↓ </span> {speed(netStats.down)}
-          <span className='arrow ml2'>↑ </span> {speed(netStats.up)}
-        </span>
-      )
-      break
-    case 'stale':
-      progressText = 'waiting for peers…'
-      break
-    default:
-      progressText = 'Paused.'
+
+  if (dat.paused) {
+    progressText = 'Paused.'
+  } else {
+    switch (dat.state) {
+      case 'complete':
+        progressText = `Complete. ↑ ${speed(netStats.up)}`
+        break
+      case 'loading':
+        progressText = (
+          <span>
+            <span className='arrow'>↓ </span> {speed(netStats.down)}
+            <span className='arrow ml2'>↑ </span> {speed(netStats.up)}
+          </span>
+        )
+        break
+      case 'stale':
+        progressText = 'waiting for peers…'
+        break
+      default:
+        progressText = 'Paused.'
+    }
   }
 
   return (
