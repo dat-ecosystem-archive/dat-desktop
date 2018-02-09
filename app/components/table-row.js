@@ -132,13 +132,7 @@ const DeleteButton = ({ ...props }) => (
 const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
   <Tr
     onClick={ev => {
-      if (
-        ev.target.tagName === 'SVG' ||
-        ev.target.tagName === 'use' ||
-        ev.target.tagName === 'INPUT'
-      ) {
-        return
-      }
+      if (['SVG', 'use', 'INPUT'].includes(ev.target.tagName)) return
       inspectDat(dat.key)
     }}
   >
