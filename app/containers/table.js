@@ -1,7 +1,6 @@
 'use strict'
 
 import Table from '../components/table'
-import { shareDat, deleteDat, togglePause, inspectDat } from '../actions'
 import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({
@@ -9,13 +8,6 @@ const mapStateToProps = state => ({
   show: state.screen === 'dats'
 })
 
-const mapDispatchToProps = dispatch => ({
-  shareDat: link => dispatch(shareDat(link)),
-  onDeleteDat: key => dispatch(deleteDat(key)),
-  onTogglePause: dat => dispatch(togglePause(dat)),
-  inspectDat: key => dispatch(inspectDat(key))
-})
-
-const TableContainer = connect(mapStateToProps, mapDispatchToProps)(Table)
+const TableContainer = connect(mapStateToProps, null)(Table)
 
 export default TableContainer

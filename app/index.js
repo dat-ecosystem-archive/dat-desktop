@@ -5,15 +5,15 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import datDesktopApp from './reducers'
+import { addDat, loadFromDisk } from './actions'
 import App from './components/app'
 import logger from 'redux-logger'
-// import persistState from 'redux-localstorage'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
 
 const store = createStore(
   datDesktopApp,
-  compose(/* persistState(), */ applyMiddleware(thunk, logger))
+  compose(applyMiddleware(thunk, logger))
 )
 
 render(
@@ -23,4 +23,7 @@ render(
   document.querySelector('div')
 )
 
+store.dispatch(loadFromDisk())
+
 ipc.on('log', (_, str) => console.log(str))
+ipc.on('link', key => store.dispatch(addDat({ key })))

@@ -47,7 +47,7 @@ const redatApp = (state = defaultState, action) => {
             key: action.key,
             path: action.path,
             loading: true,
-            paused: false,
+            paused: action.paused,
             metadata: {},
             stats: {
               network: {
@@ -268,8 +268,7 @@ const redatApp = (state = defaultState, action) => {
           ...state.dats,
           [action.key]: {
             ...state.dats[action.key],
-            paused: false,
-            state: 'stale'
+            paused: false
           }
         }
       }
