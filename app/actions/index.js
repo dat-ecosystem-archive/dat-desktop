@@ -252,18 +252,17 @@ export const updateTemporaryTitleValue = title => ({
   title
 })
 
-export const updateTitle = (key, path, editValue) => {
+export const updateTitle = (key, path, editValue) => async dispatch => {
   const filePath = `${path}/dat.json`
-  readFile(filePath)
-    .then(blob => JSON.parse)
-    .then(metadata => ({ ...metadata, title: editValue }))
-    .then(metadata => writeFile(filePath, JSON.stringify(metadata)))
+  const blob = await readFile(filePath)
+  const metadata = { ...JSON.parse(blob) , title: editValue }
+  await writeFile(filePath, JSON.stringify(metadata))
 
-  return {
+  dispatch({
     type: 'UPDATE_TITLE',
     key,
     editValue
-  }
+  })
 }
 
 export const deactivateTitleEditing = () => ({
