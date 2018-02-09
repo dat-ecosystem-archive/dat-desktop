@@ -5,7 +5,7 @@ import TitleField from '../components/title-field'
 import {
   updateTitle,
   activateTitleEditing,
-  editTitle,
+  updateTemporaryTitleValue,
   deactivateTitleEditing
 } from '../actions'
 
@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateTitle(key, path, editValue)),
   activateTitleEditing: (title, editable) =>
     dispatch(activateTitleEditing(title)),
-  editTitle: title => dispatch(editTitle(title)),
+  updateTemporaryTitleValue: title => dispatch(updateTemporaryTitleValue(title)),
   deactivateTitleEditing: () => dispatch(deactivateTitleEditing())
 })
 

@@ -232,7 +232,7 @@ export const activateTitleEditing = title => ({
   title
 })
 
-export const editTitle = title => ({ type: 'EDIT_TITLE', title })
+export const updateTemporaryTitleValue = title => ({ type: 'UPDATE_TEMPORARY_TITLE_VALUE', title })
 
 export const updateTitle = (key, path, editValue) => {
   const filePath = `${path}/dat.json`

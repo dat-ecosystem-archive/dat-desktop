@@ -84,7 +84,7 @@ class TitleField extends Component {
       ev.preventDefault()
       this.handleSave()
     } else if (oldValue !== newValue) {
-      this.props.editTitle(newValue)
+      this.props.updateTemporaryTitleValue(newValue)
     }
   }
 

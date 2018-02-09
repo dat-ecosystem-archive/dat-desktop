@@ -189,7 +189,7 @@ const redatApp = (state = defaultState, action) => {
           isEditing: true
         }
       }
-    case 'EDIT_TITLE':
+    case 'UPDATE_TEMPORARY_TITLE_VALUE':
       return {
         ...state,
         titleUnderEdit: {
