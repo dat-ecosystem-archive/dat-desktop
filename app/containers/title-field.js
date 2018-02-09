@@ -20,15 +20,15 @@ const makeMapStateToProps = (initialState, initialProps) => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return ({
+  return {
     updateTitle: (key, path, editValue) =>
-    dispatch(updateTitle(key, path, editValue)),
+      dispatch(updateTitle(key, path, editValue)),
     activateTitleEditing: (title, editable) =>
-    dispatch(activateTitleEditing(title)),
+      dispatch(activateTitleEditing(title)),
     updateTemporaryTitleValue: title =>
-    dispatch(updateTemporaryTitleValue(title)),
+      dispatch(updateTemporaryTitleValue(title)),
     deactivateTitleEditing: () => dispatch(deactivateTitleEditing())
-  })
+  }
 }
 
 const TitleFieldContainer = connect(makeMapStateToProps, mapDispatchToProps)(
