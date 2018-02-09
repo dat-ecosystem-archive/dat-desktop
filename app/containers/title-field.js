@@ -24,7 +24,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateTitle(key, path, editValue)),
   activateTitleEditing: (title, editable) =>
     dispatch(activateTitleEditing(title)),
-  updateTemporaryTitleValue: title => dispatch(updateTemporaryTitleValue(title)),
+  updateTemporaryTitleValue: title =>
+    dispatch(updateTemporaryTitleValue(title)),
   deactivateTitleEditing: () => dispatch(deactivateTitleEditing())
 })
 

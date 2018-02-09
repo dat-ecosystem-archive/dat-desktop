@@ -100,7 +100,7 @@ class TitleField extends Component {
         <div>
           <Overlay onClick={() => this.deactivateTitleEditing()} />
           <EditableFieldWrapper className='bg-white nt1 nb1 nl1 shadow-1 flex justify-between'>
-            { /* why innerRef in following component? check here - styled-components/styled-components#102 */}
+            {/* why innerRef in following component? check here - styled-components/styled-components#102 */}
             <InputField
               className='bn f6 pl1 normal w-100'
               defaultValue={editValue || title}
@@ -114,10 +114,14 @@ class TitleField extends Component {
                 Save
               </PlainButton>
             ) : (
-              <GreenButton onClick={ev => {
-                ev.stopPropagation()
-                this.handleSave()
-              }}>Save</GreenButton>
+              <GreenButton
+                onClick={ev => {
+                  ev.stopPropagation()
+                  this.handleSave()
+                }}
+              >
+                Save
+              </GreenButton>
             )}
           </EditableFieldWrapper>
         </div>
