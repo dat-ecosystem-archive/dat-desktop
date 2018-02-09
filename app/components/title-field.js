@@ -114,7 +114,10 @@ class TitleField extends Component {
                 Save
               </PlainButton>
             ) : (
-              <GreenButton onClick={() => this.handleSave()}>Save</GreenButton>
+              <GreenButton onClick={ev => {
+                ev.stopPropagation()
+                this.handleSave()
+              }}>Save</GreenButton>
             )}
           </EditableFieldWrapper>
         </div>
