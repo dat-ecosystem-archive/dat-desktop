@@ -5,12 +5,11 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import datDesktopApp from './reducers'
-import { addDat } from './actions'
+import { addDat, loadFromDisk } from './actions'
 import App from './components/app'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
-import { loadFromDisk } from './actions'
 
 const store = createStore(
   datDesktopApp,
