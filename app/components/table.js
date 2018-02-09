@@ -42,11 +42,7 @@ const StyledTable = styled.table`
 
 const Table = ({
   dats,
-  show,
-  shareDat,
-  onDeleteDat,
-  inspectDat,
-  onTogglePause
+  show
 }) => {
   if (!show) {
     return (
