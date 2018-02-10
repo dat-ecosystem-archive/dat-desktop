@@ -8,6 +8,7 @@ import * as Dialog from '../containers/dialog'
 import StatusBarContainer from '../containers/status-bar'
 import InspectContainer from '../containers/inspect'
 import DragDropContainer from '../containers/drag-drop'
+import ViewerContainer from '../containers/viewer'
 
 const App = () => (
   <Fragment>
@@ -16,6 +17,7 @@ const App = () => (
     <TableContainer />
     <Dialog.LinkContainer />
     <Dialog.ConfirmContainer />
+    <ViewerContainer />
     <InspectContainer />
     <StatusBarContainer />
     <DragDropContainer />

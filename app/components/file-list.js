@@ -21,8 +21,8 @@ const FileListTable = styled.table`
   }
 `
 
-const List = ({ dat, onClickFile }) => (
-  <FileListContainer>
+const FileList = ({ dat, onClickFile }) => (
+  <FileListContainer className='flex-auto bg-white mb2 mw6'>
     {dat && dat.files && dat.files.length ? (
       <FileListTable className='w-100 f7 f6-l '>
         <tbody>
@@ -43,12 +43,6 @@ const List = ({ dat, onClickFile }) => (
     ) : (
       <div className='f7 f6-l pa2'>N/A</div>
     )}
-  </FileListContainer>
-)
-
-const FileList = ({ dat }) => (
-  <FileListContainer className='flex-auto bg-white mb2 mw6'>
-    <List dat={dat} />
   </FileListContainer>
 )
 

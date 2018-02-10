@@ -270,6 +270,14 @@ const redatApp = (state = defaultState, action) => {
           path: action.path
         }
       }
+    case 'VIEW_FILE_CLOSE':
+      return {
+        ...state,
+        view: {
+          key: null,
+          path: null
+        }
+      }
     default:
       return state
   }

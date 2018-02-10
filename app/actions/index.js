@@ -244,7 +244,8 @@ export const dropFolder = folder => async dispatch => {
   addDat({ path: folder.path })(dispatch)
 }
 
-export const viewFile = (key, path) => ({ type: 'VIEW_FILE', key, path })
+export const viewFile = ({ key, path }) => ({ type: 'VIEW_FILE', key, path })
+export const closeViewFile = () => ({ type: 'VIEW_FILE_CLOSE' })
 
 export const loadFromDisk = () => async dispatch => {
   try {
