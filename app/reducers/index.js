@@ -15,7 +15,11 @@ const defaultState = {
     up: 0,
     down: 0
   },
-  inspect: { key: null }
+  inspect: { key: null },
+  titleEditInPlace: {
+    isEditing: false,
+    editValue: null
+  }
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -178,6 +182,44 @@ const redatApp = (state = defaultState, action) => {
             ...state.dats[action.key],
             peers: action.peers
           }
+        }
+      }
+    case 'ACTIVATE_TITLE_EDITING':
+      return {
+        ...state,
+        titleEditInPlace: {
+          ...state.titleEditInPlace,
+          isEditing: true
+        }
+      }
+    case 'UPDATE_TEMPORARY_TITLE_VALUE':
+      return {
+        ...state,
+        titleEditInPlace: {
+          ...state.titleEditInPlace,
+          editValue: action.title
+        }
+      }
+    case 'UPDATE_TITLE':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            metadata: {
+              ...state.dats[action.key].metadata,
+              title: action.editValue
+            }
+          }
+        }
+      }
+    case 'DEACTIVATE_TITLE_EDITING':
+      return {
+        ...state,
+        titleEditInPlace: {
+          isEditing: false,
+          editValue: null
         }
       }
     case 'DIALOGS_LINK_OPEN':
