@@ -16,7 +16,7 @@ const defaultState = {
     down: 0
   },
   inspect: { key: null },
-  titleUnderEdit: {
+  titleEditInPlace: {
     isEditing: false,
     editValue: null
   }
@@ -187,16 +187,16 @@ const redatApp = (state = defaultState, action) => {
     case 'ACTIVATE_TITLE_EDITING':
       return {
         ...state,
-        titleUnderEdit: {
-          ...state.titleUnderEdit,
+        titleEditInPlace: {
+          ...state.titleEditInPlace,
           isEditing: true
         }
       }
     case 'UPDATE_TEMPORARY_TITLE_VALUE':
       return {
         ...state,
-        titleUnderEdit: {
-          ...state.titleUnderEdit,
+        titleEditInPlace: {
+          ...state.titleEditInPlace,
           editValue: action.title
         }
       }
@@ -217,7 +217,7 @@ const redatApp = (state = defaultState, action) => {
     case 'DEACTIVATE_TITLE_EDITING':
       return {
         ...state,
-        titleUnderEdit: {
+        titleEditInPlace: {
           isEditing: false,
           editValue: null
         }

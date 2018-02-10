@@ -13,7 +13,7 @@ const makeMapStateToProps = (initialState, initialProps) => {
   const { key } = initialProps.dat
   const mapStateToProps = state => ({
     dat: state.dats[key],
-    titleUnderEdit: state.titleUnderEdit
+    titleEditInPlace: state.titleEditInPlace
   })
 
   return mapStateToProps

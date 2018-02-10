@@ -67,13 +67,13 @@ class TitleField extends Component {
 
   handleSave () {
     const { key, path } = this.props.dat
-    const { editValue } = this.props.titleUnderEdit
+    const { editValue } = this.props.titleEditInPlace
     if (editValue) this.props.updateTitle(key, path, editValue)
     this.props.deactivateTitleEditing()
   }
 
   handleKeyup (ev) {
-    const oldValue = this.props.titleUnderEdit.editValue
+    const oldValue = this.props.titleEditInPlace.editValue
     const newValue = ev.target.value
     ev.stopPropagation()
 
@@ -89,8 +89,8 @@ class TitleField extends Component {
   }
 
   render () {
-    const { dat, titleUnderEdit } = this.props
-    const { isEditing, editValue } = titleUnderEdit
+    const { dat, titleEditInPlace } = this.props
+    const { isEditing, editValue } = titleEditInPlace
     const { writable, metadata, key } = dat
     const { title } = metadata
     const placeholderTitle = `#${key}`
