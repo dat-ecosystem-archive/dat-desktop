@@ -109,6 +109,8 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
       dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
     })
 
+    dispatch(updateState(dat))
+
     const updateProgress = stats => {
       if (!stats) stats = dat.stats.get()
       const prevProgress = dat.progress
