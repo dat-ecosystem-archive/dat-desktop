@@ -8,6 +8,7 @@ import Status from './status'
 import bytes from 'prettier-bytes'
 import FinderButton from './finder-button'
 import HexContent from './hex-content'
+import TitleFieldContainer from '../containers/title-field'
 
 const Tr = styled.tr`
   transition: background-color 0.025s ease-out;
@@ -128,18 +129,10 @@ const DeleteButton = ({ ...props }) => (
   />
 )
 
-const TitleField = ({ dat }) => (
-  <div>
-    <h2 className='f6 f5-l normal truncate pr3'>
-      {dat.metadata.title || `#${dat.key}`}
-    </h2>
-  </div>
-)
-
 const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
   <Tr
     onClick={ev => {
-      if (ev.target.tagName === 'SVG' || ev.target.tagName === 'use') return
+      if (['SVG', 'use', 'INPUT'].includes(ev.target.tagName)) return
       inspectDat(dat.key)
     }}
   >
@@ -150,7 +143,7 @@ const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
     </td>
     <td className='cell-2'>
       <div className='cell-truncate'>
-        <TitleField dat={dat} />
+        <TitleFieldContainer dat={dat} />
         <p className='f7 f6-l color-neutral-60 truncate'>
           <span className='author'>
             {dat.metadata.author || 'Anonymous'} •{' '}

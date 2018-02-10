@@ -246,6 +246,33 @@ export const openHomepage = () => shell.openExternal('https://datproject.org/')
 export const nextIntro = screen => ({ type: 'NEXT_INTRO', screen })
 export const hideIntro = () => ({ type: 'HIDE_INTRO' })
 
+export const activateTitleEditing = title => ({
+  type: 'ACTIVATE_TITLE_EDITING',
+  title
+})
+
+export const updateTemporaryTitleValue = title => ({
+  type: 'UPDATE_TEMPORARY_TITLE_VALUE',
+  title
+})
+
+export const updateTitle = (key, path, editValue) => async dispatch => {
+  const filePath = `${path}/dat.json`
+  const blob = await readFile(filePath)
+  const metadata = { ...JSON.parse(blob), title: editValue }
+  await writeFile(filePath, JSON.stringify(metadata))
+
+  dispatch({
+    type: 'UPDATE_TITLE',
+    key,
+    editValue
+  })
+}
+
+export const deactivateTitleEditing = () => ({
+  type: 'DEACTIVATE_TITLE_EDITING'
+})
+
 export const loadFromDisk = () => async dispatch => {
   try {
     await mkdir(`${homedir()}/.dat-desktop`)
