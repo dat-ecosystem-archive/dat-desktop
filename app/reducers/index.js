@@ -16,7 +16,10 @@ const defaultState = {
     down: 0
   },
   inspect: { key: null },
-  titleUnderEdit: {}
+  titleUnderEdit: {
+    isEditing: false,
+    editValue: null
+  }
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -214,7 +217,10 @@ const redatApp = (state = defaultState, action) => {
     case 'DEACTIVATE_TITLE_EDITING':
       return {
         ...state,
-        titleUnderEdit: {}
+        titleUnderEdit: {
+          isEditing: false,
+          editValue: null
+        }
       }
     case 'DIALOGS_LINK_OPEN':
       return {
