@@ -166,7 +166,7 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
 )
 
 export const Confirm = ({ dat, onConfirm, onExit }) => (
-  <Dialog show={!!dat} onExit={onExit}>
+  <Dialog show={dat} onExit={onExit}>
     <h3 className='f4'>Remove Dat</h3>
     <p className='mt3 mb4 f7 color-neutral-70'>
       Are you sure you want to remove this dat?
