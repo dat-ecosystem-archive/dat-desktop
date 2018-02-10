@@ -111,16 +111,10 @@ const LabelInput = styled.label`
   }
 `
 
-export default const Dialog = ({
-  show,
-  children,
-  onExit,
-  height = 100,
-  width = 100
-}) => (
+const Dialog = ({ show, children, onExit, height = 100, width = 100 }) => (
   <div
-    className=`modal show items-center justify-center top-0 left-0 h-${height} w-${width} z-9999`
-    style={{ display: link ? 'flex' : 'none' }}
+    className={`modal show items-center justify-center top-0 left-0 h-${height} w-${width} z-9999`}
+    style={{ display: show ? 'flex' : 'none' }}
   >
     <Inner className='relative flex flex-column justify-center'>
       {children}
@@ -135,9 +129,11 @@ export default const Dialog = ({
   </div>
 )
 
+export default Dialog
+
 export const Link = ({ link, copied, onCopy, onExit }) => (
   <Dialog show={!!link} onExit={onExit}>
-   <h3 className='f4'>Copy Dat Link</h3>
+    <h3 className='f4'>Copy Dat Link</h3>
     <LabelInput for='dat-link' className='relative mt4 mb4'>
       <p
         className={`f7 mt0 mb0 tr absolute confirmation ${
