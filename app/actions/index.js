@@ -132,7 +132,7 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
       }
 
       const incomplete = []
-      for (const [, d] of dats) {
+      for (const d of Object.values(dats)) {
         if (d.network && d.progress < 1) incomplete.push(d)
       }
       let totalProgress = incomplete.length

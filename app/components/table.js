@@ -40,10 +40,7 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({
-  dats,
-  show
-}) => {
+const Table = ({ dats, show }) => {
   if (!show) {
     return (
       <Fragment>
