@@ -9,9 +9,12 @@ import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
 
-const dats = new Map()
+const dats = {}
 
 const stat = promisify(fs.stat)
+const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
+const mkdir = promisify(fs.mkdir)
 const { Notification } = window
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
@@ -30,20 +33,28 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
-export const addDat = ({ key, path }) => dispatch => {
+export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
-  if (key) dispatch({ type: 'ADD_DAT', key, path })
+
+  if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
+  opts = {
+    watch: true,
+    resume: true,
+    ignoreHidden: true,
+    compareFileContent: true,
+    ...opts
+  }
 
   Dat(path, { key }, (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
     if (!key) {
       key = encode(dat.key)
-      dispatch({ type: 'ADD_DAT', key, path })
+      dispatch({ type: 'ADD_DAT', key, path, paused })
     }
 
     dat.trackStats()
-    if (dat.writable) dat.importFiles()
+    if (dat.writable) dat.importFiles(opts)
 
     dispatch({
       type: 'DAT_METADATA',
@@ -54,7 +65,6 @@ export const addDat = ({ key, path }) => dispatch => {
       }
     })
 
-    dats.set(key, dat)
     dispatch({ type: 'ADD_DAT_SUCCESS', key })
     dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
 
@@ -135,8 +145,10 @@ export const addDat = ({ key, path }) => dispatch => {
     }
     updateProgress()
 
-    joinNetwork(dat)(dispatch)
-    updateConnections(dat)(dispatch)
+    if (!paused) {
+      joinNetwork(dat)(dispatch)
+      updateConnections(dat)(dispatch)
+    }
 
     let prevNetworkStats
     dat.updateInterval = setInterval(() => {
@@ -152,6 +164,9 @@ export const addDat = ({ key, path }) => dispatch => {
         }
       })
     }, 1000)
+
+    dats[key] = { dat, path, opts }
+    storeOnDisk()
   })
 }
 
@@ -185,7 +200,7 @@ const updateState = dat => {
 
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
-  const dat = dats.get(key)
+  const { dat } = dats[key]
 
   for (const con of dat.network.connections) {
     con.removeAllListeners()
@@ -194,19 +209,21 @@ export const confirmDeleteDat = key => dispatch => {
   clearInterval(dat.updateInterval)
 
   dat.close()
-  dats.delete(key)
+  delete dats[key]
+  storeOnDisk()
   dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
 
 export const togglePause = ({ key, paused }) => dispatch => {
-  const dat = dats.get(key)
+  const { dat } = dats[key]
   if (paused) {
     joinNetwork(dat)(dispatch)
   } else {
     dat.leaveNetwork()
   }
+  storeOnDisk()
   if (paused) {
     dispatch({ type: 'RESUME_DAT', key: key })
   } else {
@@ -226,3 +243,57 @@ export const dropFolder = folder => async dispatch => {
 }
 
 export const viewFile = (key, path) => ({ type: 'VIEW_FILE', key, path })
+
+export const loadFromDisk = () => async dispatch => {
+  try {
+    await mkdir(`${homedir()}/.dat-desktop`)
+  } catch (_) {}
+
+  let blob
+  try {
+    blob = await readFile(`${homedir()}/.dat-desktop/dats.json`, 'utf8')
+  } catch (_) {
+    return
+  }
+  const datOpts = JSON.parse(blob)
+
+  blob = {}
+  try {
+    blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
+  } catch (_) {}
+  const paused = JSON.parse(blob)
+
+  for (const key of Object.keys(datOpts)) {
+    const opts = JSON.parse(datOpts[key])
+    addDat({
+      key: key,
+      path: opts.dir,
+      paused: paused[key],
+      ...opts
+    })(dispatch)
+  }
+}
+
+const storeOnDisk = async () => {
+  const dir = `${homedir()}/.dat-desktop`
+  const datsState = Object.keys(dats).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: JSON.stringify({
+        dir: dats[key].path,
+        opts: dats[key].opts
+      })
+    }),
+    {}
+  )
+  const pausedState = Object.keys(dats).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: !dats[key].dat.network
+    }),
+    {}
+  )
+
+  await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
+  await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+}
