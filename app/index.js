@@ -27,3 +27,4 @@ store.dispatch(loadFromDisk())
 
 ipc.on('log', (_, str) => console.log(str))
 ipc.on('link', key => store.dispatch(addDat({ key })))
+ipc.on('file', path => store.dispatch(addDat({ path })))
