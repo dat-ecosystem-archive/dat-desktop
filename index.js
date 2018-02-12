@@ -46,7 +46,8 @@ app.on('ready', () => {
 })
 
 app.on('will-finish-launching', () => {
-  app.on('open-url', url => win.webContents.send('link', url))
+  app.on('open-url', (_, url) => win.webContents.send('link', url))
+  app.on('open-file', (_, path) => win.webContents.send('file', path))
 })
 
 app.on('window-all-closed', () => app.quit())
