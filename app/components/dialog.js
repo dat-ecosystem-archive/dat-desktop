@@ -111,9 +111,9 @@ const LabelInput = styled.label`
   }
 `
 
-const Dialog = ({ show, children, onExit, height = 100, width = 100 }) => (
+const Dialog = ({ show, children, onExit }) => (
   <div
-    className={`modal show items-center justify-center top-0 left-0 h-${height} w-${width} z-9999`}
+    className={`modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999`}
     style={{ display: show ? 'flex' : 'none' }}
   >
     <Inner className='relative flex flex-column justify-center'>

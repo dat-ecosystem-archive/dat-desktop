@@ -1,8 +1,8 @@
 import React from 'react'
 import Dialog from './dialog'
 
-const Viewer = ({ show, key, path, onExit }) => (
-  <Dialog show={show} width='800' height='600' onExit={onExit}>
+const Viewer = ({ show, dat, path, onExit }) => (
+  <Dialog show={show} onExit={onExit}>
     OHAI
   </Dialog>
 )
