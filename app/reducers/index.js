@@ -2,6 +2,7 @@
 
 const defaultState = {
   dats: [],
+  screen: 'intro',
   dialogs: {
     link: {
       link: null,
@@ -21,11 +22,30 @@ const defaultState = {
   view: {
     key: null,
     path: null
+  },
+  intro: {
+    screen: 1
+  },
+  titleEditInPlace: {
+    isEditing: false,
+    editValue: null
   }
 }
 
 const redatApp = (state = defaultState, action) => {
   switch (action.type) {
+    case 'NEXT_INTRO':
+      return {
+        ...state,
+        intro: {
+          screen: action.screen + 1
+        }
+      }
+    case 'HIDE_INTRO':
+      return {
+        ...state,
+        screen: 'dats'
+      }
     case 'ADD_DAT':
       return {
         ...state,
@@ -44,7 +64,8 @@ const redatApp = (state = defaultState, action) => {
               }
             }
           }
-        }
+        },
+        screen: 'dats'
       }
     case 'ADD_DAT_ERROR':
       return {
@@ -75,18 +96,15 @@ const redatApp = (state = defaultState, action) => {
     case 'INSPECT_DAT':
       return {
         ...state,
+        screen: 'inspect',
         inspect: {
-          ...state.inspect,
           key: action.key
         }
       }
     case 'INSPECT_DAT_CLOSE':
       return {
         ...state,
-        inspect: {
-          ...state.inspect,
-          key: null
-        }
+        screen: 'dats'
       }
     case 'DAT_FILES':
       return {
@@ -184,6 +202,44 @@ const redatApp = (state = defaultState, action) => {
             ...state.dats[action.key],
             peers: action.peers
           }
+        }
+      }
+    case 'ACTIVATE_TITLE_EDITING':
+      return {
+        ...state,
+        titleEditInPlace: {
+          ...state.titleEditInPlace,
+          isEditing: true
+        }
+      }
+    case 'UPDATE_TEMPORARY_TITLE_VALUE':
+      return {
+        ...state,
+        titleEditInPlace: {
+          ...state.titleEditInPlace,
+          editValue: action.title
+        }
+      }
+    case 'UPDATE_TITLE':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            metadata: {
+              ...state.dats[action.key].metadata,
+              title: action.editValue
+            }
+          }
+        }
+      }
+    case 'DEACTIVATE_TITLE_EDITING':
+      return {
+        ...state,
+        titleEditInPlace: {
+          isEditing: false,
+          editValue: null
         }
       }
     case 'DIALOGS_LINK_OPEN':

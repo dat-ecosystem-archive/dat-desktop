@@ -4,14 +4,9 @@ import { connect } from 'react-redux'
 import TableRow from '../components/table-row'
 import { shareDat, deleteDat, togglePause, inspectDat } from '../actions'
 
-const makeMapStateToProps = (initialState, initialProps) => {
-  const { dat } = initialProps
-  const mapStateToProps = state => ({
-    dat
-  })
-
-  return mapStateToProps
-}
+const mapStateToProps = (state, ownProps) => ({
+  dat: ownProps.dat
+})
 
 const mapDispatchToProps = dispatch => ({
   shareDat: link => dispatch(shareDat(link)),
@@ -20,8 +15,6 @@ const mapDispatchToProps = dispatch => ({
   onTogglePause: dat => dispatch(togglePause(dat))
 })
 
-const TableRowContainer = connect(makeMapStateToProps, mapDispatchToProps)(
-  TableRow
-)
+const TableRowContainer = connect(mapStateToProps, mapDispatchToProps)(TableRow)
 
 export default TableRowContainer

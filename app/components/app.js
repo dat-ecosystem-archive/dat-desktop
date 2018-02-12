@@ -1,6 +1,7 @@
 'use strict'
 
 import React, { Fragment } from 'react'
+import IntroContainer from '../containers/intro'
 import Sprite from './sprite'
 import HeaderContainer from '../containers/header'
 import TableContainer from '../containers/table'
@@ -12,6 +13,7 @@ import ViewerContainer from '../containers/viewer'
 
 const App = () => (
   <Fragment>
+    <IntroContainer />
     <Sprite />
     <HeaderContainer />
     <TableContainer />

@@ -40,14 +40,7 @@ const StyledTable = styled.table`
   }
 `
 
-const Table = ({
-  dats,
-  show,
-  shareDat,
-  onDeleteDat,
-  inspectDat,
-  onTogglePause
-}) => {
+const Table = ({ dats, show }) => {
   if (!show) {
     return (
       <Fragment>
