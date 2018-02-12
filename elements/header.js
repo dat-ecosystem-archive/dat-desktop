@@ -61,7 +61,7 @@ function HeaderElement () {
     var createButton = button.header('Share Folder', {
       id: 'create-new-dat',
       icon: icon('create-new-dat', { class: shareButtonIcon }),
-      class: 'ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l',
+      class: 'b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l',
       onclick: oncreate
     })
 
@@ -71,7 +71,7 @@ function HeaderElement () {
 
     var menuButton = button.icon('Open Menu', {
       icon: icon('menu', { class: menuButtonIcon }),
-      class: 'ml3 v-mid color-neutral-20 hover-color-white pointer',
+      class: 'ml2 v-mid color-neutral-20 hover-color-white pointer',
       onclick: toggle
     })
 
@@ -107,7 +107,7 @@ function HeaderElement () {
           ${menuButton}
           ${showMenu
             ? html`
-            <div class="absolute right-0 w5 pa3 bg-neutral">
+            <div class="absolute right-0 br1 w5 pa3 bg-neutral" style='top:3rem'>
               <h3 class="f6 f5-l mb2">
                 Dat Desktop ${version}
               </h3>
