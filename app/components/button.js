@@ -27,7 +27,7 @@ const HeaderButton = BaseButton.extend`
   }
 `
 
-var PlainButton = styled.button`
+var PlainButton = BaseButton.extend`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   background-color: transparent;
@@ -38,7 +38,7 @@ var PlainButton = styled.button`
   }
 `
 
-var GreenButton = styled.button`
+var GreenButton = BaseButton.extend`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   background-color: var(--color-green);
@@ -50,7 +50,7 @@ var GreenButton = styled.button`
   }
 `
 
-var RedButton = styled.button`
+var RedButton = BaseButton.extend`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   background-color: var(--color-red);

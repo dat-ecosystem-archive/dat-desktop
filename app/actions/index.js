@@ -242,6 +242,10 @@ export const dropFolder = folder => async dispatch => {
   addDat({ path: folder.path })(dispatch)
 }
 
+export const openHomepage = () => shell.openExternal('https://datproject.org/')
+export const nextIntro = screen => ({ type: 'NEXT_INTRO', screen })
+export const hideIntro = () => ({ type: 'HIDE_INTRO' })
+
 export const activateTitleEditing = title => ({
   type: 'ACTIVATE_TITLE_EDITING',
   title

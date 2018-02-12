@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({
   dats: state.dats,
-  show: !state.inspect.key
+  show: state.screen === 'dats'
 })
 
 const TableContainer = connect(mapStateToProps, null)(Table)
