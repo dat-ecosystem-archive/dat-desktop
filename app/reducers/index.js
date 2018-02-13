@@ -29,7 +29,8 @@ const defaultState = {
   titleEditInPlace: {
     isEditing: false,
     editValue: null
-  }
+  },
+  downloadDatKey: null
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -45,6 +46,29 @@ const redatApp = (state = defaultState, action) => {
       return {
         ...state,
         screen: 'dats'
+      }
+    case 'SHOW_DOWNLOAD_SCREEN':
+      return {
+        ...state,
+        screen: 'download',
+        downloadDatKey: action.key
+      }
+    case 'HIDE_DOWNLOAD_SCREEN':
+      return {
+        ...state,
+        screen: 'dats',
+        downloadDatKey: null
+      }
+    case 'CHANGE_DOWNLOAD_PATH':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            path: action.path
+          }
+        }
       }
     case 'ADD_DAT':
       return {
