@@ -1,8 +1,11 @@
-document.body.innerHTML = 'Hello World!'
+const pre = document.createElement('pre')
+pre.innerText = 'loading...'
+document.body.appendChild(pre)
 
-const main = async () => {
-  document.body.innerHTML += window.seek
-  document.body.innerHTML += await window.seek(0, 10)
-}
-
-main().catch(err => console.error(err))
+window.size((err, size) => {
+  if (err) throw err
+  window.read(0, size, (err, buf) => {
+    if (err) throw err
+    pre.innerText = buf.toString()
+  })
+})

@@ -9,7 +9,7 @@ import fs from 'fs'
 import promisify from 'util-promisify'
 import { basename } from 'path'
 
-const dats = {}
+export const dats = {}
 
 const stat = promisify(fs.stat)
 const readFile = promisify(fs.readFile)
