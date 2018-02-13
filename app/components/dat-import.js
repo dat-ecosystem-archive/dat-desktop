@@ -54,12 +54,15 @@ const Label = styled.label`
   }
 `
 
-const DatImport = ({ onAddDat }) => {
+const DatImport = ({ showDownloadScreen, downloadSparseDat }) => {
   const onKeyDown = e => {
     const value = e.target.value
     if (e.key !== 'Enter' || !value) return
     e.target.value = ''
-    onAddDat(value)
+    downloadSparseDat({ key: value, paused: false, sparse: true })
+    setTimeout(function () {
+      showDownloadScreen(value)
+    }, 0)
   }
 
   return (

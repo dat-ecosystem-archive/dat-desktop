@@ -33,6 +33,119 @@ export const createDat = () => dispatch => {
   addDat({ path })(dispatch)
 }
 
+export const showDownloadScreen = key => ({
+  type: 'SHOW_DOWNLOAD_SCREEN',
+  key: encode(key)
+})
+export const hideDownloadScreen = () => ({ type: 'HIDE_DOWNLOAD_SCREEN' })
+export const cancelDownloadDat = key => dispatch => {
+  key = encode(key)
+  const { dat } = dats[key]
+
+  for (const con of dat.network.connections) {
+    con.removeAllListeners()
+  }
+  dat.stats.removeAllListeners()
+  clearInterval(dat.updateInterval)
+
+  dat.close()
+  delete dats[key]
+  dispatch({ type: 'REMOVE_DAT', key })
+}
+
+export const changeDownloadPath = key => dispatch => {
+  const files = remote.dialog.showOpenDialog({
+    properties: ['openDirectory']
+  })
+  if (!files || !files.length) return
+  const path = files[0]
+  dispatch({ type: 'CHANGE_DOWNLOAD_PATH', key, path })
+}
+
+export const downloadSparseDat = ({ key }) => dispatch => {
+  if (key) key = encode(key)
+  const path = `${homedir()}/Downloads/${key}`
+  const paused = false
+
+  if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
+  const opts = {
+    watch: true,
+    resume: true,
+    ignoreHidden: true,
+    compareFileContent: true
+  }
+
+  Dat(path, { key, sparse: true }, (error, dat) => {
+    if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
+    if (!key) {
+      key = encode(dat.key)
+      dispatch({ type: 'ADD_DAT', key, path, paused })
+    }
+
+    dat.trackStats()
+
+    dispatch({
+      type: 'DAT_METADATA',
+      key,
+      metadata: {
+        title: basename(path),
+        author: 'Anonymous'
+      }
+    })
+
+    dispatch({ type: 'ADD_DAT_SUCCESS', key })
+
+    dat.archive.readFile('/dat.json', (err, blob) => {
+      if (err) return
+
+      let metadata = {}
+      try {
+        metadata = JSON.parse(blob)
+      } catch (_) {}
+
+      dispatch({ type: 'DAT_METADATA', key, metadata })
+    })
+
+    const walk = () => {
+      if (!dat.files) dat.files = []
+      var fs = { name: '/', fs: dat.archive }
+      var progress = mirror(fs, '/', { dryRun: true })
+      progress.on('put', function (file) {
+        file.name = file.name.slice(1)
+        if (file.name === '') return
+        dat.files.push({
+          path: file.name,
+          size: file.stat.size,
+          isFile: file.stat.isFile()
+        })
+        dat.files.sort(function (a, b) {
+          return a.path.localeCompare(b.path)
+        })
+
+        const { files } = dat
+        dispatch({ type: 'DAT_FILES', key, files })
+      })
+    }
+
+    if (dat.archive.content) walk()
+    else dat.archive.on('content', walk)
+
+    dat.stats.on('update', stats => {
+      if (!stats) stats = dat.stats.get()
+      dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
+    })
+
+    dispatch(updateState(dat))
+
+    if (!paused) {
+      joinNetwork(dat)(dispatch)
+      updateConnections(dat)(dispatch)
+    }
+
+    dats[key] = { dat, path, opts }
+  })
+}
+
 export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
   if (key) key = encode(key)
   if (!path) path = `${homedir()}/Downloads/${key}`
@@ -301,7 +414,7 @@ export const loadFromDisk = () => async dispatch => {
   for (const key of Object.keys(datOpts)) {
     const opts = JSON.parse(datOpts[key])
     addDat({
-      key: key,
+      key,
       path: opts.dir,
       paused: paused[key],
       ...opts
