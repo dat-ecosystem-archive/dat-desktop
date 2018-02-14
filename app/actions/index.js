@@ -202,8 +202,10 @@ export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
   const { dat } = dats[key]
 
-  for (const con of dat.network.connections) {
-    con.removeAllListeners()
+  if (dat.network) {
+    for (const con of dat.network.connections) {
+      con.removeAllListeners()
+    }
   }
   dat.stats.removeAllListeners()
   clearInterval(dat.updateInterval)
