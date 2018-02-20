@@ -10,7 +10,7 @@ const style = css`
     position: absolute;
     bottom: 0;
     width: 100%;
-    padding: .5rem 1rem;
+    padding: .5rem 1rem .75rem;
     background-color: var(--color-neutral-04);
     color: var(--color-neutral-60);
   }

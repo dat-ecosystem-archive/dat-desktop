@@ -95,8 +95,10 @@ var networkStyles = css`
       display: inline-block;
       color: var(--color-neutral-20);
       vertical-align: top;
-      width: 1.1em;
+      width: 0.75em;
       max-height: 1.6em;
+      margin-top: -0.05em;
+      margin-right: 5px;
     }
     .network-peers-many {
       --polygon-1-color: var(--color-green);
@@ -255,7 +257,7 @@ function DeleteButton () {
     var { dat, emit } = this.props
     return button.icon('Remove Dat', {
       icon: icon('delete'),
-      class: 'row-action delete',
+      class: 'row-action delete mr2',
       onclick: function (e) {
         e.preventDefault()
         e.stopPropagation()
