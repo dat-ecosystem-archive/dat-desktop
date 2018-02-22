@@ -85,10 +85,10 @@ const walk = dat => dispatch => {
 }
 
 export const downloadSparseDat = ({ key }) => dispatch => {
-  if (key) key = encode(key)
+  key = encode(key)
   const path = `${homedir()}/Downloads/${key}`
 
-  if (key) dispatch({ type: 'ADD_DAT', key, path })
+  dispatch({ type: 'ADD_DAT', key, path })
   const opts = {
     watch: true,
     resume: true,
@@ -98,10 +98,6 @@ export const downloadSparseDat = ({ key }) => dispatch => {
 
   Dat(path, { key, sparse: true }, (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
-    if (!key) {
-      key = encode(dat.key)
-      dispatch({ type: 'ADD_DAT', key, path })
-    }
 
     dat.trackStats()
 
