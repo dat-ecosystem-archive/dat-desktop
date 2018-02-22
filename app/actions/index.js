@@ -136,11 +136,8 @@ export const downloadSparseDat = ({ key }) => dispatch => {
     })
 
     dispatch(updateState(dat))
-
-    if (!paused) {
-      joinNetwork(dat)(dispatch)
-      updateConnections(dat)(dispatch)
-    }
+    joinNetwork(dat)(dispatch)
+    updateConnections(dat)(dispatch)
 
     dats[key] = { dat, path, opts }
   })
