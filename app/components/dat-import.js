@@ -60,9 +60,7 @@ const DatImport = ({ showDownloadScreen, downloadSparseDat }) => {
     if (e.key !== 'Enter' || !value) return
     e.target.value = ''
     downloadSparseDat({ key: value, paused: false, sparse: true })
-    setTimeout(function () {
-      showDownloadScreen(value)
-    }, 0)
+    showDownloadScreen(value)
   }
 
   return (
