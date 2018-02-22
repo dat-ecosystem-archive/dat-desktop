@@ -111,7 +111,7 @@ const Download = ({
           <div className='flex ml2'>
             <GreenButton
               onClick={() => {
-                addDat({ key: dat.key, path: dat.path, paused: false })
+                addDat({ key: dat.key, path: dat.path })
                 hideDownloadScreen()
               }}
             >
