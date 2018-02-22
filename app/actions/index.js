@@ -65,9 +65,8 @@ export const changeDownloadPath = key => dispatch => {
 export const downloadSparseDat = ({ key }) => dispatch => {
   if (key) key = encode(key)
   const path = `${homedir()}/Downloads/${key}`
-  const paused = false
 
-  if (key) dispatch({ type: 'ADD_DAT', key, path, paused })
+  if (key) dispatch({ type: 'ADD_DAT', key, path })
   const opts = {
     watch: true,
     resume: true,
@@ -79,7 +78,7 @@ export const downloadSparseDat = ({ key }) => dispatch => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
     if (!key) {
       key = encode(dat.key)
-      dispatch({ type: 'ADD_DAT', key, path, paused })
+      dispatch({ type: 'ADD_DAT', key, path })
     }
 
     dat.trackStats()
