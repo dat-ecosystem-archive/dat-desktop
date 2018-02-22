@@ -62,6 +62,28 @@ export const changeDownloadPath = key => dispatch => {
   dispatch({ type: 'CHANGE_DOWNLOAD_PATH', key, path })
 }
 
+const walk = dat => dispatch => {
+  const key = encode(dat.key)
+  if (!dat.files) dat.files = []
+  var fs = { name: '/', fs: dat.archive }
+  var progress = mirror(fs, '/', { dryRun: true })
+  progress.on('put', function (file) {
+    file.name = file.name.slice(1)
+    if (file.name === '') return
+    dat.files.push({
+      path: file.name,
+      size: file.stat.size,
+      isFile: file.stat.isFile()
+    })
+    dat.files.sort(function (a, b) {
+      return a.path.localeCompare(b.path)
+    })
+
+    const { files } = dat
+    dispatch({ type: 'DAT_FILES', key, files })
+  })
+}
+
 export const downloadSparseDat = ({ key }) => dispatch => {
   if (key) key = encode(key)
   const path = `${homedir()}/Downloads/${key}`
@@ -105,29 +127,8 @@ export const downloadSparseDat = ({ key }) => dispatch => {
       dispatch({ type: 'DAT_METADATA', key, metadata })
     })
 
-    const walk = () => {
-      if (!dat.files) dat.files = []
-      var fs = { name: '/', fs: dat.archive }
-      var progress = mirror(fs, '/', { dryRun: true })
-      progress.on('put', function (file) {
-        file.name = file.name.slice(1)
-        if (file.name === '') return
-        dat.files.push({
-          path: file.name,
-          size: file.stat.size,
-          isFile: file.stat.isFile()
-        })
-        dat.files.sort(function (a, b) {
-          return a.path.localeCompare(b.path)
-        })
-
-        const { files } = dat
-        dispatch({ type: 'DAT_FILES', key, files })
-      })
-    }
-
-    if (dat.archive.content) walk()
-    else dat.archive.on('content', walk)
+    if (dat.archive.content) walk(dat)(dispatch)
+    else dat.archive.on('content', () => walk(dat)(dispatch))
 
     dat.stats.on('update', stats => {
       if (!stats) stats = dat.stats.get()
@@ -188,29 +189,8 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch => {
       dispatch({ type: 'DAT_METADATA', key, metadata })
     })
 
-    const walk = () => {
-      if (!dat.files) dat.files = []
-      var fs = { name: '/', fs: dat.archive }
-      var progress = mirror(fs, '/', { dryRun: true })
-      progress.on('put', function (file) {
-        file.name = file.name.slice(1)
-        if (file.name === '') return
-        dat.files.push({
-          path: file.name,
-          size: file.stat.size,
-          isFile: file.stat.isFile()
-        })
-        dat.files.sort(function (a, b) {
-          return a.path.localeCompare(b.path)
-        })
-
-        const { files } = dat
-        dispatch({ type: 'DAT_FILES', key, files })
-      })
-    }
-
-    if (dat.archive.content) walk()
-    else dat.archive.on('content', walk)
+    if (dat.archive.content) walk(dat)(dispatch)
+    else dat.archive.on('content', () => walk(dat)(dispatch))
 
     dat.stats.on('update', stats => {
       if (!stats) stats = dat.stats.get()
