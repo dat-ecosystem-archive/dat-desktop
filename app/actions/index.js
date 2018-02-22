@@ -89,12 +89,6 @@ export const downloadSparseDat = ({ key }) => dispatch => {
   const path = `${homedir()}/Downloads/${key}`
 
   dispatch({ type: 'ADD_DAT', key, path })
-  const opts = {
-    watch: true,
-    resume: true,
-    ignoreHidden: true,
-    compareFileContent: true
-  }
 
   Dat(path, { key, sparse: true }, (error, dat) => {
     if (error) return dispatch({ type: 'ADD_DAT_ERROR', key, error })
@@ -134,8 +128,6 @@ export const downloadSparseDat = ({ key }) => dispatch => {
     dispatch(updateState(dat))
     joinNetwork(dat)(dispatch)
     updateConnections(dat)(dispatch)
-
-    dats[key] = { dat, path, opts }
   })
 }
 
