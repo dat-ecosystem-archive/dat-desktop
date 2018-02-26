@@ -128,6 +128,8 @@ export const downloadSparseDat = ({ key }) => dispatch => {
     dispatch(updateState(dat))
     joinNetwork(dat)(dispatch)
     updateConnections(dat)(dispatch)
+
+    dats[key] = { dat, path }
   })
 }
 
