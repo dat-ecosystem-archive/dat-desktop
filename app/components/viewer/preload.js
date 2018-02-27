@@ -50,21 +50,6 @@ class Stream extends EventEmitter2 {
     this.file = file
     this.start = start
     this.end = end
-    this.removeAllListeners()
-    validateRange(file, start, end)
-      .then(({start, end}) =>
-        ipcRenderer.sendToHost('viewer:stream', {
-          cmd: 'open',
-          start,
-          end,
-          id: this.id,
-          datPath: file.datPath
-        })
-      )
-      .catch(err => {
-        console.warn(err)
-        this.close(err)
-      })
   }
   write (err, data) {
     if (this.closed) return
@@ -97,8 +82,31 @@ class Stream extends EventEmitter2 {
       this.emit('error', err)
     }
     this.emit('end')
-    ipcRenderer.sendToHost('viewer:stream', {cmd: 'close', id: this.id})
     this.removeAllListeners()
+  }
+}
+
+class IPCStream extends Stream {
+  constructor (file, start, end) {
+    super(file, start, end)
+    validateRange(file, start, end)
+      .then(({start, end}) =>
+        ipcRenderer.sendToHost('viewer:stream', {
+          cmd: 'open',
+          start,
+          end,
+          id: this.id,
+          datPath: file.datPath
+        })
+      )
+      .catch(err => {
+        console.warn(err)
+        this.close(err)
+      })
+  }
+  close (err) {
+    super.close(err)
+    ipcRenderer.sendToHost('viewer:stream', {cmd: 'close', id: this.id})
   }
 }
 
@@ -185,7 +193,7 @@ function exec (opts) {
 const _streams = {}
 
 function createStream (file, start, end) {
-  const stream = new Stream(file, start, end)
+  const stream = new IPCStream(file, start, end)
   _streams[stream.id] = stream
   stream.on('end', () => delete _streams[stream.id])
   return stream
