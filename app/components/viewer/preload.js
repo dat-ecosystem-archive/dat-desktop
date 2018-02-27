@@ -22,25 +22,36 @@ function nextId () {
 }
 
 function validateRange (file, start, end) {
-  return file.size()
-    .then(size => {
-      if (start === undefined || start === null) {
-        start = 0
-      }
-      if (end === undefined || end === null) {
-        end = size
-      }
-      if (start > size) {
-        throw new Error(`Can not create stream for ${file.datPath}[${start}:${end}] because start is out of bounds ${size}`)
-      }
-      if (end > size) {
-        throw new Error(`Can not create stream for ${file.datPath}[${start}:${end}] because end is out of bounds ${size}`)
-      }
-      if (start > end) {
-        throw new Error(`Can not create stream for ${file.datPath}[${start}:${end}] because start is after end`)
-      }
-      return {start, end}
-    })
+  return file.size().then(size => {
+    if (start === undefined || start === null) {
+      start = 0
+    }
+    if (end === undefined || end === null) {
+      end = size
+    }
+    if (start > size) {
+      throw new Error(
+        `Can not create stream for ${
+          file.datPath
+        }[${start}:${end}] because start is out of bounds ${size}`
+      )
+    }
+    if (end > size) {
+      throw new Error(
+        `Can not create stream for ${
+          file.datPath
+        }[${start}:${end}] because end is out of bounds ${size}`
+      )
+    }
+    if (start > end) {
+      throw new Error(
+        `Can not create stream for ${
+          file.datPath
+        }[${start}:${end}] because start is after end`
+      )
+    }
+    return { start, end }
+  })
 }
 
 class Stream extends EventEmitter2 {
@@ -90,7 +101,7 @@ class IPCStream extends Stream {
   constructor (file, start, end) {
     super(file, start, end)
     validateRange(file, start, end)
-      .then(({start, end}) =>
+      .then(({ start, end }) =>
         ipcRenderer.sendToHost('viewer:stream', {
           cmd: 'open',
           start,
@@ -106,7 +117,7 @@ class IPCStream extends Stream {
   }
   close (err) {
     super.close(err)
-    ipcRenderer.sendToHost('viewer:stream', {cmd: 'close', id: this.id})
+    ipcRenderer.sendToHost('viewer:stream', { cmd: 'close', id: this.id })
   }
 }
 
@@ -122,7 +133,7 @@ class File {
   }
   exec (cmd, ...args) {
     if (this.destroyed) return
-    const promise = exec({cmd, args})
+    const promise = exec({ cmd, args })
     this._execs[promise.id] = true
     return promise
       .catch(err => {
@@ -131,7 +142,7 @@ class File {
         }
         return Promise.reject(err)
       })
-      .then((data) => {
+      .then(data => {
         if (this.destroyed) return
         delete this._execs[promise.id]
         return data
@@ -152,8 +163,9 @@ class File {
     this._execs = null
   }
   read (start, end) {
-    return validateRange(this, start, end)
-      .then(({start, end}) => this.exec('read', this.datPath, start, end))
+    return validateRange(this, start, end).then(({ start, end }) =>
+      this.exec('read', this.datPath, start, end)
+    )
   }
   createReadStream (start, end) {
     const stream = createStream(this, start, end)
@@ -165,7 +177,7 @@ class File {
   }
 }
 
-window.openFile = (datPath) => {
+window.openFile = datPath => {
   return new File(datPath)
 }
 window.initViewer = () => {
@@ -180,7 +192,7 @@ function cancelExec (id) {
 function exec (opts) {
   let cb
   const promise = new Promise((resolve, reject) => {
-    cb = (err, data) => err ? reject(err) : resolve(data)
+    cb = (err, data) => (err ? reject(err) : resolve(data))
   })
   const id = nextId()
   promise.id = id
