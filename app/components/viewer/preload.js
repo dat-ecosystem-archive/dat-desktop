@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron')
+const { EventEmitter2 } = require('eventemitter2')
 
 let currentId = 0.0
 
@@ -42,58 +43,7 @@ function validateRange (file, start, end) {
     })
 }
 
-class EventEmitter {
-  constructor () {
-    this.removeAllListeners()
-  }
-  removeAllListeners () {
-    this.handlers = {}
-  }
-  removeListener (event, handler) {
-    const handlers = this.handlers[event]
-    if (handlers === null || handlers === undefined) return
-    if (handlers === handler) {
-      delete this.handlers[event]
-      return
-    }
-    if (Array.isArray(handlers)) {
-      handlers.splice(handlers.findIndex(h => h === handler), 1)
-      if (handlers.length === 1) {
-        this.handlers[event] = handlers[0]
-      }
-    }
-  }
-  emit (event, ...args) {
-    const handlers = this.handlers[event]
-    // No handler
-    if (handlers === null || handlers === undefined) return
-    if (Array.isArray(handlers)) {
-      // many handlers
-      handlers.forEach(handler => handler(...args))
-      return
-    }
-    // One handler
-    handlers(...args)
-  }
-  on (event, handler) {
-    let handlers = this.handlers[event]
-    if (handlers === undefined) {
-      throw new Error(`Event ${event} not supported! (Supported events: ${Object.keys(this.handlers)})`)
-    }
-    if (Array.isArray(handlers)) {
-      handlers.push(handler)
-      return
-    }
-    if (handlers !== null) {
-      handlers = [handlers, handler]
-    } else {
-      handlers = handler
-    }
-    this.handlers[event] = handlers
-  }
-}
-
-class Stream extends EventEmitter {
+class Stream extends EventEmitter2 {
   constructor (file, start, end) {
     super()
     this.id = nextId()
