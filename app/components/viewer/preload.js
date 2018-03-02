@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron')
-const { EventEmitter2 } = require('eventemitter2')
+const { EventEmitter } = require('events')
 
 let currentId = 0.0
 
@@ -54,7 +54,7 @@ function validateRange (file, start, end) {
   })
 }
 
-class Stream extends EventEmitter2 {
+class Stream extends EventEmitter {
   constructor (file, start, end) {
     super()
     this.id = nextId()
