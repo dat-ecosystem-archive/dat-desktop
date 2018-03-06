@@ -8,9 +8,11 @@
   "author": "Dat Team",
   "scripts": {
     "start": "electron .",
-    "test": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && npm run unit-tests && standard",
-    "watch": "webpack --watch",
-    "unit-tests": "NODE_ENV=test babel-tape-runner unit-tests/*.js"
+    "pretest": "npm run lint",
+    "test": "npm run test:unit",
+    "test:unit": "NODE_ENV=test babel-tape-runner unit-tests/*.js",
+    "lint": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && standard",
+    "watch": "webpack --watch"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
