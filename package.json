@@ -10,7 +10,7 @@
     "start": "electron .",
     "pretest": "npm run lint",
     "test": "npm run test:unit",
-    "test:unit": "NODE_ENV=test babel-tape-runner unit-tests/*.js",
+    "test:unit": "NODE_ENV=test babel-tape-runner -r ./unit-tests/_helpers/*.js unit-tests/*.js",
     "lint": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && standard",
     "watch": "webpack --watch"
   },

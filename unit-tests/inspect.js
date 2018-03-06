@@ -1,10 +1,7 @@
 import test from 'tape'
 import React from 'react'
-import configure from 'enzyme-adapter-react-helper'
 import { shallow } from 'enzyme'
 import Inspect from '../app/components/inspect'
-
-configure()
 
 test('should render an empty div component', t => {
   const wrapper = shallow(

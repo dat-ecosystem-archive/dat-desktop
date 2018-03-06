@@ -1,10 +1,7 @@
 import test from 'tape'
 import React from 'react'
-import configure from 'enzyme-adapter-react-helper'
 import { shallow } from 'enzyme'
 import HexContent from '../app/components/hex-content'
-
-configure()
 
 test('hexagon should be blue when loading dat', t => {
   const wrapper = shallow(

@@ -1,10 +1,7 @@
 import test from 'tape'
 import React from 'react'
-import configure from 'enzyme-adapter-react-helper'
 import { render } from 'enzyme'
 import FileList from '../app/components/file-list'
-
-configure()
 
 test('file list should render div with class pa2', t => {
   const files = []

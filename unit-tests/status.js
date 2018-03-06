@@ -1,10 +1,7 @@
 import test from 'tape'
 import React from 'react'
-import configure from 'enzyme-adapter-react-helper'
 import { shallow } from 'enzyme'
 import Status from '../app/components/status'
-
-configure()
 
 test('progress text should read "Paused" when dat is paused', t => {
   const wrapper = shallow(
