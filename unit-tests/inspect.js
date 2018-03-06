@@ -56,27 +56,11 @@ test('should show default values when metadata is not present on dat ', t => {
     />
   )
 
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(1)
-      .text(),
-    defaultSize
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(3)
-      .text(),
-    defaultAuthor
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(4)
-      .text(),
-    defaultDescription
-  )
+  const selectableNodes = wrapper.find('.is-selectable')
+
+  t.equal(selectableNodes.at(1).text(), defaultSize)
+  t.equal(selectableNodes.at(3).text(), defaultAuthor)
+  t.equal(selectableNodes.at(4).text(), defaultDescription)
 
   t.end()
 })
@@ -102,48 +86,14 @@ test('should show info when present on dat', t => {
     />
   )
 
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(0)
-      .text(),
-    key
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(1)
-      .text(),
-    '9 B'
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(2)
-      .text(),
-    '2'
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(3)
-      .text(),
-    'A-author'
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(4)
-      .text(),
-    'A-desc'
-  )
-  t.equal(
-    wrapper
-      .find('.is-selectable')
-      .at(5)
-      .text(),
-    'A-path'
-  )
+  const selectableNodes = wrapper.find('.is-selectable')
+
+  t.equal(selectableNodes.at(0).text(), key)
+  t.equal(selectableNodes.at(1).text(), '9 B')
+  t.equal(selectableNodes.at(2).text(), '2')
+  t.equal(selectableNodes.at(3).text(), 'A-author')
+  t.equal(selectableNodes.at(4).text(), 'A-desc')
+  t.equal(selectableNodes.at(5).text(), 'A-path')
 
   t.end()
 })
