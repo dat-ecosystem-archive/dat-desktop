@@ -5,7 +5,7 @@ document.body.appendChild(pre)
 let current
 let firstData
 
-window.addEventListener('viewer:open', async (event) => {
+window.addEventListener('viewer:open', async event => {
   if (current) {
     current.destroy()
   }
