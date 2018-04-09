@@ -328,3 +328,7 @@ const storeOnDisk = async () => {
   await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
   await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
 }
+
+export const toggleMenu = visible => dispatch => {
+  dispatch({ type: 'TOGGLE_MENU', visible })
+}
