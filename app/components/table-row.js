@@ -56,8 +56,10 @@ const IconContainer = styled.div`
     color: var(--color-neutral-20);
     svg {
       vertical-align: middle;
-      width: 1.1em;
+      width: 0.75em;
       max-height: 1.6em;
+      margin-top: -0.05em;
+      margin-right: 5px;
       @media (min-width: 960px) {
         width: 1.4em;
       }
@@ -124,7 +126,7 @@ const LinkButton = ({ ...props }) => (
 const DeleteButton = ({ ...props }) => (
   <Button.Icon
     icon={<Icon name='delete' />}
-    className='row-action'
+    className='row-action mr2'
     {...props}
   />
 )
