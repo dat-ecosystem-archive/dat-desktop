@@ -1,4 +1,6 @@
 environment:
+  ELECTRON_ENABLE_STACK_DUMPING: 'true'
+  DEBUG: '*,-nugget*,-eslint*,-extract-zip*,-sumchecker*,-electron-download*,-dependency-check*'
   matrix:
     - nodejs_version: "8"
 
