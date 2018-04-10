@@ -1,0 +1,3 @@
+global.window = {
+  addEventListener: function () {}
+}
