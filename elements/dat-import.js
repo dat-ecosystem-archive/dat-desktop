@@ -21,9 +21,10 @@ const prefix = css`
     }
     input {
       height: 2rem;
-      width: 7.25rem;
+      width: 7.5rem;
       padding-right: .5rem;
       padding-left: 2rem;
+      border-radius:2px;
       border: 1px solid transparent;
       background-color: transparent;
       color: var(--color-neutral-30);

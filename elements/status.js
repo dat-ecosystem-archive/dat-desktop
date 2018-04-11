@@ -6,7 +6,7 @@ const progressbar = css`
   :host {
     --progress-height: .5rem;
     --bar-height: var(--progress-height);
-    --counter-width: 2.5rem;
+    --counter-width: 3.0rem;
     --tile-width: 28px;
     --stripe-width: 5px;
     min-width: 8rem;

@@ -55,6 +55,7 @@ var redStyles = css`
 var headerStyles = css`
   :host {
     color: var(--color-neutral-30);
+    height:2rem;
   }
   :host:hover,
   :host:focus {
