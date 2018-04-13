@@ -20,7 +20,7 @@ const Header = ({ onShare }) => (
       <DatImport />
       <Button.Header
         icon={<Icon name='create-new-dat' style={{ width: '1.2em' }} />}
-        className='ml2 ml3-l b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l'
+        className='b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l'
         onClick={onShare}
       >
         Share Folder
