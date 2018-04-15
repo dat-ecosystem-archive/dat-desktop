@@ -22,6 +22,10 @@ const defaultState = {
   intro: {
     screen: 1
   },
+  version: require('../../package.json').version,
+  menu: {
+    visible: false
+  },
   titleEditInPlace: {
     isEditing: false,
     editValue: null
@@ -312,6 +316,14 @@ const redatApp = (state = defaultState, action) => {
             ...state.dats[action.key],
             paused: false
           }
+        }
+      }
+    case 'TOGGLE_MENU':
+      return {
+        ...state,
+        menu: {
+          ...state.menu,
+          visible: action.visible
         }
       }
     default:
