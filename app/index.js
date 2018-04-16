@@ -5,16 +5,21 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import datDesktopApp from './reducers'
-import { addDat, loadFromDisk } from './actions'
+import { addDat } from './actions'
 import App from './components/app'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
 import drag from 'electron-drag'
+import DatMiddleware from './actions/dat-middleware'
+
+const datMiddleware = new DatMiddleware()
 
 const store = createStore(
   datDesktopApp,
-  compose(applyMiddleware(thunk, logger))
+  compose(
+    applyMiddleware(store => datMiddleware.middleware(store), thunk, logger)
+  )
 )
 
 render(
@@ -26,7 +31,7 @@ render(
 
 drag('header')
 
-store.dispatch(loadFromDisk())
+datMiddleware.loadFromDisk()
 
 ipc.on('log', (_, str) => console.log(str))
 ipc.on('link', key => store.dispatch(addDat({ key })))
