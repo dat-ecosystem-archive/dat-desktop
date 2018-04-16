@@ -7,7 +7,7 @@ import bytes from 'prettier-bytes'
 const ProgressBar = styled.div`
   --progress-height: 0.5rem;
   --bar-height: var(--progress-height);
-  --counter-width: 3.0rem;
+  --counter-width: 3rem;
   --tile-width: 28px;
   --stripe-width: 5px;
   min-width: 8rem;
