@@ -70,7 +70,6 @@ const DatImport = ({ onAddDat }) => {
         placeholder='Download'
         onKeyDown={onKeyDown}
         className='input-reset f7 f6-l'
-        defaultValue='dat://40a7f6b6147ae695bcbcff432f684c7bb5291ea339c28c1755896cdeb80bd2f9/'
       />
       <Icon name='link' className='absolute top-0 bottom-0 left-0' />
     </Label>
