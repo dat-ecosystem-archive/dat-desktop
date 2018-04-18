@@ -4,8 +4,16 @@ import { encode } from 'dat-encoding'
 import { clipboard, remote, shell } from 'electron'
 import fs from 'fs'
 import promisify from 'util-promisify'
+import path from 'path'
 
 const stat = promisify(fs.stat)
+
+function showOpenDialog (props) {
+  if (process.env.RUNNING_IN_SPECTRON && process.env.OPEN_RESULT) {
+    return [path.resolve(__dirname, process.env.OPEN_RESULT)]
+  }
+  return remote.dialog.showOpenDialog(props)
+}
 
 export const shareDat = key => ({ type: 'DIALOGS_LINK_OPEN', key })
 export const copyLink = link => {
@@ -15,7 +23,7 @@ export const copyLink = link => {
 export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
 
 export const createDat = () => dispatch => {
-  const files = remote.dialog.showOpenDialog({
+  const files = showOpenDialog({
     properties: ['openDirectory']
   })
   if (!files || !files.length) return
@@ -31,7 +39,7 @@ export const hideDownloadScreen = () => ({ type: 'HIDE_DOWNLOAD_SCREEN' })
 export const cancelDownloadDat = key => dispatch =>
   dispatch({ type: 'CANCEL_DOWNLOAD_DAT', key })
 export const changeDownloadPath = key => dispatch => {
-  const files = remote.dialog.showOpenDialog({
+  const files = showOpenDialog({
     properties: ['openDirectory']
   })
   if (!files || !files.length) return
