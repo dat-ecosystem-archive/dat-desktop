@@ -43,6 +43,7 @@ const redatApp = (state = defaultState, action) => {
         }
       }
     case 'HIDE_INTRO':
+      document.title = 'Dat Desktop'
       return {
         ...state,
         screen: 'dats'
