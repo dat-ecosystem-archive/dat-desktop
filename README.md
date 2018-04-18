@@ -44,7 +44,8 @@ $ brew update && brew cask install dat
 $ npm install             # install dependencies
 $ npm start               # start the application
 $ npm run dist            # compile the app into an ASAR file to release
-$ npm start --dat=<dir>   # change the path for new dat archives (default ~/Downloads)
+$ npm start --data=<dir>  # change the path for new dat archives (default ~/Downloads/dat)
+$ npm start --db=<dir>    # change the path for users settings (default ~/.dat-desktop)
 ```
 
 ## FAQ
