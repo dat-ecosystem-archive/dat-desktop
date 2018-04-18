@@ -320,26 +320,16 @@ const redatApp = (state = defaultState, action) => {
           }
         }
       }
-    case 'PAUSE_DAT':
+    case 'TOGGLE_PAUSE':
+      const dat = state.dats[action.key]
       return {
         ...state,
         dats: {
           ...state.dats,
           [action.key]: {
-            ...state.dats[action.key],
-            paused: true,
-            peers: 0
-          }
-        }
-      }
-    case 'RESUME_DAT':
-      return {
-        ...state,
-        dats: {
-          ...state.dats,
-          [action.key]: {
-            ...state.dats[action.key],
-            paused: false
+            ...dat,
+            paused: !action.paused,
+            peers: !action.paused ? 0 : dat.peers
           }
         }
       }
