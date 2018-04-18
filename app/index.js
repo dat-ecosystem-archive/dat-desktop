@@ -34,6 +34,8 @@ const store = createStore(
   )
 )
 
+document.title = 'Dat Desktop | Welcome'
+
 render(
   <Provider store={store}>
     <App />
