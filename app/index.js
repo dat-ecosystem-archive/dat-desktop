@@ -27,11 +27,16 @@ const datMiddleware = new DatMiddleware({
   dataDir: argv.db,
   downloadsDir: argv.data
 })
+const isDev = process.env.NODE_ENV === 'development'
 
 const store = createStore(
   datDesktopApp,
   compose(
-    applyMiddleware(store => datMiddleware.middleware(store), thunk, logger)
+    applyMiddleware(
+      store => datMiddleware.middleware(store),
+      thunk,
+      isDev ? logger : storage => dispatch => dispatch
+    )
   )
 )
 
