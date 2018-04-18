@@ -45,7 +45,7 @@ export const addDat = ({ key, path, paused, ...opts }) => dispatch =>
   dispatch({ type: 'TRY_ADD_DAT', key, path, paused, ...opts })
 export const deleteDat = key => ({ type: 'DIALOGS_DELETE_OPEN', key })
 export const confirmDeleteDat = key => dispatch => {
-  dispatch({ type: 'REMOVE_DAT' })
+  dispatch({ type: 'REMOVE_DAT', key })
   dispatch({ type: 'DIALOGS_DELETE_CLOSE' })
 }
 export const cancelDeleteDat = () => ({ type: 'DIALOGS_DELETE_CLOSE' })
