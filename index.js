@@ -34,7 +34,6 @@ app.on('ready', () => {
     backgroundColor: neutral
   })
   win.loadURL(`file://${__dirname}/index.html`)
-  win.webContents.openDevTools()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
 
   ipcMain.on('progress', (_, progress) => win && win.setProgressBar(progress))

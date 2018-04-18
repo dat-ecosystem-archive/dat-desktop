@@ -11,10 +11,11 @@ platform:
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
   - npm install
-
-test_script:
   - node --version
   - npm --version
+
+test_script:
+  - npm run build
   - npm test
 
 # Don't actually build.

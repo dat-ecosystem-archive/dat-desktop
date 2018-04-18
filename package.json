@@ -8,11 +8,12 @@
   "author": "Dat Team",
   "scripts": {
     "start": "electron .",
-    "pretest": "npm run lint",
-    "test": "npm run test:unit",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "test": "npm run test:lint && npm run test:unit && npm run test:integration",
     "test:unit": "NODE_ENV=test babel-tape-runner -r ./unit-tests/_helpers/*.js unit-tests/*.js",
-    "lint": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && standard",
-    "watch": "webpack --watch"
+    "test:lint": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && standard",
+    "test:integration": "node ./tests/index.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -21,11 +22,15 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-tape-runner": "^2.0.1",
+    "bluebird": "^3.5.1",
+    "clipboardy": "^1.2.3",
+    "del": "^3.0.0",
     "electron": "^1.7.10",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-adapter-react-helper": "^1.2.3",
     "prettier-standard": "^8.0.0",
+    "spectron": "^3.8.0",
     "standard": "^10.0.3",
     "tape": "^4.9.0",
     "webpack": "^3.10.0",
