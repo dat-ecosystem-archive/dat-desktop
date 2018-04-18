@@ -2,7 +2,6 @@
 
 import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
-import { homedir } from 'os'
 import fs from 'fs'
 import { basename, join as joinPath } from 'path'
 import { ipcRenderer, shell } from 'electron'
@@ -15,7 +14,9 @@ const writeFile = promisify(fs.writeFile)
 const { Notification } = window
 
 export default class DatMiddleware {
-  constructor () {
+  constructor ({ downloadsDir, dataDir }) {
+    this.downloadsDir = downloadsDir
+    this.dataDir = dataDir
     this.dats = {}
     this.listeners = []
     this.execByType = {
@@ -62,7 +63,7 @@ export default class DatMiddleware {
   }
 
   async updateTitle ({ path, editValue }) {
-    const filePath = `${path}/dat.json`
+    const filePath = joinPath(path, 'dat.json')
     const blob = await readFile(filePath)
     const metadata = { ...JSON.parse(blob), title: editValue }
     await writeFile(filePath, JSON.stringify(metadata))
@@ -86,7 +87,7 @@ export default class DatMiddleware {
 
   async tryAddDat ({ key, path, paused, ...opts }) {
     if (key) key = encode(key)
-    if (!path) path = `${homedir()}/Downloads/${key}`
+    if (!path) path = joinPath(this.downloadsDir, key)
 
     if (key) this.dispatch({ type: 'ADD_DAT', key, path, paused })
     opts = {
@@ -212,7 +213,7 @@ export default class DatMiddleware {
 
   async downloadSparseDat ({ key }) {
     key = encode(key)
-    const path = `${homedir()}/Downloads/${key}`
+    const path = joinPath(this.downloadsDir, key)
 
     this.dispatch({ type: 'ADD_DAT', key, path })
 
@@ -326,15 +327,12 @@ export default class DatMiddleware {
 
   async loadFromDisk () {
     try {
-      await mkdirp(joinPath(homedir(), '.dat-desktop'))
+      await mkdirp(this.dataDir)
     } catch (_) {}
 
     let blob
     try {
-      blob = await readFile(
-        joinPath(homedir(), '.dat-desktop', 'dats.json'),
-        'utf8'
-      )
+      blob = await readFile(joinPath(this.dataDir, 'dats.json'), 'utf8')
     } catch (_) {
       return
     }
@@ -342,10 +340,7 @@ export default class DatMiddleware {
 
     blob = {}
     try {
-      blob = await readFile(
-        joinPath(homedir(), '.dat-desktop', 'paused.json'),
-        'utf8'
-      )
+      blob = await readFile(joinPath(this.dataDir, 'paused.json'), 'utf8')
     } catch (_) {}
     const paused = JSON.parse(blob)
 
@@ -361,10 +356,10 @@ export default class DatMiddleware {
   }
 
   async storeOnDisk () {
-    const dir = `${homedir()}/.dat-desktop`
     try {
-      await mkdirp(dir)
+      await mkdirp(this.dataDir)
     } catch (_) {}
+
     const datsState = Object.keys(this.dats).reduce(
       (acc, key) => ({
         ...acc,
@@ -383,7 +378,13 @@ export default class DatMiddleware {
       {}
     )
 
-    await writeFile(joinPath(dir, 'dats.json'), JSON.stringify(datsState))
-    await writeFile(joinPath(dir, 'paused.json'), JSON.stringify(pausedState))
+    await writeFile(
+      joinPath(this.dataDir, 'dats.json'),
+      JSON.stringify(datsState)
+    )
+    await writeFile(
+      joinPath(this.dataDir, 'paused.json'),
+      JSON.stringify(pausedState)
+    )
   }
 }
