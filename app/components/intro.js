@@ -141,19 +141,25 @@ class IntroScreen extends Component {
         </Content>
         {screen === 1 ? (
           <GreenButton
-            className='mt2 mb5 relative'
+            className='mt2 mb5 relative btn-get-started'
             onClick={() => next(screen)}
           >
             Get Started
           </GreenButton>
         ) : (
           <Footer>
-            <PlainButton onClick={() => hide()}>Skip Intro</PlainButton>
+            <PlainButton onClick={() => hide()} className='btn-skip'>
+              Skip Intro
+            </PlainButton>
             <Dots screen={screen} />
             {screen < 5 ? (
-              <GreenButton onClick={() => next(screen)}>Next</GreenButton>
+              <GreenButton onClick={() => next(screen)} className='btn-next'>
+                Next
+              </GreenButton>
             ) : (
-              <GreenButton onClick={() => hide()}>Done</GreenButton>
+              <GreenButton onClick={() => hide()} className='btn-next btn-done'>
+                Done
+              </GreenButton>
             )}
           </Footer>
         )}
