@@ -160,7 +160,7 @@ const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
     <td className='cell-3'>
       <Status dat={dat} />
     </td>
-    <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.length || 0)}</td>
+    <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.byteLength || 0)}</td>
     <NetworkContainer className='cell-5'>
       <NetworkIcon dat={dat} />
       <span className='network v-top f6 f5-l ml1'>{dat.peers}</span>

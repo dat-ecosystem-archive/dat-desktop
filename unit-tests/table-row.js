@@ -114,7 +114,7 @@ test('table row should render size equals to length property on stats', t => {
       dat={{
         metadata: {},
         stats: {
-          length: 40
+          byteLength: 40
         },
         writable: true
       }}
@@ -137,7 +137,7 @@ test('table row should render peers', t => {
       dat={{
         metadata: {},
         stats: {
-          length: 40
+          byteLength: 40
         },
         writable: true,
         peers: 2
