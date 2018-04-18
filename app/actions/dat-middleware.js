@@ -4,14 +4,14 @@ import Dat from 'dat-node'
 import { encode } from 'dat-encoding'
 import { homedir } from 'os'
 import fs from 'fs'
-import { basename } from 'path'
+import { basename, join as joinPath } from 'path'
 import { ipcRenderer, shell } from 'electron'
+import mkdirp from 'mkdirp-promise'
 import mirror from 'mirror-folder'
 import promisify from 'util-promisify'
 
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
-const mkdir = promisify(fs.mkdir)
 const { Notification } = window
 
 export default class DatMiddleware {
@@ -330,12 +330,15 @@ export default class DatMiddleware {
 
   async loadFromDisk () {
     try {
-      await mkdir(`${homedir()}/.dat-desktop`)
+      await mkdirp(joinPath(homedir(), '.dat-desktop'))
     } catch (_) {}
 
     let blob
     try {
-      blob = await readFile(`${homedir()}/.dat-desktop/dats.json`, 'utf8')
+      blob = await readFile(
+        joinPath(homedir(), '.dat-desktop', 'dats.json'),
+        'utf8'
+      )
     } catch (_) {
       return
     }
@@ -343,7 +346,10 @@ export default class DatMiddleware {
 
     blob = {}
     try {
-      blob = await readFile(`${homedir()}/.dat-desktop/paused.json`, 'utf8')
+      blob = await readFile(
+        joinPath(homedir(), '.dat-desktop', 'paused.json'),
+        'utf8'
+      )
     } catch (_) {}
     const paused = JSON.parse(blob)
 
@@ -360,6 +366,9 @@ export default class DatMiddleware {
 
   async storeOnDisk () {
     const dir = `${homedir()}/.dat-desktop`
+    try {
+      await mkdirp(dir)
+    } catch (_) {}
     const datsState = Object.keys(this.dats).reduce(
       (acc, key) => ({
         ...acc,
@@ -378,7 +387,7 @@ export default class DatMiddleware {
       {}
     )
 
-    await writeFile(`${dir}/dats.json`, JSON.stringify(datsState))
-    await writeFile(`${dir}/paused.json`, JSON.stringify(pausedState))
+    await writeFile(joinPath(dir, 'dats.json'), JSON.stringify(datsState))
+    await writeFile(joinPath(dir, 'paused.json'), JSON.stringify(pausedState))
   }
 }
