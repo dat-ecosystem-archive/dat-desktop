@@ -39,6 +39,7 @@
     "dat-node": "^3.5.7",
     "electron-default-menu": "^1.0.1",
     "mirror-folder": "^2.1.1",
+    "mkdirp-promise": "^5.0.1",
     "ms": "^2.1.1",
     "polished": "^1.9.2",
     "prettier-bytes": "^1.0.4",
