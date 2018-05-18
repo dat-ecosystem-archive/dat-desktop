@@ -19,7 +19,7 @@ const Label = styled.label`
     width: 7.5rem;
     padding-right: 0.5rem;
     padding-left: 2rem;
-    border-radius:2px;
+    border-radius: 2px;
     border: 1px solid transparent;
     background-color: transparent;
     color: var(--color-neutral-30);

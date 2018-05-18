@@ -21,7 +21,7 @@ const BaseButton = styled.button`
 
 const HeaderButton = BaseButton.extend`
   color: var(--color-neutral-30);
-  height:2rem;
+  height: 2rem;
   :hover,
   :focus {
     color: var(--color-white);
