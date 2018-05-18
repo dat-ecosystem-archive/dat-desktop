@@ -31,7 +31,11 @@ app.on('ready', () => {
     titleBarStyle: 'hiddenInset',
     minWidth: 640,
     minHeight: 395,
-    backgroundColor: neutral
+    backgroundColor: neutral,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: `${__dirname}/preload.js`
+    }
   })
   win.loadURL(`file://${__dirname}/index.html`)
   win.webContents.openDevTools()
