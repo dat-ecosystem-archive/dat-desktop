@@ -3,7 +3,9 @@ const nodeExternals = require('webpack-node-externals')
 module.exports = {
   entry: './app/index.js',
   target: 'electron-main',
-  externals: [nodeExternals()],
+  externals: [nodeExternals({
+    whitelist: /react-file-drop/
+  })],
   output: {
     path: `${__dirname}/static`,
     filename: 'bundle.js',
