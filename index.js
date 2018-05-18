@@ -5,6 +5,7 @@ const { neutral } = require('dat-colors')
 const autoUpdater = require('./lib/auto-updater')
 const defaultMenu = require('electron-default-menu')
 const doctor = require('dat-doctor')
+const isDev = process.env.NODE_ENV !== 'production'
 const { Writable } = require('stream')
 
 const menu = defaultMenu(app, shell)
@@ -26,8 +27,9 @@ let win
 
 app.on('ready', () => {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    // Extending the size of the browserwindow to make sure that the developer bar is visible.
+    width: 800 + (isDev ? 50 : 0),
+    height: 600 + (isDev ? 200 : 0),
     titleBarStyle: 'hiddenInset',
     minWidth: 640,
     minHeight: 395,
@@ -38,12 +40,13 @@ app.on('ready', () => {
     }
   })
   win.loadURL(`file://${__dirname}/index.html`)
-  win.webContents.openDevTools()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
 
   ipcMain.on('progress', (_, progress) => win && win.setProgressBar(progress))
 
-  if (process.env.NODE_ENV === 'production') {
+  if (isDev) {
+    win.webContents.openDevTools()
+  } else {
     const log = str => win && win.webContents.send('log', str)
     autoUpdater({ log })
   }
