@@ -2,13 +2,15 @@ const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: './app/index.js',
-  target: 'electron',
+  target: 'electron-main',
   externals: [nodeExternals()],
   output: {
-    filename: 'static/build.js',
+    path: `${__dirname}/static`,
+    filename: 'bundle.js',
     libraryTarget: 'commonjs2'
   },
   devtool: 'eval',
+  mode: 'production',
   node: {
     __dirname: true
   },
