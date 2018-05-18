@@ -38,7 +38,7 @@
     "dat-icons": "^2.5.2",
     "dat-node": "^3.5.8",
     "electron-default-menu": "^1.0.1",
-    "mirror-folder": "^2.1.1",
+    "mirror-folder": "^3.0.0",
     "ms": "^2.1.1",
     "polished": "^1.9.2",
     "prettier-bytes": "^1.0.4",
