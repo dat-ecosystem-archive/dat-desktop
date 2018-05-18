@@ -12,7 +12,6 @@ module.exports = {
     filename: 'bundle.js',
     libraryTarget: 'commonjs2'
   },
-  mode: 'production',
   devtool: 'inline-source-map',
   node: {
     __dirname: true

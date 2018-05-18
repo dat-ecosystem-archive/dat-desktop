@@ -12,8 +12,10 @@
     "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test babel-tape-runner -r ./unit-tests/_helpers/*.js unit-tests/*.js",
     "lint": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && standard",
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "dev": "(npm run watch &); npm run start",
+    "build:prod": "webpack --mode=production",
+    "build:dev": "webpack --mode=development",
+    "watch": "webpack --watch --mode=development"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
