@@ -1,13 +1,14 @@
 const nodeExternals = require('webpack-node-externals')
+const path = require('path')
 
 module.exports = {
-  entry: './app/index.js',
+  entry: path.join('.', 'app', 'index.js'),
   target: 'electron-main',
   externals: [nodeExternals({
     whitelist: /react-file-drop/
   })],
   output: {
-    path: `${__dirname}/static`,
+    path: path.join(__dirname, 'static'),
     filename: 'bundle.js',
     libraryTarget: 'commonjs2'
   },
@@ -20,7 +21,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        include: `${__dirname}/app`,
+        include: path.join(__dirname, 'app'),
         loader: 'babel-loader',
         query: {
           presets: ['react'],
