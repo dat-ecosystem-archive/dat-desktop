@@ -10,8 +10,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onShare: () => dispatch(createDat()),
-  onMenu: (visible) => dispatch(toggleMenu(visible)),
-  onReport: () => shell.openExternal('https://github.com/dat-land/dat-desktop/issues/')
+  onMenu: visible => dispatch(toggleMenu(visible)),
+  onReport: () =>
+    shell.openExternal('https://github.com/dat-land/dat-desktop/issues/')
 })
 
 const HeaderContainer = connect(mapStateToProps, mapDispatchToProps)(Header)

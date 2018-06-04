@@ -28,7 +28,7 @@ app.on('ready', () => {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    titleBarStyle: 'hidden-inset',
+    titleBarStyle: 'hiddenInset',
     minWidth: 640,
     minHeight: 395,
     backgroundColor: neutral

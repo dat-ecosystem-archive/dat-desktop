@@ -6,4 +6,4 @@ build/background.tiff
 .dat
 tags
 yarn.lock
-static/build.js
+static/bundle.js
