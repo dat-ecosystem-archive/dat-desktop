@@ -19,10 +19,10 @@
     "watch": "webpack --watch --mode=development",
     "pack": "npm run build:prod && npm run pack:all",
     "pack:os": "build --dir",
-    "pack:all": "npm run pack:os -- --linux --mac",
+    "pack:all": "npm run pack:os -- --linux --mac --win",
     "dist": "npm run build:prod && npm run dist:os",
     "dist:os": "build",
-    "dist:all": "npm run dist:os -- --linux --mac"
+    "dist:all": "npm run dist:os -- --linux --mac --win"
   },
   "standard": {
     "ignore": [
@@ -99,6 +99,10 @@
         "AppImage",
         "deb"
       ]
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/icon.png"
     },
     "protocols": [
       {
