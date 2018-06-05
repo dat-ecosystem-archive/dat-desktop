@@ -73,9 +73,11 @@
   "build": {
     "appId": "com.datproject.dat",
     "mac": {
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "icon": "build/icon.icns"
     },
     "dmg": {
+      "icon": "build/icon.icns",
       "contents": [
         {
           "x": 220,
