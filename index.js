@@ -6,7 +6,7 @@ const autoUpdater = require('./lib/auto-updater')
 const defaultMenu = require('electron-default-menu')
 const doctor = require('dat-doctor')
 const path = require('path')
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV === 'development'
 const { Writable } = require('stream')
 
 const menu = defaultMenu(app, shell)
