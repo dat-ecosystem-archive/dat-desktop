@@ -5,6 +5,7 @@ const { neutral } = require('dat-colors')
 const autoUpdater = require('./lib/auto-updater')
 const defaultMenu = require('electron-default-menu')
 const doctor = require('dat-doctor')
+const path = require('path')
 const isDev = process.env.NODE_ENV !== 'production'
 const { Writable } = require('stream')
 
@@ -26,6 +27,9 @@ menu[menu.length - 1].submenu.push({
 let win
 
 app.on('ready', () => {
+  if (isDev) {
+    console.log(BrowserWindow.addDevToolsExtension(path.join(__dirname, 'dev', 'react-dev-tools')))
+  }
   win = new BrowserWindow({
     // Extending the size of the browserwindow to make sure that the developer bar is visible.
     width: 800 + (isDev ? 50 : 0),
