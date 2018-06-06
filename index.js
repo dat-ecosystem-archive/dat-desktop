@@ -28,7 +28,7 @@ let win
 
 app.on('ready', () => {
   if (isDev) {
-    console.log(BrowserWindow.addDevToolsExtension(path.join(__dirname, 'dev', 'react-dev-tools')))
+    BrowserWindow.addDevToolsExtension(path.join(__dirname, 'dev', 'react-dev-tools'))
   }
   win = new BrowserWindow({
     // Extending the size of the browserwindow to make sure that the developer bar is visible.
