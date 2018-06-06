@@ -12,6 +12,7 @@
     "test": "npm run test:unit",
     "test:unit": "cross-env NODE_ENV=test babel-tape-runner -r ./unit-tests/_helpers/*.js unit-tests/*.js",
     "lint": "prettier-standard 'app/**/*.js' 'tests/**/*.js' 'lib/**/*.js' 'unit-tests/*.js' && standard",
+    "deps": "cross-env DEBUG=* dependency-check . --detective precinct --entry app/index.js",
     "clean": "git clean -dfX",
     "burnthemall": "rm -rf ~/.electron && npm run clean && rm -f package-lock.json && npm install",
     "update-rdt": "rm -rf dev/react-dev-tools && ced fmkadmapgofadopljbjfkapdkoienihi dev/react-dev-tools",
