@@ -25,10 +25,12 @@ menu[menu.length - 1].submenu.push({
 })
 
 let win
+let watchProcess
 
 app.on('ready', () => {
   if (isDev) {
     BrowserWindow.addDevToolsExtension(path.join(__dirname, 'dev', 'react-dev-tools'))
+    watchAndReload()
   }
   win = new BrowserWindow({
     // Extending the size of the browserwindow to make sure that the developer bar is visible.
@@ -61,7 +63,13 @@ app.on('will-finish-launching', () => {
   app.on('open-file', (_, path) => win.webContents.send('file', path))
 })
 
-app.on('window-all-closed', () => app.quit())
+app.on('window-all-closed', () => {
+  if (watchProcess) {
+    watchProcess.close()
+    watchProcess = null
+  }
+  app.quit()
+})
 
 const quit = app.makeSingleInstance(() => {
   if (!win) return
@@ -70,3 +78,36 @@ const quit = app.makeSingleInstance(() => {
 })
 
 if (quit) app.quit()
+
+function watchAndReload () {
+  let gaze
+  let first = true
+  try {
+    gaze = require('gaze')
+  } catch (e) {
+    console.warn('Gaze is not installed, wont be able to reload the app')
+    // In case dev dependencies are not installed
+    return
+  }
+  gaze([
+    `preload.js`,
+    `static/**/*`
+  ], {
+    debounceDelay: 60,
+    cwd: __dirname
+  }, (err, process) => {
+    if (err) {
+      console.warn('Gaze doesnt run well, wont be able to reload the app')
+      console.warn(err)
+      return
+    }
+    watchProcess = process
+    watchProcess.on('all', () => {
+      if (first) {
+        first = false
+        return
+      }
+      win && win.reload()
+    })
+  })
+}
