@@ -1,4 +1,13 @@
 'use strict'
+/**
+ * This file exists for security reasons!
+ *
+ * It prepares by removing dangerous scripts from the global scopes
+ * Before running the app.
+ *
+ * See: https://electronjs.org/docs/tutorial/security
+ *    & https://eslint.org/docs/rules/no-implied-eval
+ */
 // eslint-disable-next-line no-eval
 window.eval = global.eval = function () {
   throw new Error('Sorry, this app does not support window.eval().')
