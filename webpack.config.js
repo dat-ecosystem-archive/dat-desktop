@@ -1,7 +1,7 @@
+const { DefinePlugin } = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const path = require('path')
-
-module.exports = {
+module.exports = (_, argv) => ({
   entry: path.normalize(`${__dirname}/app/index.js`),
   target: 'electron-main',
   externals: [nodeExternals({
@@ -12,8 +12,7 @@ module.exports = {
     filename: 'bundle.js',
     libraryTarget: 'commonjs2'
   },
-  devtool: 'eval',
-  mode: 'production',
+  devtool: 'inline-source-map',
   node: {
     __dirname: true
   },
@@ -31,5 +30,10 @@ module.exports = {
         }
       }
     ]
-  }
-}
+  },
+  plugins: [
+    new DefinePlugin({
+      'process.env.NODE_ENV': argv.mode
+    })
+  ]
+})
