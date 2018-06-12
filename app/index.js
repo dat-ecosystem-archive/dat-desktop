@@ -10,6 +10,7 @@ import App from './components/app'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc } from 'electron'
+import drag from 'electron-drag'
 
 const store = createStore(
   datDesktopApp,
@@ -22,6 +23,8 @@ render(
   </Provider>,
   document.querySelector('div')
 )
+
+drag('header')
 
 store.dispatch(loadFromDisk())
 
