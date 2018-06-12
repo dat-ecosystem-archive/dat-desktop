@@ -1,7 +1,7 @@
 'use strict'
 
 const defaultState = {
-  dats: [],
+  dats: {},
   screen: 'intro',
   dialogs: {
     link: {
@@ -68,6 +68,7 @@ const redatApp = (state = defaultState, action) => {
         screen: 'dats'
       }
     case 'ADD_DAT_ERROR':
+    case 'WRITE_METADATA_ERROR':
       return {
         ...state,
         dats: {
