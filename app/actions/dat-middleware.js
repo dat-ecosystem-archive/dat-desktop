@@ -23,10 +23,21 @@ export default class DatMiddleware {
       UPDATE_TITLE: action => this.updateTitle(action),
       REMOVE_DAT: action => this.removeDat(action),
       TRY_ADD_DAT: action => this.tryAddDat(action),
+      REQUEST_DOWNLOAD: action => this.validateDownloadRequest(action),
       TOGGLE_PAUSE: action => this.togglePause(action),
       DOWNLOAD_SPARSE_DAT: action => this.downloadSparseDat(action),
       CANCEL_DOWNLOAD_DAT: action => this.cancelDownloadDat(action)
     }
+  }
+
+  async validateDownloadRequest ({ key }) {
+    if (key) {
+      key = encode(key)
+      if (this.dats[key]) {
+        return this.dispatch({ type: 'ADD_DAT_ERROR', key, error: new Error('Dat with same key already exists.') })
+      }
+    }
+    this.dispatch({ type: 'SHOW_DOWNLOAD_SCREEN', key})
   }
 
   execAction (action) {
@@ -89,11 +100,29 @@ export default class DatMiddleware {
     this.storeOnDisk()
   }
 
-  async tryAddDat ({ key, path, paused, ...opts }) {
-    if (key) key = encode(key)
+  async tryAddDat (action) {
+    const { key, path, paused, ...opts } = action
+    if (key) {
+      key = encode(key)
+      if (this.dats[key]) {
+        return this.dispatch({ type: 'ADD_DAT_ERROR', key, error: new Error('Dat with same key already added.') })
+      }
+    }
     if (!path) path = joinPath(this.downloadsDir, key)
+    
+    for (let dat of this.dats) {
+      if (dat.path === path) {
+        return this.dispatch({ type: 'ADD_DAT_ERROR', key, error: new Error('Dat with same path already added.')})
+      }
+    }
 
-    if (key) this.dispatch({ type: 'ADD_DAT', key, path, paused })
+    await internalAddDat(action)
+  }
+
+  async internalAddDat({ key, path, paused, ...opts}) {
+    if (key) {
+      this.dispatch({ type: 'ADD_DAT', key, path, paused })
+    }
     opts = {
       watch: true,
       resume: true,
@@ -350,7 +379,7 @@ export default class DatMiddleware {
 
     for (const key of Object.keys(datOpts)) {
       const opts = JSON.parse(datOpts[key])
-      this.tryAddDat({
+      this.internalAddDat({
         key,
         path: opts.dir,
         paused: paused[key],

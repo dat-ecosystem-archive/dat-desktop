@@ -30,9 +30,8 @@ export const createDat = () => dispatch => {
   const path = files[0]
   addDat({ path })(dispatch)
 }
-
-export const showDownloadScreen = key => ({
-  type: 'SHOW_DOWNLOAD_SCREEN',
+export const requestDownload = key => ({
+  type: 'REQUEST_DOWNLOAD',
   key: encode(key)
 })
 export const hideDownloadScreen = () => ({ type: 'HIDE_DOWNLOAD_SCREEN' })
@@ -64,7 +63,6 @@ export const inspectDat = key => dispatch => {
   dispatch({ type: 'INSPECT_DAT', key })
 }
 export const closeInspectDat = () => ({ type: 'INSPECT_DAT_CLOSE' })
-
 export const dropFolder = folder => async dispatch => {
   const isDirectory = (await stat(folder.path)).isDirectory()
   if (!isDirectory) return
@@ -81,7 +79,7 @@ export const activateTitleEditing = title => ({
 })
 
 export const updateTemporaryTitleValue = title => ({
-  type: 'UPDATE_TEMPORARY_TITLE_VALUE',
+  type: 'UPDATE_TEMPORARY_TITLE_V' + 'ALUE',
   title
 })
 

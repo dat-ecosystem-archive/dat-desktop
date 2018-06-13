@@ -1,12 +1,12 @@
 import DatImport from '../components/dat-import'
-import { showDownloadScreen, downloadSparseDat } from '../actions'
+import { requestDownload, downloadSparseDat } from '../actions'
 import { connect } from 'react-redux'
 
 const mapStateToProps = state => state
 
 const mapDispatchToProps = dispatch => {
   return {
-    showDownloadScreen: key => dispatch(showDownloadScreen(key)),
+    requestDownload: key => dispatch(requestDownload(key)),
     downloadSparseDat: key => dispatch(downloadSparseDat(key))
   }
 }
