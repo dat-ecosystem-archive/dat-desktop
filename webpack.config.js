@@ -1,4 +1,3 @@
-const { DefinePlugin } = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const path = require('path')
 module.exports = (_, argv) => ({
@@ -11,6 +10,9 @@ module.exports = (_, argv) => ({
     path: path.normalize(`${__dirname}/static`),
     filename: 'bundle.js',
     libraryTarget: 'commonjs2'
+  },
+  optimization: {
+    nodeEnv: argv.mode
   },
   devtool: 'inline-source-map',
   node: {
@@ -30,10 +32,5 @@ module.exports = (_, argv) => ({
         }
       }
     ]
-  },
-  plugins: [
-    new DefinePlugin({
-      'process.env.NODE_ENV': argv.mode
-    })
-  ]
+  }
 })
