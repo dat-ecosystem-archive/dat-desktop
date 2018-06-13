@@ -33,7 +33,7 @@ module.exports = (_, argv) => ({
   },
   plugins: [
     new DefinePlugin({
-      'process.env.NODE_ENV': argv.mode
+      'process.env.NODE_ENV': `"${argv.mode}"`
     })
   ]
 })
