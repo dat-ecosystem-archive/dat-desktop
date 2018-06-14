@@ -34,10 +34,14 @@ export default class DatMiddleware {
     if (key) {
       key = encode(key)
       if (this.dats[key]) {
-        return this.dispatch({ type: 'ADD_DAT_ERROR', key, error: new Error('Dat with same key already exists.') })
+        return this.dispatch({
+          type: 'ADD_DAT_ERROR',
+          key,
+          error: new Error('Dat with same key already exists.')
+        })
       }
     }
-    this.dispatch({ type: 'SHOW_DOWNLOAD_SCREEN', key})
+    this.dispatch({ type: 'SHOW_DOWNLOAD_SCREEN', key })
   }
 
   execAction (action) {
@@ -73,9 +77,10 @@ export default class DatMiddleware {
     this.listeners.forEach(listener => listener(action))
   }
 
-  async updateTitle ({ path, editValue }) {
-    const filePath = joinPath(path, 'dat.json')
-    const metadata = { ...getState().dats[key].metadata, title: editValue }
+  async updateTitle ({ key, editValue }) {
+    const dat = this.dats[key]
+    const filePath = joinPath(dat.path, 'dat.json')
+    const metadata = { ...dat.dat.metadata, title: editValue }
 
     try {
       await writeFile(filePath, JSON.stringify(metadata))
@@ -101,25 +106,34 @@ export default class DatMiddleware {
   }
 
   async tryAddDat (action) {
-    const { key, path, paused, ...opts } = action
+    let { key, path } = action
     if (key) {
       key = encode(key)
       if (this.dats[key]) {
-        return this.dispatch({ type: 'ADD_DAT_ERROR', key, error: new Error('Dat with same key already added.') })
+        return this.dispatch({
+          type: 'ADD_DAT_ERROR',
+          key,
+          error: new Error('Dat with same key already added.')
+        })
       }
     }
     if (!path) path = joinPath(this.downloadsDir, key)
-    
-    for (let dat of this.dats) {
+
+    for (let key in this.dats) {
+      const dat = this.dats[key]
       if (dat.path === path) {
-        return this.dispatch({ type: 'ADD_DAT_ERROR', key, error: new Error('Dat with same path already added.')})
+        return this.dispatch({
+          type: 'ADD_DAT_ERROR',
+          key,
+          error: new Error('Dat with same path already added.')
+        })
       }
     }
 
-    await internalAddDat(action)
+    await this.internalAddDat(action)
   }
 
-  async internalAddDat({ key, path, paused, ...opts}) {
+  async internalAddDat ({ key, path, paused, ...opts }) {
     if (key) {
       this.dispatch({ type: 'ADD_DAT', key, path, paused })
     }
