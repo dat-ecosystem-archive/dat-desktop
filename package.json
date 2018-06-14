@@ -7,7 +7,7 @@
   "description": "Dat Desktop App",
   "author": "Dat Team <community@datproject.org>",
   "scripts": {
-    "start": "cross-env NODE_ENV=development electron .",
+    "start": "cross-env NODE_V=\"$(node -v)\" NODE_ENV=development electron .",
     "pretest": "npm run lint",
     "test": "npm run test:unit",
     "test:unit": "cross-env NODE_ENV=test babel-tape-runner -r ./unit-tests/_helpers/*.js unit-tests/*.js",
