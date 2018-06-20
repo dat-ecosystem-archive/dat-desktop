@@ -307,6 +307,8 @@ export default class DatMiddleware {
 
   removeDatInternally (key) {
     const { dat } = this.dats[key]
+    delete this.dats[key]
+    this.dispatch({ type: 'REMOVE_DAT', key })
 
     for (const con of dat.network.connections) {
       con.removeAllListeners()
@@ -315,8 +317,6 @@ export default class DatMiddleware {
     clearInterval(dat.updateInterval)
 
     dat.close()
-    delete this.dats[key]
-    this.dispatch({ type: 'REMOVE_DAT', key })
   }
 
   walk (dat) {
