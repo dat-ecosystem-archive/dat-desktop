@@ -308,6 +308,9 @@ export default class DatMiddleware {
   removeDatInternally (key) {
     const { dat } = this.dats[key]
     delete this.dats[key]
+    if (dat.mirrorProgress) {
+      dat.mirrorProgress.destroy()
+    }
     this.dispatch({ type: 'REMOVE_DAT', key })
 
     for (const con of dat.network.connections) {
@@ -321,6 +324,7 @@ export default class DatMiddleware {
 
   walk (dat) {
     const key = encode(dat.key)
+    if (!this.dats[key]) return // maybe it was deleted?
     if (!dat.files) dat.files = []
     var fs = { name: '/', fs: dat.archive }
     var progress = mirror(fs, '/', { dryRun: true })
@@ -339,6 +343,7 @@ export default class DatMiddleware {
       const { files } = dat
       this.dispatch({ type: 'DAT_FILES', key, files })
     })
+    dat.mirrorProgress = progress
   }
 
   updateState (dat) {
