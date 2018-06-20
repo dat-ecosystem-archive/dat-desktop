@@ -173,8 +173,8 @@ const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
     <td className='cell-6'>
       <IconContainer className='flex justify-end'>
         <FinderButton dat={dat} />
-        <LinkButton onClick={() => shareDat(`dat://${dat.key}`)} />
-        <DeleteButton onClick={() => onDeleteDat(dat.key)} />
+        <LinkButton trigger={() => shareDat(`dat://${dat.key}`)} />
+        <DeleteButton trigger={() => onDeleteDat(dat.key)} />
       </IconContainer>
     </td>
   </Tr>
