@@ -92,16 +92,8 @@ export default class DatMiddleware {
   async removeDat ({ key }) {
     const { dat } = this.dats[key]
 
-    if (dat.network) {
-      for (const con of dat.network.connections) {
-        con.removeAllListeners()
-      }
-    }
-    dat.stats.removeAllListeners()
-    clearInterval(dat.updateInterval)
+    this.removeDatInternally(key)
 
-    dat.close()
-    delete this.dats[key]
     this.storeOnDisk()
   }
 
@@ -309,6 +301,11 @@ export default class DatMiddleware {
 
   async cancelDownloadDat (key) {
     key = encode(key)
+
+    this.removeDatInternally(key)
+  }
+
+  removeDatInternally (key) {
     const { dat } = this.dats[key]
 
     for (const con of dat.network.connections) {
