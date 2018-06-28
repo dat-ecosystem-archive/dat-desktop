@@ -42,17 +42,14 @@ const InputField = styled.input`
 `
 
 class TitleField extends Component {
-  constructor (props) {
-    super(props)
-    this.onclick = this.onclick.bind(this)
-    this.handleSave = this.handleSave.bind(this)
-    this.deactivateTitleEditing = this.deactivateTitleEditing.bind(this)
+  startEditing () {
+    this.setState({ editing: true })
   }
 
   onclick (ev) {
     ev.stopPropagation()
     ev.preventDefault()
-    this.props.activateTitleEditing()
+    this.startEditing()
 
     // setTimeout? Because ref on input is set asynchronously, and later. So we can't do focus, select on it until ref is set
     setTimeout(() => {
@@ -61,67 +58,64 @@ class TitleField extends Component {
     }, 0)
   }
 
-  deactivateTitleEditing () {
-    this.props.deactivateTitleEditing()
+  commit () {
+    const oldValue = this.props.value
+    const newValue = this.titleInput.value
+    if (oldValue !== newValue) {
+      this.props.onChange(newValue)
+    }
+    this.cancel()
   }
 
-  handleSave () {
-    const { key, path } = this.props.dat
-    const { editValue } = this.props.titleEditInPlace
-    if (editValue) this.props.updateTitle(key, path, editValue)
-    this.props.deactivateTitleEditing()
+  cancel () {
+    this.setState({
+      modified: false,
+      editing: false
+    })
   }
 
   handleKeyup (ev) {
-    const oldValue = this.props.titleEditInPlace.editValue
-    const newValue = ev.target.value
     ev.stopPropagation()
 
     if (ev.key === 'Escape') {
       ev.preventDefault()
-      this.props.deactivateTitleEditing()
-    } else if (ev.key === 'Enter') {
-      ev.preventDefault()
-      this.handleSave()
-    } else if (oldValue !== newValue) {
-      this.props.updateTemporaryTitleValue(newValue)
+      this.cancel()
+      return
     }
+
+    if (ev.key === 'Enter') {
+      ev.preventDefault()
+      this.commit()
+      return
+    }
+
+    const oldValue = this.props.value
+    const newValue = ev.target.value
+    const modified = oldValue !== newValue
+    this.setState({ modified })
   }
 
   render () {
-    const { dat, titleEditInPlace } = this.props
-    const { isEditing, editValue } = titleEditInPlace
-    const { writable, metadata, key } = dat
-    const { title } = metadata
-    const placeholderTitle = `#${key}`
-
-    if (isEditing && writable) {
+    const { writable, value } = this.props
+    const { editing, modified } = this.state || {}
+    if (editing && writable) {
       return (
-        <div>
-          <Overlay onClick={() => this.deactivateTitleEditing()} />
+        <div onClick={e => e.stopPropagation()}>
+          <Overlay onClick={() => this.cancel()} />
           <EditableFieldWrapper className='bg-white nt1 nb1 nl1 shadow-1 flex justify-between'>
             {/* why innerRef in following component? check here - styled-components/styled-components#102 */}
             <InputField
               className='bn f6 pl1 normal w-100'
-              defaultValue={editValue || title}
+              defaultValue={value}
               onKeyUp={ev => this.handleKeyup(ev)}
               innerRef={input => {
                 this.titleInput = input
               }}
             />
-            {editValue === title ? (
-              <PlainButton onClick={ev => this.deactivateTitleEditing(ev)}>
-                Save
-              </PlainButton>
+            {!modified ? (
+              <PlainButton onClick={() => this.commit()}>Save</PlainButton>
             ) : (
-              <GreenButton
-                onClick={ev => {
-                  ev.stopPropagation()
-                  this.handleSave()
-                }}
-              >
-                Save
-              </GreenButton>
+              <GreenButton onClick={() => this.commit()}>Save</GreenButton>
             )}
           </EditableFieldWrapper>
         </div>
@@ -132,10 +126,11 @@ class TitleField extends Component {
       return (
         <EditableFieldWrapper>
           <h2
+            tabIndex='0'
             className='f6 f5-l normal truncate pr3'
             onClick={ev => this.onclick(ev)}
           >
-            {title || placeholderTitle}
+            {value}
             <Icon
               name='edit'
               className='absolute top-0 bottom-0 right-0 color-neutral-30 indicator'
@@ -147,9 +142,7 @@ class TitleField extends Component {
 
     return (
       <div>
-        <h2 className='f6 f5-l normal truncate pr3'>
-          {title || placeholderTitle}
-        </h2>
+        <h2 className='f6 f5-l normal truncate pr3'>{value}</h2>
       </div>
     )
   }

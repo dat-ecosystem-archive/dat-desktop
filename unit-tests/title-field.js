@@ -9,20 +9,7 @@ import {
 import Icon from '../app/components/icon'
 
 test('title field show not be editable if dat is not writable', t => {
-  const wrapper = shallow(
-    <TitleField
-      dat={{
-        writable: false,
-        metadata: {
-          title: 'A-title'
-        }
-      }}
-      titleEditInPlace={{
-        isEditing: false,
-        editValue: ''
-      }}
-    />
-  )
+  const wrapper = shallow(<TitleField value='A-title' />)
 
   t.equal(wrapper.find(PlainButton).length, 0)
   t.equal(wrapper.find(GreenButton).length, 0)
@@ -31,41 +18,20 @@ test('title field show not be editable if dat is not writable', t => {
 })
 
 test('title field show edit button if dat is editable and is not editing', t => {
-  const wrapper = shallow(
-    <TitleField
-      dat={{
-        writable: true,
-        metadata: {
-          title: 'A-title'
-        }
-      }}
-      titleEditInPlace={{
-        isEditing: false,
-        editValue: ''
-      }}
-    />
-  )
+  const wrapper = shallow(<TitleField writable value='A-title' />)
 
   t.equal(wrapper.find(Icon).length, 1)
 
   t.end()
 })
 
-test('title field show plain button if title value is equal to input field value when editing', t => {
-  const wrapper = shallow(
-    <TitleField
-      dat={{
-        writable: true,
-        metadata: {
-          title: 'A-title'
-        }
-      }}
-      titleEditInPlace={{
-        isEditing: true,
-        editValue: 'A-title'
-      }}
-    />
-  )
+test('title field show plain button if title value is equal to input field value when editing', async t => {
+  const field = <TitleField writable value='A-title' />
+  const wrapper = shallow(field)
+  wrapper.setState({
+    editing: true,
+    modified: false
+  })
 
   t.equal(wrapper.find(PlainButton).length, 1)
   t.equal(wrapper.find(GreenButton).length, 0)
@@ -74,20 +40,12 @@ test('title field show plain button if title value is equal to input field value
 })
 
 test('title field show green button if title value is not equal to input field value when editing', t => {
-  const wrapper = shallow(
-    <TitleField
-      dat={{
-        writable: true,
-        metadata: {
-          title: 'A-title'
-        }
-      }}
-      titleEditInPlace={{
-        isEditing: true,
-        editValue: 'beep'
-      }}
-    />
-  )
+  const field = <TitleField writable value='A-title' />
+  const wrapper = shallow(field)
+  wrapper.setState({
+    editing: true,
+    modified: true
+  })
 
   t.equal(wrapper.find(PlainButton).length, 0)
   t.equal(wrapper.find(GreenButton).length, 1)
