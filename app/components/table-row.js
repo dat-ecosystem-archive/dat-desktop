@@ -8,7 +8,7 @@ import Status from './status'
 import bytes from 'prettier-bytes'
 import FinderButton from './finder-button'
 import HexContent from './hex-content'
-import TitleFieldContainer from '../containers/title-field'
+import TitleField from './title-field'
 
 const Tr = styled.tr`
   transition: background-color 0.025s ease-out;
@@ -136,48 +136,60 @@ const DeleteButton = ({ ...props }) => (
   />
 )
 
-const Row = ({ dat, shareDat, onDeleteDat, inspectDat, onTogglePause }) => (
-  <Tr
-    onClick={ev => {
-      const tag = ev.target.tagName.toLowerCase()
-      if (['svg', 'use', 'input'].includes(tag)) return
-      inspectDat(dat.key)
-    }}
-  >
-    <td className='cell-1'>
-      <div className='w2 center' onClick={() => onTogglePause(dat)}>
-        <HexContent dat={dat} />
-      </div>
-    </td>
-    <td className='cell-2'>
-      <div className='cell-truncate'>
-        <TitleFieldContainer dat={dat} />
-        <p className='f7 f6-l color-neutral-60 truncate'>
-          <span className='author'>
-            {dat.metadata.author || 'Anonymous'} •{' '}
-          </span>
-          <span className='title'>
-            {dat.writable ? 'Read & Write' : 'Read-only'}
-          </span>
-        </p>
-      </div>
-    </td>
-    <td className='cell-3'>
-      <Status dat={dat} />
-    </td>
-    <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.byteLength || 0)}</td>
-    <NetworkContainer className='cell-5'>
-      <NetworkIcon dat={dat} />
-      <span className='network v-top f6 f5-l ml1'>{dat.peers}</span>
-    </NetworkContainer>
-    <td className='cell-6'>
-      <IconContainer className='flex justify-end'>
-        <FinderButton dat={dat} />
-        <LinkButton trigger={() => shareDat(`dat://${dat.key}`)} />
-        <DeleteButton trigger={() => onDeleteDat(dat.key)} />
-      </IconContainer>
-    </td>
-  </Tr>
-)
+const Row = ({
+  dat,
+  shareDat,
+  onDeleteDat,
+  inspectDat,
+  onTogglePause,
+  updateTitle
+}) => {
+  const { writable, metadata, key } = dat
+  const { title } = metadata
+  const placeholderTitle = `#${key}`
+  return (<Tr onClick={() => inspectDat(dat.key)}>
+      <td className='cell-1'>
+        <div className='w2 center' onClick={event => {
+          event.stopPropagation()
+          onTogglePause(dat)
+        }}>
+            <HexContent dat={dat} />
+        </div>
+      </td>
+      <td className='cell-2'>
+        <div className='cell-truncate'>
+          <TitleField
+            value={title || placeholderTitle}
+            writable={writable}
+            onChange={title => updateTitle(key, title)}
+          />
+          <p className='f7 f6-l color-neutral-60 truncate'>
+            <span className='author'>
+              {dat.metadata.author || 'Anonymous'} •{' '}
+            </span>
+            <span className='title'>
+              {dat.writable ? 'Read & Write' : 'Read-only'}
+            </span>
+          </p>
+        </div>
+      </td>
+      <td className='cell-3'>
+        <Status dat={dat} />
+      </td>
+      <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.length || 0)}</td>
+      <NetworkContainer className='cell-5'>
+        <NetworkIcon dat={dat} />
+        <span className='network v-top f6 f5-l ml1'>{dat.peers}</span>
+      </NetworkContainer>
+      <td className='cell-6'>
+        <IconContainer className='flex justify-end'>
+          <FinderButton dat={dat} />
+          <LinkButton onClick={() => shareDat(`dat://${dat.key}`)} />
+          <DeleteButton onClick={() => onDeleteDat(dat.key)} />
+        </IconContainer>
+      </td>
+    </Tr>
+  )
+}
 
 export default Row

@@ -9,6 +9,20 @@ const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 const { Writable } = require('stream')
 
+if (typeof process.env.NODE_V === 'string' && process.env.NODE_V !== process.version) {
+  console.error(`
+    WARNING:
+      You are using a different version of Node than is used in this electron release!
+      - Used Version: ${process.env.NODE_V}
+      - Electron's Node Version: ${process.version}
+    
+      We recommend running:
+      
+      $ nvm install ${process.version}; npm rebuild;
+
+    `)
+}
+
 const menu = defaultMenu(app, shell)
 menu[menu.length - 1].submenu.push({
   label: 'Doctor',

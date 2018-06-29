@@ -73,26 +73,12 @@ export const openHomepage = () => shell.openExternal('https://datproject.org/')
 export const nextIntro = screen => ({ type: 'NEXT_INTRO', screen })
 export const hideIntro = () => ({ type: 'HIDE_INTRO' })
 
-export const activateTitleEditing = title => ({
-  type: 'ACTIVATE_TITLE_EDITING',
-  title
-})
-
-export const updateTemporaryTitleValue = title => ({
-  type: 'UPDATE_TEMPORARY_TITLE_V' + 'ALUE',
-  title
-})
-
-export const updateTitle = (key, path, editValue) => async dispatch =>
+export const updateTitle = (key, title) => async dispatch =>
   dispatch({
     type: 'UPDATE_TITLE',
     key,
-    editValue
+    title
   })
-
-export const deactivateTitleEditing = () => ({
-  type: 'DEACTIVATE_TITLE_EDITING'
-})
 
 export const toggleMenu = visible => dispatch => {
   dispatch({ type: 'TOGGLE_MENU', visible })
