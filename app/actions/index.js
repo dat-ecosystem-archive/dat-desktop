@@ -248,19 +248,11 @@ export const openHomepage = () => shell.openExternal('https://datproject.org/')
 export const nextIntro = screen => ({ type: 'NEXT_INTRO', screen })
 export const hideIntro = () => ({ type: 'HIDE_INTRO' })
 
-export const activateTitleEditing = title => ({
-  type: 'ACTIVATE_TITLE_EDITING',
-  title
-})
-
-export const updateTemporaryTitleValue = title => ({
-  type: 'UPDATE_TEMPORARY_TITLE_VALUE',
-  title
-})
-
-export const updateTitle = (key, path, editValue) => async (dispatch, getState) => {
+export const updateTitle = (key, title) => async dispatch => {
+  const dat = dats[key]
+  const path = dat.path
   const filePath = `${path}/dat.json`
-  const metadata = { ...getState().dats[key].metadata, title: editValue }
+  const metadata = { ...dat.metadata, title }
 
   try {
     await writeFile(filePath, JSON.stringify(metadata))
@@ -271,13 +263,9 @@ export const updateTitle = (key, path, editValue) => async (dispatch, getState) 
   dispatch({
     type: 'UPDATE_TITLE',
     key,
-    editValue
+    title
   })
 }
-
-export const deactivateTitleEditing = () => ({
-  type: 'DEACTIVATE_TITLE_EDITING'
-})
 
 export const loadFromDisk = () => async dispatch => {
   try {
