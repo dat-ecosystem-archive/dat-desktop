@@ -90,10 +90,7 @@ export default class DatMiddleware {
   }
 
   async removeDat ({ key }) {
-    const { dat } = this.dats[key]
-
     this.removeDatInternally(key)
-
     this.storeOnDisk()
   }
 
