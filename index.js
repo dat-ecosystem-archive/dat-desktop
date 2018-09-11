@@ -45,7 +45,16 @@ menu[menu.length - 1].submenu.push({
       }
     })
     doctor({ out })
-  }
+  },
+  {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click () { require('electron').shell.openExternal('https://dat.land/apps-on-dat/') }
+        }
+      ]
+    }
 })
 
 function onReady () {
