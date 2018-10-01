@@ -12,9 +12,6 @@ notifications:
 addons:
   apt:
     packages:
-      # - icnsutils
-      # - graphicsmagick
-      # - xz-utils
       - xvfb
 
 env:
