@@ -142,13 +142,17 @@ const Row = ({
   const { writable, metadata, key } = dat
   const { title } = metadata
   const placeholderTitle = `#${key}`
-  return (<Tr onClick={() => inspectDat(dat.key)}>
+  return (
+    <Tr onClick={() => inspectDat(dat.key)}>
       <td className='cell-1'>
-        <div className='w2 center' onClick={event => {
-          event.stopPropagation()
-          onTogglePause(dat)
-        }}>
-            <HexContent dat={dat} />
+        <div
+          className='w2 center'
+          onClick={event => {
+            event.stopPropagation()
+            onTogglePause(dat)
+          }}
+        >
+          <HexContent dat={dat} />
         </div>
       </td>
       <td className='cell-2'>
