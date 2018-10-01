@@ -1,26 +1,36 @@
-dist: trusty
 language: node_js
 node_js:
-  - 8
-  
+  - '8'
+
 os:
-  - osx
   - linux
+  - osx
+
+notifications:
+  email: true
+
 addons:
   apt:
     packages:
-      - icnsutils
-      - graphicsmagick
-      - xz-utils
+      # - icnsutils
+      # - graphicsmagick
+      # - xz-utils
       - xvfb
+
 env:
   - DISPLAY=":99.0"
+
 install:
+  - export DISPLAY=':99.0'
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - npm install
+
 deploy:
-  provider: script
+  provider: script #releases
+  #api_key: $ENCRYPTED_GITHUB_TOKEN
+  skip_cleanup: true
   script: npm run dist
   on:
     branch: master
-  skip_cleanup: true
+    # branch: fix/react-travis
+    # tags: true
