@@ -33,5 +33,5 @@ deploy:
   on:
     node: '10'
     repo: dat-land/dat-desktop
-    branch: react
+    # branch: react
     tags: true
