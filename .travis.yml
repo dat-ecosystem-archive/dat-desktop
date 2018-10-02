@@ -22,10 +22,15 @@ install:
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - npm install
 
-after_success:
-  - npm run dist
+# Trigger deploy in PR
+# after_success:
+#   - npm run dist
 
-# deploy:
-#   provider: script
-#   script: npm run dist
-#   skip_cleanup: true
+deploy:
+  provider: script
+  script: npm run dist
+  skip_cleanup: true
+  on:
+    repo: dat-land/dat-desktop
+    branch: react
+    tags: true
