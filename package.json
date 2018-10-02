@@ -7,7 +7,7 @@
   "description": "Dat Desktop App",
   "author": "Dat Team <community@datproject.org>",
   "scripts": {
-    "start": "cross-env NODE_ENV=development npm-run-all -p start:watch start:electron",
+    "start": "npm run build:dev && cross-env NODE_ENV=development npm-run-all -p start:watch start:electron",
     "start:electron": "cross-env NODE_V=\"$(node -v)\" NODE_ENV=development electron .",
     "start:watch": "webpack --watch --mode=development",
     "test": "npm run test:deps && npm run test:lint && npm run test:unit",
