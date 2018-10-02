@@ -23,14 +23,15 @@ install:
   - npm install
 
 # Trigger deploy in PR
-after_success:
-  - npm run dist:publish
+# after_success:
+#   - npm run dist:publish
 
 deploy:
   provider: script
   script: npm run dist:publish
   skip_cleanup: true
   on:
+    node: '10'
     repo: dat-land/dat-desktop
     branch: react
     tags: true
