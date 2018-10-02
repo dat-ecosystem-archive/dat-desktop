@@ -1,10 +1,10 @@
 {
   "name": "dat-desktop",
-  "productName": "Dat",
-  "version": "2.0.1",
+  "productName": "Dat Desktop",
+  "version": "3.0.0-alpha",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
-  "description": "Dat Desktop App",
+  "description": "Peer to peer data sharing app built for humans.",
   "author": "Dat Team <community@datproject.org>",
   "scripts": {
     "start": "npm run build:dev && cross-env NODE_ENV=development npm-run-all -p start:watch start:electron",
@@ -18,13 +18,13 @@
     "clean:git": "git clean -dfX",
     "clean:dirs": "rm -rf ~/.electron && rm -f package-lock.json",
     "update-rdt": "rm -rf dev/react-dev-tools && ced fmkadmapgofadopljbjfkapdkoienihi dev/react-dev-tools",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production",
+    "build:dev": "webpack --mode=development --progress --profile --colors",
+    "build:prod": "webpack --mode=production --progress --profile --colors",
     "pack": "npm run build:prod && npm run pack:all",
     "pack:os": "build --dir",
     "pack:all": "npm run pack:os -- --linux --mac --win",
     "dist": "npm run build:prod && npm run dist:os",
-    "dist:os": "build",
+    "dist:os": "build --publish onTagOrDraft",
     "dist:all": "npm run dist:os -- --linux --mac --win"
   },
   "standard": {
@@ -112,6 +112,9 @@
     "win": {
       "target": "NSIS",
       "icon": "build/icon.png"
+    },
+    "directories": {
+      "output": "dist"
     },
     "protocols": [
       {
