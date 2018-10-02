@@ -22,25 +22,8 @@ install:
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - npm install
 
-# before_deploy:
-  # - sudo add-apt-repository ppa:ubuntu-wine/ppa -y
-  # - sudo apt-get update -q
-  # - sudo apt-get install -y wine1.7
-  # - npm run package
-
-# deploy:
-  # - provider: releases
-  #   api_key:
-  #     secure: BMUPjgDD4hAfLiCOjVibl4+annrnV9VhOS3+FCR2bm0aJt3UcHj5DJzi/fETXFxc8dYL+w/NDjBcCH9QK8laVaYRt6iCfKiSF4j2LogvW5CRIEfZCDqTy+6fQhFMFY3DZLhdn459o7/6hgHP0sVhm+uPH3dKE6u+LawSxRB2IP/siqUCaFMdpXAiKRt6/1FRxJ9BasFlpi43y3MkKgbRTBJoU6IUdBIhqFVyOVx4sCgNiNN7rHBJzBf6MQhihkYFRo2SNLM3rVCOEKeCqe7bJCdVplHk3x06uWUU+pxTmDm5npK23NI5SjeasehbSvcJi0F5BjkUmpLI2PUVo9u+KR/2SGOKWOwuFZ4H9+s0krE9gxZndh9APaCs0r9ce5+QUi6S9e4Pd7OQjnVty7JoA8s5l0tBSr3AcmultHL10uP1UpUztKlRQRJob7gI1BJF3CERnMxv95X2pfw7A3PlpZCTz8Bsn5KPGE+vJ6/u7Fl9X2z5QFTwtSTn+e0v5gx8WH9xkjCGlg8U6AhOqFI06nP9P0ms7k2GJVcf3iKj5b1uBeUGN1nBnIw4+QkkB6Kjz5dVqXtdIFIbuHjqM3iHmH0+qzPNnZYwnDETdM/JOpgIQc7Ckgf9I76WwYCavim0iYa/NOrP+PzHYkW+iRf5jZPelHT/EanRom/PnPdLcsM=
-  #   file: "FILE TO UPLOAD"
-  #   on:
-  #     repo: dat-land/dat-desktop
-  #     branch: fix/react-travis
-  #     tags: true
-
-  # - provider: bintray
-  #   file: "Path to a descriptor file, containing information for the Bintray upload"
-  #   user: "Bintray user"
-  #   key: "Bintray API key"
-  #   passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
-  #   skip_cleanup: true 
+deploy:
+  provider: script
+  script: npm run dist
+  skip_cleanup: true
+  
