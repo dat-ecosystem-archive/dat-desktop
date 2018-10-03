@@ -32,6 +32,6 @@ deploy:
   skip_cleanup: true
   on:
     # node: '10'
-    repo: dat-land/dat-desktop
+    # repo: dat-land/dat-desktop
     # branch: react
-    tags: true
+    # tags: true
