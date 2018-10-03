@@ -1,11 +1,11 @@
 language: node_js
 node_js:
-- '8'
-- '10'
+  # - '8'
+  - '10'
 
 os:
-- linux
-- osx
+  - linux
+  - osx
 
 notifications:
   email: false
@@ -13,7 +13,7 @@ notifications:
 addons:
   apt:
     packages:
-    - xvfb
+      - xvfb
 
 env:
   - DISPLAY=":99.0"
@@ -31,7 +31,7 @@ deploy:
   script: npm run dist:publish
   skip_cleanup: true
   on:
-    node: '10'
+    # node: '10'
     repo: dat-land/dat-desktop
     # branch: react
     tags: true
