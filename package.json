@@ -65,6 +65,7 @@
     "dat-node": "^3.5.8",
     "electron-default-menu": "^1.0.1",
     "electron-drag": "github:martinheidegger/electron-drag#f432d168f0a4f7f53aa9272793dd4c6793072ea0",
+    "minimist": "^1.2.0",
     "mirror-folder": "^3.0.0",
     "mkdirp-promise": "^5.0.1",
     "ms": "^2.1.1",
