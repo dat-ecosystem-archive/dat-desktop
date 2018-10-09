@@ -286,6 +286,7 @@ const redatApp = (state = defaultState, action) => {
     case 'DIALOGS_DELETE_CLOSE':
       return {
         ...state,
+        screen: 'dats',
         dialogs: {
           ...state.dialogs,
           delete: {
