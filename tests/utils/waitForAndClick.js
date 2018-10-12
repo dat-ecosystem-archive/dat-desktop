@@ -1,10 +1,9 @@
+const waitForVisible = require('./waitForVisible')
+
 module.exports = function waitForAndClick (t, app, selector, ms, reverse) {
-  return app.client.waitForExist(selector, ms, reverse)
-    .then(function () {
-      t.ok(true, selector + ' exists.')
+  return waitForVisible(t, app, selector, ms, reverse)
+    .then(selector => {
       return app.client.click(selector)
-        .then(function () {
-          t.ok(true, selector + ' clicked.')
-        })
     })
+    .then(() => t.ok(true, selector + ' clicked.'))
 }

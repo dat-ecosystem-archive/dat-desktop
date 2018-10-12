@@ -3,7 +3,8 @@ node_modules
 dmgs
 npm-debug.log
 build/background.tiff
-bundle.js
 .dat
 tags
 yarn.lock
+package-lock.json
+static/bundle.js
