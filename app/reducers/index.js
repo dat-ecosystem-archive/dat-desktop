@@ -25,7 +25,8 @@ const defaultState = {
   version: require('../../package.json').version,
   menu: {
     visible: false
-  }
+  },
+  downloadDatKey: null
 }
 
 const redatApp = (state = defaultState, action) => {
@@ -38,9 +39,33 @@ const redatApp = (state = defaultState, action) => {
         }
       }
     case 'HIDE_INTRO':
+      document.title = 'Dat Desktop'
       return {
         ...state,
         screen: 'dats'
+      }
+    case 'SHOW_DOWNLOAD_SCREEN':
+      return {
+        ...state,
+        screen: 'download',
+        downloadDatKey: action.key
+      }
+    case 'HIDE_DOWNLOAD_SCREEN':
+      return {
+        ...state,
+        screen: 'dats',
+        downloadDatKey: null
+      }
+    case 'CHANGE_DOWNLOAD_PATH':
+      return {
+        ...state,
+        dats: {
+          ...state.dats,
+          [action.key]: {
+            ...state.dats[action.key],
+            path: action.path
+          }
+        }
       }
     case 'ADD_DAT':
       return {
@@ -261,6 +286,7 @@ const redatApp = (state = defaultState, action) => {
     case 'DIALOGS_DELETE_CLOSE':
       return {
         ...state,
+        screen: 'dats',
         dialogs: {
           ...state.dialogs,
           delete: {
@@ -268,26 +294,16 @@ const redatApp = (state = defaultState, action) => {
           }
         }
       }
-    case 'PAUSE_DAT':
+    case 'TOGGLE_PAUSE':
+      const dat = state.dats[action.key]
       return {
         ...state,
         dats: {
           ...state.dats,
           [action.key]: {
-            ...state.dats[action.key],
-            paused: true,
-            peers: 0
-          }
-        }
-      }
-    case 'RESUME_DAT':
-      return {
-        ...state,
-        dats: {
-          ...state.dats,
-          [action.key]: {
-            ...state.dats[action.key],
-            paused: false
+            ...dat,
+            paused: !action.paused,
+            peers: !action.paused ? 0 : dat.peers
           }
         }
       }

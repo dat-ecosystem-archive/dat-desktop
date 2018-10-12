@@ -112,21 +112,26 @@ const NetworkContainer = styled.td`
 `
 
 const NetworkIcon = ({ dat }) => {
-  const iconClass =
+  const iconClass = `network-peers ${
     dat.peers === 0
       ? 'network-peers-0'
       : dat.peers === 1 ? 'network-peers-1' : 'network-peers-many'
+  }`
   return <Icon name='network' className={iconClass} />
 }
 
 const LinkButton = ({ ...props }) => (
-  <Button.Icon icon={<Icon name='link' />} className='row-action' {...props} />
+  <Button.Icon
+    icon={<Icon name='link' />}
+    className='row-action btn-link'
+    {...props}
+  />
 )
 
 const DeleteButton = ({ ...props }) => (
   <Button.Icon
     icon={<Icon name='delete' />}
-    className='row-action mr2'
+    className='row-action mr2 btn-delete'
     {...props}
   />
 )
@@ -175,7 +180,9 @@ const Row = ({
       <td className='cell-3'>
         <Status dat={dat} />
       </td>
-      <td className='f6 f5-l cell-4 size'>{bytes(dat.stats.length || 0)}</td>
+      <td className='f6 f5-l cell-4 size'>
+        {bytes(dat.stats.byteLength || 0)}
+      </td>
       <NetworkContainer className='cell-5'>
         <NetworkIcon dat={dat} />
         <span className='network v-top f6 f5-l ml1'>{dat.peers}</span>

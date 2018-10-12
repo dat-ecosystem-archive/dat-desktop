@@ -54,12 +54,13 @@ const Label = styled.label`
   }
 `
 
-const DatImport = ({ onAddDat }) => {
+const DatImport = ({ requestDownload, downloadSparseDat }) => {
   const onKeyDown = e => {
     const value = e.target.value
     if (e.key !== 'Enter' || !value) return
     e.target.value = ''
-    onAddDat(value)
+    downloadSparseDat({ key: value, paused: false, sparse: true })
+    requestDownload(value)
   }
 
   return (
