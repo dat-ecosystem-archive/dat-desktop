@@ -35,7 +35,7 @@ const LabelInput = styled.label`
   --button-width: 3rem;
   height: var(--input-height);
   border: 0;
-  .dat-input-button {
+  .btn-copy-to-clipboard {
     width: var(--button-width);
     height: calc(var(--input-height) - 2px);
     top: 1px;
@@ -111,6 +111,18 @@ const LabelInput = styled.label`
   }
 `
 
+function CloseButton ({ onExit }) {
+  return (
+    <button
+      onClick={onExit}
+      className='absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit btn-close'
+      aria-label='Close Modal'
+    >
+      <Icon name='cross' />
+    </button>
+  )
+}
+
 export const Link = ({ link, copied, onCopy, onExit }) => (
   <div
     className='modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999'
@@ -135,7 +147,7 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
         />
         <Icon name='link' />
         <button
-          className='absolute pointer dat-input-button'
+          className='absolute pointer btn-copy-to-clipboard'
           title='Copy to Clipboard'
           aria-label='Copy to Clipboard'
           onClick={() => onCopy(link)}
@@ -146,13 +158,7 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
       <p className='f7 color-neutral-70'>
         Anyone with this link can view your Dat.
       </p>
-      <button
-        onClick={onExit}
-        className='absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit'
-        aria-label='Close Modal'
-      >
-        <Icon name='cross' />
-      </button>
+      <CloseButton onExit={onExit} />
     </Inner>
   </div>
 )
@@ -171,22 +177,16 @@ export const Confirm = ({ dat, onConfirm, onExit }) => (
       </p>
       <p>
         <Button.Green
-          className='fr ml3 confirm-button'
+          className='fr ml3 btn-confirm'
           onClick={() => onConfirm(dat)}
         >
           Yes, Remove Dat
         </Button.Green>
-        <Button.Plain className='fr cancel-button' onClick={onExit} autoFocus>
+        <Button.Plain className='fr btn-cancel' onClick={onExit} autoFocus>
           No, Cancel
         </Button.Plain>
       </p>
-      <button
-        onClick={onExit}
-        className='absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit'
-        aria-label='Close Modal'
-      >
-        <Icon name='cross' />
-      </button>
+      <CloseButton onExit={onExit} />
     </Inner>
   </div>
 )

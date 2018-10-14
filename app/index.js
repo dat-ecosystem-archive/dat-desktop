@@ -5,17 +5,42 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import datDesktopApp from './reducers'
-import { addDat, loadFromDisk } from './actions'
+import { addDat } from './actions'
 import App from './components/app'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
-import { ipcRenderer as ipc } from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import drag from 'electron-drag'
+import DatMiddleware from './actions/dat-middleware'
+import minimist from 'minimist'
+import path from 'path'
+import { homedir } from 'os'
+
+const argv = minimist(remote.process.argv.slice(2), {
+  default: {
+    db: path.join(homedir(), '.dat-desktop'),
+    data: path.join(remote.app.getPath('downloads'), '/dat')
+  }
+})
+
+const datMiddleware = new DatMiddleware({
+  dataDir: argv.db,
+  downloadsDir: argv.data
+})
+const isDev = process.env.NODE_ENV === 'development'
 
 const store = createStore(
   datDesktopApp,
-  compose(applyMiddleware(thunk, logger))
+  compose(
+    applyMiddleware(
+      store => datMiddleware.middleware(store),
+      thunk,
+      isDev ? logger : storage => dispatch => dispatch
+    )
+  )
 )
+
+document.title = 'Dat Desktop | Welcome'
 
 render(
   <Provider store={store}>
@@ -26,7 +51,7 @@ render(
 
 drag('header')
 
-store.dispatch(loadFromDisk())
+datMiddleware.loadFromDisk()
 
 ipc.on('log', (_, str) => console.log(str))
 ipc.on('link', key => store.dispatch(addDat({ key })))

@@ -10,7 +10,8 @@
     "email": "community@datproject.org"
   },
   "scripts": {
-    "start": "npm run build:dev && cross-env NODE_ENV=development npm-run-all -p start:watch start:electron",
+    "prestart": "npm run build:dev",
+    "start": "cross-env NODE_ENV=development npm-run-all -p start:watch start:electron",
     "start:electron": "cross-env NODE_V=\"$(node -v)\" NODE_ENV=development electron .",
     "start:watch": "webpack --watch --mode=development",
     "test": "npm run test:deps && npm run test:lint && npm run test:unit",
@@ -69,7 +70,9 @@
     "dat-node": "^3.5.8",
     "electron-default-menu": "^1.0.1",
     "electron-drag": "github:martinheidegger/electron-drag#f432d168f0a4f7f53aa9272793dd4c6793072ea0",
+    "minimist": "^1.2.0",
     "mirror-folder": "^3.0.0",
+    "mkdirp-promise": "^5.0.1",
     "ms": "^2.1.1",
     "polished": "^1.9.2",
     "prettier-bytes": "^1.0.4",

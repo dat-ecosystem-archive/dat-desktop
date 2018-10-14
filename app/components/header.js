@@ -36,14 +36,14 @@ const Header = ({ onShare, onMenu, onReport, menuVisible, version }) => {
         <DatImport />
         <Button.Header
           icon={<Icon name='create-new-dat' style={{ width: '1.2em' }} />}
-          className='b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l'
+          className='b--transparent v-mid color-neutral-30 hover-color-white f7 f6-l btn-share-folder'
           onClick={onShare}
         >
           Share Folder
         </Button.Header>
         <Button.Header
           icon={<Icon name='menu' style={{ width: '1.2em' }} />}
-          className='ml2 v-mid color-neutral-20 hover-color-white pointer'
+          className='ml2 v-mid color-neutral-20 hover-color-white pointer btn-toggle-menu'
           onClick={toggleMenu}
         />
         {menuVisible && (
