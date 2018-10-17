@@ -5,7 +5,7 @@ import { closeInspectDat } from '../actions'
 import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({
-  dat: state.dats[state.inspect.key]
+  dat: state.screen === 'inspect' ? state.dats[state.inspect.key] : null
 })
 
 const mapDispatchToProps = dispatch => ({
