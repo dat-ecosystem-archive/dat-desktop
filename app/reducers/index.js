@@ -1,8 +1,10 @@
 'use strict'
 
+import SCREEN from '../consts/screen'
+
 const defaultState = {
   dats: {},
-  screen: 'intro',
+  screen: SCREEN.INTRO,
   dialogs: {
     link: {
       link: null,
@@ -42,18 +44,18 @@ const redatApp = (state = defaultState, action) => {
       document.title = 'Dat Desktop'
       return {
         ...state,
-        screen: 'dats'
+        screen: SCREEN.DATS
       }
     case 'SHOW_DOWNLOAD_SCREEN':
       return {
         ...state,
-        screen: 'download',
+        screen: SCREEN.DOWNLOAD,
         downloadDatKey: action.key
       }
     case 'HIDE_DOWNLOAD_SCREEN':
       return {
         ...state,
-        screen: 'dats',
+        screen: SCREEN.DATS,
         downloadDatKey: null
       }
     case 'CHANGE_DOWNLOAD_PATH':
@@ -86,7 +88,7 @@ const redatApp = (state = defaultState, action) => {
             }
           }
         },
-        screen: 'dats'
+        screen: SCREEN.DATS
       }
     case 'ADD_DAT_ERROR':
     case 'WRITE_METADATA_ERROR':
@@ -118,7 +120,7 @@ const redatApp = (state = defaultState, action) => {
     case 'INSPECT_DAT':
       return {
         ...state,
-        screen: 'inspect',
+        screen: SCREEN.INSPECT,
         inspect: {
           key: action.key
         }
@@ -126,7 +128,7 @@ const redatApp = (state = defaultState, action) => {
     case 'INSPECT_DAT_CLOSE':
       return {
         ...state,
-        screen: 'dats'
+        screen: SCREEN.DATS
       }
     case 'DAT_FILES':
       return {
@@ -286,7 +288,7 @@ const redatApp = (state = defaultState, action) => {
     case 'DIALOGS_DELETE_CLOSE':
       return {
         ...state,
-        screen: 'dats',
+        screen: SCREEN.DATS,
         dialogs: {
           ...state.dialogs,
           delete: {

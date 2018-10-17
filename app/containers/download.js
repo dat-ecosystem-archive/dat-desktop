@@ -1,5 +1,6 @@
 'use strict'
 
+import SCREEN from '../consts/screen'
 import Download from '../components/download'
 import {
   addDat,
@@ -10,7 +11,7 @@ import {
 import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({
-  show: state.screen === 'download',
+  show: state.screen === SCREEN.DOWNLOAD,
   dat: state.dats[state.downloadDatKey]
 })
 
