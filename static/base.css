@@ -26,9 +26,14 @@ time, mark, audio, video {
   border: 0;
 }
 
+html {
+  overflow: auto;
+}
+
 body {
   line-height: 1.5;
   overflow: hidden;
+  min-width: 800px;
 }
 
 main {

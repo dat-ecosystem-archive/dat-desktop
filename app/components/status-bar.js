@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import bytes from 'prettier-bytes'
 
 const Bar = styled.div`
-  position: absolute;
+  position: fixed;
+  left:0;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
   padding: 0.5rem 1rem 0.75rem;
   background-color: var(--color-neutral-04);
   color: var(--color-neutral-60);
