@@ -47,7 +47,7 @@
     "babel-tape-runner": "^2.0.1",
     "cross-env": "^5.1.6",
     "dependency-check": "^3.1.0",
-    "electron": "^3.0.4",
+    "electron": "^3.0.5",
     "electron-builder": "^20.28.4",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
