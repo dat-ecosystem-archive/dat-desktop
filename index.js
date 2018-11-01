@@ -1,46 +1,36 @@
-const defaultMenu = require('electron-default-menu')
-const { app, shell, Menu, ipcMain } = require('electron')
-const window = require('electron-window')
-const Env = require('envobj')
-const path = require('path')
-const doctor = require('dat-doctor')
-const Writable = require('stream').Writable
+'use strict'
 
+const { app, BrowserWindow, shell, Menu, ipcMain } = require('electron')
+const { neutral } = require('dat-colors')
 const autoUpdater = require('./lib/auto-updater')
-const colors = require('dat-colors')
+const defaultMenu = require('electron-default-menu')
+const doctor = require('dat-doctor')
+const path = require('path')
+const isDev = process.env.NODE_ENV === 'development'
+const { Writable } = require('stream')
 
-const delegateEvents = require('delegate-electron-events')
+if (typeof process.env.NODE_V === 'string' && process.env.NODE_V !== process.version) {
+  console.error(`
+    WARNING:
+      You are using a different version of Node than is used in this electron release!
+      - Used Version: ${process.env.NODE_V}
+      - Electron's Node Version: ${process.version}
+    
+      We recommend running:
+      
+      $ nvm install ${process.version}; npm rebuild;
 
-const windowStyles = {
-  width: 800,
-  height: 600,
-  titleBarStyle: 'hidden-inset',
-  minWidth: 640,
-  minHeight: 395,
-  backgroundColor: colors.neutral
+    `)
 }
-
-const env = Env({ NODE_ENV: 'production' })
-const emitter = delegateEvents() // make sure we don't miss events while booting
-let mainWindow
-
-const shouldQuit = app.makeSingleInstance(() => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore()
-    mainWindow.focus()
-  }
-})
-
-if (shouldQuit) app.quit()
 
 const menu = defaultMenu(app, shell)
 menu[menu.length - 1].submenu.push({
   label: 'Doctor',
   click: () => {
-    mainWindow.webContents.openDevTools({ mode: 'detach' })
+    win.webContents.openDevTools({ mode: 'detach' })
     const out = Writable({
       write (chunk, env, done) {
-        if (mainWindow) mainWindow.webContents.send('log', chunk.toString())
+        if (win) win.webContents.send('log', chunk.toString())
         done()
       }
     })
@@ -48,39 +38,90 @@ menu[menu.length - 1].submenu.push({
   }
 })
 
-function onReady () {
-  mainWindow = window.createWindow(windowStyles)
-  const indexPath = path.join(__dirname, 'index.html')
-  const log = str => mainWindow.webContents.send('log', str)
-
-  ipcMain.on('quit', () => app.quit()) // TODO: ping backend with error
-  ipcMain.on('progress', (ev, progress) => mainWindow.setProgressBar(progress))
-  emitter.on('open-file', (file) => mainWindow.webContents.send('file', file))
-  emitter.on('open-url', (url) => mainWindow.webContents.send('link', url))
-
-  mainWindow.showUrl(indexPath, () => {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
-    if (env.NODE_ENV === 'development') {
-      mainWindow.webContents.openDevTools({ mode: 'detach' })
-    }
-    if (env.NODE_ENV === 'production') {
-      autoUpdater({ log })
-    }
-  })
-
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-}
+let win
+let watchProcess
 
 app.on('ready', () => {
-  if (env.NODE_ENV !== 'production') {
-    const browserify = require('./lib/browserify')
-    const b = browserify({ watch: true })
-    b.once('written', onReady)
+  if (isDev) {
+    BrowserWindow.addDevToolsExtension(path.join(__dirname, 'dev', 'react-dev-tools'))
+    watchAndReload()
+  }
+  win = new BrowserWindow({
+    // Extending the size of the browserwindow to make sure that the developer bar is visible.
+    width: 800 + (isDev ? 50 : 0),
+    height: 600 + (isDev ? 200 : 0),
+    titleBarStyle: 'hiddenInset',
+    minWidth: 640,
+    minHeight: 395,
+    backgroundColor: neutral,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: `${__dirname}/preload.js`
+    }
+  })
+  win.loadURL(`file://${__dirname}/index.html`)
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
+
+  ipcMain.on('progress', (_, progress) => win && win.setProgressBar(progress))
+
+  if (isDev) {
+    win.webContents.openDevTools()
   } else {
-    onReady()
+    const log = str => win && win.webContents.send('log', str)
+    autoUpdater({ log })
   }
 })
 
-app.on('window-all-closed', () => app.quit())
+app.on('will-finish-launching', () => {
+  app.on('open-url', (_, url) => win.webContents.send('link', url))
+  app.on('open-file', (_, path) => win.webContents.send('file', path))
+})
+
+app.on('window-all-closed', () => {
+  if (watchProcess) {
+    watchProcess.close()
+    watchProcess = null
+  }
+  app.quit()
+})
+
+const quit = app.makeSingleInstance(() => {
+  if (!win) return
+  if (win.isMinimized()) win.restore()
+  win.focus()
+})
+
+if (quit) app.quit()
+
+function watchAndReload () {
+  let gaze
+  let first = true
+  try {
+    gaze = require('gaze')
+  } catch (e) {
+    console.warn('Gaze is not installed, wont be able to reload the app')
+    // In case dev dependencies are not installed
+    return
+  }
+  gaze([
+    `preload.js`,
+    `static/**/*`
+  ], {
+    debounceDelay: 60,
+    cwd: __dirname
+  }, (err, process) => {
+    if (err) {
+      console.warn('Gaze doesnt run well, wont be able to reload the app')
+      console.warn(err)
+      return
+    }
+    watchProcess = process
+    watchProcess.on('all', () => {
+      if (first) {
+        first = false
+        return
+      }
+      win && win.reload()
+    })
+  })
+}
