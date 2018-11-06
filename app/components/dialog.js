@@ -142,7 +142,7 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
         <input
           name='dat-link'
           type='text'
-          value={link || ''}
+          defaultValue={link || ''}
           className='relative dib pa0 dat-input-input'
         />
         <Icon name='link' />
