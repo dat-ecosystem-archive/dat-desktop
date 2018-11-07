@@ -29,7 +29,7 @@ const BaseButton = styled.button.attrs({
   }
 `
 
-const HeaderButton = BaseButton.extend`
+const HeaderButton = styled(BaseButton)`
   color: var(--color-neutral-30);
   height: 2rem;
   :hover,
@@ -38,7 +38,7 @@ const HeaderButton = BaseButton.extend`
   }
 `
 
-var PlainButton = BaseButton.extend`
+var PlainButton = styled(BaseButton)`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   background-color: transparent;
@@ -49,7 +49,7 @@ var PlainButton = BaseButton.extend`
   }
 `
 
-var GreenButton = BaseButton.extend`
+var GreenButton = styled(BaseButton)`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   background-color: var(--color-green);
@@ -61,7 +61,7 @@ var GreenButton = BaseButton.extend`
   }
 `
 
-var RedButton = BaseButton.extend`
+var RedButton = styled(BaseButton)`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   background-color: var(--color-red);
