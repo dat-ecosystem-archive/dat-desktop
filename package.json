@@ -1,7 +1,7 @@
 {
   "name": "dat-desktop",
   "productName": "Dat",
-  "version": "2.0.1",
+  "version": "3.0.0-beta",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
   "description": "Dat Desktop App",
