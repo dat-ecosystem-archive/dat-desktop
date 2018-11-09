@@ -9,6 +9,10 @@ node_js:
 os:
   - osx
   - linux
+
+notifications:
+  email: false
+
 addons:
   apt:
     packages:
