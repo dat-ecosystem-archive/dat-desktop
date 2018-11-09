@@ -27,6 +27,7 @@
     "dist": "npm run build:prod && npm run dist:os",
     "dist:os": "build --x64 --ia32",
     "dist:all": "npm run dist:os -- --linux --mac --win",
+    "dist:publish": "npm run dist -- --publish onTagOrDraft"
   },
   "standard": {
     "ignore": [

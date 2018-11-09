@@ -21,7 +21,7 @@ install:
   - npm run build:prod
 deploy:
   provider: script
-  script: npm run dist
+  script: npm run dist:publish
   on:
     branch: master
   skip_cleanup: true
