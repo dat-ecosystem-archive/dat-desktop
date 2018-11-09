@@ -1,11 +1,14 @@
 {
   "name": "dat-desktop",
-  "productName": "Dat",
+  "productName": "Dat Desktop",
   "version": "3.0.0-beta",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
-  "description": "Dat Desktop App",
-  "author": "Dat Team <community@datproject.org>",
+  "description": "Peer to peer data sharing app built for humans.",
+  "author": {
+    "name": "Dat Team",
+    "email": "community@datproject.org"
+  },
   "scripts": {
     "prestart": "npm run build:dev",
     "start": "cross-env NODE_ENV=development npm-run-all -p start:watch start:electron",
@@ -86,7 +89,12 @@
     "util-promisify": "^2.1.0"
   },
   "build": {
-    "appId": "com.datproject.dat",
+    "appId": "land.dat.${name}",
+    "productName": "${productName}",
+    "copyright": "Copyright © 2018 ${author}",
+    "directories": {
+      "output": "dist"
+    },
     "mac": {
       "category": "public.app-category.utilities",
       "icon": "build/icon.icns"
