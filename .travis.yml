@@ -1,11 +1,18 @@
 dist: trusty
+cache: bundler
+sudo: false
+
 language: node_js
 node_js:
   - 10.2
-  
+
 os:
   - osx
   - linux
+
+notifications:
+  email: false
+
 addons:
   apt:
     packages:
@@ -13,15 +20,18 @@ addons:
       - graphicsmagick
       - xz-utils
       - xvfb
+
 env:
   - DISPLAY=":99.0"
+
 install:
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - npm install
   - npm run build:prod
+
 deploy:
   provider: script
-  script: npm run dist
+  script: npm run dist:publish
   on:
     branch: master
   skip_cleanup: true
