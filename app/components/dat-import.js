@@ -64,7 +64,7 @@ const DatImport = ({ requestDownload, downloadSparseDat }) => {
   }
 
   return (
-    <Label for='dat-import' className='relative dib pa0 b--none'>
+    <Label htmlFor='dat-import' className='relative dib pa0 b--none'>
       <input
         name='dat-import'
         type='text'

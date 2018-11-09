@@ -130,7 +130,7 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
   >
     <Inner className='relative flex flex-column justify-center'>
       <h3 className='f4'>Copy Dat Link</h3>
-      <LabelInput for='dat-link' className='relative mt4 mb4'>
+      <LabelInput htmlFor='dat-link' className='relative mt4 mb4'>
         <p
           className={`f7 mt0 mb0 tr absolute confirmation ${
             copied ? 'show-confirmation' : ''
