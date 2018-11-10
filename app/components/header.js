@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 import { neutral } from 'dat-colors'
-import { default as DatImport } from '../containers/dat-import'
+import DatImport from '../containers/dat-import'
 import * as Button from './button'
 import Icon from './icon'
 

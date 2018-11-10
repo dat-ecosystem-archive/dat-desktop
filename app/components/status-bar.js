@@ -4,7 +4,7 @@ import bytes from 'prettier-bytes'
 
 const Bar = styled.div`
   position: fixed;
-  left:0;
+  left: 0;
   bottom: 0;
   width: 100vw;
   padding: 0.5rem 1rem 0.75rem;
