@@ -7,6 +7,7 @@ const defaultMenu = require('electron-default-menu')
 const doctor = require('dat-doctor')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
+const isTest = process.env.NODE_ENV === 'test'
 const { Writable } = require('stream')
 
 if (typeof process.env.NODE_V === 'string' && process.env.NODE_V !== process.version) {
@@ -55,12 +56,16 @@ app.on('ready', () => {
     minHeight: 395,
     backgroundColor: neutral,
     icon: path.resolve(`${__dirname}/build/icon.png`),
-    webPreferences: {
-      nodeIntegration: false,
-      preload: `${__dirname}/preload.js`
-    }
+    // Spectron doesn't work with "preload" enabled, loading is handled in index.html
+    webPreferences: (!isTest
+      ? {
+        nodeIntegration: false,
+        preload: `${__dirname}/preload.js`
+      }
+      : {}
+    )
   })
-  win.loadURL(`file://${__dirname}/index.html`)
+  win.loadURL(`file://${__dirname}/index.html#${process.env.NODE_ENV}`)
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
 
   ipcMain.on('progress', (_, progress) => win && win.setProgressBar(progress))
