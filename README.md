@@ -8,8 +8,8 @@
 
 <div align="center">
   <!-- Build Status -->
-  <a href="https://travis-ci.org/datproject/dat-desktop">
-    <img src="https://img.shields.io/travis/datproject/dat-desktop/master.svg?style=flat-square"
+  <a href="https://travis-ci.org/dat-land/dat-desktop">
+    <img src="https://img.shields.io/travis/dat-land/dat-desktop/master.svg?style=flat-square"
       alt="Build Status" />
   </a>
   <!-- Standard -->
