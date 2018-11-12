@@ -167,9 +167,6 @@ export default class DatMiddleware {
         this.dispatch({ type: 'DAT_METADATA', key, metadata })
       })
 
-      if (dat.archive.content) this.walk(dat)
-      else dat.archive.on('content', () => this.walk(dat))
-
       dat.stats.on('update', stats => {
         if (!stats) stats = dat.stats.get()
         this.updateProgress(dat, key, stats)
@@ -199,7 +196,7 @@ export default class DatMiddleware {
         })
       }, 1000)
 
-      this.dats[key] = { dat, path, opts }
+      this.appendDatInternally(key, dat, path, opts)
       this.storeOnDisk()
     })
   }
@@ -280,9 +277,6 @@ export default class DatMiddleware {
         this.dispatch({ type: 'DAT_METADATA', key, metadata })
       })
 
-      if (dat.archive.content) this.walk(dat)
-      else dat.archive.on('content', () => this.walk(dat))
-
       dat.stats.on('update', stats => {
         if (!stats) stats = dat.stats.get()
         this.dispatch({ type: 'DAT_STATS', key, stats: { ...stats } })
@@ -292,7 +286,7 @@ export default class DatMiddleware {
       this.joinNetwork(dat)
       this.updateConnections(dat)
 
-      this.dats[key] = { dat, path }
+      this.appendDatInternally(key, dat, path)
     })
   }
 
@@ -300,6 +294,13 @@ export default class DatMiddleware {
     key = encode(key)
 
     this.removeDatInternally(key)
+  }
+
+  appendDatInternally (key, dat, path, opts = {}) {
+    this.dats[key] = { dat, path, opts }
+    dat.stats.once('update', () => {
+      this.walk(dat)
+    })
   }
 
   removeDatInternally (key) {
