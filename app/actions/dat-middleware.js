@@ -290,9 +290,7 @@ export default class DatMiddleware {
     })
   }
 
-  async cancelDownloadDat (key) {
-    key = encode(key)
-
+  async cancelDownloadDat ({ key }) {
     this.removeDatInternally(key)
   }
 
@@ -305,6 +303,7 @@ export default class DatMiddleware {
 
   removeDatInternally (key) {
     const { dat } = this.dats[key]
+    if (!dat) return // maybe was deleted
     delete this.dats[key]
     if (dat.mirrorProgress) {
       dat.mirrorProgress.destroy()

@@ -145,6 +145,7 @@ const Row = ({
   updateTitle
 }) => {
   const { writable, metadata, key } = dat
+  if (!metadata) return null
   const { title } = metadata
   const placeholderTitle = `#${key}`
   return (
