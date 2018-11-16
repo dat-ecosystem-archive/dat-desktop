@@ -42,16 +42,15 @@ const store = createStore(
 
 document.title = 'Dat Desktop | Welcome'
 
-render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.querySelector('div')
-)
-
-drag('header')
-
-datMiddleware.loadFromDisk()
+datMiddleware.loadFromDisk().then(function () {
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.querySelector('div')
+  )
+  drag('header')
+})
 
 ipc.on('log', (_, str) => console.log(str))
 ipc.on('link', key => store.dispatch(addDat({ key })))
