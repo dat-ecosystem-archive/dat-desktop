@@ -4,8 +4,8 @@ export const DOWNLOAD = 'download'
 export const INSPECT = 'inspect'
 
 export default {
-    INTRO,
-    DATS,
-    DOWNLOAD,
-    INSPECT
+  INTRO,
+  DATS,
+  DOWNLOAD,
+  INSPECT
 }
