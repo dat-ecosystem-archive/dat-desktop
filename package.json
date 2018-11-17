@@ -89,9 +89,8 @@
     "util-promisify": "^2.1.0"
   },
   "build": {
-    "appId": "land.dat.${name}",
-    "productName": "${productName}",
-    "copyright": "Copyright © 2018 ${author}",
+    "appId": "land.dat.dat-desktop",
+    "asar": true,
     "directories": {
       "output": "dist"
     },
@@ -116,10 +115,14 @@
     },
     "linux": {
       "category": "Utility",
+      "packageCategory": "Utility",
       "target": [
         "AppImage",
         "deb"
       ]
+    },
+    "deb": {
+      "synopsis": "Dat Desktop App"
     },
     "win": {
       "target": "NSIS",
