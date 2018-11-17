@@ -2,7 +2,6 @@
 
 import React, { Fragment } from 'react'
 import IntroContainer from '../containers/intro'
-import Sprite from './sprite'
 import HeaderContainer from '../containers/header'
 import TableContainer from '../containers/table'
 import * as Dialog from '../containers/dialog'
@@ -14,7 +13,6 @@ import DownloadContainer from '../containers/download'
 const App = () => (
   <Fragment>
     <IntroContainer />
-    <Sprite />
     <HeaderContainer />
     <TableContainer />
     <Dialog.LinkContainer />
