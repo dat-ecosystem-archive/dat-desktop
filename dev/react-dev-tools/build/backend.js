@@ -56,13 +56,9 @@
 	 */
 	'use strict';
 
-	var Agent = __webpack_require__(1);
-	var TraceUpdatesBackendManager = __webpack_require__(11);
-	var Bridge = __webpack_require__(20);
-	var inject = __webpack_require__(45);
-	var setupRNStyle = __webpack_require__(59);
-	var setupHighlighter = __webpack_require__(61);
-	var setupRelay = __webpack_require__(66);
+	// Do not add requires here!
+	// Running module factories is intentionally delayed until we know the hook exists.
+	// This is to avoid issues like: https://github.com/facebook/react-devtools/issues/1039
 
 	window.addEventListener('message', welcome);
 	function welcome(evt) {
@@ -75,6 +71,16 @@
 	}
 
 	function setup(hook) {
+	  var Agent = __webpack_require__(1);
+	  var ProfileCollector = __webpack_require__(11);
+	  var TraceUpdatesBackendManager = __webpack_require__(12);
+	  var Bridge = __webpack_require__(21);
+	  var inject = __webpack_require__(46);
+	  var setupRNStyle = __webpack_require__(58);
+	  var setupHighlighter = __webpack_require__(60);
+	  var setupProfiler = __webpack_require__(65);
+	  var setupRelay = __webpack_require__(66);
+
 	  var listeners = [];
 
 	  var wall = {
@@ -114,6 +120,7 @@
 	    setupRNStyle(bridge, agent, hook.resolveRNStyle);
 	  }
 
+	  setupProfiler(bridge, agent, hook);
 	  setupRelay(bridge, agent, hook);
 
 	  agent.on('shutdown', function () {
@@ -125,6 +132,7 @@
 	  });
 
 	  setupHighlighter(agent);
+	  ProfileCollector.init(agent);
 	  TraceUpdatesBackendManager.init(agent);
 	}
 
@@ -315,6 +323,9 @@
 	      bridge.on('selected', function (id) {
 	        return _this3.emit('selected', id);
 	      });
+	      bridge.on('isRecording', function (isRecording) {
+	        return _this3.emit('isRecording', isRecording);
+	      });
 	      bridge.on('setInspectEnabled', function (enabled) {
 	        _this3._inspectEnabled = enabled;
 	        _this3.emit('stopInspecting');
@@ -381,6 +392,9 @@
 	      this.on('update', function (data) {
 	        return bridge.send('update', data);
 	      });
+	      this.on('updateProfileTimes', function (data) {
+	        return bridge.send('updateProfileTimes', data);
+	      });
 	      this.on('unmount', function (id) {
 	        bridge.send('unmount', id);
 	        // once an element has been unmounted, the bridge doesn't need to be
@@ -392,6 +406,15 @@
 	      });
 	      this.on('setInspectEnabled', function (data) {
 	        return bridge.send('setInspectEnabled', data);
+	      });
+	      this.on('isRecording', function (isRecording) {
+	        return bridge.send('isRecording', isRecording);
+	      });
+	      this.on('storeSnapshot', function (data) {
+	        return bridge.send('storeSnapshot', data);
+	      });
+	      this.on('clearSnapshots', function () {
+	        return bridge.send('clearSnapshots');
 	      });
 	    }
 	  }, {
@@ -581,6 +604,12 @@
 	      this.emit('root', id);
 	    }
 	  }, {
+	    key: 'rootCommitted',
+	    value: function rootCommitted(renderer, internalInstance, data) {
+	      var id = this.getId(internalInstance);
+	      this.emit('rootCommitted', id, internalInstance, data);
+	    }
+	  }, {
 	    key: 'onMounted',
 	    value: function onMounted(renderer, component, data) {
 	      var _this5 = this;
@@ -622,11 +651,34 @@
 	      this.emit('update', send);
 	    }
 	  }, {
+	    key: 'onUpdatedProfileTimes',
+	    value: function onUpdatedProfileTimes(component, data) {
+	      var _this7 = this;
+
+	      var id = this.getId(component);
+	      this.elementData.set(id, data);
+
+	      var send = assign({}, data);
+	      if (send.children && send.children.map) {
+	        send.children = send.children.map(function (c) {
+	          return _this7.getId(c);
+	        });
+	      }
+	      send.id = id;
+	      send.canUpdate = send.updater && !!send.updater.forceUpdate;
+	      delete send.type;
+	      delete send.updater;
+	      this.emit('updateProfileTimes', send);
+	    }
+	  }, {
 	    key: 'onUnmounted',
 	    value: function onUnmounted(component) {
 	      var id = this.getId(component);
 	      this.elementData.delete(id);
-	      this.roots.delete(id);
+	      if (this.roots.has(id)) {
+	        this.roots.delete(id);
+	        this.emit('rootUnmounted', id);
+	      }
 	      this.renderers.delete(id);
 	      this.emit('unmount', id);
 	      this.idsByInternalInstances.delete(component);
@@ -1167,6 +1219,8 @@
 	 *
 	 */
 
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+
 	/**
 	 * Retrieves the value from the path of nested objects
 	 * @param  {Object} base Base or root object for path
@@ -1176,7 +1230,7 @@
 	function getIn(base, path) {
 	  return path.reduce(function (obj, attr) {
 	    if (obj) {
-	      if (obj.hasOwnProperty(attr)) {
+	      if (hasOwnProperty.call(obj, attr)) {
 	        return obj[attr];
 	      }
 	      if (typeof obj[Symbol.iterator] === 'function') {
@@ -1193,6 +1247,150 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Set) {/**
+	 * Copyright (c) 2015-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * 
+	 */
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var hasNativePerformanceNow = (typeof performance === 'undefined' ? 'undefined' : _typeof(performance)) === 'object' && typeof performance.now === 'function';
+
+	var now = hasNativePerformanceNow ? function () {
+	  return performance.now();
+	} : function () {
+	  return Date.now();
+	};
+
+	/**
+	 * The Profiler UI displays the entire React tree, with timing info, for each commit.
+	 * The frontend store only has the latest tree at any given time though,
+	 * So the ProfileCollector stores snapshots of the immutable tree for each commit,
+	 * Along with timing information for nodes that were updated in that commit.
+	 * This information is saved in the ProfilerStore.
+	 */
+
+	var ProfileCollector = function () {
+	  function ProfileCollector(agent) {
+	    var _this = this;
+
+	    _classCallCheck(this, ProfileCollector);
+
+	    this._committedNodes = new Set();
+	    this._isRecording = false;
+	    this._maxActualDuration = 0;
+	    this._recordingStartTime = 0;
+
+	    this._onIsRecording = function (isRecording) {
+	      _this._committedNodes = new Set();
+	      _this._isRecording = isRecording;
+	      _this._recordingStartTime = isRecording ? now() : 0;
+
+	      if (isRecording) {
+	        // Maybe in the future, we'll allow collecting multiple profiles and stepping through them.
+	        // For now, clear old snapshots when we start recording new data though.
+	        _this._agent.emit('clearSnapshots');
+
+	        // Note that the Profiler doesn't need to do anything to turn profiling on in React.
+	        // Profiling-capable builds automatically profile all roots when DevTools is detected.
+	      }
+	    };
+
+	    this._onMountOrUpdate = function (data) {
+	      if (!_this._isRecording || data.actualDuration === undefined) {
+	        return;
+	      }
+
+	      _this._committedNodes.add(data.id);
+	      _this._maxActualDuration = Math.max(_this._maxActualDuration, data.actualDuration);
+	    };
+
+	    this._onRootCommitted = function (id, internalInstance, data) {
+	      if (!_this._isRecording) {
+	        return;
+	      }
+
+	      // Once all roots have been committed,
+	      // Take a snapshot of the current tree.
+	      _this._takeCommitSnapshotForRoot(id, data);
+
+	      // Then reset data for the next snapshot.
+	      _this._committedNodes = new Set();
+	      _this._maxActualDuration = 0;
+	    };
+
+	    this._onUnmount = function (id) {
+	      _this._committedNodes.delete(id);
+	    };
+
+	    this._agent = agent;
+
+	    agent.on('isRecording', this._onIsRecording);
+	    agent.on('mount', this._onMountOrUpdate);
+	    agent.on('rootCommitted', this._onRootCommitted);
+	    agent.on('unmount', this._onUnmount);
+	    agent.on('update', this._onMountOrUpdate);
+	  }
+
+	  _createClass(ProfileCollector, [{
+	    key: '_takeCommitSnapshotForRoot',
+	    value: function _takeCommitSnapshotForRoot(id, data) {
+	      var _this2 = this;
+
+	      var interactionsArray = data.memoizedInteractions != null ? Array.from(data.memoizedInteractions) : [];
+
+	      // Map interaction start times to when we started profiling.
+	      // We clone (rather than mutate) the interactions in stateNode.memoizedInteractions,
+	      // Because we don't want to affect user code that might be consuming these Interactions via Profiler.
+	      var memoizedInteractions = interactionsArray.map(function (_ref) {
+	        var name = _ref.name,
+	            timestamp = _ref.timestamp;
+	        return {
+	          name: name,
+	          timestamp: timestamp - _this2._recordingStartTime
+	        };
+	      });
+
+	      var storeSnapshot = {
+	        memoizedInteractions: memoizedInteractions,
+	        committedNodes: Array.from(this._committedNodes),
+	        commitTime: now() - this._recordingStartTime,
+	        duration: this._maxActualDuration,
+	        root: id
+	      };
+
+	      this._agent.emit('storeSnapshot', storeSnapshot);
+	    }
+	  }]);
+
+	  return ProfileCollector;
+	}();
+
+	function init(agent) {
+	  return new ProfileCollector(agent);
+	}
+
+	module.exports = {
+	  init: init
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1212,10 +1410,10 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var TraceUpdatesAbstractNodeMeasurer = __webpack_require__(12);
-	var TraceUpdatesAbstractNodePresenter = __webpack_require__(17);
-	var TraceUpdatesWebNodeMeasurer = __webpack_require__(18);
-	var TraceUpdatesWebNodePresenter = __webpack_require__(19);
+	var TraceUpdatesAbstractNodeMeasurer = __webpack_require__(13);
+	var TraceUpdatesAbstractNodePresenter = __webpack_require__(18);
+	var TraceUpdatesWebNodeMeasurer = __webpack_require__(19);
+	var TraceUpdatesWebNodePresenter = __webpack_require__(20);
 
 	var NODE_TYPE_COMPOSITE = 'Composite';
 	var NODE_TYPE_SPECIAL = 'Special';
@@ -1249,7 +1447,8 @@
 	      // We highlight user components and context consumers
 	      // (without consumers, a context update that renders
 	      // only host nodes directly wouldn't highlight at all).
-	      var shouldHighlight = obj.nodeType === NODE_TYPE_COMPOSITE || obj.nodeType === NODE_TYPE_SPECIAL && obj.name === 'Context.Consumer';
+	      var shouldHighlight = obj.nodeType === NODE_TYPE_COMPOSITE || obj.nodeType === NODE_TYPE_SPECIAL && obj.name.endsWith('.Consumer');
+
 	      if (!shouldHighlight) {
 	        return;
 	      }
@@ -1292,7 +1491,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1315,8 +1514,8 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var requestAnimationFrame = __webpack_require__(13);
-	var immutable = __webpack_require__(16);
+	var requestAnimationFrame = __webpack_require__(14);
+	var immutable = __webpack_require__(17);
 
 	// How long the measurement can be cached in ms.
 	var DURATION = 800;
@@ -1539,7 +1738,7 @@
 	module.exports = TraceUpdatesAbstractNodeMeasurer;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -1555,8 +1754,8 @@
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(14);
-	var nativeRequestAnimationFrame = __webpack_require__(15);
+	var emptyFunction = __webpack_require__(15);
+	var nativeRequestAnimationFrame = __webpack_require__(16);
 
 	var lastTime = 0;
 
@@ -1576,7 +1775,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/**
@@ -1619,7 +1818,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -1641,7 +1840,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_Object_dot_create, WeakMap, Map, Set) {/**
@@ -6629,7 +6828,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(4), __webpack_require__(3), __webpack_require__(5)))
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6650,8 +6849,8 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var immutable = __webpack_require__(16);
-	var requestAnimationFrame = __webpack_require__(13);
+	var immutable = __webpack_require__(17);
+	var requestAnimationFrame = __webpack_require__(14);
 
 	// How long the measurement should be presented for.
 	var DURATION = 250;
@@ -6814,7 +7013,7 @@
 	module.exports = TraceUpdatesAbstractNodePresenter;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_Object_dot_create) {/**
@@ -6838,7 +7037,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = __webpack_provided_Object_dot_create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TraceUpdatesAbstractNodeMeasurer = __webpack_require__(12);
+	var TraceUpdatesAbstractNodeMeasurer = __webpack_require__(13);
 
 	var DUMMY = {
 	  bottom: 0,
@@ -6896,7 +7095,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_Object_dot_create) {/**
@@ -6922,7 +7121,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = __webpack_provided_Object_dot_create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TraceUpdatesAbstractNodePresenter = __webpack_require__(17);
+	var TraceUpdatesAbstractNodePresenter = __webpack_require__(18);
 
 	var OUTLINE_COLOR = '#f0f0f0';
 
@@ -7055,7 +7254,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Map, __webpack_provided_Object_dot_create) {/**
@@ -7078,11 +7277,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var consts = __webpack_require__(21);
-	var hydrate = __webpack_require__(40);
-	var dehydrate = __webpack_require__(41);
+	var consts = __webpack_require__(22);
+	var hydrate = __webpack_require__(41);
+	var dehydrate = __webpack_require__(42);
 	var getIn = __webpack_require__(10);
-	var performanceNow = __webpack_require__(42);
+	var performanceNow = __webpack_require__(43);
 
 	// Use the polyfill if the function is not native implementation
 	function getWindowFunction(name, polyfill) {
@@ -7535,7 +7734,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7550,7 +7749,7 @@
 	 */
 	'use strict';
 
-	var _Symbol = __webpack_require__(22);
+	var _Symbol = __webpack_require__(23);
 
 	module.exports = {
 	  name: _Symbol('name'),
@@ -7561,16 +7760,16 @@
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(23)() ? Symbol : __webpack_require__(24);
+	module.exports = __webpack_require__(24)() ? Symbol : __webpack_require__(25);
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7594,15 +7793,15 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_Object_dot_create) {// ES2015 Symbol polyfill for environments that do not support it (or partially support it_
 
 	'use strict';
 
-	var d              = __webpack_require__(25)
-	  , validateSymbol = __webpack_require__(38)
+	var d              = __webpack_require__(26)
+	  , validateSymbol = __webpack_require__(39)
 
 	  , create = __webpack_provided_Object_dot_create, defineProperties = Object.defineProperties
 	  , defineProperty = Object.defineProperty, objPrototype = Object.prototype
@@ -7708,15 +7907,15 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign        = __webpack_require__(26)
-	  , normalizeOpts = __webpack_require__(33)
-	  , isCallable    = __webpack_require__(34)
-	  , contains      = __webpack_require__(35)
+	var assign        = __webpack_require__(27)
+	  , normalizeOpts = __webpack_require__(34)
+	  , isCallable    = __webpack_require__(35)
+	  , contains      = __webpack_require__(36)
 
 	  , d;
 
@@ -7777,18 +7976,18 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(27)()
+	module.exports = __webpack_require__(28)()
 		? Object.assign
-		: __webpack_require__(28);
+		: __webpack_require__(29);
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7803,13 +8002,13 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var keys  = __webpack_require__(29)
-	  , value = __webpack_require__(32)
+	var keys  = __webpack_require__(30)
+	  , value = __webpack_require__(33)
 
 	  , max = Math.max;
 
@@ -7831,18 +8030,18 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(30)()
+	module.exports = __webpack_require__(31)()
 		? Object.keys
-		: __webpack_require__(31);
+		: __webpack_require__(32);
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7856,7 +8055,7 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7869,7 +8068,7 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7881,7 +8080,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_Object_dot_create) {'use strict';
@@ -7905,7 +8104,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	// Deprecated
@@ -7916,18 +8115,18 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(36)()
+	module.exports = __webpack_require__(37)()
 		? String.prototype.contains
-		: __webpack_require__(37);
+		: __webpack_require__(38);
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7941,7 +8140,7 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7954,12 +8153,12 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isSymbol = __webpack_require__(39);
+	var isSymbol = __webpack_require__(40);
 
 	module.exports = function (value) {
 		if (!isSymbol(value)) throw new TypeError(value + " is not a symbol");
@@ -7968,7 +8167,7 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7979,7 +8178,7 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7994,7 +8193,7 @@
 	 */
 	'use strict';
 
-	var consts = __webpack_require__(21);
+	var consts = __webpack_require__(22);
 
 	function hydrate(data, cleaned) {
 	  cleaned.forEach(function (path) {
@@ -8017,7 +8216,7 @@
 	module.exports = hydrate;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/**
@@ -8198,7 +8397,7 @@
 	module.exports = dehydrate;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8215,7 +8414,7 @@
 
 	'use strict';
 
-	var performance = __webpack_require__(43);
+	var performance = __webpack_require__(44);
 
 	var performanceNow;
 
@@ -8237,7 +8436,7 @@
 	module.exports = performanceNow;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8254,7 +8453,7 @@
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(44);
+	var ExecutionEnvironment = __webpack_require__(45);
 
 	var performance;
 
@@ -8265,7 +8464,7 @@
 	module.exports = performance || {};
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	/**
@@ -8306,7 +8505,7 @@
 	module.exports = ExecutionEnvironment;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8321,34 +8520,49 @@
 	 */
 	'use strict';
 
-	var setupBackend = __webpack_require__(46);
+	var setupBackend = __webpack_require__(47);
 
 	module.exports = function (hook, agent) {
-	  var subs = [hook.sub('renderer-attached', function (_ref) {
+	  var subs = [
+	  // Basic functionality
+	  hook.sub('renderer-attached', function (_ref) {
 	    var id = _ref.id,
 	        renderer = _ref.renderer,
 	        helpers = _ref.helpers;
 
 	    agent.setReactInternals(id, helpers);
 	    helpers.walkTree(agent.onMounted.bind(agent, id), agent.addRoot.bind(agent, id));
-	  }), hook.sub('root', function (_ref2) {
+	  }), hook.sub('mount', function (_ref2) {
 	    var renderer = _ref2.renderer,
-	        internalInstance = _ref2.internalInstance;
-	    return agent.addRoot(renderer, internalInstance);
-	  }), hook.sub('mount', function (_ref3) {
-	    var renderer = _ref3.renderer,
-	        internalInstance = _ref3.internalInstance,
-	        data = _ref3.data;
+	        internalInstance = _ref2.internalInstance,
+	        data = _ref2.data;
 	    return agent.onMounted(renderer, internalInstance, data);
+	  }), hook.sub('unmount', function (_ref3) {
+	    var renderer = _ref3.renderer,
+	        internalInstance = _ref3.internalInstance;
+	    return agent.onUnmounted(internalInstance);
 	  }), hook.sub('update', function (_ref4) {
 	    var renderer = _ref4.renderer,
 	        internalInstance = _ref4.internalInstance,
 	        data = _ref4.data;
 	    return agent.onUpdated(internalInstance, data);
-	  }), hook.sub('unmount', function (_ref5) {
+	  }),
+
+	  // Required by Profiler plugin
+	  hook.sub('root', function (_ref5) {
 	    var renderer = _ref5.renderer,
 	        internalInstance = _ref5.internalInstance;
-	    return agent.onUnmounted(internalInstance);
+	    return agent.addRoot(renderer, internalInstance);
+	  }), hook.sub('rootCommitted', function (_ref6) {
+	    var renderer = _ref6.renderer,
+	        internalInstance = _ref6.internalInstance,
+	        data = _ref6.data;
+	    return agent.rootCommitted(renderer, internalInstance, data);
+	  }), hook.sub('updateProfileTimes', function (_ref7) {
+	    var renderer = _ref7.renderer,
+	        internalInstance = _ref7.internalInstance,
+	        data = _ref7.data;
+	    return agent.onUpdatedProfileTimes(internalInstance, data);
 	  })];
 
 	  var success = setupBackend(hook);
@@ -8367,7 +8581,7 @@
 	};
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8395,7 +8609,7 @@
 	 */
 	'use strict';
 
-	var attachRenderer = __webpack_require__(47);
+	var attachRenderer = __webpack_require__(48);
 
 	module.exports = function setupBackend(hook) {
 	  var oldReact = window.React && window.React.__internals;
@@ -8428,7 +8642,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Map) {/**
@@ -8443,9 +8657,9 @@
 	 */
 	'use strict';
 
-	var getData = __webpack_require__(48);
-	var getData012 = __webpack_require__(54);
-	var attachRendererFiber = __webpack_require__(55);
+	var getData = __webpack_require__(49);
+	var getData012 = __webpack_require__(55);
+	var attachRendererFiber = __webpack_require__(56);
 
 	/**
 	 * This takes care of patching the renderer to emit events on the global
@@ -8656,7 +8870,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8671,13 +8885,18 @@
 	 */
 	'use strict';
 
+	// ----------------------------------------------------
+	// This is Stack-only version.
+	// The Fiber version is inlined in attachRendererFiber.
+	// ----------------------------------------------------
+
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var copyWithSet = __webpack_require__(49);
-	var getDisplayName = __webpack_require__(50);
-	var traverseAllChildrenImpl = __webpack_require__(51);
+	var copyWithSet = __webpack_require__(50);
+	var getDisplayName = __webpack_require__(51);
+	var traverseAllChildrenImpl = __webpack_require__(52);
 
 	/**
 	 * Convert a react internal instance to a sanitized data object.
@@ -8872,7 +9091,7 @@
 	module.exports = getData;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports) {
 
 	/**
@@ -8907,7 +9126,7 @@
 	module.exports = copyWithSet;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(WeakMap) {/**
@@ -8967,7 +9186,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8984,7 +9203,7 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var invariant = __webpack_require__(52);
+	var invariant = __webpack_require__(53);
 
 	var SEPARATOR = '.';
 	var SUBSEPARATOR = ':';
@@ -9096,7 +9315,7 @@
 	module.exports = traverseAllChildrenImpl;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9149,10 +9368,10 @@
 	}
 
 	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(53)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54)))
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -9338,7 +9557,7 @@
 
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9353,7 +9572,12 @@
 	 */
 	'use strict';
 
-	var copyWithSet = __webpack_require__(49);
+	// ----------------------------------------------------
+	// This is Stack-only version.
+	// The Fiber version is inlined in attachRendererFiber.
+	// ----------------------------------------------------
+
+	var copyWithSet = __webpack_require__(50);
 
 	function getData012(internalInstance) {
 	  var children = null;
@@ -9482,7 +9706,7 @@
 	module.exports = getData012;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Set) {/**
@@ -9497,20 +9721,408 @@
 	 */
 	'use strict';
 
-	var getDataFiber = __webpack_require__(56);
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var _require = __webpack_require__(57),
-	    ClassComponent = _require.ClassComponent,
-	    FunctionalComponent = _require.FunctionalComponent,
-	    ContextConsumer = _require.ContextConsumer,
-	    HostRoot = _require.HostRoot;
+	var semver = __webpack_require__(57);
 
-	// Inlined from ReactTypeOfSideEffect
+	var copyWithSet = __webpack_require__(50);
+	var getDisplayName = __webpack_require__(51);
 
+	function getInternalReactConstants(version) {
+	  var ReactTypeOfWork;
+	  var ReactSymbols;
+	  var ReactTypeOfSideEffect;
 
-	var PerformedWork = 1;
+	  // **********************************************************
+	  // The section below is copied from files in React repo.
+	  // Keep it in sync, and add version guards if it changes.
+	  // **********************************************************
+	  if (semver.gte(version, '16.6.0-beta.0')) {
+	    ReactTypeOfWork = {
+	      ClassComponent: 1,
+	      ContextConsumer: 9,
+	      ContextProvider: 10,
+	      CoroutineComponent: -1, // Removed
+	      CoroutineHandlerPhase: -1, // Removed
+	      ForwardRef: 11,
+	      Fragment: 7,
+	      FunctionalComponent: 0,
+	      HostComponent: 5,
+	      HostPortal: 4,
+	      HostRoot: 3,
+	      HostText: 6,
+	      IndeterminateComponent: 2,
+	      LazyComponent: 16,
+	      MemoComponent: 14,
+	      Mode: 8,
+	      Profiler: 12,
+	      SimpleMemoComponent: 15,
+	      SuspenseComponent: 13,
+	      YieldComponent: -1 };
+	  } else if (semver.gte(version, '16.4.3-alpha')) {
+	    ReactTypeOfWork = {
+	      ClassComponent: 2,
+	      ContextConsumer: 11,
+	      ContextProvider: 12,
+	      CoroutineComponent: -1, // Removed
+	      CoroutineHandlerPhase: -1, // Removed
+	      ForwardRef: 13,
+	      Fragment: 9,
+	      FunctionalComponent: 0,
+	      HostComponent: 7,
+	      HostPortal: 6,
+	      HostRoot: 5,
+	      HostText: 8,
+	      IndeterminateComponent: 4,
+	      LazyComponent: -1, // Doesn't exist yet
+	      MemoComponent: -1, // Doesn't exist yet
+	      Mode: 10,
+	      Profiler: 15,
+	      SimpleMemoComponent: -1, // Doesn't exist yet
+	      SuspenseComponent: 16,
+	      YieldComponent: -1 };
+	  } else {
+	    ReactTypeOfWork = {
+	      ClassComponent: 2,
+	      ContextConsumer: 12,
+	      ContextProvider: 13,
+	      CoroutineComponent: 7,
+	      CoroutineHandlerPhase: 8,
+	      ForwardRef: 14,
+	      Fragment: 10,
+	      FunctionalComponent: 1,
+	      HostComponent: 5,
+	      HostPortal: 4,
+	      HostRoot: 3,
+	      HostText: 6,
+	      IndeterminateComponent: 0,
+	      LazyComponent: -1, // Doesn't exist yet
+	      MemoComponent: -1, // Doesn't exist yet
+	      Mode: 11,
+	      Profiler: 15,
+	      SimpleMemoComponent: -1, // Doesn't exist yet
+	      SuspenseComponent: 16,
+	      YieldComponent: 9
+	    };
+	  }
+	  ReactSymbols = {
+	    CONCURRENT_MODE_NUMBER: 0xeacf,
+	    CONCURRENT_MODE_SYMBOL_STRING: 'Symbol(react.concurrent_mode)',
+	    DEPRECATED_ASYNC_MODE_SYMBOL_STRING: 'Symbol(react.async_mode)',
+	    CONTEXT_CONSUMER_NUMBER: 0xeace,
+	    CONTEXT_CONSUMER_SYMBOL_STRING: 'Symbol(react.context)',
+	    CONTEXT_PROVIDER_NUMBER: 0xeacd,
+	    CONTEXT_PROVIDER_SYMBOL_STRING: 'Symbol(react.provider)',
+	    FORWARD_REF_NUMBER: 0xead0,
+	    FORWARD_REF_SYMBOL_STRING: 'Symbol(react.forward_ref)',
+	    PROFILER_NUMBER: 0xead2,
+	    PROFILER_SYMBOL_STRING: 'Symbol(react.profiler)',
+	    PURE_NUMBER: 0xead3,
+	    PURE_SYMBOL_STRING: 'Symbol(react.pure)',
+	    STRICT_MODE_NUMBER: 0xeacc,
+	    STRICT_MODE_SYMBOL_STRING: 'Symbol(react.strict_mode)',
+	    SUSPENSE_NUMBER: 0xead1,
+	    SUSPENSE_SYMBOL_STRING: 'Symbol(react.suspense)',
+	    DEPRECATED_PLACEHOLDER_SYMBOL_STRING: 'Symbol(react.placeholder)'
+	  };
+	  ReactTypeOfSideEffect = {
+	    PerformedWork: 1
+	  };
+	  // **********************************************************
+	  // End of copied code.
+	  // **********************************************************
+
+	  return {
+	    ReactTypeOfWork: ReactTypeOfWork,
+	    ReactSymbols: ReactSymbols,
+	    ReactTypeOfSideEffect: ReactTypeOfSideEffect
+	  };
+	}
 
 	function attachRendererFiber(hook, rid, renderer) {
+	  var _getInternalReactCons = getInternalReactConstants(renderer.version),
+	      ReactTypeOfWork = _getInternalReactCons.ReactTypeOfWork,
+	      ReactSymbols = _getInternalReactCons.ReactSymbols,
+	      ReactTypeOfSideEffect = _getInternalReactCons.ReactTypeOfSideEffect;
+
+	  var PerformedWork = ReactTypeOfSideEffect.PerformedWork;
+	  var FunctionalComponent = ReactTypeOfWork.FunctionalComponent,
+	      ClassComponent = ReactTypeOfWork.ClassComponent,
+	      ContextConsumer = ReactTypeOfWork.ContextConsumer,
+	      HostRoot = ReactTypeOfWork.HostRoot,
+	      HostPortal = ReactTypeOfWork.HostPortal,
+	      HostComponent = ReactTypeOfWork.HostComponent,
+	      HostText = ReactTypeOfWork.HostText,
+	      Fragment = ReactTypeOfWork.Fragment,
+	      ForwardRef = ReactTypeOfWork.ForwardRef;
+	  var CONCURRENT_MODE_NUMBER = ReactSymbols.CONCURRENT_MODE_NUMBER,
+	      CONCURRENT_MODE_SYMBOL_STRING = ReactSymbols.CONCURRENT_MODE_SYMBOL_STRING,
+	      DEPRECATED_ASYNC_MODE_SYMBOL_STRING = ReactSymbols.DEPRECATED_ASYNC_MODE_SYMBOL_STRING,
+	      CONTEXT_CONSUMER_NUMBER = ReactSymbols.CONTEXT_CONSUMER_NUMBER,
+	      CONTEXT_CONSUMER_SYMBOL_STRING = ReactSymbols.CONTEXT_CONSUMER_SYMBOL_STRING,
+	      CONTEXT_PROVIDER_NUMBER = ReactSymbols.CONTEXT_PROVIDER_NUMBER,
+	      CONTEXT_PROVIDER_SYMBOL_STRING = ReactSymbols.CONTEXT_PROVIDER_SYMBOL_STRING,
+	      PROFILER_NUMBER = ReactSymbols.PROFILER_NUMBER,
+	      PROFILER_SYMBOL_STRING = ReactSymbols.PROFILER_SYMBOL_STRING,
+	      PURE_NUMBER = ReactSymbols.PURE_NUMBER,
+	      PURE_SYMBOL_STRING = ReactSymbols.PURE_SYMBOL_STRING,
+	      STRICT_MODE_NUMBER = ReactSymbols.STRICT_MODE_NUMBER,
+	      STRICT_MODE_SYMBOL_STRING = ReactSymbols.STRICT_MODE_SYMBOL_STRING,
+	      SUSPENSE_NUMBER = ReactSymbols.SUSPENSE_NUMBER,
+	      SUSPENSE_SYMBOL_STRING = ReactSymbols.SUSPENSE_SYMBOL_STRING,
+	      DEPRECATED_PLACEHOLDER_SYMBOL_STRING = ReactSymbols.DEPRECATED_PLACEHOLDER_SYMBOL_STRING;
+
+	  // TODO: we might want to change the data structure
+	  // once we no longer suppport Stack versions of `getData`.
+
+	  function getDataFiber(fiber) {
+	    var type = fiber.type;
+	    var key = fiber.key;
+	    var ref = fiber.ref;
+	    var source = fiber._debugSource;
+	    var publicInstance = null;
+	    var props = null;
+	    var state = null;
+	    var children = null;
+	    var context = null;
+	    var updater = null;
+	    var nodeType = null;
+	    var name = null;
+	    var text = null;
+
+	    // Profiler data
+	    var actualDuration = null;
+	    var actualStartTime = null;
+	    var treeBaseDuration = null;
+	    var memoizedInteractions = null;
+
+	    var resolvedType = type;
+	    if ((typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type !== null) {
+	      if (typeof type.then === 'function') {
+	        resolvedType = type._reactResult;
+	      }
+	    }
+
+	    // TODO: Add support for new tags LazyComponent, MemoComponent, and SimpleMemoComponent
+
+	    switch (fiber.tag) {
+	      case FunctionalComponent:
+	      case ClassComponent:
+	        nodeType = 'Composite';
+	        name = getDisplayName(resolvedType);
+	        publicInstance = fiber.stateNode;
+	        props = fiber.memoizedProps;
+	        state = fiber.memoizedState;
+	        if (publicInstance != null) {
+	          context = publicInstance.context;
+	          if (context && Object.keys(context).length === 0) {
+	            context = null;
+	          }
+	        }
+	        var inst = publicInstance;
+	        if (inst) {
+	          updater = {
+	            setState: inst.setState && inst.setState.bind(inst),
+	            forceUpdate: inst.forceUpdate && inst.forceUpdate.bind(inst),
+	            setInProps: inst.forceUpdate && setInProps.bind(null, fiber),
+	            setInState: inst.forceUpdate && setInState.bind(null, inst),
+	            setInContext: inst.forceUpdate && setInContext.bind(null, inst)
+	          };
+	        }
+	        children = [];
+	        break;
+	      case ForwardRef:
+	        var functionName = getDisplayName(resolvedType.render, '');
+	        nodeType = 'Special';
+	        name = resolvedType.displayName || (functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef');
+	        children = [];
+	        break;
+	      case HostRoot:
+	        nodeType = 'Wrapper';
+	        children = [];
+	        memoizedInteractions = fiber.stateNode.memoizedInteractions;
+	        break;
+	      case HostPortal:
+	        nodeType = 'Portal';
+	        name = 'ReactPortal';
+	        props = {
+	          target: fiber.stateNode.containerInfo
+	        };
+	        children = [];
+	        break;
+	      case HostComponent:
+	        nodeType = 'Native';
+	        name = fiber.type;
+
+	        // TODO (bvaughn) we plan to remove this prefix anyway.
+	        // We can cut this special case out when it's gone.
+	        name = name.replace('topsecret-', '');
+
+	        publicInstance = fiber.stateNode;
+	        props = fiber.memoizedProps;
+	        if (typeof props.children === 'string' || typeof props.children === 'number') {
+	          children = props.children.toString();
+	        } else {
+	          children = [];
+	        }
+	        if (typeof fiber.stateNode.setNativeProps === 'function') {
+	          // For editing styles in RN
+	          updater = {
+	            setNativeProps: function setNativeProps(nativeProps) {
+	              fiber.stateNode.setNativeProps(nativeProps);
+	            }
+	          };
+	        }
+	        break;
+	      case HostText:
+	        nodeType = 'Text';
+	        text = fiber.memoizedProps;
+	        break;
+	      case Fragment:
+	        nodeType = 'Wrapper';
+	        children = [];
+	        break;
+	      default:
+	        var symbolOrNumber = (typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type !== null ? type.$$typeof : type;
+	        // $FlowFixMe facebook/flow/issues/2362
+	        var switchValue = (typeof symbolOrNumber === 'undefined' ? 'undefined' : _typeof(symbolOrNumber)) === 'symbol' ? symbolOrNumber.toString() : symbolOrNumber;
+
+	        switch (switchValue) {
+	          case PURE_NUMBER:
+	          case PURE_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            if (type.displayName) {
+	              name = type.displayName;
+	            } else {
+	              var displayName = type.render.displayName || type.render.name;
+	              name = displayName ? 'Pure(' + displayName + ')' : 'Pure';
+	            }
+	            children = [];
+	            break;
+	          case CONCURRENT_MODE_NUMBER:
+	          case CONCURRENT_MODE_SYMBOL_STRING:
+	          case DEPRECATED_ASYNC_MODE_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            name = 'ConcurrentMode';
+	            children = [];
+	            break;
+	          case CONTEXT_PROVIDER_NUMBER:
+	          case CONTEXT_PROVIDER_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            props = fiber.memoizedProps;
+	            name = (fiber.type._context.displayName || 'Context') + '.Provider';
+	            children = [];
+	            break;
+	          case CONTEXT_CONSUMER_NUMBER:
+	          case CONTEXT_CONSUMER_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            props = fiber.memoizedProps;
+	            // NOTE: TraceUpdatesBackendManager depends on the name ending in '.Consumer'
+	            // If you change the name, figure out a more resilient way to detect it.
+	            name = (fiber.type.displayName || 'Context') + '.Consumer';
+	            children = [];
+	            break;
+	          case STRICT_MODE_NUMBER:
+	          case STRICT_MODE_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            name = 'StrictMode';
+	            children = [];
+	            break;
+	          case SUSPENSE_NUMBER:
+	          case SUSPENSE_SYMBOL_STRING:
+	          case DEPRECATED_PLACEHOLDER_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            name = 'Suspense';
+	            props = fiber.memoizedProps;
+	            children = [];
+	            break;
+	          case PROFILER_NUMBER:
+	          case PROFILER_SYMBOL_STRING:
+	            nodeType = 'Special';
+	            props = fiber.memoizedProps;
+	            name = 'Profiler(' + fiber.memoizedProps.id + ')';
+	            children = [];
+	            break;
+	          default:
+	            nodeType = 'Native';
+	            props = fiber.memoizedProps;
+	            name = 'TODO_NOT_IMPLEMENTED_YET';
+	            children = [];
+	            break;
+	        }
+	        break;
+	    }
+
+	    if (Array.isArray(children)) {
+	      var child = fiber.child;
+	      while (child) {
+	        children.push(getOpaqueNode(child));
+	        child = child.sibling;
+	      }
+	    }
+
+	    if (fiber.actualDuration !== undefined) {
+	      actualDuration = fiber.actualDuration;
+	      actualStartTime = fiber.actualStartTime;
+	      treeBaseDuration = fiber.treeBaseDuration;
+	    }
+
+	    // $FlowFixMe
+	    return {
+	      nodeType: nodeType,
+	      type: type,
+	      key: key,
+	      ref: ref,
+	      source: source,
+	      name: name,
+	      props: props,
+	      state: state,
+	      context: context,
+	      children: children,
+	      text: text,
+	      updater: updater,
+	      publicInstance: publicInstance,
+	      memoizedInteractions: memoizedInteractions,
+
+	      // Profiler data
+	      actualDuration: actualDuration,
+	      actualStartTime: actualStartTime,
+	      treeBaseDuration: treeBaseDuration
+	    };
+	  }
+
+	  function setInProps(fiber, path, value) {
+	    var inst = fiber.stateNode;
+	    fiber.pendingProps = copyWithSet(inst.props, path, value);
+	    if (fiber.alternate) {
+	      // We don't know which fiber is the current one because DevTools may bail out of getDataFiber() call,
+	      // and so the data object may refer to another version of the fiber. Therefore we update pendingProps
+	      // on both. I hope that this is safe.
+	      fiber.alternate.pendingProps = fiber.pendingProps;
+	    }
+	    fiber.stateNode.forceUpdate();
+	  }
+
+	  function setInState(inst, path, value) {
+	    setIn(inst.state, path, value);
+	    inst.forceUpdate();
+	  }
+
+	  function setInContext(inst, path, value) {
+	    setIn(inst.context, path, value);
+	    inst.forceUpdate();
+	  }
+
+	  function setIn(obj, path, value) {
+	    var last = path.pop();
+	    var parent = path.reduce(function (obj_, attr) {
+	      return obj_ ? obj_[attr] : null;
+	    }, obj);
+	    if (parent) {
+	      parent[last] = value;
+	    }
+	  }
+
 	  // This is a slightly annoying indirection.
 	  // It is currently necessary because DevTools wants
 	  // to use unique objects as keys for instances.
@@ -9549,6 +10161,11 @@
 	    }
 	  }
 
+	  function haveProfilerTimesChanged(prevFiber, nextFiber) {
+	    return prevFiber.actualDuration !== undefined && ( // Short-circuit check for non-profiling builds
+	    prevFiber.actualDuration !== nextFiber.actualDuration || prevFiber.actualStartTime !== nextFiber.actualStartTime || prevFiber.treeBaseDuration !== nextFiber.treeBaseDuration);
+	  }
+
 	  var pendingEvents = [];
 
 	  function flushPendingEvents() {
@@ -9563,7 +10180,7 @@
 	  function enqueueMount(fiber) {
 	    pendingEvents.push({
 	      internalInstance: getOpaqueNode(fiber),
-	      data: getDataFiber(fiber, getOpaqueNode),
+	      data: getDataFiber(fiber),
 	      renderer: rid,
 	      type: 'mount'
 	    });
@@ -9580,11 +10197,23 @@
 
 	  function enqueueUpdateIfNecessary(fiber, hasChildOrderChanged) {
 	    if (!hasChildOrderChanged && !hasDataChanged(fiber.alternate, fiber)) {
+	      // If only timing information has changed, we still need to update the nodes.
+	      // But we can do it in a faster way since we know it's safe to skip the children.
+	      // It's also important to avoid emitting an "update" signal for the node in this case,
+	      // Since that would indicate to the Profiler that it was part of the "commit" when it wasn't.
+	      if (haveProfilerTimesChanged(fiber.alternate, fiber)) {
+	        pendingEvents.push({
+	          internalInstance: getOpaqueNode(fiber),
+	          data: getDataFiber(fiber),
+	          renderer: rid,
+	          type: 'updateProfileTimes'
+	        });
+	      }
 	      return;
 	    }
 	    pendingEvents.push({
 	      internalInstance: getOpaqueNode(fiber),
-	      data: getDataFiber(fiber, getOpaqueNode),
+	      data: getDataFiber(fiber),
 	      renderer: rid,
 	      type: 'update'
 	    });
@@ -9608,6 +10237,15 @@
 	      pendingEvents.unshift(event);
 	    }
 	    opaqueNodes.delete(opaqueNode);
+	  }
+
+	  function markRootCommitted(fiber) {
+	    pendingEvents.push({
+	      internalInstance: getOpaqueNode(fiber),
+	      data: getDataFiber(fiber),
+	      renderer: rid,
+	      type: 'rootCommitted'
+	    });
 	  }
 
 	  function mountFiber(fiber) {
@@ -9692,6 +10330,7 @@
 	    hook.getFiberRoots(rid).forEach(function (root) {
 	      // Hydrate all the roots for the first time.
 	      mountFiber(root.current);
+	      markRootCommitted(root.current);
 	    });
 	    flushPendingEvents();
 	  }
@@ -9711,6 +10350,7 @@
 	  function handleCommitFiberRoot(root) {
 	    var current = root.current;
 	    var alternate = current.alternate;
+
 	    if (alternate) {
 	      // TODO: relying on this seems a bit fishy.
 	      var wasMounted = alternate.memoizedState != null && alternate.memoizedState.element != null;
@@ -9729,6 +10369,7 @@
 	      // Mount a new root.
 	      mountFiber(current);
 	    }
+	    markRootCommitted(current);
 	    // We're done here.
 	    flushPendingEvents();
 	  }
@@ -9768,339 +10409,1338 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright (c) 2015-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * 
-	 */
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = SemVer;
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	// The debug function is excluded entirely from the minified version.
+	/* nomin */ var debug;
+	/* nomin */ if (typeof process === 'object' &&
+	    /* nomin */ process.env &&
+	    /* nomin */ process.env.NODE_DEBUG &&
+	    /* nomin */ /\bsemver\b/i.test(process.env.NODE_DEBUG))
+	  /* nomin */ debug = function() {
+	    /* nomin */ var args = Array.prototype.slice.call(arguments, 0);
+	    /* nomin */ args.unshift('SEMVER');
+	    /* nomin */ console.log.apply(console, args);
+	    /* nomin */ };
+	/* nomin */ else
+	  /* nomin */ debug = function() {};
 
-	var copyWithSet = __webpack_require__(49);
-	var getDisplayName = __webpack_require__(50);
+	// Note: this is the semver.org version of the spec that it implements
+	// Not necessarily the package version of this code.
+	exports.SEMVER_SPEC_VERSION = '2.0.0';
 
-	var _require = __webpack_require__(57),
-	    FunctionalComponent = _require.FunctionalComponent,
-	    ClassComponent = _require.ClassComponent,
-	    HostRoot = _require.HostRoot,
-	    HostPortal = _require.HostPortal,
-	    HostComponent = _require.HostComponent,
-	    HostText = _require.HostText,
-	    Fragment = _require.Fragment;
+	var MAX_LENGTH = 256;
+	var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
 
-	var _require2 = __webpack_require__(58),
-	    ASYNC_MODE_NUMBER = _require2.ASYNC_MODE_NUMBER,
-	    ASYNC_MODE_SYMBOL_STRING = _require2.ASYNC_MODE_SYMBOL_STRING,
-	    CONTEXT_CONSUMER_NUMBER = _require2.CONTEXT_CONSUMER_NUMBER,
-	    CONTEXT_CONSUMER_SYMBOL_STRING = _require2.CONTEXT_CONSUMER_SYMBOL_STRING,
-	    CONTEXT_PROVIDER_NUMBER = _require2.CONTEXT_PROVIDER_NUMBER,
-	    CONTEXT_PROVIDER_SYMBOL_STRING = _require2.CONTEXT_PROVIDER_SYMBOL_STRING,
-	    FORWARD_REF_NUMBER = _require2.FORWARD_REF_NUMBER,
-	    FORWARD_REF_SYMBOL_STRING = _require2.FORWARD_REF_SYMBOL_STRING,
-	    PROFILER_NUMBER = _require2.PROFILER_NUMBER,
-	    PROFILER_SYMBOL_STRING = _require2.PROFILER_SYMBOL_STRING,
-	    STRICT_MODE_NUMBER = _require2.STRICT_MODE_NUMBER,
-	    STRICT_MODE_SYMBOL_STRING = _require2.STRICT_MODE_SYMBOL_STRING,
-	    TIMEOUT_NUMBER = _require2.TIMEOUT_NUMBER,
-	    TIMEOUT_SYMBOL_STRING = _require2.TIMEOUT_SYMBOL_STRING;
+	// Max safe segment length for coercion.
+	var MAX_SAFE_COMPONENT_LENGTH = 16;
 
-	// TODO: we might want to change the data structure
-	// once we no longer suppport Stack versions of `getData`.
+	// The actual regexps go on exports.re
+	var re = exports.re = [];
+	var src = exports.src = [];
+	var R = 0;
+
+	// The following Regular Expressions can be used for tokenizing,
+	// validating, and parsing SemVer version strings.
+
+	// ## Numeric Identifier
+	// A single `0`, or a non-zero digit followed by zero or more digits.
+
+	var NUMERICIDENTIFIER = R++;
+	src[NUMERICIDENTIFIER] = '0|[1-9]\\d*';
+	var NUMERICIDENTIFIERLOOSE = R++;
+	src[NUMERICIDENTIFIERLOOSE] = '[0-9]+';
 
 
-	function getDataFiber(fiber, getOpaqueNode) {
-	  var type = fiber.type;
-	  var key = fiber.key;
-	  var ref = fiber.ref;
-	  var source = fiber._debugSource;
-	  var publicInstance = null;
-	  var props = null;
-	  var state = null;
-	  var children = null;
-	  var context = null;
-	  var updater = null;
-	  var nodeType = null;
-	  var name = null;
-	  var text = null;
+	// ## Non-numeric Identifier
+	// Zero or more digits, followed by a letter or hyphen, and then zero or
+	// more letters, digits, or hyphens.
 
-	  switch (fiber.tag) {
-	    case FunctionalComponent:
-	    case ClassComponent:
-	      nodeType = 'Composite';
-	      name = getDisplayName(fiber.type);
-	      publicInstance = fiber.stateNode;
-	      props = fiber.memoizedProps;
-	      state = fiber.memoizedState;
-	      if (publicInstance != null) {
-	        context = publicInstance.context;
-	        if (context && Object.keys(context).length === 0) {
-	          context = null;
-	        }
-	      }
-	      var inst = publicInstance;
-	      if (inst) {
-	        updater = {
-	          setState: inst.setState && inst.setState.bind(inst),
-	          forceUpdate: inst.forceUpdate && inst.forceUpdate.bind(inst),
-	          setInProps: inst.forceUpdate && setInProps.bind(null, fiber),
-	          setInState: inst.forceUpdate && setInState.bind(null, inst),
-	          setInContext: inst.forceUpdate && setInContext.bind(null, inst)
-	        };
-	      }
-	      children = [];
-	      break;
-	    case HostRoot:
-	      nodeType = 'Wrapper';
-	      children = [];
-	      break;
-	    case HostPortal:
-	      nodeType = 'Portal';
-	      name = 'ReactPortal';
-	      props = {
-	        target: fiber.stateNode.containerInfo
-	      };
-	      children = [];
-	      break;
-	    case HostComponent:
-	      nodeType = 'Native';
-	      name = fiber.type;
+	var NONNUMERICIDENTIFIER = R++;
+	src[NONNUMERICIDENTIFIER] = '\\d*[a-zA-Z-][a-zA-Z0-9-]*';
 
-	      // TODO (bvaughn) we plan to remove this prefix anyway.
-	      // We can cut this special case out when it's gone.
-	      name = name.replace('topsecret-', '');
 
-	      publicInstance = fiber.stateNode;
-	      props = fiber.memoizedProps;
-	      if (typeof props.children === 'string' || typeof props.children === 'number') {
-	        children = props.children.toString();
-	      } else {
-	        children = [];
-	      }
-	      if (typeof fiber.stateNode.setNativeProps === 'function') {
-	        // For editing styles in RN
-	        updater = {
-	          setNativeProps: function setNativeProps(nativeProps) {
-	            fiber.stateNode.setNativeProps(nativeProps);
-	          }
-	        };
-	      }
-	      break;
-	    case HostText:
-	      nodeType = 'Text';
-	      text = fiber.memoizedProps;
-	      break;
-	    case Fragment:
-	      nodeType = 'Wrapper';
-	      children = [];
-	      break;
-	    default:
-	      // Coroutines and yields
-	      var symbolOrNumber = (typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type !== null ? type.$$typeof : type;
-	      // $FlowFixMe facebook/flow/issues/2362
-	      var switchValue = (typeof symbolOrNumber === 'undefined' ? 'undefined' : _typeof(symbolOrNumber)) === 'symbol' ? symbolOrNumber.toString() : symbolOrNumber;
+	// ## Main Version
+	// Three dot-separated numeric identifiers.
 
-	      switch (switchValue) {
-	        case ASYNC_MODE_NUMBER:
-	        case ASYNC_MODE_SYMBOL_STRING:
-	          nodeType = 'Special';
-	          name = 'AsyncMode';
-	          children = [];
-	          break;
-	        case CONTEXT_PROVIDER_NUMBER:
-	        case CONTEXT_PROVIDER_SYMBOL_STRING:
-	          nodeType = 'Special';
-	          props = fiber.memoizedProps;
-	          name = 'Context.Provider';
-	          children = [];
-	          break;
-	        case CONTEXT_CONSUMER_NUMBER:
-	        case CONTEXT_CONSUMER_SYMBOL_STRING:
-	          nodeType = 'Special';
-	          props = fiber.memoizedProps;
-	          // TODO: TraceUpdatesBackendManager currently depends on this.
-	          // If you change .name, figure out a more resilient way to detect it.
-	          name = 'Context.Consumer';
-	          children = [];
-	          break;
-	        case STRICT_MODE_NUMBER:
-	        case STRICT_MODE_SYMBOL_STRING:
-	          nodeType = 'Special';
-	          name = 'StrictMode';
-	          children = [];
-	          break;
-	        case FORWARD_REF_NUMBER:
-	        case FORWARD_REF_SYMBOL_STRING:
-	          var functionName = getDisplayName(fiber.type.render, '');
-	          nodeType = 'Special';
-	          name = functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef';
-	          children = [];
-	          break;
-	        case TIMEOUT_NUMBER:
-	        case TIMEOUT_SYMBOL_STRING:
-	          nodeType = 'Special';
-	          name = 'Timeout';
-	          props = fiber.memoizedProps;
-	          children = [];
-	          break;
-	        case PROFILER_NUMBER:
-	        case PROFILER_SYMBOL_STRING:
-	          nodeType = 'Special';
-	          props = fiber.memoizedProps;
-	          name = 'Profiler';
-	          children = [];
-	          break;
-	        default:
-	          nodeType = 'Native';
-	          props = fiber.memoizedProps;
-	          name = 'TODO_NOT_IMPLEMENTED_YET';
-	          children = [];
-	          break;
-	      }
-	      break;
+	var MAINVERSION = R++;
+	src[MAINVERSION] = '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+	                   '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+	                   '(' + src[NUMERICIDENTIFIER] + ')';
+
+	var MAINVERSIONLOOSE = R++;
+	src[MAINVERSIONLOOSE] = '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+	                        '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+	                        '(' + src[NUMERICIDENTIFIERLOOSE] + ')';
+
+	// ## Pre-release Version Identifier
+	// A numeric identifier, or a non-numeric identifier.
+
+	var PRERELEASEIDENTIFIER = R++;
+	src[PRERELEASEIDENTIFIER] = '(?:' + src[NUMERICIDENTIFIER] +
+	                            '|' + src[NONNUMERICIDENTIFIER] + ')';
+
+	var PRERELEASEIDENTIFIERLOOSE = R++;
+	src[PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[NUMERICIDENTIFIERLOOSE] +
+	                                 '|' + src[NONNUMERICIDENTIFIER] + ')';
+
+
+	// ## Pre-release Version
+	// Hyphen, followed by one or more dot-separated pre-release version
+	// identifiers.
+
+	var PRERELEASE = R++;
+	src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
+	                  '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))';
+
+	var PRERELEASELOOSE = R++;
+	src[PRERELEASELOOSE] = '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
+	                       '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
+
+	// ## Build Metadata Identifier
+	// Any combination of digits, letters, or hyphens.
+
+	var BUILDIDENTIFIER = R++;
+	src[BUILDIDENTIFIER] = '[0-9A-Za-z-]+';
+
+	// ## Build Metadata
+	// Plus sign, followed by one or more period-separated build metadata
+	// identifiers.
+
+	var BUILD = R++;
+	src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] +
+	             '(?:\\.' + src[BUILDIDENTIFIER] + ')*))';
+
+
+	// ## Full Version String
+	// A main version, followed optionally by a pre-release version and
+	// build metadata.
+
+	// Note that the only major, minor, patch, and pre-release sections of
+	// the version string are capturing groups.  The build metadata is not a
+	// capturing group, because it should not ever be used in version
+	// comparison.
+
+	var FULL = R++;
+	var FULLPLAIN = 'v?' + src[MAINVERSION] +
+	                src[PRERELEASE] + '?' +
+	                src[BUILD] + '?';
+
+	src[FULL] = '^' + FULLPLAIN + '$';
+
+	// like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
+	// also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
+	// common in the npm registry.
+	var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
+	                 src[PRERELEASELOOSE] + '?' +
+	                 src[BUILD] + '?';
+
+	var LOOSE = R++;
+	src[LOOSE] = '^' + LOOSEPLAIN + '$';
+
+	var GTLT = R++;
+	src[GTLT] = '((?:<|>)?=?)';
+
+	// Something like "2.*" or "1.2.x".
+	// Note that "x.x" is a valid xRange identifer, meaning "any version"
+	// Only the first item is strictly required.
+	var XRANGEIDENTIFIERLOOSE = R++;
+	src[XRANGEIDENTIFIERLOOSE] = src[NUMERICIDENTIFIERLOOSE] + '|x|X|\\*';
+	var XRANGEIDENTIFIER = R++;
+	src[XRANGEIDENTIFIER] = src[NUMERICIDENTIFIER] + '|x|X|\\*';
+
+	var XRANGEPLAIN = R++;
+	src[XRANGEPLAIN] = '[v=\\s]*(' + src[XRANGEIDENTIFIER] + ')' +
+	                   '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+	                   '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+	                   '(?:' + src[PRERELEASE] + ')?' +
+	                   src[BUILD] + '?' +
+	                   ')?)?';
+
+	var XRANGEPLAINLOOSE = R++;
+	src[XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+	                        '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+	                        '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+	                        '(?:' + src[PRERELEASELOOSE] + ')?' +
+	                        src[BUILD] + '?' +
+	                        ')?)?';
+
+	var XRANGE = R++;
+	src[XRANGE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAIN] + '$';
+	var XRANGELOOSE = R++;
+	src[XRANGELOOSE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAINLOOSE] + '$';
+
+	// Coercion.
+	// Extract anything that could conceivably be a part of a valid semver
+	var COERCE = R++;
+	src[COERCE] = '(?:^|[^\\d])' +
+	              '(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '})' +
+	              '(?:\\.(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '}))?' +
+	              '(?:\\.(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '}))?' +
+	              '(?:$|[^\\d])';
+
+	// Tilde ranges.
+	// Meaning is "reasonably at or greater than"
+	var LONETILDE = R++;
+	src[LONETILDE] = '(?:~>?)';
+
+	var TILDETRIM = R++;
+	src[TILDETRIM] = '(\\s*)' + src[LONETILDE] + '\\s+';
+	re[TILDETRIM] = new RegExp(src[TILDETRIM], 'g');
+	var tildeTrimReplace = '$1~';
+
+	var TILDE = R++;
+	src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$';
+	var TILDELOOSE = R++;
+	src[TILDELOOSE] = '^' + src[LONETILDE] + src[XRANGEPLAINLOOSE] + '$';
+
+	// Caret ranges.
+	// Meaning is "at least and backwards compatible with"
+	var LONECARET = R++;
+	src[LONECARET] = '(?:\\^)';
+
+	var CARETTRIM = R++;
+	src[CARETTRIM] = '(\\s*)' + src[LONECARET] + '\\s+';
+	re[CARETTRIM] = new RegExp(src[CARETTRIM], 'g');
+	var caretTrimReplace = '$1^';
+
+	var CARET = R++;
+	src[CARET] = '^' + src[LONECARET] + src[XRANGEPLAIN] + '$';
+	var CARETLOOSE = R++;
+	src[CARETLOOSE] = '^' + src[LONECARET] + src[XRANGEPLAINLOOSE] + '$';
+
+	// A simple gt/lt/eq thing, or just "" to indicate "any version"
+	var COMPARATORLOOSE = R++;
+	src[COMPARATORLOOSE] = '^' + src[GTLT] + '\\s*(' + LOOSEPLAIN + ')$|^$';
+	var COMPARATOR = R++;
+	src[COMPARATOR] = '^' + src[GTLT] + '\\s*(' + FULLPLAIN + ')$|^$';
+
+
+	// An expression to strip any whitespace between the gtlt and the thing
+	// it modifies, so that `> 1.2.3` ==> `>1.2.3`
+	var COMPARATORTRIM = R++;
+	src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] +
+	                      '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')';
+
+	// this one has to use the /g flag
+	re[COMPARATORTRIM] = new RegExp(src[COMPARATORTRIM], 'g');
+	var comparatorTrimReplace = '$1$2$3';
+
+
+	// Something like `1.2.3 - 1.2.4`
+	// Note that these all use the loose form, because they'll be
+	// checked against either the strict or loose comparator form
+	// later.
+	var HYPHENRANGE = R++;
+	src[HYPHENRANGE] = '^\\s*(' + src[XRANGEPLAIN] + ')' +
+	                   '\\s+-\\s+' +
+	                   '(' + src[XRANGEPLAIN] + ')' +
+	                   '\\s*$';
+
+	var HYPHENRANGELOOSE = R++;
+	src[HYPHENRANGELOOSE] = '^\\s*(' + src[XRANGEPLAINLOOSE] + ')' +
+	                        '\\s+-\\s+' +
+	                        '(' + src[XRANGEPLAINLOOSE] + ')' +
+	                        '\\s*$';
+
+	// Star ranges basically just allow anything at all.
+	var STAR = R++;
+	src[STAR] = '(<|>)?=?\\s*\\*';
+
+	// Compile to actual regexp objects.
+	// All are flag-free, unless they were created above with a flag.
+	for (var i = 0; i < R; i++) {
+	  debug(i, src[i]);
+	  if (!re[i])
+	    re[i] = new RegExp(src[i]);
+	}
+
+	exports.parse = parse;
+	function parse(version, loose) {
+	  if (version instanceof SemVer)
+	    return version;
+
+	  if (typeof version !== 'string')
+	    return null;
+
+	  if (version.length > MAX_LENGTH)
+	    return null;
+
+	  var r = loose ? re[LOOSE] : re[FULL];
+	  if (!r.test(version))
+	    return null;
+
+	  try {
+	    return new SemVer(version, loose);
+	  } catch (er) {
+	    return null;
+	  }
+	}
+
+	exports.valid = valid;
+	function valid(version, loose) {
+	  var v = parse(version, loose);
+	  return v ? v.version : null;
+	}
+
+
+	exports.clean = clean;
+	function clean(version, loose) {
+	  var s = parse(version.trim().replace(/^[=v]+/, ''), loose);
+	  return s ? s.version : null;
+	}
+
+	exports.SemVer = SemVer;
+
+	function SemVer(version, loose) {
+	  if (version instanceof SemVer) {
+	    if (version.loose === loose)
+	      return version;
+	    else
+	      version = version.version;
+	  } else if (typeof version !== 'string') {
+	    throw new TypeError('Invalid Version: ' + version);
 	  }
 
-	  if (Array.isArray(children)) {
-	    var child = fiber.child;
-	    while (child) {
-	      children.push(getOpaqueNode(child));
-	      child = child.sibling;
+	  if (version.length > MAX_LENGTH)
+	    throw new TypeError('version is longer than ' + MAX_LENGTH + ' characters')
+
+	  if (!(this instanceof SemVer))
+	    return new SemVer(version, loose);
+
+	  debug('SemVer', version, loose);
+	  this.loose = loose;
+	  var m = version.trim().match(loose ? re[LOOSE] : re[FULL]);
+
+	  if (!m)
+	    throw new TypeError('Invalid Version: ' + version);
+
+	  this.raw = version;
+
+	  // these are actually numbers
+	  this.major = +m[1];
+	  this.minor = +m[2];
+	  this.patch = +m[3];
+
+	  if (this.major > MAX_SAFE_INTEGER || this.major < 0)
+	    throw new TypeError('Invalid major version')
+
+	  if (this.minor > MAX_SAFE_INTEGER || this.minor < 0)
+	    throw new TypeError('Invalid minor version')
+
+	  if (this.patch > MAX_SAFE_INTEGER || this.patch < 0)
+	    throw new TypeError('Invalid patch version')
+
+	  // numberify any prerelease numeric ids
+	  if (!m[4])
+	    this.prerelease = [];
+	  else
+	    this.prerelease = m[4].split('.').map(function(id) {
+	      if (/^[0-9]+$/.test(id)) {
+	        var num = +id;
+	        if (num >= 0 && num < MAX_SAFE_INTEGER)
+	          return num;
+	      }
+	      return id;
+	    });
+
+	  this.build = m[5] ? m[5].split('.') : [];
+	  this.format();
+	}
+
+	SemVer.prototype.format = function() {
+	  this.version = this.major + '.' + this.minor + '.' + this.patch;
+	  if (this.prerelease.length)
+	    this.version += '-' + this.prerelease.join('.');
+	  return this.version;
+	};
+
+	SemVer.prototype.toString = function() {
+	  return this.version;
+	};
+
+	SemVer.prototype.compare = function(other) {
+	  debug('SemVer.compare', this.version, this.loose, other);
+	  if (!(other instanceof SemVer))
+	    other = new SemVer(other, this.loose);
+
+	  return this.compareMain(other) || this.comparePre(other);
+	};
+
+	SemVer.prototype.compareMain = function(other) {
+	  if (!(other instanceof SemVer))
+	    other = new SemVer(other, this.loose);
+
+	  return compareIdentifiers(this.major, other.major) ||
+	         compareIdentifiers(this.minor, other.minor) ||
+	         compareIdentifiers(this.patch, other.patch);
+	};
+
+	SemVer.prototype.comparePre = function(other) {
+	  if (!(other instanceof SemVer))
+	    other = new SemVer(other, this.loose);
+
+	  // NOT having a prerelease is > having one
+	  if (this.prerelease.length && !other.prerelease.length)
+	    return -1;
+	  else if (!this.prerelease.length && other.prerelease.length)
+	    return 1;
+	  else if (!this.prerelease.length && !other.prerelease.length)
+	    return 0;
+
+	  var i = 0;
+	  do {
+	    var a = this.prerelease[i];
+	    var b = other.prerelease[i];
+	    debug('prerelease compare', i, a, b);
+	    if (a === undefined && b === undefined)
+	      return 0;
+	    else if (b === undefined)
+	      return 1;
+	    else if (a === undefined)
+	      return -1;
+	    else if (a === b)
+	      continue;
+	    else
+	      return compareIdentifiers(a, b);
+	  } while (++i);
+	};
+
+	// preminor will bump the version up to the next minor release, and immediately
+	// down to pre-release. premajor and prepatch work the same way.
+	SemVer.prototype.inc = function(release, identifier) {
+	  switch (release) {
+	    case 'premajor':
+	      this.prerelease.length = 0;
+	      this.patch = 0;
+	      this.minor = 0;
+	      this.major++;
+	      this.inc('pre', identifier);
+	      break;
+	    case 'preminor':
+	      this.prerelease.length = 0;
+	      this.patch = 0;
+	      this.minor++;
+	      this.inc('pre', identifier);
+	      break;
+	    case 'prepatch':
+	      // If this is already a prerelease, it will bump to the next version
+	      // drop any prereleases that might already exist, since they are not
+	      // relevant at this point.
+	      this.prerelease.length = 0;
+	      this.inc('patch', identifier);
+	      this.inc('pre', identifier);
+	      break;
+	    // If the input is a non-prerelease version, this acts the same as
+	    // prepatch.
+	    case 'prerelease':
+	      if (this.prerelease.length === 0)
+	        this.inc('patch', identifier);
+	      this.inc('pre', identifier);
+	      break;
+
+	    case 'major':
+	      // If this is a pre-major version, bump up to the same major version.
+	      // Otherwise increment major.
+	      // 1.0.0-5 bumps to 1.0.0
+	      // 1.1.0 bumps to 2.0.0
+	      if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0)
+	        this.major++;
+	      this.minor = 0;
+	      this.patch = 0;
+	      this.prerelease = [];
+	      break;
+	    case 'minor':
+	      // If this is a pre-minor version, bump up to the same minor version.
+	      // Otherwise increment minor.
+	      // 1.2.0-5 bumps to 1.2.0
+	      // 1.2.1 bumps to 1.3.0
+	      if (this.patch !== 0 || this.prerelease.length === 0)
+	        this.minor++;
+	      this.patch = 0;
+	      this.prerelease = [];
+	      break;
+	    case 'patch':
+	      // If this is not a pre-release version, it will increment the patch.
+	      // If it is a pre-release it will bump up to the same patch version.
+	      // 1.2.0-5 patches to 1.2.0
+	      // 1.2.0 patches to 1.2.1
+	      if (this.prerelease.length === 0)
+	        this.patch++;
+	      this.prerelease = [];
+	      break;
+	    // This probably shouldn't be used publicly.
+	    // 1.0.0 "pre" would become 1.0.0-0 which is the wrong direction.
+	    case 'pre':
+	      if (this.prerelease.length === 0)
+	        this.prerelease = [0];
+	      else {
+	        var i = this.prerelease.length;
+	        while (--i >= 0) {
+	          if (typeof this.prerelease[i] === 'number') {
+	            this.prerelease[i]++;
+	            i = -2;
+	          }
+	        }
+	        if (i === -1) // didn't increment anything
+	          this.prerelease.push(0);
+	      }
+	      if (identifier) {
+	        // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
+	        // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
+	        if (this.prerelease[0] === identifier) {
+	          if (isNaN(this.prerelease[1]))
+	            this.prerelease = [identifier, 0];
+	        } else
+	          this.prerelease = [identifier, 0];
+	      }
+	      break;
+
+	    default:
+	      throw new Error('invalid increment argument: ' + release);
+	  }
+	  this.format();
+	  this.raw = this.version;
+	  return this;
+	};
+
+	exports.inc = inc;
+	function inc(version, release, loose, identifier) {
+	  if (typeof(loose) === 'string') {
+	    identifier = loose;
+	    loose = undefined;
+	  }
+
+	  try {
+	    return new SemVer(version, loose).inc(release, identifier).version;
+	  } catch (er) {
+	    return null;
+	  }
+	}
+
+	exports.diff = diff;
+	function diff(version1, version2) {
+	  if (eq(version1, version2)) {
+	    return null;
+	  } else {
+	    var v1 = parse(version1);
+	    var v2 = parse(version2);
+	    if (v1.prerelease.length || v2.prerelease.length) {
+	      for (var key in v1) {
+	        if (key === 'major' || key === 'minor' || key === 'patch') {
+	          if (v1[key] !== v2[key]) {
+	            return 'pre'+key;
+	          }
+	        }
+	      }
+	      return 'prerelease';
+	    }
+	    for (var key in v1) {
+	      if (key === 'major' || key === 'minor' || key === 'patch') {
+	        if (v1[key] !== v2[key]) {
+	          return key;
+	        }
+	      }
+	    }
+	  }
+	}
+
+	exports.compareIdentifiers = compareIdentifiers;
+
+	var numeric = /^[0-9]+$/;
+	function compareIdentifiers(a, b) {
+	  var anum = numeric.test(a);
+	  var bnum = numeric.test(b);
+
+	  if (anum && bnum) {
+	    a = +a;
+	    b = +b;
+	  }
+
+	  return (anum && !bnum) ? -1 :
+	         (bnum && !anum) ? 1 :
+	         a < b ? -1 :
+	         a > b ? 1 :
+	         0;
+	}
+
+	exports.rcompareIdentifiers = rcompareIdentifiers;
+	function rcompareIdentifiers(a, b) {
+	  return compareIdentifiers(b, a);
+	}
+
+	exports.major = major;
+	function major(a, loose) {
+	  return new SemVer(a, loose).major;
+	}
+
+	exports.minor = minor;
+	function minor(a, loose) {
+	  return new SemVer(a, loose).minor;
+	}
+
+	exports.patch = patch;
+	function patch(a, loose) {
+	  return new SemVer(a, loose).patch;
+	}
+
+	exports.compare = compare;
+	function compare(a, b, loose) {
+	  return new SemVer(a, loose).compare(new SemVer(b, loose));
+	}
+
+	exports.compareLoose = compareLoose;
+	function compareLoose(a, b) {
+	  return compare(a, b, true);
+	}
+
+	exports.rcompare = rcompare;
+	function rcompare(a, b, loose) {
+	  return compare(b, a, loose);
+	}
+
+	exports.sort = sort;
+	function sort(list, loose) {
+	  return list.sort(function(a, b) {
+	    return exports.compare(a, b, loose);
+	  });
+	}
+
+	exports.rsort = rsort;
+	function rsort(list, loose) {
+	  return list.sort(function(a, b) {
+	    return exports.rcompare(a, b, loose);
+	  });
+	}
+
+	exports.gt = gt;
+	function gt(a, b, loose) {
+	  return compare(a, b, loose) > 0;
+	}
+
+	exports.lt = lt;
+	function lt(a, b, loose) {
+	  return compare(a, b, loose) < 0;
+	}
+
+	exports.eq = eq;
+	function eq(a, b, loose) {
+	  return compare(a, b, loose) === 0;
+	}
+
+	exports.neq = neq;
+	function neq(a, b, loose) {
+	  return compare(a, b, loose) !== 0;
+	}
+
+	exports.gte = gte;
+	function gte(a, b, loose) {
+	  return compare(a, b, loose) >= 0;
+	}
+
+	exports.lte = lte;
+	function lte(a, b, loose) {
+	  return compare(a, b, loose) <= 0;
+	}
+
+	exports.cmp = cmp;
+	function cmp(a, op, b, loose) {
+	  var ret;
+	  switch (op) {
+	    case '===':
+	      if (typeof a === 'object') a = a.version;
+	      if (typeof b === 'object') b = b.version;
+	      ret = a === b;
+	      break;
+	    case '!==':
+	      if (typeof a === 'object') a = a.version;
+	      if (typeof b === 'object') b = b.version;
+	      ret = a !== b;
+	      break;
+	    case '': case '=': case '==': ret = eq(a, b, loose); break;
+	    case '!=': ret = neq(a, b, loose); break;
+	    case '>': ret = gt(a, b, loose); break;
+	    case '>=': ret = gte(a, b, loose); break;
+	    case '<': ret = lt(a, b, loose); break;
+	    case '<=': ret = lte(a, b, loose); break;
+	    default: throw new TypeError('Invalid operator: ' + op);
+	  }
+	  return ret;
+	}
+
+	exports.Comparator = Comparator;
+	function Comparator(comp, loose) {
+	  if (comp instanceof Comparator) {
+	    if (comp.loose === loose)
+	      return comp;
+	    else
+	      comp = comp.value;
+	  }
+
+	  if (!(this instanceof Comparator))
+	    return new Comparator(comp, loose);
+
+	  debug('comparator', comp, loose);
+	  this.loose = loose;
+	  this.parse(comp);
+
+	  if (this.semver === ANY)
+	    this.value = '';
+	  else
+	    this.value = this.operator + this.semver.version;
+
+	  debug('comp', this);
+	}
+
+	var ANY = {};
+	Comparator.prototype.parse = function(comp) {
+	  var r = this.loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
+	  var m = comp.match(r);
+
+	  if (!m)
+	    throw new TypeError('Invalid comparator: ' + comp);
+
+	  this.operator = m[1];
+	  if (this.operator === '=')
+	    this.operator = '';
+
+	  // if it literally is just '>' or '' then allow anything.
+	  if (!m[2])
+	    this.semver = ANY;
+	  else
+	    this.semver = new SemVer(m[2], this.loose);
+	};
+
+	Comparator.prototype.toString = function() {
+	  return this.value;
+	};
+
+	Comparator.prototype.test = function(version) {
+	  debug('Comparator.test', version, this.loose);
+
+	  if (this.semver === ANY)
+	    return true;
+
+	  if (typeof version === 'string')
+	    version = new SemVer(version, this.loose);
+
+	  return cmp(version, this.operator, this.semver, this.loose);
+	};
+
+	Comparator.prototype.intersects = function(comp, loose) {
+	  if (!(comp instanceof Comparator)) {
+	    throw new TypeError('a Comparator is required');
+	  }
+
+	  var rangeTmp;
+
+	  if (this.operator === '') {
+	    rangeTmp = new Range(comp.value, loose);
+	    return satisfies(this.value, rangeTmp, loose);
+	  } else if (comp.operator === '') {
+	    rangeTmp = new Range(this.value, loose);
+	    return satisfies(comp.semver, rangeTmp, loose);
+	  }
+
+	  var sameDirectionIncreasing =
+	    (this.operator === '>=' || this.operator === '>') &&
+	    (comp.operator === '>=' || comp.operator === '>');
+	  var sameDirectionDecreasing =
+	    (this.operator === '<=' || this.operator === '<') &&
+	    (comp.operator === '<=' || comp.operator === '<');
+	  var sameSemVer = this.semver.version === comp.semver.version;
+	  var differentDirectionsInclusive =
+	    (this.operator === '>=' || this.operator === '<=') &&
+	    (comp.operator === '>=' || comp.operator === '<=');
+	  var oppositeDirectionsLessThan =
+	    cmp(this.semver, '<', comp.semver, loose) &&
+	    ((this.operator === '>=' || this.operator === '>') &&
+	    (comp.operator === '<=' || comp.operator === '<'));
+	  var oppositeDirectionsGreaterThan =
+	    cmp(this.semver, '>', comp.semver, loose) &&
+	    ((this.operator === '<=' || this.operator === '<') &&
+	    (comp.operator === '>=' || comp.operator === '>'));
+
+	  return sameDirectionIncreasing || sameDirectionDecreasing ||
+	    (sameSemVer && differentDirectionsInclusive) ||
+	    oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
+	};
+
+
+	exports.Range = Range;
+	function Range(range, loose) {
+	  if (range instanceof Range) {
+	    if (range.loose === loose) {
+	      return range;
+	    } else {
+	      return new Range(range.raw, loose);
 	    }
 	  }
 
-	  // $FlowFixMe
-	  return {
-	    nodeType: nodeType,
-	    type: type,
-	    key: key,
-	    ref: ref,
-	    source: source,
-	    name: name,
-	    props: props,
-	    state: state,
-	    context: context,
-	    children: children,
-	    text: text,
-	    updater: updater,
-	    publicInstance: publicInstance
-	  };
-	}
-
-	function setInProps(fiber, path, value) {
-	  var inst = fiber.stateNode;
-	  fiber.pendingProps = copyWithSet(inst.props, path, value);
-	  if (fiber.alternate) {
-	    // We don't know which fiber is the current one because DevTools may bail out of getDataFiber() call,
-	    // and so the data object may refer to another version of the fiber. Therefore we update pendingProps
-	    // on both. I hope that this is safe.
-	    fiber.alternate.pendingProps = fiber.pendingProps;
+	  if (range instanceof Comparator) {
+	    return new Range(range.value, loose);
 	  }
-	  fiber.stateNode.forceUpdate();
-	}
 
-	function setInState(inst, path, value) {
-	  setIn(inst.state, path, value);
-	  inst.forceUpdate();
-	}
+	  if (!(this instanceof Range))
+	    return new Range(range, loose);
 
-	function setInContext(inst, path, value) {
-	  setIn(inst.context, path, value);
-	  inst.forceUpdate();
-	}
+	  this.loose = loose;
 
-	function setIn(obj, path, value) {
-	  var last = path.pop();
-	  var parent = path.reduce(function (obj_, attr) {
-	    return obj_ ? obj_[attr] : null;
-	  }, obj);
-	  if (parent) {
-	    parent[last] = value;
+	  // First, split based on boolean or ||
+	  this.raw = range;
+	  this.set = range.split(/\s*\|\|\s*/).map(function(range) {
+	    return this.parseRange(range.trim());
+	  }, this).filter(function(c) {
+	    // throw out any that are not relevant for whatever reason
+	    return c.length;
+	  });
+
+	  if (!this.set.length) {
+	    throw new TypeError('Invalid SemVer Range: ' + range);
 	  }
+
+	  this.format();
 	}
 
-	module.exports = getDataFiber;
-
-/***/ },
-/* 57 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright (c) 2015-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * 
-	 */
-	'use strict';
-
-	// Copied from React repo.
-
-	module.exports = {
-	  IndeterminateComponent: 0, // Before we know whether it is functional or class
-	  FunctionalComponent: 1,
-	  ClassComponent: 2,
-	  HostRoot: 3, // Root of a host tree. Could be nested inside another node.
-	  HostPortal: 4, // A subtree. Could be an entry point to a different renderer.
-	  HostComponent: 5,
-	  HostText: 6,
-	  CoroutineComponent: 7,
-	  CoroutineHandlerPhase: 8,
-	  YieldComponent: 9,
-	  Fragment: 10,
-	  Mode: 11,
-	  ContextConsumer: 12,
-	  ContextProvider: 13,
-	  ForwardRef: 14
+	Range.prototype.format = function() {
+	  this.range = this.set.map(function(comps) {
+	    return comps.join(' ').trim();
+	  }).join('||').trim();
+	  return this.range;
 	};
+
+	Range.prototype.toString = function() {
+	  return this.range;
+	};
+
+	Range.prototype.parseRange = function(range) {
+	  var loose = this.loose;
+	  range = range.trim();
+	  debug('range', range, loose);
+	  // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
+	  var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE];
+	  range = range.replace(hr, hyphenReplace);
+	  debug('hyphen replace', range);
+	  // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
+	  range = range.replace(re[COMPARATORTRIM], comparatorTrimReplace);
+	  debug('comparator trim', range, re[COMPARATORTRIM]);
+
+	  // `~ 1.2.3` => `~1.2.3`
+	  range = range.replace(re[TILDETRIM], tildeTrimReplace);
+
+	  // `^ 1.2.3` => `^1.2.3`
+	  range = range.replace(re[CARETTRIM], caretTrimReplace);
+
+	  // normalize spaces
+	  range = range.split(/\s+/).join(' ');
+
+	  // At this point, the range is completely trimmed and
+	  // ready to be split into comparators.
+
+	  var compRe = loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
+	  var set = range.split(' ').map(function(comp) {
+	    return parseComparator(comp, loose);
+	  }).join(' ').split(/\s+/);
+	  if (this.loose) {
+	    // in loose mode, throw out any that are not valid comparators
+	    set = set.filter(function(comp) {
+	      return !!comp.match(compRe);
+	    });
+	  }
+	  set = set.map(function(comp) {
+	    return new Comparator(comp, loose);
+	  });
+
+	  return set;
+	};
+
+	Range.prototype.intersects = function(range, loose) {
+	  if (!(range instanceof Range)) {
+	    throw new TypeError('a Range is required');
+	  }
+
+	  return this.set.some(function(thisComparators) {
+	    return thisComparators.every(function(thisComparator) {
+	      return range.set.some(function(rangeComparators) {
+	        return rangeComparators.every(function(rangeComparator) {
+	          return thisComparator.intersects(rangeComparator, loose);
+	        });
+	      });
+	    });
+	  });
+	};
+
+	// Mostly just for testing and legacy API reasons
+	exports.toComparators = toComparators;
+	function toComparators(range, loose) {
+	  return new Range(range, loose).set.map(function(comp) {
+	    return comp.map(function(c) {
+	      return c.value;
+	    }).join(' ').trim().split(' ');
+	  });
+	}
+
+	// comprised of xranges, tildes, stars, and gtlt's at this point.
+	// already replaced the hyphen ranges
+	// turn into a set of JUST comparators.
+	function parseComparator(comp, loose) {
+	  debug('comp', comp);
+	  comp = replaceCarets(comp, loose);
+	  debug('caret', comp);
+	  comp = replaceTildes(comp, loose);
+	  debug('tildes', comp);
+	  comp = replaceXRanges(comp, loose);
+	  debug('xrange', comp);
+	  comp = replaceStars(comp, loose);
+	  debug('stars', comp);
+	  return comp;
+	}
+
+	function isX(id) {
+	  return !id || id.toLowerCase() === 'x' || id === '*';
+	}
+
+	// ~, ~> --> * (any, kinda silly)
+	// ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0
+	// ~2.0, ~2.0.x, ~>2.0, ~>2.0.x --> >=2.0.0 <2.1.0
+	// ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
+	// ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
+	// ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
+	function replaceTildes(comp, loose) {
+	  return comp.trim().split(/\s+/).map(function(comp) {
+	    return replaceTilde(comp, loose);
+	  }).join(' ');
+	}
+
+	function replaceTilde(comp, loose) {
+	  var r = loose ? re[TILDELOOSE] : re[TILDE];
+	  return comp.replace(r, function(_, M, m, p, pr) {
+	    debug('tilde', comp, _, M, m, p, pr);
+	    var ret;
+
+	    if (isX(M))
+	      ret = '';
+	    else if (isX(m))
+	      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
+	    else if (isX(p))
+	      // ~1.2 == >=1.2.0 <1.3.0
+	      ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
+	    else if (pr) {
+	      debug('replaceTilde pr', pr);
+	      if (pr.charAt(0) !== '-')
+	        pr = '-' + pr;
+	      ret = '>=' + M + '.' + m + '.' + p + pr +
+	            ' <' + M + '.' + (+m + 1) + '.0';
+	    } else
+	      // ~1.2.3 == >=1.2.3 <1.3.0
+	      ret = '>=' + M + '.' + m + '.' + p +
+	            ' <' + M + '.' + (+m + 1) + '.0';
+
+	    debug('tilde return', ret);
+	    return ret;
+	  });
+	}
+
+	// ^ --> * (any, kinda silly)
+	// ^2, ^2.x, ^2.x.x --> >=2.0.0 <3.0.0
+	// ^2.0, ^2.0.x --> >=2.0.0 <3.0.0
+	// ^1.2, ^1.2.x --> >=1.2.0 <2.0.0
+	// ^1.2.3 --> >=1.2.3 <2.0.0
+	// ^1.2.0 --> >=1.2.0 <2.0.0
+	function replaceCarets(comp, loose) {
+	  return comp.trim().split(/\s+/).map(function(comp) {
+	    return replaceCaret(comp, loose);
+	  }).join(' ');
+	}
+
+	function replaceCaret(comp, loose) {
+	  debug('caret', comp, loose);
+	  var r = loose ? re[CARETLOOSE] : re[CARET];
+	  return comp.replace(r, function(_, M, m, p, pr) {
+	    debug('caret', comp, _, M, m, p, pr);
+	    var ret;
+
+	    if (isX(M))
+	      ret = '';
+	    else if (isX(m))
+	      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
+	    else if (isX(p)) {
+	      if (M === '0')
+	        ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
+	      else
+	        ret = '>=' + M + '.' + m + '.0 <' + (+M + 1) + '.0.0';
+	    } else if (pr) {
+	      debug('replaceCaret pr', pr);
+	      if (pr.charAt(0) !== '-')
+	        pr = '-' + pr;
+	      if (M === '0') {
+	        if (m === '0')
+	          ret = '>=' + M + '.' + m + '.' + p + pr +
+	                ' <' + M + '.' + m + '.' + (+p + 1);
+	        else
+	          ret = '>=' + M + '.' + m + '.' + p + pr +
+	                ' <' + M + '.' + (+m + 1) + '.0';
+	      } else
+	        ret = '>=' + M + '.' + m + '.' + p + pr +
+	              ' <' + (+M + 1) + '.0.0';
+	    } else {
+	      debug('no pr');
+	      if (M === '0') {
+	        if (m === '0')
+	          ret = '>=' + M + '.' + m + '.' + p +
+	                ' <' + M + '.' + m + '.' + (+p + 1);
+	        else
+	          ret = '>=' + M + '.' + m + '.' + p +
+	                ' <' + M + '.' + (+m + 1) + '.0';
+	      } else
+	        ret = '>=' + M + '.' + m + '.' + p +
+	              ' <' + (+M + 1) + '.0.0';
+	    }
+
+	    debug('caret return', ret);
+	    return ret;
+	  });
+	}
+
+	function replaceXRanges(comp, loose) {
+	  debug('replaceXRanges', comp, loose);
+	  return comp.split(/\s+/).map(function(comp) {
+	    return replaceXRange(comp, loose);
+	  }).join(' ');
+	}
+
+	function replaceXRange(comp, loose) {
+	  comp = comp.trim();
+	  var r = loose ? re[XRANGELOOSE] : re[XRANGE];
+	  return comp.replace(r, function(ret, gtlt, M, m, p, pr) {
+	    debug('xRange', comp, ret, gtlt, M, m, p, pr);
+	    var xM = isX(M);
+	    var xm = xM || isX(m);
+	    var xp = xm || isX(p);
+	    var anyX = xp;
+
+	    if (gtlt === '=' && anyX)
+	      gtlt = '';
+
+	    if (xM) {
+	      if (gtlt === '>' || gtlt === '<') {
+	        // nothing is allowed
+	        ret = '<0.0.0';
+	      } else {
+	        // nothing is forbidden
+	        ret = '*';
+	      }
+	    } else if (gtlt && anyX) {
+	      // replace X with 0
+	      if (xm)
+	        m = 0;
+	      if (xp)
+	        p = 0;
+
+	      if (gtlt === '>') {
+	        // >1 => >=2.0.0
+	        // >1.2 => >=1.3.0
+	        // >1.2.3 => >= 1.2.4
+	        gtlt = '>=';
+	        if (xm) {
+	          M = +M + 1;
+	          m = 0;
+	          p = 0;
+	        } else if (xp) {
+	          m = +m + 1;
+	          p = 0;
+	        }
+	      } else if (gtlt === '<=') {
+	        // <=0.7.x is actually <0.8.0, since any 0.7.x should
+	        // pass.  Similarly, <=7.x is actually <8.0.0, etc.
+	        gtlt = '<';
+	        if (xm)
+	          M = +M + 1;
+	        else
+	          m = +m + 1;
+	      }
+
+	      ret = gtlt + M + '.' + m + '.' + p;
+	    } else if (xm) {
+	      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
+	    } else if (xp) {
+	      ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
+	    }
+
+	    debug('xRange return', ret);
+
+	    return ret;
+	  });
+	}
+
+	// Because * is AND-ed with everything else in the comparator,
+	// and '' means "any version", just remove the *s entirely.
+	function replaceStars(comp, loose) {
+	  debug('replaceStars', comp, loose);
+	  // Looseness is ignored here.  star is always as loose as it gets!
+	  return comp.trim().replace(re[STAR], '');
+	}
+
+	// This function is passed to string.replace(re[HYPHENRANGE])
+	// M, m, patch, prerelease, build
+	// 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
+	// 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
+	// 1.2 - 3.4 => >=1.2.0 <3.5.0
+	function hyphenReplace($0,
+	                       from, fM, fm, fp, fpr, fb,
+	                       to, tM, tm, tp, tpr, tb) {
+
+	  if (isX(fM))
+	    from = '';
+	  else if (isX(fm))
+	    from = '>=' + fM + '.0.0';
+	  else if (isX(fp))
+	    from = '>=' + fM + '.' + fm + '.0';
+	  else
+	    from = '>=' + from;
+
+	  if (isX(tM))
+	    to = '';
+	  else if (isX(tm))
+	    to = '<' + (+tM + 1) + '.0.0';
+	  else if (isX(tp))
+	    to = '<' + tM + '.' + (+tm + 1) + '.0';
+	  else if (tpr)
+	    to = '<=' + tM + '.' + tm + '.' + tp + '-' + tpr;
+	  else
+	    to = '<=' + to;
+
+	  return (from + ' ' + to).trim();
+	}
+
+
+	// if ANY of the sets match ALL of its comparators, then pass
+	Range.prototype.test = function(version) {
+	  if (!version)
+	    return false;
+
+	  if (typeof version === 'string')
+	    version = new SemVer(version, this.loose);
+
+	  for (var i = 0; i < this.set.length; i++) {
+	    if (testSet(this.set[i], version))
+	      return true;
+	  }
+	  return false;
+	};
+
+	function testSet(set, version) {
+	  for (var i = 0; i < set.length; i++) {
+	    if (!set[i].test(version))
+	      return false;
+	  }
+
+	  if (version.prerelease.length) {
+	    // Find the set of versions that are allowed to have prereleases
+	    // For example, ^1.2.3-pr.1 desugars to >=1.2.3-pr.1 <2.0.0
+	    // That should allow `1.2.3-pr.2` to pass.
+	    // However, `1.2.4-alpha.notready` should NOT be allowed,
+	    // even though it's within the range set by the comparators.
+	    for (var i = 0; i < set.length; i++) {
+	      debug(set[i].semver);
+	      if (set[i].semver === ANY)
+	        continue;
+
+	      if (set[i].semver.prerelease.length > 0) {
+	        var allowed = set[i].semver;
+	        if (allowed.major === version.major &&
+	            allowed.minor === version.minor &&
+	            allowed.patch === version.patch)
+	          return true;
+	      }
+	    }
+
+	    // Version has a -pre, but it's not one of the ones we like.
+	    return false;
+	  }
+
+	  return true;
+	}
+
+	exports.satisfies = satisfies;
+	function satisfies(version, range, loose) {
+	  try {
+	    range = new Range(range, loose);
+	  } catch (er) {
+	    return false;
+	  }
+	  return range.test(version);
+	}
+
+	exports.maxSatisfying = maxSatisfying;
+	function maxSatisfying(versions, range, loose) {
+	  var max = null;
+	  var maxSV = null;
+	  try {
+	    var rangeObj = new Range(range, loose);
+	  } catch (er) {
+	    return null;
+	  }
+	  versions.forEach(function (v) {
+	    if (rangeObj.test(v)) { // satisfies(v, range, loose)
+	      if (!max || maxSV.compare(v) === -1) { // compare(max, v, true)
+	        max = v;
+	        maxSV = new SemVer(max, loose);
+	      }
+	    }
+	  })
+	  return max;
+	}
+
+	exports.minSatisfying = minSatisfying;
+	function minSatisfying(versions, range, loose) {
+	  var min = null;
+	  var minSV = null;
+	  try {
+	    var rangeObj = new Range(range, loose);
+	  } catch (er) {
+	    return null;
+	  }
+	  versions.forEach(function (v) {
+	    if (rangeObj.test(v)) { // satisfies(v, range, loose)
+	      if (!min || minSV.compare(v) === 1) { // compare(min, v, true)
+	        min = v;
+	        minSV = new SemVer(min, loose);
+	      }
+	    }
+	  })
+	  return min;
+	}
+
+	exports.validRange = validRange;
+	function validRange(range, loose) {
+	  try {
+	    // Return '*' instead of '' so that truthiness works.
+	    // This will throw if it's invalid anyway
+	    return new Range(range, loose).range || '*';
+	  } catch (er) {
+	    return null;
+	  }
+	}
+
+	// Determine if version is less than all the versions possible in the range
+	exports.ltr = ltr;
+	function ltr(version, range, loose) {
+	  return outside(version, range, '<', loose);
+	}
+
+	// Determine if version is greater than all the versions possible in the range.
+	exports.gtr = gtr;
+	function gtr(version, range, loose) {
+	  return outside(version, range, '>', loose);
+	}
+
+	exports.outside = outside;
+	function outside(version, range, hilo, loose) {
+	  version = new SemVer(version, loose);
+	  range = new Range(range, loose);
+
+	  var gtfn, ltefn, ltfn, comp, ecomp;
+	  switch (hilo) {
+	    case '>':
+	      gtfn = gt;
+	      ltefn = lte;
+	      ltfn = lt;
+	      comp = '>';
+	      ecomp = '>=';
+	      break;
+	    case '<':
+	      gtfn = lt;
+	      ltefn = gte;
+	      ltfn = gt;
+	      comp = '<';
+	      ecomp = '<=';
+	      break;
+	    default:
+	      throw new TypeError('Must provide a hilo val of "<" or ">"');
+	  }
+
+	  // If it satisifes the range it is not outside
+	  if (satisfies(version, range, loose)) {
+	    return false;
+	  }
+
+	  // From now on, variable terms are as if we're in "gtr" mode.
+	  // but note that everything is flipped for the "ltr" function.
+
+	  for (var i = 0; i < range.set.length; ++i) {
+	    var comparators = range.set[i];
+
+	    var high = null;
+	    var low = null;
+
+	    comparators.forEach(function(comparator) {
+	      if (comparator.semver === ANY) {
+	        comparator = new Comparator('>=0.0.0')
+	      }
+	      high = high || comparator;
+	      low = low || comparator;
+	      if (gtfn(comparator.semver, high.semver, loose)) {
+	        high = comparator;
+	      } else if (ltfn(comparator.semver, low.semver, loose)) {
+	        low = comparator;
+	      }
+	    });
+
+	    // If the edge version comparator has a operator then our version
+	    // isn't outside it
+	    if (high.operator === comp || high.operator === ecomp) {
+	      return false;
+	    }
+
+	    // If the lowest version comparator has an operator and our version
+	    // is less than it then it isn't higher than the range
+	    if ((!low.operator || low.operator === comp) &&
+	        ltefn(version, low.semver)) {
+	      return false;
+	    } else if (low.operator === ecomp && ltfn(version, low.semver)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	exports.prerelease = prerelease;
+	function prerelease(version, loose) {
+	  var parsed = parse(version, loose);
+	  return (parsed && parsed.prerelease.length) ? parsed.prerelease : null;
+	}
+
+	exports.intersects = intersects;
+	function intersects(r1, r2, loose) {
+	  r1 = new Range(r1, loose)
+	  r2 = new Range(r2, loose)
+	  return r1.intersects(r2)
+	}
+
+	exports.coerce = coerce;
+	function coerce(version) {
+	  if (version instanceof SemVer)
+	    return version;
+
+	  if (typeof version !== 'string')
+	    return null;
+
+	  var match = version.match(re[COERCE]);
+
+	  if (match == null)
+	    return null;
+
+	  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0')); 
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54)))
 
 /***/ },
 /* 58 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright (c) 2015-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * 
-	 */
-	'use strict';
-
-	// Based on the React repo.
-
-	module.exports = {
-	  ASYNC_MODE_NUMBER: 0xeacf,
-	  ASYNC_MODE_SYMBOL_STRING: 'Symbol(react.async_mode)',
-	  CONTEXT_CONSUMER_NUMBER: 0xeace,
-	  CONTEXT_CONSUMER_SYMBOL_STRING: 'Symbol(react.context)',
-	  CONTEXT_PROVIDER_NUMBER: 0xeacd,
-	  CONTEXT_PROVIDER_SYMBOL_STRING: 'Symbol(react.provider)',
-	  FORWARD_REF_NUMBER: 0xead0,
-	  FORWARD_REF_SYMBOL_STRING: 'Symbol(react.forward_ref)',
-	  PROFILER_NUMBER: 0xead2,
-	  PROFILER_SYMBOL_STRING: 'Symbol(react.profiler)',
-	  STRICT_MODE_NUMBER: 0xeacc,
-	  STRICT_MODE_SYMBOL_STRING: 'Symbol(react.strict_mode)',
-	  TIMEOUT_NUMBER: 0xead1,
-	  TIMEOUT_SYMBOL_STRING: 'Symbol(react.timeout)'
-	};
-
-/***/ },
-/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10119,7 +11759,7 @@
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	var resolveBoxStyle = __webpack_require__(60);
+	var resolveBoxStyle = __webpack_require__(59);
 
 	var styleOverridesByHostComponentId = {};
 
@@ -10316,7 +11956,7 @@
 	}
 
 /***/ },
-/* 60 */
+/* 59 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -10382,7 +12022,7 @@
 	module.exports = resolveBoxStyle;
 
 /***/ },
-/* 61 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10397,7 +12037,7 @@
 	 */
 	'use strict';
 
-	var Highlighter = __webpack_require__(62);
+	var Highlighter = __webpack_require__(61);
 
 	module.exports = function setup(agent) {
 	  var hl = new Highlighter(window, function (node) {
@@ -10427,7 +12067,7 @@
 	};
 
 /***/ },
-/* 62 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10446,8 +12086,8 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Overlay = __webpack_require__(63);
-	var MultiOverlay = __webpack_require__(65);
+	var Overlay = __webpack_require__(62);
+	var MultiOverlay = __webpack_require__(64);
 
 	/**
 	 * Manages the highlighting of items on an html page, as well as
@@ -10613,7 +12253,7 @@
 	module.exports = Highlighter;
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10634,7 +12274,7 @@
 
 	var assign = __webpack_require__(7);
 
-	var _require = __webpack_require__(64),
+	var _require = __webpack_require__(63),
 	    monospace = _require.monospace;
 
 	/**
@@ -10672,7 +12312,7 @@
 	      fontWeight: 'bold',
 	      padding: '3px 5px',
 	      position: 'fixed',
-	      fontSize: monospace.sizes.normal
+	      fontSize: monospace.sizes.normal + 'px'
 	    });
 
 	    this.nameSpan = doc.createElement('span');
@@ -10905,7 +12545,7 @@
 	module.exports = Overlay;
 
 /***/ },
-/* 64 */
+/* 63 */
 /***/ function(module, exports) {
 
 	/**
@@ -10939,7 +12579,7 @@
 	};
 
 /***/ },
-/* 65 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11024,6 +12664,52 @@
 	}();
 
 	module.exports = MultiOverlay;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright (c) 2015-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * 
+	 */
+	'use strict';
+
+	var emptyFunction = function emptyFunction() {};
+
+	module.exports = function (bridge, agent, hook) {
+	  var checkIfProfilingIsSupported = function checkIfProfilingIsSupported() {
+	    var profilingIsSupported = false;
+
+	    // Feature detection for profiling mode.
+	    // The presence of an "treeBaseDuration" field signifies:
+	    // 1) This is a new enough version of React (e.g. > 16.4 which was the initial profiling release)
+	    // 2) This is a profiling capable bundle (e.g. DEV or PROFILING)
+	    agent.roots.forEach(function (rootId) {
+	      var root = agent.internalInstancesById.get(rootId);
+	      if (root.hasOwnProperty('treeBaseDuration')) {
+	        profilingIsSupported = true;
+	      }
+	    });
+
+	    bridge.call('profiler:update', [profilingIsSupported], emptyFunction);
+	  };
+
+	  // Wait for roots to be registered.
+	  // They might not yet exist at the time the plugin is initialized.
+	  // Also while the first root(s) may not be capable of profiling, later ones might.
+	  agent.on('root', checkIfProfilingIsSupported);
+	  agent.on('rootUnmounted', checkIfProfilingIsSupported);
+
+	  // Check once in case some roots have already been registered:
+	  checkIfProfilingIsSupported();
+	};
 
 /***/ },
 /* 66 */

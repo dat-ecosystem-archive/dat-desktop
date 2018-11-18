@@ -35,7 +35,7 @@
                 var toString = Function.prototype.toString;
                 if (renderer.Mount && renderer.Mount._renderNewRootComponent) {
                     var renderRootCode = toString.call(renderer.Mount._renderNewRootComponent);
-                    return 0 !== renderRootCode.indexOf("function") ? "production" : renderRootCode.indexOf("storedMeasure") !== -1 ? "development" : renderRootCode.indexOf("should be a pure function") !== -1 ? renderRootCode.indexOf("NODE_ENV") !== -1 ? "development" : renderRootCode.indexOf("development") !== -1 ? "development" : renderRootCode.indexOf("true") !== -1 ? "development" : renderRootCode.indexOf("nextElement") !== -1 || renderRootCode.indexOf("nextComponent") !== -1 ? "unminified" : "development" : renderRootCode.indexOf("nextElement") !== -1 || renderRootCode.indexOf("nextComponent") !== -1 ? "unminified" : renderRootCode.indexOf("._registerComponent") !== -1 ? "outdated" : "production";
+                    return 0 !== renderRootCode.indexOf("function") ? "production" : renderRootCode.indexOf("storedMeasure") !== -1 ? "development" : renderRootCode.indexOf("should be a pure function") !== -1 ? renderRootCode.indexOf("NODE_ENV") !== -1 ? "development" : renderRootCode.indexOf("development") !== -1 ? "development" : renderRootCode.indexOf("true") !== -1 ? "development" : renderRootCode.indexOf("nextElement") !== -1 || renderRootCode.indexOf("nextComponent") !== -1 ? "unminified" : "development" : renderRootCode.indexOf("nextElement") !== -1 || renderRootCode.indexOf("nextComponent") !== -1 ? "unminified" : "outdated";
                 }
             } catch (err) {}
             return "production";
@@ -130,7 +130,7 @@
         }
         function recordRequest(type, start, request, requestNumber) {
             var id = Math.random().toString(16).substr(2);
-            request.then(function(response) {
+            request.getPromise().then(function(response) {
                 emit("relay:success", {
                     id: id,
                     end: performanceNow(),
