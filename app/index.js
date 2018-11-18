@@ -10,7 +10,6 @@ import App from './components/app'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { ipcRenderer as ipc, remote } from 'electron'
-import drag from 'electron-drag'
 import DatMiddleware from './actions/dat-middleware'
 import minimist from 'minimist'
 import path from 'path'
@@ -51,7 +50,6 @@ datMiddleware
       </Provider>,
       document.querySelector('div')
     )
-    drag('header')
   })
   .catch(err => {
     console.log(err.stack || err)
