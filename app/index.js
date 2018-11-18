@@ -46,7 +46,11 @@ document.title = 'Dat Desktop | Welcome'
 datMiddleware
   .loadFromDisk()
   .then(function () {
+    // # addGlobalComponents
+    // Adding global components only once to the DOM.
     document.body.appendChild(datIcons())
+  })
+  .then(function () {
     render(
       <Provider store={store}>
         <App />
