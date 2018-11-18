@@ -16,7 +16,6 @@ const Main = styled.main`
     top: 0.25rem;
     right: 5.5rem;
     width: 17rem;
-    z-index: 3;
   }
   .create-new-dat,
   .link {
