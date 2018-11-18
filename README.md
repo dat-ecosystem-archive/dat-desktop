@@ -29,7 +29,7 @@ To run _Dat Desktop_ in development mode:
 
 ```sh
 npm install             # install dependencies
-npm run start           # start the application
+npm start               # start the application
 ```
 
 To create binary packages run:
@@ -57,7 +57,7 @@ $ ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/" npm install
 
 ## Licenses
 
-[MIT License](https://github.com/dat-land/dat-desktop/blob/master/LICENSE)
+[MIT License](./LICENSE)
 
 ### Font Attribution & License
 
