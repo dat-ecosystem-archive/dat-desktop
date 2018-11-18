@@ -14,6 +14,7 @@ import DatMiddleware from './actions/dat-middleware'
 import minimist from 'minimist'
 import path from 'path'
 import { homedir } from 'os'
+import datIcons from 'dat-icons'
 
 const argv = minimist(remote.process.argv.slice(2), {
   default: {
@@ -43,6 +44,11 @@ document.title = 'Dat Desktop | Welcome'
 
 datMiddleware
   .loadFromDisk()
+  .then(function () {
+    // # addGlobalComponents
+    // Adding global components only once to the DOM.
+    document.body.appendChild(datIcons())
+  })
   .then(function () {
     render(
       <Provider store={store}>
