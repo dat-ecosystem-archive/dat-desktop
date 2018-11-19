@@ -54,6 +54,7 @@ app.on('ready', () => {
     minWidth: 640,
     minHeight: 395,
     backgroundColor: neutral,
+    icon: path.resolve(`${__dirname}/build/icon.png`),
     webPreferences: {
       nodeIntegration: false,
       preload: `${__dirname}/preload.js`
