@@ -38,13 +38,13 @@
     ]
   },
   "devDependencies": {
-    "@leichtgewicht/chrome-ext-downloader": "^1.1.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-tape-runner": "^2.0.1",
+    "chrome-ext-downloader": "^1.0.4",
     "cross-env": "^5.1.6",
     "dependency-check": "^3.1.0",
     "electron": "^3.0.8",
