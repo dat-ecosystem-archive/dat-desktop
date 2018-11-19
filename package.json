@@ -77,7 +77,7 @@
     "mirror-folder": "^3.0.0",
     "mkdirp-promise": "^5.0.1",
     "ms": "^2.1.1",
-    "polished": "^1.9.2",
+    "polished": "^2.3.0",
     "prettier-bytes": "^1.0.4",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
