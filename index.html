@@ -8,5 +8,12 @@
   </head>
   <body>
     <div></div>
+    <script>
+      // Spectron doesn't work with "preload" enabled, we need to load
+      // the bundle in the test the insecure way.
+      if (document.location.hash === '#test') {
+        require('./static/bundle.js')
+      }
+    </script>
   </body>
 </html>
