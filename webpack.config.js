@@ -25,9 +25,9 @@ module.exports = (_, argv) => ({
         include: path.normalize(`${__dirname}/app`),
         loader: 'babel-loader',
         query: {
-          presets: ['react'],
+          presets: ['@babel/preset-react'],
           plugins: [
-            'transform-object-rest-spread'
+            '@babel/plugin-transform-modules-commonjs'
           ]
         }
       }

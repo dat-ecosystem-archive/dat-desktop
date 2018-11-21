@@ -1,11 +1,13 @@
 {
-  "presets": ["react"],
+  "presets": [
+    "@babel/preset-react"
+  ],
   "env": {
     "test": {
       "plugins": [
-        "transform-es2015-modules-commonjs",
-        "transform-es2015-classes",
-        "transform-object-rest-spread"
+        "@babel/plugin-transform-modules-commonjs",
+        "@babel/plugin-transform-classes",
+        "@babel/plugin-proposal-object-rest-spread"
       ]
     }
   }
