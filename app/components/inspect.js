@@ -37,8 +37,7 @@ const Column = styled.div`
   padding: 0.25rem;
 `
 
-const Row = ({ children, label = null, ...props }) => {
-  if (!children) return null
+const Row = ({ label = null, ...props }) => {
   return (
     <div className='flex mb2'>
       {label !== null && <Label className='f7 f6-l'>{label}</Label>}
