@@ -72,7 +72,7 @@ const Inspect = ({
   const size =
     dat.stats && Number(dat.stats.length) === dat.stats.length
       ? bytes(dat.stats.length)
-      : 0
+      : bytes(0)
   const peers = isNaN(parseInt(dat.peers)) ? '…' : dat.peers
 
   return (
@@ -85,12 +85,18 @@ const Inspect = ({
           <h2 className='f5 normal truncate pr3 w-90'>{title}</h2>
         </DetailHeader>
         <div className='flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto'>
-          <Row label='Link:'>{toStr(dat.key)}</Row>
-          <Row label='Size:'>{size}</Row>
-          <Row label='Peers:'>{peers}</Row>
-          <Row label='Author:'>{author}</Row>
-          <Row label='Description:'>{description}</Row>
-          <Row label='Download to:' className='flex bg-white'>
+          <Row label='Link:' data-test="key">{toStr(dat.key)}</Row>
+          <Row label='Size:' data-test='size'>
+            {size}
+          </Row>
+          <Row label='Peers:' data-test="peers">{peers}</Row>
+          <Row label='Author:' data-test='author'>
+            {author}
+          </Row>
+          <Row label='Description:' data-test='description'>
+            {description}
+          </Row>
+          <Row label='Download to:' className='flex bg-white' data-test='path'>
             <pre
               className='flex-auto f7 f6-l'
               style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
