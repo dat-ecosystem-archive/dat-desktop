@@ -3,10 +3,10 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import StatusBar from '../app/components/status-bar'
 
-test('status bar should render a fragment with single child (div) when show is false', t => {
+test('status bar should render empty when show is false', t => {
   const wrapper = shallow(<StatusBar up={20} down={40} show={false} />)
 
-  t.equal(wrapper.find('div').length, 1)
+  t.equal(wrapper.isEmptyRender(), true)
 
   t.end()
 })

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import bytes from 'prettier-bytes'
 
@@ -13,13 +13,7 @@ const Bar = styled.div`
 `
 
 const StatusBar = ({ up, down, show }) => {
-  if (!show) {
-    return (
-      <Fragment>
-        <div />
-      </Fragment>
-    )
-  }
+  if (!show) return null
 
   return (
     <Bar id='status-bar'>
