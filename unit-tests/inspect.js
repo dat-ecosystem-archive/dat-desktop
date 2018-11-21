@@ -5,7 +5,7 @@ import Inspect from '../app/components/inspect'
 
 test('should render an empty div component', t => {
   const wrapper = shallow(
-    <Inspect dat={null} closeInspectDat={() => {}} addFilesToDat={() => {}} />
+    <Inspect dat={null} closeInspectDat={() => {}} />
   )
 
   t.equal(wrapper.find('div').length, 1)
@@ -24,7 +24,6 @@ test('should set title to dat key when metadata is not present on dat', t => {
         }
       }}
       closeInspectDat={() => {}}
-      addFilesToDat={() => {}}
     />
   )
 
@@ -49,7 +48,6 @@ test('should show default values when metadata is not present on dat ', t => {
         peers: 2
       }}
       closeInspectDat={() => {}}
-      addFilesToDat={() => {}}
     />
   )
 
@@ -79,7 +77,6 @@ test('should show info when present on dat', t => {
         path: 'A-path'
       }}
       closeInspectDat={() => {}}
-      addFilesToDat={() => {}}
     />
   )
 

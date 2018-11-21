@@ -54,7 +54,6 @@ const Inspect = ({
   show,
   dat,
   closeInspectDat,
-  addFilesToDat,
   addDat,
   hideDownloadScreen,
   cancelDownloadDat,
