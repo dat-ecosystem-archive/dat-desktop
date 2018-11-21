@@ -49,6 +49,16 @@ var PlainButton = styled(BaseButton)`
   }
 `
 
+var TextButton = styled(BaseButton)`
+  font-size: 0.75rem;
+  background-color: transparent;
+  color: var(--color-neutral-40);
+  :hover,
+  :focus {
+    color: var(--color-neutral-70);
+  }
+`
+
 var GreenButton = styled(BaseButton)`
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
@@ -97,6 +107,12 @@ export const Plain = ({ children, ...props }) => (
   <PlainButton {...props}>
     <InnerWrapperComponent>{children}</InnerWrapperComponent>
   </PlainButton>
+)
+
+export const Text = ({ children, icon, ...props }) => (
+  <TextButton {...props}>
+    <InnerWrapperComponent icon={icon}>{children}</InnerWrapperComponent>
+  </TextButton>
 )
 
 export const Green = ({ children, icon, ...props }) => (
