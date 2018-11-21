@@ -1,11 +1,11 @@
 import test from 'tape'
 import React from 'react'
-import { render } from 'enzyme'
+import { shallow, render } from 'enzyme'
 import FileList from '../app/components/file-list'
 
 test('file list should render div with class pa2', t => {
   const files = []
-  const wrapper = render(
+  const wrapper = shallow(
     <FileList
       dat={{
         files
@@ -13,7 +13,7 @@ test('file list should render div with class pa2', t => {
     />
   )
 
-  t.equal(wrapper.find('.pa2').length, 1)
+  t.equal(wrapper.find('.pa2').length, 0)
 
   t.end()
 })
