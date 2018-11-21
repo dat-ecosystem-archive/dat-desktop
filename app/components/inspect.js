@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { toStr } from 'dat-encoding'
 import bytes from 'prettier-bytes'
@@ -30,13 +30,7 @@ const Label = ({ children }) => (
 )
 
 const Inspect = ({ dat, closeInspectDat, addFilesToDat }) => {
-  if (!dat) {
-    return (
-      <Fragment>
-        <div />
-      </Fragment>
-    )
-  }
+  if (!dat) return null
 
   const title = dat
     ? dat.metadata ? dat.metadata.title : dat.key

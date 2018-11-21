@@ -3,12 +3,12 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Inspect from '../app/components/inspect'
 
-test('should render an empty div component', t => {
+test('should render empty', t => {
   const wrapper = shallow(
     <Inspect dat={null} closeInspectDat={() => {}} addFilesToDat={() => {}} />
   )
 
-  t.equal(wrapper.find('div').length, 1)
+  t.equal(wrapper.isEmptyRender(), true)
 
   t.end()
 })
