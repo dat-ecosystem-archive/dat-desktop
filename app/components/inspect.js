@@ -80,11 +80,15 @@ const Inspect = ({
           <h2 className='f5 normal truncate pr3 w-90'>{title}</h2>
         </DetailHeader>
         <div className='flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto'>
-          <Row label='Link:' data-test="key">{toStr(dat.key)}</Row>
+          <Row label='Link:' data-test='key'>
+            {toStr(dat.key)}
+          </Row>
           <Row label='Size:' data-test='size'>
             {size}
           </Row>
-          <Row label='Peers:' data-test="peers">{peers}</Row>
+          <Row label='Peers:' data-test='peers'>
+            {peers}
+          </Row>
           <Row label='Author:' data-test='author'>
             {author}
           </Row>

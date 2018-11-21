@@ -45,10 +45,38 @@ test('should show default values when metadata is not present on dat ', t => {
     />
   )
 
-  t.equal(wrapper.children().find('[data-test="key"]').childAt(0).text(), key)
-  t.equal(wrapper.children().find('[data-test="size"]').childAt(0).text(), '0 B')
-  t.equal(wrapper.children().find('[data-test="author"]').childAt(0).text(), 'N/A')
-  t.equal(wrapper.children().find('[data-test="description"]').childAt(0).text(), 'N/A')
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="key"]')
+      .childAt(0)
+      .text(),
+    key
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="size"]')
+      .childAt(0)
+      .text(),
+    '0 B'
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="author"]')
+      .childAt(0)
+      .text(),
+    'N/A'
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="description"]')
+      .childAt(0)
+      .text(),
+    'N/A'
+  )
 
   t.end()
 })
@@ -73,12 +101,54 @@ test('should show info when present on dat', t => {
     />
   )
 
-  t.equal(wrapper.children().find('[data-test="key"]').childAt(0).text(), key)
-  t.equal(wrapper.children().find('[data-test="size"]').childAt(0).text(), '9 B')
-  t.equal(wrapper.children().find('[data-test="peers"]').childAt(0).text(), '2')
-  t.equal(wrapper.children().find('[data-test="author"]').childAt(0).text(), 'A-author')
-  t.equal(wrapper.children().find('[data-test="description"]').childAt(0).text(), 'A-desc')
-  t.equal(wrapper.children().find('[data-test="path"]').childAt(0).text(), 'A-path')
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="key"]')
+      .childAt(0)
+      .text(),
+    key
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="size"]')
+      .childAt(0)
+      .text(),
+    '9 B'
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="peers"]')
+      .childAt(0)
+      .text(),
+    '2'
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="author"]')
+      .childAt(0)
+      .text(),
+    'A-author'
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="description"]')
+      .childAt(0)
+      .text(),
+    'A-desc'
+  )
+  t.equal(
+    wrapper
+      .children()
+      .find('[data-test="path"]')
+      .childAt(0)
+      .text(),
+    'A-path'
+  )
 
   t.end()
 })
