@@ -6,7 +6,7 @@ import { Green as GreenButton, Plain as PlainButton } from './button'
 
 const Intro = styled.main`
   position: relative;
-  height: 100vh;
+  height: 100%;
   background-color: var(--color-neutral);
   color: var(--color-white);
   display: flex;
@@ -19,13 +19,13 @@ const Intro = styled.main`
 const Content = styled.div`
   position: relative;
   flex: 1;
-  width: 100vw;
+  width: 100%;
   padding: 3rem 2rem;
 `
 
 const Footer = styled.div`
   position: relative;
-  width: 100vw;
+  width: 100%;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
@@ -34,8 +34,8 @@ const Footer = styled.div`
   }
 `
 const Image = styled.img`
-  max-width: 100vw;
-  max-height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
 `
 
 const StyledDots = styled.div`
