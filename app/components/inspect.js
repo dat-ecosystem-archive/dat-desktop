@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { toStr } from 'dat-encoding'
 import bytes from 'prettier-bytes'
@@ -42,16 +42,13 @@ const Row = ({ children, label = null, ...props }) => {
   return (
     <div className='flex mb2'>
       {label !== null && <Label className='f7 f6-l'>{label}</Label>}
-      <Column className='bg-white f7 f6-l' {...props}>
-        {children}
-      </Column>
+      <Column className='bg-white f7 f6-l' {...props} />
     </div>
   )
 }
 
 const Inspect = ({
   screen,
-  show,
   dat,
   closeInspectDat,
   addDat,
@@ -61,12 +58,10 @@ const Inspect = ({
 }) => {
   if (!dat) return null
 
-  const title = dat
-    ? dat.metadata ? dat.metadata.title : dat.key
-    : 'Fetching metadata …'
-  const author = dat
-    ? dat.metadata && dat.metadata.author ? dat.metadata.author : 'N/A'
-    : '…'
+  const title =
+    dat.metadata && dat.metadata.title ? dat.metadata.title : dat.key || 'N/A'
+  const author =
+    dat.metadata && dat.metadata.author ? dat.metadata.author : 'N/A'
   const description =
     dat.metadata && dat.metadata.description ? dat.metadata.description : 'N/A'
   const size =
