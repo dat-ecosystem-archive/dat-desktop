@@ -4,16 +4,18 @@ import Icon from './icon'
 import { Plain as PlainButton, Green as GreenButton } from './button'
 
 const Overlay = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1;
 `
 
 const EditableFieldWrapper = styled.div`
   position: relative;
+  z-index: 1;
   h2 {
     position: relative;
   }
