@@ -26,7 +26,7 @@ const Container = styled.header`
 `
 
 const HideLayer = styled.div`
-  position: absolute;
+  position: fixed;
   background: ${transparentize(0.85, neutral)};
   width: 100vw;
   height: 100vh;
