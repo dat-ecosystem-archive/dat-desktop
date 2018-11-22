@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import Icon from './icon'
 import { Plain as PlainButton, Green as GreenButton } from './button'
@@ -35,32 +36,38 @@ const EditableFieldWrapper = styled.div`
   }
 `
 
-const InputField = styled.input`
+const InputFieldStyle = styled.input`
   :focus {
     outline: none;
   }
 `
 
+class InputField extends Component {
+  componentDidMount () {
+    const input = ReactDOM.findDOMNode(this)
+    input.focus()
+    input.select()
+  }
+  render () {
+    return <InputFieldStyle {...this.props} />
+  }
+}
+
 class TitleField extends Component {
-  startEditing () {
-    this.setState({ editing: true })
+  constructor (props) {
+    super(props)
+    this.titleInput = React.createRef()
   }
 
   onclick (ev) {
     ev.stopPropagation()
     ev.preventDefault()
-    this.startEditing()
-
-    // setTimeout? Because ref on input is set asynchronously, and later. So we can't do focus, select on it until ref is set
-    setTimeout(() => {
-      this.titleInput.focus()
-      this.titleInput.select()
-    }, 0)
+    this.setState({ editing: true })
   }
 
   commit () {
     const oldValue = this.props.value
-    const newValue = this.titleInput.value
+    const newValue = ReactDOM.findDOMNode(this.titleInput.current).value
     if (oldValue !== newValue) {
       this.props.onChange(newValue)
     }
@@ -108,14 +115,12 @@ class TitleField extends Component {
               className='bn f6 pl1 normal w-100'
               defaultValue={value}
               onKeyUp={ev => this.handleKeyup(ev)}
-              innerRef={input => {
-                this.titleInput = input
-              }}
+              ref={this.titleInput}
             />
-            {!modified ? (
-              <PlainButton onClick={() => this.commit()}>Save</PlainButton>
-            ) : (
+            {modified ? (
               <GreenButton onClick={() => this.commit()}>Save</GreenButton>
+            ) : (
+              <PlainButton onClick={() => this.cancel()}>Save</PlainButton>
             )}
           </EditableFieldWrapper>
         </div>
