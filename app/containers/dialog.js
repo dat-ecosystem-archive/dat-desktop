@@ -1,9 +1,10 @@
-import { Link, Confirm } from '../components/dialog'
+import { Link, Confirm, Alert } from '../components/dialog'
 import {
   copyLink,
   closeShareDat,
   confirmDeleteDat,
-  cancelDeleteDat
+  cancelDeleteDat,
+  closeAlert
 } from '../actions'
 import { connect } from 'react-redux'
 
@@ -27,3 +28,12 @@ export const ConfirmContainer = connect(
     onExit: () => dispatch(cancelDeleteDat())
   })
 )(Confirm)
+
+export const AlertContainer = connect(
+  state => ({
+    alert: state.dialogs.alert
+  }),
+  dispatch => ({
+    onExit: () => dispatch(closeAlert())
+  })
+)(Alert)

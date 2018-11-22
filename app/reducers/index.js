@@ -62,6 +62,14 @@ const redatApp = (state = generateDefaultState(), action) => {
         },
         screen: SCREEN.DATS
       }
+    case 'ADD_DAT_ERROR:EXISTED':
+      return {
+        ...state,
+        dialogs: {
+          ...state.dialogs,
+          alert: 'The DAT is already in the list.'
+        }
+      }
     case 'ADD_DAT_ERROR':
     case 'WRITE_METADATA_ERROR':
       return {
@@ -87,8 +95,11 @@ const redatApp = (state = generateDefaultState(), action) => {
         }
       }
     case 'REMOVE_DAT':
-      const { [action.key]: del, ...dats } = state.dats
-      return { ...state, dats }
+      if (state.dats[action.key]) {
+        const { [action.key]: del, ...dats } = state.dats
+        return { ...state, dats }
+      }
+      return state
     case 'INSPECT_DAT':
       return {
         ...state,
@@ -266,6 +277,14 @@ const redatApp = (state = generateDefaultState(), action) => {
           delete: {
             dat: null
           }
+        }
+      }
+    case 'DIALOGS_ALERT_CLOSE':
+      return {
+        ...state,
+        dialogs: {
+          ...state.dialogs,
+          alert: null
         }
       }
     case 'TOGGLE_PAUSE':
