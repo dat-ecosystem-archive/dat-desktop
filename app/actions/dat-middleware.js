@@ -77,10 +77,10 @@ export default class DatMiddleware {
     this.listeners.forEach(listener => listener(action))
   }
 
-  async updateTitle ({ key, editValue }) {
+  async updateTitle ({ key, title }) {
     const dat = this.dats[key]
     const filePath = joinPath(dat.path, 'dat.json')
-    const metadata = { ...dat.dat.metadata, title: editValue }
+    const metadata = { ...dat.dat.metadata, title: title }
 
     try {
       await writeFile(filePath, JSON.stringify(metadata))
