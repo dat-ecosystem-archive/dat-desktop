@@ -34,14 +34,10 @@ const DropIcon = styled(Icon)`
   color: white;
 `
 
-const DragDropContainer = connect(mapStateToProps, mapDispatchToProps)(function (
-  props
-) {
-  return (
-    <DropFrame {...props}>
-      <DropIcon name='create-new-dat' />
-    </DropFrame>
-  )
+const DragDropContainer = connect(mapStateToProps, mapDispatchToProps)(function(props){
+  return <DropFrame {...props}>
+    <DropIcon name='create-new-dat' />
+  </DropFrame>
 })
 
 export default DragDropContainer
