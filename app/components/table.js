@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import TableRowContainer from '../containers/table-row'
 import Empty from './empty'
@@ -41,13 +41,7 @@ const StyledTable = styled.table`
 `
 
 const Table = ({ dats, show }) => {
-  if (!show) {
-    return (
-      <Fragment>
-        <div />
-      </Fragment>
-    )
-  }
+  if (!show) return null
 
   if (!Object.keys(dats).length) return <Empty />
 
