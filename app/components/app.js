@@ -31,14 +31,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(function ({
       <HeaderContainer />
       {/* /header */}
 
-      {/* footer */}
-      <StatusBarContainer />
-      {/* /footer */}
-
       {/* main */}
       <TableContainer />
       <InspectContainer />
       {/* /main */}
+
+      {/* footer */}
+      <StatusBarContainer />
+      {/* /footer */}
 
       <Dialog.LinkContainer />
       <Dialog.ConfirmContainer />

@@ -34,6 +34,7 @@ body {
   line-height: 1.5;
   overflow: hidden;
   min-width: 800px;
+  height: 100vh;
 }
 
 main {
@@ -96,7 +97,7 @@ button {
 #app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 #app-root > main {

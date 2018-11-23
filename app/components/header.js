@@ -9,17 +9,12 @@ import * as Button from './button'
 import Icon from './icon'
 
 const Container = styled.header`
-  position: fixed;
-  z-index: 1;
   width: 100%;
   height: 2.5rem;
   padding: 0.25rem 0.75rem;
   -webkit-app-region: drag;
   background-color: var(--color-neutral);
   color: var(--color-white);
-  & ~ main {
-    margin-top: 2.5rem;
-  }
 `
 
 const HideLayer = styled.div`
