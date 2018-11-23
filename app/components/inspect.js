@@ -74,47 +74,45 @@ const Inspect = ({
 
   return (
     <main className='flex flex-column'>
-      <div className='flex flex-column flex-auto'>
-        <DetailHeader className='flex items-center'>
-          <div className='w3'>
-            <Icon name='hexagon-down' className='w2 center color-neutral-30' />
-          </div>
-          <h2 className='f5 normal truncate pr3 w-90'>{title}</h2>
-        </DetailHeader>
-        <div className='flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto'>
-          <Row label='Link:' data-test='key'>
-            {toStr(dat.key)}
-          </Row>
-          <Row label='Size:' data-test='size'>
-            {size}
-          </Row>
-          <Row label='Peers:' data-test='peers'>
-            {peers}
-          </Row>
-          <Row label='Author:' data-test='author'>
-            {author}
-          </Row>
-          <Row label='Description:' data-test='description'>
-            {description}
-          </Row>
-          <Row label='Download to:' className='flex bg-white' data-test='path'>
-            <pre
-              className='flex-auto f7 f6-l'
-              style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-            >
-              {dat.path}
-            </pre>
-            <TextButton onClick={() => changeDownloadPath(dat.key)}>
-              CHANGE...
-            </TextButton>
-          </Row>
-          <Row label='Files:'>
-            <FileList
-              dat={dat}
-              fallback={<div className='f7 f6-l pa2'>N/A</div>}
-            />
-          </Row>
+      <DetailHeader className='flex items-center bg-white'>
+        <div className='w3'>
+          <Icon name='hexagon-down' className='w2 center color-neutral-30' />
         </div>
+        <h2 className='f5 normal truncate pr3 w-90'>{title}</h2>
+      </DetailHeader>
+      <div className='flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto'>
+        <Row label='Link:' data-test='key'>
+          {toStr(dat.key)}
+        </Row>
+        <Row label='Size:' data-test='size'>
+          {size}
+        </Row>
+        <Row label='Peers:' data-test='peers'>
+          {peers}
+        </Row>
+        <Row label='Author:' data-test='author'>
+          {author}
+        </Row>
+        <Row label='Description:' data-test='description'>
+          {description}
+        </Row>
+        <Row label='Download to:' className='flex bg-white' data-test='path'>
+          <pre
+            className='flex-auto f7 f6-l'
+            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            {dat.path}
+          </pre>
+          <TextButton onClick={() => changeDownloadPath(dat.key)}>
+            CHANGE...
+          </TextButton>
+        </Row>
+        <Row label='Files:'>
+          <FileList
+            dat={dat}
+            fallback={<div className='f7 f6-l pa2'>N/A</div>}
+          />
+        </Row>
       </div>
       {screen === SCREEN.INSPECT && (
         <DetailFooter className='pa3 flex items-center justify-between bg-white'>
