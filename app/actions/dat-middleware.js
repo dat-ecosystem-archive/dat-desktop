@@ -382,13 +382,13 @@ export default class DatMiddleware {
     } catch (_) {
       return
     }
-    const datOpts = JSON.parse(blob)
+    const datOpts = JSON.parse(blob || '{}')
 
-    blob = {}
+    blob = null
     try {
       blob = await readFile(joinPath(this.dataDir, 'paused.json'), 'utf8')
     } catch (_) {}
-    const paused = JSON.parse(blob)
+    const paused = JSON.parse(blob || '{}')
 
     for (const key of Object.keys(datOpts)) {
       const opts = JSON.parse(datOpts[key])
