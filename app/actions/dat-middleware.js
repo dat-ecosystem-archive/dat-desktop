@@ -13,6 +13,17 @@ const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 const { Notification } = window
 
+async function readJSON (file) {
+  try {
+    const blob = await readFile(file, 'utf8')
+    if (!blob) {
+      return {}
+    }
+    return JSON.parse(blob)
+  } catch (_) {}
+  return {}
+}
+
 export default class DatMiddleware {
   constructor ({ downloadsDir, dataDir }) {
     this.downloadsDir = downloadsDir
@@ -376,19 +387,10 @@ export default class DatMiddleware {
       await mkdirp(this.dataDir)
     } catch (_) {}
 
-    let blob
-    try {
-      blob = await readFile(joinPath(this.dataDir, 'dats.json'), 'utf8')
-    } catch (_) {
-      return
-    }
-    const datOpts = JSON.parse(blob || '{}')
-
-    blob = null
-    try {
-      blob = await readFile(joinPath(this.dataDir, 'paused.json'), 'utf8')
-    } catch (_) {}
-    const paused = JSON.parse(blob || '{}')
+    const [ datOpts, paused ] = await Promise.all([
+      readJSON(joinPath(this.dataDir, 'dats.json')),
+      readJSON(joinPath(this.dataDir, 'paused.json'))
+    ])
 
     for (const key of Object.keys(datOpts)) {
       const opts = JSON.parse(datOpts[key])
