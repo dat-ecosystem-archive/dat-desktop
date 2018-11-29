@@ -1,37 +1,9 @@
 'use strict'
 
 import SCREEN from '../consts/screen'
+import generateDefaultState from '../consts/state'
 
-const defaultState = {
-  dats: {},
-  screen: SCREEN.INTRO,
-  dialogs: {
-    link: {
-      link: null,
-      copied: false
-    },
-    delete: {
-      dat: null
-    }
-  },
-  speed: {
-    up: 0,
-    down: 0
-  },
-  inspect: {
-    key: null
-  },
-  intro: {
-    screen: 1
-  },
-  version: require('../../package.json').version,
-  menu: {
-    visible: false
-  },
-  downloadDatKey: null
-}
-
-const redatApp = (state = defaultState, action) => {
+const redatApp = (state = generateDefaultState(), action) => {
   switch (action.type) {
     case 'NEXT_INTRO':
       return {
