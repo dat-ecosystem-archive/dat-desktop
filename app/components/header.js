@@ -11,7 +11,6 @@ import Icon from './icon'
 const Container = styled.header`
   position: fixed;
   z-index: 1;
-  top: 0;
   width: 100%;
   height: 2.5rem;
   padding: 0.25rem 0.75rem;
@@ -33,7 +32,6 @@ const HideLayer = styled.div`
   height: 100vh;
   left: 0;
   top: 0;
-  z-index: 2;
 `
 
 const Header = ({ onShare, onMenu, onReport, menuVisible, version }) => {
@@ -58,7 +56,7 @@ const Header = ({ onShare, onMenu, onReport, menuVisible, version }) => {
         {menuVisible && (
           <div
             className='absolute right-0 br1 w5 pa3 bg-neutral'
-            style={{ top: '3rem', zIndex: 6 }}
+            style={{ top: '3rem', right: '0.5rem', zIndex: 6 }}
           >
             <h3 className='f6 f5-l mb2'>Dat Desktop {version}</h3>
             <p className='f6 f5-l mb3'>
