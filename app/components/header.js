@@ -9,12 +9,12 @@ import * as Button from './button'
 import Icon from './icon'
 
 const Container = styled.header`
+  width: 100%;
   height: 2.5rem;
   padding: 0.25rem 0.75rem;
   -webkit-app-region: drag;
   background-color: var(--color-neutral);
   color: var(--color-white);
-  z-index: 4;
 `
 
 const HideLayer = styled.div`
@@ -24,7 +24,6 @@ const HideLayer = styled.div`
   height: 100%;
   left: 0;
   top: 0;
-  z-index: 5;
 `
 
 const Header = ({ onShare, onMenu, onReport, menuVisible, version }) => {

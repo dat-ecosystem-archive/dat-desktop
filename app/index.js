@@ -54,7 +54,7 @@ datMiddleware
       <Provider store={store}>
         <App />
       </Provider>,
-      document.querySelector('div')
+      document.getElementById('app-root')
     )
   })
   .catch(err => {

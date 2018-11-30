@@ -34,11 +34,10 @@ body {
   line-height: 1.5;
   overflow: hidden;
   min-width: 800px;
+  height: 100vh;
 }
 
 main {
-  overflow-y: auto;
-  height: calc(100vh - 2.5rem); /* height of header + status bar */
   background-color: var(--color-white);
 }
 
@@ -93,4 +92,14 @@ button {
   0% { background-color: rgba(42,202,75,.2); }
   35% { background-color: rgba(42,202,75,.2); }
   100% { background-color: rgba(42,202,75,0); }
+}
+
+#app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#app-root > main {
+  flex: 1;
 }
