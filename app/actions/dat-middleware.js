@@ -411,13 +411,14 @@ export default class DatMiddleware {
     const datsState = Object.keys(this.dats).reduce(
       (acc, key) => ({
         ...acc,
-        [key]: JSON.stringify({
+        [key]: {
           dir: this.dats[key].path,
           opts: this.dats[key].opts
-        })
+        }
       }),
       {}
     )
+
     const pausedState = Object.keys(this.dats).reduce(
       (acc, key) => ({
         ...acc,
