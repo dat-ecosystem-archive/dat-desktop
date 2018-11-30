@@ -5,12 +5,13 @@ import Icon from './icon'
 import { Plain as PlainButton, Green as GreenButton } from './button'
 
 const Overlay = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1;
 `
 
 const EditableFieldWrapper = styled.div`
@@ -34,6 +35,10 @@ const EditableFieldWrapper = styled.div`
       display: block;
     }
   }
+`
+
+const ActiveEditableFieldWrapper = styled(EditableFieldWrapper)`
+  z-index: 1;
 `
 
 const InputFieldStyle = styled.input`
@@ -109,7 +114,7 @@ class TitleField extends Component {
       return (
         <div onClick={e => e.stopPropagation()}>
           <Overlay onClick={() => this.cancel()} />
-          <EditableFieldWrapper className='bg-white nt1 nb1 nl1 shadow-1 flex justify-between'>
+          <ActiveEditableFieldWrapper className='bg-white nt1 nb1 nl1 shadow-1 flex justify-between'>
             {/* why innerRef in following component? check here - styled-components/styled-components#102 */}
             <InputField
               className='bn f6 pl1 normal w-100'
@@ -122,7 +127,7 @@ class TitleField extends Component {
             ) : (
               <PlainButton onClick={() => this.cancel()}>Save</PlainButton>
             )}
-          </EditableFieldWrapper>
+          </ActiveEditableFieldWrapper>
         </div>
       )
     }
