@@ -3,7 +3,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const BaseButton = styled.button.attrs({
+const BaseButton = styled.button.attrs(props => ({
+  ...props,
   onClick: props => {
     if (props.trigger) {
       return function (e) {
@@ -13,7 +14,7 @@ const BaseButton = styled.button.attrs({
     }
     return undefined
   }
-})`
+}))`
   text-transform: uppercase;
   letter-spacing: 0.025em;
   cursor: pointer;
