@@ -387,7 +387,7 @@ export default class DatMiddleware {
       await mkdirp(this.dataDir)
     } catch (_) {}
 
-    const [ datOpts, paused ] = await Promise.all([
+    const [datOpts, paused] = await Promise.all([
       readJSON(joinPath(this.dataDir, 'dats.json')),
       readJSON(joinPath(this.dataDir, 'paused.json'))
     ])
@@ -426,13 +426,12 @@ export default class DatMiddleware {
       {}
     )
 
-    await writeFile(
-      joinPath(this.dataDir, 'dats.json'),
-      JSON.stringify(datsState)
-    )
-    await writeFile(
-      joinPath(this.dataDir, 'paused.json'),
-      JSON.stringify(pausedState)
-    )
+    await Promise.all([
+      writeFile(joinPath(this.dataDir, 'dats.json'), JSON.stringify(datsState)),
+      writeFile(
+        joinPath(this.dataDir, 'paused.json'),
+        JSON.stringify(pausedState)
+      )
+    ])
   }
 }
