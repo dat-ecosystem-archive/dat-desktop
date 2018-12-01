@@ -2,7 +2,7 @@
 
 import SCREEN from '../consts/screen'
 
-export default () => ({
+export const generateDefaultState = () => ({
   dats: {},
   screen: SCREEN.INTRO,
   dialogs: {

@@ -1,7 +1,7 @@
 'use strict'
 
 import SCREEN from '../consts/screen'
-import generateDefaultState from '../consts/state'
+import { generateDefaultState } from '../consts/state'
 
 const redatApp = (state = generateDefaultState(), action) => {
   switch (action.type) {
