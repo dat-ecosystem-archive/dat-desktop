@@ -7,11 +7,15 @@ import bytes from 'prettier-bytes'
 const FileListTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  tr:odd td {
-    background-color: var(--color-neutral-04);
+  tr:nth-child(odd) td {
+    background-color: var(--color-white);
+  }
+  tr:nth-child(even) td {
+    background-color: var(--color-neutral-10);
   }
   td {
     border: 0;
+    padding: 0.25rem;
   }
   td:last-child {
     width: 4rem;
