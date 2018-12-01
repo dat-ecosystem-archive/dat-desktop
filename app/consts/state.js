@@ -2,7 +2,6 @@
 
 import SCREEN from '../consts/screen'
 
-// immutable
 export default () => ({
   dats: {},
   screen: SCREEN.INTRO,
