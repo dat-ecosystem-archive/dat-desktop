@@ -393,13 +393,23 @@ export default class DatMiddleware {
     ])
 
     for (const key of Object.keys(datOpts)) {
-      const opts = datOpts[key]
-      this.internalAddDat({
-        key,
-        path: opts.dir,
-        paused: paused[key],
-        ...opts
-      })
+      let datdata
+
+      // It is for compatibility.
+      try {
+        datdata = JSON.parse(datOpts[key])
+      } catch (e) {
+        datdata = datOpts[key] || null
+      }
+
+      if (datdata) {
+        this.internalAddDat({
+          key,
+          path: datdata.dir,
+          paused: paused[key],
+          ...datdata
+        })
+      }
     }
   }
 
