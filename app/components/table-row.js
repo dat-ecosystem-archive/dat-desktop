@@ -10,7 +10,7 @@ import FinderButton from './finder-button'
 import HexContent from './hex-content'
 import TitleField from './title-field'
 
-const Tr = styled.tr`
+export const Tr = styled.tr`
   transition: background-color 0.025s ease-out;
   &:hover,
   &:focus {

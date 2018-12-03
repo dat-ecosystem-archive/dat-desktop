@@ -1,8 +1,9 @@
 'use strict'
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import TableRowContainer from '../containers/table-row'
+import { Tr } from './table-row'
 import Empty from './empty'
 
 const StyledTable = styled.table`
@@ -14,6 +15,9 @@ const StyledTable = styled.table`
   td {
     padding-right: 0.75rem;
     padding-left: 0.75rem;
+    &:nth-child(2) {
+      padding-left: 0;
+    }
   }
   th {
     height: 4rem;
@@ -22,12 +26,7 @@ const StyledTable = styled.table`
     color: var(--color-neutral-60);
     border-bottom: 1px solid var(--color-neutral-20);
     &:first-child {
-      width: 3rem;
-      padding: 0;
       border: none;
-    }
-    &:last-child {
-      width: 8.25rem;
     }
   }
   td {
@@ -41,35 +40,33 @@ const StyledTable = styled.table`
 `
 
 const Table = ({ dats, show }) => {
-  if (!show) {
-    return (
-      <Fragment>
-        <div />
-      </Fragment>
-    )
-  }
+  if (!show) return null
 
   if (!Object.keys(dats).length) return <Empty />
 
   return (
-    <main>
+    <main className='flex flex-column'>
       <StyledTable>
         <thead>
-          <tr>
+          <Tr>
             <th className='cell-1' />
             <th className='tl cell-2'>Link</th>
             <th className='tl cell-3'>Status</th>
             <th className='tl cell-4'>Size</th>
             <th className='tl cell-5'>Peers</th>
             <th className='cell-6' />
-          </tr>
+          </Tr>
         </thead>
-        <tbody>
-          {Object.keys(dats).map(key => (
-            <TableRowContainer key={key} dat={dats[key]} />
-          ))}
-        </tbody>
       </StyledTable>
+      <div className='flex-auto overflow-y-auto'>
+        <StyledTable>
+          <tbody>
+            {Object.keys(dats).map(key => (
+              <TableRowContainer key={key} dat={dats[key]} />
+            ))}
+          </tbody>
+        </StyledTable>
+      </div>
     </main>
   )
 }
