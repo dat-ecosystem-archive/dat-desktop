@@ -82,22 +82,22 @@ const Inspect = ({
         <h2 className='f5 normal truncate pr3 w-90'>{title}</h2>
       </DetailHeader>
       <div className='flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto'>
-        <Row label='Link' data-test='key'>
+        <Row label='Link:' data-test='key'>
           {toStr(dat.key)}
         </Row>
-        <Row label='Size' data-test='size'>
+        <Row label='Size:' data-test='size'>
           {size}
         </Row>
-        <Row label='Peers' data-test='peers'>
+        <Row label='Peers:' data-test='peers'>
           {peers}
         </Row>
-        <Row label='Author' data-test='author'>
+        <Row label='Author:' data-test='author'>
           {author}
         </Row>
-        <Row label='Description' data-test='description'>
+        <Row label='Description:' data-test='description'>
           {description}
         </Row>
-        <Row label='Download to' className='flex bg-white' data-test='path'>
+        <Row label='Download to:' className='flex bg-white' data-test='path'>
           <pre
             className='flex-auto f7 f6-l'
             style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -108,7 +108,7 @@ const Inspect = ({
             CHANGE...
           </TextButton>
         </Row>
-        <Row label='Files' style={{padding: 0}}>
+        <Row label='Files:' style={{padding: 0}}>
           <FileList
             dat={dat}
             fallback={<div className='f7 f6-l pa2'>N/A</div>}
