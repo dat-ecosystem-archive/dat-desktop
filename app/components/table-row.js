@@ -12,10 +12,12 @@ import TitleField from './title-field'
 
 export const Tr = styled.tr`
   transition: background-color 0.025s ease-out;
-  &:hover,
-  &:focus {
-    background-color: var(--color-neutral-04);
-    cursor: pointer;
+  &.selectable {
+    &:hover,
+    &:focus {
+      background-color: var(--color-neutral-04);
+      cursor: pointer;
+    }
   }
   .cell-1 {
     width: 4rem;
@@ -149,7 +151,7 @@ const Row = ({
   const { title } = metadata
   const placeholderTitle = `#${key}`
   return (
-    <Tr onClick={() => inspectDat(dat.key)}>
+    <Tr onClick={() => inspectDat(dat.key)} className='selectable'>
       <td className='cell-1'>
         <div
           className='w2 center'
