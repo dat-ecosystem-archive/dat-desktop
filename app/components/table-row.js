@@ -126,6 +126,7 @@ const LinkButton = ({ ...props }) => (
   <Button.Icon
     icon={<Icon name='link' />}
     className='row-action btn-link'
+    title='Copy Link'
     {...props}
   />
 )
@@ -134,6 +135,7 @@ const DeleteButton = ({ ...props }) => (
   <Button.Icon
     icon={<Icon name='delete' />}
     className='row-action mr2 btn-delete'
+    title='Delete'
     {...props}
   />
 )
