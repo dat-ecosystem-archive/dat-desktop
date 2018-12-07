@@ -3,7 +3,6 @@ version: 3.0.{build}-{branch}
 
 # branches to build
 branches:
-  # whitelist
   only:
     - master
     - fix/appveyor
@@ -15,14 +14,8 @@ skip_branch_with_pr: false
 image: Visual Studio 2017
 
 environment:
-  # ELECTRON_ENABLE_STACK_DUMPING: 'true'
-  # DEBUG: '*,-nugget*,-eslint*,-extract-zip*,-sumchecker*,-electron-download*,-dependency-check*'
   matrix:
     - nodejs_version: "10"
-
-# platform:
-#   - x86
-#   - x64
 
 cache:
   - node_modules
@@ -30,7 +23,6 @@ cache:
   - '%LOCALAPPDATA%\electron-builder\cache'
 
 install:
-  # - ps: Install-Product node $env:nodejs_version $env:platform
   - ps: Install-Product node $env:nodejs_version
   - npm install
   - node --version
@@ -42,8 +34,6 @@ test_script:
 
 build_script:
   - npm run dist
-#  - cd dist
-#  - msiexec /i "KioskDemoElectron.msi" /l*v "install.log" KIOSK_USERNAME=%username%
 
 # Don't actually build.
 # build: off
@@ -51,7 +41,3 @@ build_script:
 artifacts:
   - path: .\dist\*.msi
   - path: .\dist\*.log
-
-# RDP for debugging purposes
-# init:
-  # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
