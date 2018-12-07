@@ -1,3 +1,19 @@
+# version format
+version: 3.0.{build}-{branch}
+
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+    - fix/appveyor
+
+# Do not build feature branch with open Pull Requests
+skip_branch_with_pr: false
+
+# Build worker image (VM template)
+image: Visual Studio 2017
+
 environment:
   # ELECTRON_ENABLE_STACK_DUMPING: 'true'
   # DEBUG: '*,-nugget*,-eslint*,-extract-zip*,-sumchecker*,-electron-download*,-dependency-check*'
