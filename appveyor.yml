@@ -20,9 +20,9 @@ environment:
   matrix:
     - nodejs_version: "10"
 
-platform:
-  - x86
-  - x64
+# platform:
+#   - x86
+#   - x64
 
 cache:
   - node_modules
@@ -30,7 +30,8 @@ cache:
   - '%LOCALAPPDATA%\electron-builder\cache'
 
 install:
-  - ps: Install-Product node $env:nodejs_version $env:platform
+  # - ps: Install-Product node $env:nodejs_version $env:platform
+  - ps: Install-Product node $env:nodejs_version
   - npm install
   - node --version
   - npm --version
