@@ -2,11 +2,16 @@ environment:
   ELECTRON_ENABLE_STACK_DUMPING: 'true'
   DEBUG: '*,-nugget*,-eslint*,-extract-zip*,-sumchecker*,-electron-download*,-dependency-check*'
   matrix:
-    - nodejs_version: "8"
+    - nodejs_version: "10"
 
 platform:
   - x86
   - x64
+
+cache:
+  - node_modules
+  - '%LOCALAPPDATA%\electron\Cache'
+  - '%LOCALAPPDATA%\electron-builder\cache'
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
@@ -18,9 +23,15 @@ test_script:
   - npm run build:prod
   - npm test
 
+build_script:
+  - npm run dist
+
 # Don't actually build.
 build: off
 
+artifact:
+  - path: dist
+
 # RDP for debugging purposes
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# init:
+  # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
