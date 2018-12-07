@@ -3,6 +3,7 @@ version: 3.0.{build}-{branch}
 
 # branches to build
 branches:
+  # whitelist
   only:
     - master
     - fix/appveyor
@@ -16,6 +17,9 @@ image: Visual Studio 2017
 environment:
   matrix:
     - nodejs_version: "10"
+# platform:
+#   - x86
+#   - x64
 
 cache:
   - node_modules
@@ -23,21 +27,15 @@ cache:
   - '%LOCALAPPDATA%\electron-builder\cache'
 
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version # $env:platform
   - npm install
   - node --version
   - npm --version
 
+build: off
+shallow_clone: true
+clone_depth: 1
+
 test_script:
-  - npm run build:prod
-  - npm test
-
-build_script:
+  # - npm test
   - npm run dist
-
-# Don't actually build.
-# build: off
-
-artifacts:
-  - path: .\dist\*.msi
-  - path: .\dist\*.log
