@@ -3,17 +3,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const BaseButton = styled.button.attrs(props => ({
+const BaseButton = styled.button.attrs(({ trigger, onClick, ...props }) => ({
   ...props,
-  onClick: props => {
-    if (props.trigger) {
-      return function (e) {
-        e.stopPropagation()
-        props.trigger.apply(this, [e])
-      }
-    }
-    return undefined
-  }
+  onClick: trigger ? function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    trigger.call(this, e)
+  } : onClick
 }))`
   text-transform: uppercase;
   letter-spacing: 0.025em;
