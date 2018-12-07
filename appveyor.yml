@@ -1,6 +1,6 @@
 environment:
-  ELECTRON_ENABLE_STACK_DUMPING: 'true'
-  DEBUG: '*,-nugget*,-eslint*,-extract-zip*,-sumchecker*,-electron-download*,-dependency-check*'
+  # ELECTRON_ENABLE_STACK_DUMPING: 'true'
+  # DEBUG: '*,-nugget*,-eslint*,-extract-zip*,-sumchecker*,-electron-download*,-dependency-check*'
   matrix:
     - nodejs_version: "10"
 
@@ -25,12 +25,15 @@ test_script:
 
 build_script:
   - npm run dist
+#  - cd dist
+#  - msiexec /i "KioskDemoElectron.msi" /l*v "install.log" KIOSK_USERNAME=%username%
 
 # Don't actually build.
-build: off
+# build: off
 
-artifact:
-  - path: dist
+artifacts:
+  - path: .\dist\*.msi
+  - path: .\dist\*.log
 
 # RDP for debugging purposes
 # init:
