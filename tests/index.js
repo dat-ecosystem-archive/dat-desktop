@@ -156,10 +156,14 @@ test('working with dats', function (t) {
 
 // Create a new app instance
 function createApp (t) {
+  const bin = path.resolve(__dirname, '../node_modules/.bin/electron')
+  console.log(bin)
+  const index = path.join(__dirname, '../index.js')
+  console.log(index)
   var app = new spectron.Application({
-    path: path.join(__dirname, '../node_modules/.bin/electron'),
+    path: bin,
     args: [
-      path.join(__dirname, '../index.js'),
+      index,
       '--data',
       TEST_DATA,
       '--db',
