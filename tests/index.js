@@ -177,13 +177,15 @@ function createApp (t) {
 
 function clear () {
   return Promise.all([
-    new Promise((resolve, reject) =>
-      exec(
-        `git checkout -- "${FIXTURES}"`,
-        error => (error ? reject(error) : resolve())
-      )
+    del(FIXTURES).then(
+      () =>
+        new Promise((resolve, reject) =>
+          exec(
+            `git checkout -- "${FIXTURES}"`,
+            error => (error ? reject(error) : resolve())
+          )
+        )
     ),
-    del(FIXTURES),
     del(TEST_DATA)
   ])
 }
