@@ -156,19 +156,16 @@ test('working with dats', function (t) {
 
 // Create a new app instance
 function createApp (t) {
-  const bin = path.resolve(__dirname, '../node_modules/.bin/electron')
-  console.log(bin)
+  let electronPath = path.resolve(__dirname, '../node_modules/.bin/electron')
+  if (process.platform === 'win32') {
+    electronPath += '.cmd'
+  }
+  console.log(electronPath)
   const index = path.join(__dirname, '../index.js')
   console.log(index)
   var app = new spectron.Application({
-    path: bin,
-    args: [
-      index,
-      '--data',
-      TEST_DATA,
-      '--db',
-      TEST_DATA_DB
-    ],
+    path: electronPath,
+    args: [index, '--data', TEST_DATA, '--db', TEST_DATA_DB],
     env: {
       NODE_ENV: 'test',
       RUNNING_IN_SPECTRON: true,
