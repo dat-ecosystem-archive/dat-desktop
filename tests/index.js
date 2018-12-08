@@ -36,7 +36,7 @@ test('init', function (t) {
             getWindowCount: 1,
             isMinimized: false,
             isDevToolsOpened: false,
-            isFocused: process.os !== 'win32', // Windows cant focus by default
+            isFocused: process.platform !== 'win32', // Windows cant focus by default
             bounds: {
               width: 800,
               height: 600
