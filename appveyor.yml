@@ -11,8 +11,7 @@ branches:
 # Do not build feature branch with open Pull Requests
 skip_branch_with_pr: false
 
-# Build worker image (VM template)
-image: Visual Studio 2017
+os: unstable
 
 environment:
   matrix:
