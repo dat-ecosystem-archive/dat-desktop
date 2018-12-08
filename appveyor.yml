@@ -33,8 +33,8 @@ install:
   - npm --version
 
 build: off
-shallow_clone: true
-clone_depth: 1
+# shallow_clone: true
+# clone_depth: 1
 
 test_script:
   - npm test
