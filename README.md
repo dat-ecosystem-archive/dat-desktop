@@ -20,6 +20,7 @@
 To run _Dat Desktop_ in development mode:
 
 ```sh
+node --version          # v8.12.0
 npm install             # install dependencies
 npm start               # start the application
 ```
