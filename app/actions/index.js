@@ -10,7 +10,12 @@ const stat = promisify(fs.stat)
 
 function showOpenDialog (props) {
   if (process.env.RUNNING_IN_SPECTRON && process.env.OPEN_RESULT) {
-    return [path.resolve(__dirname, process.env.OPEN_RESULT)]
+    return new Promise((resolve, reject) => {
+      resolve({
+        cancelled: false,
+        filePaths: [path.resolve(__dirname, process.env.OPEN_RESULT)]
+      })
+    })
   }
   return remote.dialog.showOpenDialog(props)
 }
@@ -23,12 +28,21 @@ export const copyLink = link => {
 export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
 
 export const createDat = () => dispatch => {
-  const files = showOpenDialog({
+  showOpenDialog({
     properties: ['openDirectory']
   })
-  if (!files || !files.length) return
-  const path = files[0]
-  addDat({ path })(dispatch)
+    .then(({ filePaths, cancelled }) => {
+      if (cancelled) return
+      if (!filePaths) {
+        console.error('Did not get files from the open dialog, closing')
+        return
+      }
+      const path = filePaths[0]
+      addDat({ path })(dispatch)
+    })
+    .catch(err => {
+      console.error(err)
+    })
 }
 export const requestDownload = key => ({
   type: 'REQUEST_DOWNLOAD',

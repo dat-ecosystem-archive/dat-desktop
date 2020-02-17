@@ -108,7 +108,7 @@ const Inspect = ({
             CHANGE...
           </TextButton>
         </Row>
-        <Row label='Files:' style={{padding: 0}}>
+        <Row label='Files:' style={{ padding: 0 }}>
           <FileList
             dat={dat}
             fallback={<div className='f7 f6-l pa2'>N/A</div>}

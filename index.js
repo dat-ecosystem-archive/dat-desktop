@@ -62,7 +62,9 @@ app.on('ready', () => {
         nodeIntegration: false,
         preload: `${__dirname}/preload.js`
       }
-      : {}
+      : {
+        nodeIntegration: true
+      }
     )
   })
   win.loadURL(`file://${__dirname}/index.html#${process.env.NODE_ENV}`)
