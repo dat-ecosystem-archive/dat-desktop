@@ -25,17 +25,19 @@ export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
 export const createDat = () => dispatch => {
   showOpenDialog({
     properties: ['openDirectory']
-  }).then(({ filePaths, cancelled }) => {
-    if (cancelled) return
-    if (!filePaths) {
-      console.error('Did not get files from the open dialog, closing')
-      return
-    }
-    const path = filePaths[0]
-    addDat({ path })(dispatch)
-  }).catch((err) => {
-    console.error(err)
   })
+    .then(({ filePaths, cancelled }) => {
+      if (cancelled) return
+      if (!filePaths) {
+        console.error('Did not get files from the open dialog, closing')
+        return
+      }
+      const path = filePaths[0]
+      addDat({ path })(dispatch)
+    })
+    .catch(err => {
+      console.error(err)
+    })
 }
 export const requestDownload = key => ({
   type: 'REQUEST_DOWNLOAD',
