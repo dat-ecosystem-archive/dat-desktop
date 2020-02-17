@@ -23,12 +23,19 @@ export const copyLink = link => {
 export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
 
 export const createDat = () => dispatch => {
-  const files = showOpenDialog({
+  showOpenDialog({
     properties: ['openDirectory']
+  }).then(({ filePaths, cancelled }) => {
+    if (cancelled) return
+    if (!filePaths) {
+      console.error('Did not get files from the open dialog, closing')
+      return
+    }
+    const path = filePaths[0]
+    addDat({ path })(dispatch)
+  }).catch((err) => {
+    console.error(err)
   })
-  if (!files || !files.length) return
-  const path = files[0]
-  addDat({ path })(dispatch)
 }
 export const requestDownload = key => ({
   type: 'REQUEST_DOWNLOAD',
