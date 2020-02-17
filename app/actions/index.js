@@ -10,7 +10,12 @@ const stat = promisify(fs.stat)
 
 function showOpenDialog (props) {
   if (process.env.RUNNING_IN_SPECTRON && process.env.OPEN_RESULT) {
-    return [path.resolve(__dirname, process.env.OPEN_RESULT)]
+    return new Promise((resolve, reject) => {
+      resolve({
+        cancelled: false,
+        filePaths: [path.resolve(__dirname, process.env.OPEN_RESULT)]
+      })
+    })
   }
   return remote.dialog.showOpenDialog(props)
 }
