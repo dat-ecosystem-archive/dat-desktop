@@ -1,6 +1,6 @@
 # Dat Desktop
 
-**Peer to peer data sharing app built for humans.**
+**Peer to peer data versioning & syncronization.**
 
 [!["Build Status"](https://img.shields.io/travis/dat-land/dat-desktop/master.svg?style=flat-square)](https://travis-ci.org/dat-land/dat-desktop) 
 [!["Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
