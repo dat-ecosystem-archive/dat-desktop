@@ -384,6 +384,7 @@ export default class DatMiddleware {
 
   async loadFromDisk () {
     try {
+      await mkdirp(this.downloadsDir)
       await mkdirp(this.dataDir)
     } catch (_) {}
 
