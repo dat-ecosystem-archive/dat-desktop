@@ -16,9 +16,9 @@ if (typeof process.env.NODE_V === 'string' && process.env.NODE_V !== process.ver
       You are using a different version of Node than is used in this electron release!
       - Used Version: ${process.env.NODE_V}
       - Electron's Node Version: ${process.version}
-    
+
       We recommend running:
-      
+
       $ nvm install ${process.version}; npm rebuild;
 
     `)
@@ -62,7 +62,9 @@ app.on('ready', () => {
         nodeIntegration: false,
         preload: `${__dirname}/preload.js`
       }
-      : {}
+      : {
+        nodeIntegration: true
+      }
     )
   })
   win.loadURL(`file://${__dirname}/index.html#${process.env.NODE_ENV}`)
@@ -91,13 +93,13 @@ app.on('window-all-closed', () => {
   app.quit()
 })
 
-const quit = app.makeSingleInstance(() => {
-  if (!win) return
-  if (win.isMinimized()) win.restore()
-  win.focus()
-})
-
-if (quit) app.quit()
+// const quit = app.makeSingleInstance(() => {
+//   if (!win) return
+//   if (win.isMinimized()) win.restore()
+//   win.focus()
+// })
+//
+// if (quit) app.quit()
 
 function watchAndReload () {
   let gaze
