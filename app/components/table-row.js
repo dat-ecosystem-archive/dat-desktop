@@ -150,8 +150,10 @@ const Row = ({
   if (!metadata) return null
   const { title } = metadata
   const placeholderTitle = `#${key}`
+  // TODO: inspectDat needs more work!
+  // onClick={() => inspectDat(dat.key)} className='selectable'>
   return (
-    <Tr onClick={() => inspectDat(dat.key)} className='selectable'>
+    <Tr>
       <td className='cell-1'>
         <div
           className='w2 center'
