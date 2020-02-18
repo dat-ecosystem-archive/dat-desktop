@@ -17,8 +17,11 @@ const FinderButton = ({ dat, onClick }) => (
   <Button.Icon
     icon={<Icon name='open-in-finder' />}
     className='row-action btn-finder'
-    trigger={() => shell.openExternal(`file://${resolve(dat.path)}`, () => {})}
     title={`Open in ${alt}`}
+    onClick={ev => {
+      ev.stopPropagation()
+      shell.openExternal(`file://${resolve(dat.path)}`, () => {})
+    }}
   />
 )
 

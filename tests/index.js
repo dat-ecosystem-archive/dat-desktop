@@ -105,7 +105,7 @@ test('working with dats', function (t) {
     .then(() =>
       Promise.all([
         waitForMatch(t, app, '.network', /0/),
-        waitForMatch(t, app, '.size', /(126|52) B/, 'contains correct size')
+        waitForMatch(t, app, '.size', /([1-9]\d*) B/)
       ])
     )
     .then(() =>
@@ -135,7 +135,7 @@ test('working with dats', function (t) {
         .then(isVisible => t.equal(isVisible, true, 'reloaded and is visible'))
     )
     .then(() =>
-      waitForMatch(t, app, '.size', /(126|52) B/, 'contains correct size')
+      waitForMatch(t, app, '.size', /([1-9]\d*) B/)
     )
     .then(() => waitForAndClick(t, app, '.btn-delete'))
     .then(() => waitForAndClick(t, app, '.btn-cancel'))
@@ -156,15 +156,14 @@ test('working with dats', function (t) {
 
 // Create a new app instance
 function createApp (t) {
+  let electronPath = path.resolve(__dirname, '..', 'node_modules', '.bin', 'electron')
+  if (process.platform === 'win32') {
+    electronPath += '.cmd'
+  }
+  const index = path.join(__dirname, '..', 'index.js')
   var app = new spectron.Application({
-    path: path.join(__dirname, '../node_modules/.bin/electron'),
-    args: [
-      path.join(__dirname, '../index.js'),
-      '--data',
-      TEST_DATA,
-      '--db',
-      TEST_DATA_DB
-    ],
+    path: electronPath,
+    args: [index, '--data', TEST_DATA, '--db', TEST_DATA_DB],
     env: {
       NODE_ENV: 'test',
       RUNNING_IN_SPECTRON: true,
@@ -177,13 +176,15 @@ function createApp (t) {
 
 function clear () {
   return Promise.all([
-    new Promise((resolve, reject) =>
-      exec(
-        `git checkout -- "${FIXTURES}"`,
-        error => (error ? reject(error) : resolve())
-      )
+    del(FIXTURES).then(
+      () =>
+        new Promise((resolve, reject) =>
+          exec(
+            `git checkout -- "${FIXTURES}"`,
+            error => (error ? reject(error) : resolve())
+          )
+        )
     ),
-    del(FIXTURES),
     del(TEST_DATA)
   ])
 }
@@ -196,17 +197,24 @@ function init (app, t) {
 function waitForLoad (app, t) {
   return app
     .start()
-    .then(() => app.client.waitUntilWindowLoaded())
+    .then(() => {
+      app.client.waitUntilWindowLoaded()
+    })
     .then(function () {
       // Switch to the main window
       return app.client.windowByIndex(0)
     })
-    .then(() => app.client.waitUntilWindowLoaded())
-    .then(() =>
+    .then(() => {
+      app.client.waitUntilWindowLoaded()
+    })
+    .then(() => {
+      app.browserWindow.focus()
       app.browserWindow
         .isVisible()
-        .then(isVisible => t.ok(isVisible, 'isVisible'))
-    )
+        .then(isVisible => {
+          t.ok(isVisible, 'isVisible')
+        })
+    })
     .then(() => app)
 }
 
