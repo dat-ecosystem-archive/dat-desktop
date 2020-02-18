@@ -36,7 +36,6 @@ const Label = styled.div`
 `
 
 const Column = styled.div`
-  width: 100%;
   overflow: hidden;
   padding: 0.25rem;
 `
@@ -81,7 +80,7 @@ const Inspect = ({
         </div>
         <h2 className='f5 normal truncate pr3 w-90'>{title}</h2>
       </DetailHeader>
-      <div className='flex-auto pa3 pl5 bg-neutral-04 overflow-y-auto'>
+      <div className='flex-auto pa3 bg-neutral-04 overflow-y-auto'>
         <Row label='Link:' data-test='key'>
           {toStr(dat.key)}
         </Row>
@@ -100,7 +99,7 @@ const Inspect = ({
         <Row label='Download to:' className='flex bg-white' data-test='path'>
           <pre
             className='flex-auto f7 f6-l'
-            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+            style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}
           >
             {dat.path}
           </pre>
@@ -108,7 +107,12 @@ const Inspect = ({
             CHANGE...
           </TextButton>
         </Row>
-        <Row label='Files:' style={{ padding: 0 }}>
+        <Row label='Files:' style={{
+          padding: 0,
+          height: '100%',
+          maxHeight: '200px',
+          overflow: 'scroll'
+        }}>
           <FileList
             dat={dat}
             fallback={<div className='f7 f6-l pa2'>N/A</div>}
@@ -126,7 +130,6 @@ const Inspect = ({
       )}
       {screen === SCREEN.DOWNLOAD && (
         <DetailFooter className='pa3 flex items-center justify-between bg-white'>
-          <p className='truncate'>Download this Dat now?</p>
           <div className='flex ml2'>
             <GreenButton
               onClick={() => {
