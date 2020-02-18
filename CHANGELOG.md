@@ -2,13 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [2.1.0](https://github.com/datproject/dat-desktop/compare/v3.0.0-beta...v2.1.0) (2020-02-18)
-
+## [3.0.0](https://github.com/datproject/dat-desktop/compare/v2.1.0...v3.0.0) (2020-02-18)
 
 ### Features
 
-* Remove inspectDat until it's in better shape ([26eef7f](https://github.com/datproject/dat-desktop/commit/26eef7f0d12031df026dc26695cbded67406ee45))
-
+* Windows builds!
 
 ### Bug Fixes
 
