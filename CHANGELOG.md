@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/datproject/dat-desktop/compare/v3.0.0...v3.0.1) (2020-02-18)
+
+
+### Bug Fixes
+
+* Fix a bug where sometimes download dir wouldn't exist and crash ([7e1f2a7](https://github.com/datproject/dat-desktop/commit/7e1f2a741c708772500a505e7f21b76456af1c92))
+* Should no longer crash on startup for Mac. ([1bd0436](https://github.com/datproject/dat-desktop/commit/1bd043692129fe2436c15b8f6d2371bd9ea6f8bc))
+* When downloading a dat, ensure Download button is visible. ([4a573ed](https://github.com/datproject/dat-desktop/commit/4a573ed385d7f3df7ac5f4f687f4e9db40397556))
+
 ## [3.0.0](https://github.com/datproject/dat-desktop/compare/v2.1.0...v3.0.0) (2020-02-18)
 
 ### Features
