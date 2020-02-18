@@ -6,5 +6,4 @@ build/background.tiff
 .dat
 tags
 yarn.lock
-package-lock.json
 static/bundle.js
