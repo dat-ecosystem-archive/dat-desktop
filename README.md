@@ -1,6 +1,6 @@
 # Dat Desktop
 
-**Peer to peer data sharing app built for humans.**
+**Peer to peer data versioning & syncronization.**
 
 [!["Build Status"](https://img.shields.io/travis/dat-land/dat-desktop/master.svg?style=flat-square)](https://travis-ci.org/dat-land/dat-desktop) 
 [!["Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
@@ -20,7 +20,7 @@
 To run _Dat Desktop_ in development mode:
 
 ```sh
-node --version          # v8.12.0
+node --version          # v12.4.0
 npm install             # install dependencies
 npm start               # start the application
 ```

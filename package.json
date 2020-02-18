@@ -1,7 +1,7 @@
 {
   "name": "dat-desktop",
   "productName": "Dat Desktop",
-  "version": "3.0.0-beta",
+  "version": "3.0.1",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
   "description": "Peer to peer data sharing app built for humans.",
@@ -26,12 +26,13 @@
     "build:dev": "webpack --mode=development --progress --profile --colors",
     "build:prod": "webpack --mode=production --profile --colors",
     "pack": "npm run build:prod && npm run pack:all",
-    "pack:os": "build --x64 --ia32 --dir",
+    "pack:os": "electron-builder --x64 --ia32 --dir",
     "pack:all": "npm run pack:os -- --linux --mac --win",
     "dist": "npm run build:prod && npm run dist:os",
-    "dist:os": "build --x64 --ia32",
+    "dist:os": "electron-builder --x64 --ia32",
     "dist:all": "npm run dist:os -- --linux --mac --win",
-    "dist:publish": "npm run dist -- --publish onTagOrDraft"
+    "dist:publish": "npm run dist -- --publish onTagOrDraft",
+    "release": "standard-version"
   },
   "standard": {
     "ignore": [
@@ -50,8 +51,8 @@
     "cross-env": "^5.1.6",
     "del": "^3.0.0",
     "dependency-check": "^3.1.0",
-    "electron": "^8.0.1",
-    "electron-builder": "^20.31.2",
+    "electron": "^6.1.7",
+    "electron-builder": "^21.2.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-adapter-react-helper": "^1.2.3",
