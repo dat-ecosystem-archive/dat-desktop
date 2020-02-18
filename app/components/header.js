@@ -60,8 +60,7 @@ const Header = ({ onShare, onMenu, onReport, menuVisible, version }) => {
           >
             <h3 className='f6 f5-l mb2'>Dat Desktop {version}</h3>
             <p className='f6 f5-l mb3'>
-              Dat Desktop is a peer to peer sharing app built for humans by
-              humans.
+              Dat Desktop is a peer to peer data versioning and syncronization app.
             </p>
             <p className='f6 f5-l'>
               <a
