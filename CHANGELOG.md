@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* deprecate inspectDat until it's in better shape ([26eef7f](https://github.com/datproject/dat-desktop/commit/26eef7f0d12031df026dc26695cbded67406ee45))
+* Remove inspectDat until it's in better shape ([26eef7f](https://github.com/datproject/dat-desktop/commit/26eef7f0d12031df026dc26695cbded67406ee45))
 
 
 ### Bug Fixes
