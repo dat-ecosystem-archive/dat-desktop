@@ -387,7 +387,7 @@ export default class DatMiddleware {
       await mkdirp(this.dataDir)
     } catch (_) {}
 
-    const [ datOpts, paused ] = await Promise.all([
+    const [datOpts, paused] = await Promise.all([
       readJSON(joinPath(this.dataDir, 'dats.json')),
       readJSON(joinPath(this.dataDir, 'paused.json'))
     ])

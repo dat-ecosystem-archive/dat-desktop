@@ -4,16 +4,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 const BaseButton = styled.button.attrs(props => ({
-  ...props,
-  onClick: props => {
-    if (props.trigger) {
-      return function (e) {
-        e.stopPropagation()
-        props.trigger.apply(this, [e])
-      }
-    }
-    return undefined
-  }
+  ...props
 }))`
   text-transform: uppercase;
   letter-spacing: 0.025em;
