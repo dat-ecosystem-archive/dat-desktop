@@ -1,7 +1,7 @@
 {
   "name": "dat-desktop",
   "productName": "Dat Desktop",
-  "version": "3.0.0-beta",
+  "version": "3.0.0",
   "license": "MIT",
   "repository": "datproject/dat-desktop",
   "description": "Peer to peer data sharing app built for humans.",
@@ -31,7 +31,8 @@
     "dist": "npm run build:prod && npm run dist:os",
     "dist:os": "build --x64 --ia32",
     "dist:all": "npm run dist:os -- --linux --mac --win",
-    "dist:publish": "npm run dist -- --publish onTagOrDraft"
+    "dist:publish": "npm run dist -- --publish onTagOrDraft",
+    "release": "standard-version"
   },
   "standard": {
     "ignore": [
