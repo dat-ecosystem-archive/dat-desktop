@@ -7,7 +7,7 @@ module.exports = function waitForMatch (t, app, selector, regexp, ms, reverse) {
     reverse = false
   }
   if (!ms) {
-    ms = 10000
+    ms = 15000
   }
   var lastValue
   var end = Date.now() + ms
