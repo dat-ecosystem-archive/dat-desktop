@@ -14,20 +14,13 @@
 - [FAQ](#faq)
 - [License](#license)
 
-## Download
 
-_Dat_ needs to be installed first. To run the app locally check out our [download
-guide](https://datproject.org/install) or install directly from the command line:
-
-```sh
-npm install -g dat
-```
-
-## Commands
+## Contributing
 
 To run _Dat Desktop_ in development mode:
 
 ```sh
+node --version          # v8.12.0
 npm install             # install dependencies
 npm start               # start the application
 ```
