@@ -9,10 +9,10 @@
 
 ## Table of Content
 
-- [Download](#download)
+- [Download](/releases)
 - [Commands](#commands)
 - [FAQ](#faq)
-- [License](#license)
+- [License](#licenses)
 
 
 ## Contributing
