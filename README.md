@@ -10,7 +10,6 @@
 ## Table of Content
 
 - [Download](/releases)
-- [Commands](#commands)
 - [FAQ](#faq)
 - [License](#licenses)
 
