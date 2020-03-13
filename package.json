@@ -74,7 +74,7 @@
     "dat-icons": "^2.5.2",
     "dat-node": "^3.5.8",
     "electron-default-menu": "^1.0.1",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "mirror-folder": "^3.0.0",
     "mkdirp-promise": "^5.0.1",
     "ms": "^2.1.1",
