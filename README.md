@@ -9,9 +9,9 @@
 
 ## Table of Content
 
-- [Download](https://github.com/datproject/dat-desktop/releases)
-- [FAQ](#FAQ)
-- [License](#license)
+- [Download](/releases)
+- [FAQ](#faq)
+- [License](#licenses)
 
 
 ## Contributing
