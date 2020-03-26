@@ -26,6 +26,7 @@ export const copyLink = link => {
   return { type: 'DIALOGS_LINK_COPY' }
 }
 export const closeShareDat = () => ({ type: 'DIALOGS_LINK_CLOSE' })
+export const closeAlert = () => ({ type: 'DIALOGS_ALERT_CLOSE' })
 
 export const createDat = () => dispatch => {
   showOpenDialog({

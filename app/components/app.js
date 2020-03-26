@@ -42,6 +42,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function ({
 
       <Dialog.LinkContainer />
       <Dialog.ConfirmContainer />
+      <Dialog.AlertContainer />
       <DragDropContainer />
     </Fragment>
   )

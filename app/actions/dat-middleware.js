@@ -110,7 +110,8 @@ export default class DatMiddleware {
     if (key) {
       key = encode(key)
       if (this.dats[key]) {
-        return this.dispatch({
+        this.dispatch({ type: 'ADD_DAT_ERROR:EXISTED' })
+        throw this.dispatch({
           type: 'ADD_DAT_ERROR',
           key,
           error: new Error('Dat with same key already added.')
@@ -122,7 +123,8 @@ export default class DatMiddleware {
     for (let key in this.dats) {
       const dat = this.dats[key]
       if (dat.path === path) {
-        return this.dispatch({
+        this.dispatch({ type: 'ADD_DAT_ERROR:EXISTED' })
+        throw this.dispatch({
           type: 'ADD_DAT_ERROR',
           key,
           error: new Error('Dat with same path already added.')
@@ -257,6 +259,10 @@ export default class DatMiddleware {
 
   async downloadSparseDat ({ key }) {
     key = encode(key)
+    if (this.dats[key]) {
+      this.dispatch({ type: 'ADD_DAT_ERROR:EXISTED' })
+      return
+    }
     const path = joinPath(this.downloadsDir, key)
 
     this.dispatch({ type: 'ADD_DAT', key, path })
@@ -313,13 +319,14 @@ export default class DatMiddleware {
   }
 
   removeDatInternally (key) {
-    const { dat } = this.dats[key]
+    this.dispatch({ type: 'REMOVE_DAT', key })
+
+    const { dat } = this.dats[key] || {}
     if (!dat) return // maybe was deleted
     delete this.dats[key]
     if (dat.mirrorProgress) {
       dat.mirrorProgress.destroy()
     }
-    this.dispatch({ type: 'REMOVE_DAT', key })
 
     for (const con of dat.network.connections) {
       con.removeAllListeners()
