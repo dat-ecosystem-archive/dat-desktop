@@ -9,9 +9,8 @@
 
 ## Table of Content
 
-- [Download](#download)
-- [Commands](#commands)
-- [FAQ](#faq)
+- [Download](https://github.com/datproject/dat-desktop/releases)
+- [FAQ](#FAQ)
 - [License](#license)
 
 

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/datproject/dat-desktop/compare/v3.0.1...v3.0.2) (2020-02-20)
+
+
+### Bug Fixes
+
+* add standard version ([c6788cf](https://github.com/datproject/dat-desktop/commit/c6788cf))
+* Windows download issue, an attempt to squash it! ([dd270f1](https://github.com/datproject/dat-desktop/commit/dd270f1))
+
+
+
 ### [3.0.1](https://github.com/datproject/dat-desktop/compare/v3.0.0...v3.0.1) (2020-02-18)
 
 

@@ -169,7 +169,7 @@ export default class DatMiddleware {
       this.dispatch({ type: 'ADD_DAT_SUCCESS', key })
       this.dispatch({ type: 'DAT_WRITABLE', key, writable: dat.writable })
 
-      dat.archive.readFile('/dat.json', (err, blob) => {
+      dat.archive.readFile('dat.json', (err, blob) => {
         if (err) return
 
         let metadata = {}
