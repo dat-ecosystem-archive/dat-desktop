@@ -47,7 +47,13 @@ datMiddleware
   .then(function () {
     // # addGlobalComponents
     // Adding global components only once to the DOM.
-    document.body.appendChild(datIcons())
+    const svg = document.body.appendChild(datIcons())
+
+    // remove titleTag from SVG.
+    // titleTag is provide uncontrollable "tooltip".
+    Array.from(svg.querySelectorAll('title')).forEach(node =>
+      node.parentNode.removeChild(node)
+    )
   })
   .then(function () {
     render(

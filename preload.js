@@ -8,6 +8,9 @@
  * See: https://electronjs.org/docs/tutorial/security
  *    & https://eslint.org/docs/rules/no-implied-eval
  */
+const platform = require('os').platform()
+window.__defineGetter__('DAT_ENV', () => ({ platform }))
+
 // eslint-disable-next-line no-eval
 window.eval = global.eval = function () {
   throw new Error('Sorry, this app does not support window.eval().')
