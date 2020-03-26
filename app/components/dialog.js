@@ -5,6 +5,10 @@ import styled from 'styled-components'
 import Icon from './icon'
 import * as Button from './button'
 
+const Overlay = styled.div`
+  background: rgba(0, 0, 0, 0.25);
+`
+
 const Inner = styled.div`
   min-width: 25rem;
   max-width: 32rem;
@@ -117,6 +121,7 @@ function CloseButton ({ onExit }) {
       onClick={onExit}
       className='absolute pointer pa0 top-0 right-0 h2 w2 bg-transparent tc exit btn-close'
       aria-label='Close Modal'
+      style={{ outline: 0 }}
     >
       <Icon name='cross' />
     </button>
@@ -124,7 +129,7 @@ function CloseButton ({ onExit }) {
 }
 
 export const Link = ({ link, copied, onCopy, onExit }) => (
-  <div
+  <Overlay
     className='modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999'
     style={{ display: link ? 'flex' : 'none' }}
   >
@@ -160,11 +165,11 @@ export const Link = ({ link, copied, onCopy, onExit }) => (
       </p>
       <CloseButton onExit={onExit} />
     </Inner>
-  </div>
+  </Overlay>
 )
 
 export const Confirm = ({ dat, onConfirm, onExit }) => (
-  <div
+  <Overlay
     className='modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999'
     style={{ display: dat ? 'flex' : 'none' }}
   >
@@ -188,5 +193,22 @@ export const Confirm = ({ dat, onConfirm, onExit }) => (
       </p>
       <CloseButton onExit={onExit} />
     </Inner>
-  </div>
+  </Overlay>
+)
+
+export const Alert = ({ alert, onExit }) => (
+  <Overlay
+    className='modal fixed items-center justify-center top-0 left-0 h-100 w-100 z-9999'
+    style={{ display: alert ? 'flex' : 'none' }}
+  >
+    <Inner className='relative flex flex-column justify-center'>
+      <p className='mt3 mb4 f5 color-neutral-70'>{alert}</p>
+      <p>
+        <Button.Green className='fr btn-confirm' onClick={onExit} autoFocus>
+          CLOSE
+        </Button.Green>
+      </p>
+      <CloseButton onExit={onExit} />
+    </Inner>
+  </Overlay>
 )
