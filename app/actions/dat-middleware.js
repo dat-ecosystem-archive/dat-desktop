@@ -367,14 +367,14 @@ export default class DatMiddleware {
       ? 'paused'
       : dat.writable || dat.progress === 1
         ? 'complete'
-        : dat.network.connected ? 'loading' : 'stale'
+        : dat.network.connections.size ? 'loading' : 'stale'
     this.dispatch({ type: 'DAT_STATE', key, state })
   }
 
   updateConnections (dat) {
     if (!dat.network) return
     const key = encode(dat.key)
-    this.dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connected })
+    this.dispatch({ type: 'DAT_PEERS', key, peers: dat.network.connections.size })
   }
 
   joinNetwork (dat) {
