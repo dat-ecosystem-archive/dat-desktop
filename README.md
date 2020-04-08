@@ -2,14 +2,14 @@
 
 **Peer to peer data versioning & syncronization.**
 
-[!["Build Status"](https://img.shields.io/travis/dat-land/dat-desktop/master.svg?style=flat-square)](https://travis-ci.org/dat-land/dat-desktop) 
+[!["Build Status"](https://img.shields.io/travis/dat-land/dat-desktop/master.svg?style=flat-square)](https://travis-ci.org/dat-land/dat-desktop)
 [!["Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
 
 ![screenshot](assets/screenshot.png)
 
 ## Table of Content
 
-- [Download](/releases)
+- [Download](https://github.com/datproject/dat-desktop/releases)
 - [FAQ](#faq)
 - [License](#licenses)
 
@@ -35,8 +35,8 @@ npm run dist :os        # compile the app into an binary package
 
 ### How to speed up downloading Electron
 
-If you’re not in Europe or the US, you might want to use a different mirror for 
-`electron`. You can set the `ELECTRON_MIRROR` variable to point to a different 
+If you’re not in Europe or the US, you might want to use a different mirror for
+`electron`. You can set the `ELECTRON_MIRROR` variable to point to a different
 provider:
 
 ```sh
