@@ -88,7 +88,7 @@
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "standard-version": "^6.0.1",
+    "standard-version": "^8.0.1",
     "styled-components": "^4.1.1",
     "tachyons": "^4.9.1",
     "util-promisify": "^2.1.0"
