@@ -69,10 +69,9 @@
   },
   "dependencies": {
     "dat-colors": "^3.5.1",
-    "dat-doctor": "^1.4.0",
     "dat-encoding": "^5.0.1",
     "dat-icons": "^2.5.2",
-    "dat-node": "^3.5.8",
+    "dat-node": "^4.0.0",
     "electron-default-menu": "^1.0.1",
     "minimist": "^1.2.0",
     "mirror-folder": "^3.0.0",

@@ -4,11 +4,9 @@ const { app, BrowserWindow, shell, Menu, ipcMain } = require('electron')
 const { neutral } = require('dat-colors')
 const autoUpdater = require('./lib/auto-updater')
 const defaultMenu = require('electron-default-menu')
-const doctor = require('dat-doctor')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 const isTest = process.env.NODE_ENV === 'test'
-const { Writable } = require('stream')
 
 if (typeof process.env.NODE_V === 'string' && process.env.NODE_V !== process.version) {
   console.error(`
@@ -25,19 +23,6 @@ if (typeof process.env.NODE_V === 'string' && process.env.NODE_V !== process.ver
 }
 
 const menu = defaultMenu(app, shell)
-menu[menu.length - 1].submenu.push({
-  label: 'Doctor',
-  click: () => {
-    win.webContents.openDevTools({ mode: 'detach' })
-    const out = Writable({
-      write (chunk, env, done) {
-        if (win) win.webContents.send('log', chunk.toString())
-        done()
-      }
-    })
-    doctor({ out })
-  }
-})
 
 let win
 let watchProcess
